@@ -1,0 +1,232 @@
+{
+  "id": "id",
+  "name": { "id": "Bahasa Indonesia", "en": "Indonesian" },
+  "flag": "🇮🇩",
+  "ttsLocale": "id-ID",
+  "units": [
+    {
+      "id": "id_u1",
+      "title": { "id": "Dasar-dasar", "en": "Basics" },
+      "color": "#58CC02",
+      "icon": "👋",
+      "lessons": [
+        {
+          "id": "id_u1_l1",
+          "title": { "id": "Salam", "en": "Greetings" },
+          "words": [
+            { "target": "halo", "meaning": { "id": "hello", "en": "hello" }, "emoji": "👋" },
+            { "target": "selamat pagi", "meaning": { "id": "good morning", "en": "good morning" }, "emoji": "🌅" },
+            { "target": "selamat malam", "meaning": { "id": "good evening / good night", "en": "good evening / good night" }, "emoji": "🌙" },
+            { "target": "sampai jumpa", "meaning": { "id": "see you / goodbye", "en": "see you / goodbye" }, "emoji": "🚪" },
+            { "target": "tolong", "meaning": { "id": "please (help)", "en": "please (help)" }, "emoji": "🙏" },
+            { "target": "terima kasih", "meaning": { "id": "thank you", "en": "thank you" }, "emoji": "💚" }
+          ],
+          "sentences": [
+            { "target": "Selamat pagi teman", "tokens": ["Selamat", "pagi", "teman"], "meaning": { "id": "Good morning friend", "en": "Good morning friend" } },
+            { "target": "Terima kasih banyak", "tokens": ["Terima", "kasih", "banyak"], "meaning": { "id": "Thank you very much", "en": "Thank you very much" } }
+          ]
+        },
+        {
+          "id": "id_u1_l2",
+          "title": { "id": "Perkenalan", "en": "Introductions" },
+          "words": [
+            { "target": "saya", "meaning": { "id": "I / me", "en": "I / me" }, "emoji": "🙋" },
+            { "target": "kamu", "meaning": { "id": "you", "en": "you" }, "emoji": "👉" },
+            { "target": "nama", "meaning": { "id": "name", "en": "name" }, "emoji": "📛" },
+            { "target": "teman", "meaning": { "id": "friend", "en": "friend" }, "emoji": "🤝" },
+            { "target": "guru", "meaning": { "id": "teacher", "en": "teacher" }, "emoji": "👩‍🏫" },
+            { "target": "murid", "meaning": { "id": "student", "en": "student" }, "emoji": "🎒" }
+          ],
+          "sentences": [
+            { "target": "Nama saya Emma", "tokens": ["Nama", "saya", "Emma"], "meaning": { "id": "My name is Emma", "en": "My name is Emma" } },
+            { "target": "Saya seorang murid", "tokens": ["Saya", "seorang", "murid"], "meaning": { "id": "I am a student", "en": "I am a student" } }
+          ]
+        },
+        {
+          "id": "id_u1_l3",
+          "title": { "id": "Angka", "en": "Numbers" },
+          "words": [
+            { "target": "satu", "meaning": { "id": "one", "en": "one" }, "emoji": "1️⃣" },
+            { "target": "dua", "meaning": { "id": "two", "en": "two" }, "emoji": "2️⃣" },
+            { "target": "tiga", "meaning": { "id": "three", "en": "three" }, "emoji": "3️⃣" },
+            { "target": "empat", "meaning": { "id": "four", "en": "four" }, "emoji": "4️⃣" },
+            { "target": "lima", "meaning": { "id": "five", "en": "five" }, "emoji": "5️⃣" },
+            { "target": "sepuluh", "meaning": { "id": "ten", "en": "ten" }, "emoji": "🔟" }
+          ],
+          "sentences": [
+            { "target": "Saya punya dua teman", "tokens": ["Saya", "punya", "dua", "teman"], "meaning": { "id": "I have two friends", "en": "I have two friends" } },
+            { "target": "Tiga empat lima", "tokens": ["Tiga", "empat", "lima"], "meaning": { "id": "Three four five", "en": "Three four five" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "id_u2",
+      "title": { "id": "Keluarga & Orang", "en": "Family & People" },
+      "color": "#1CB0F6",
+      "icon": "👨‍👩‍👧",
+      "lessons": [
+        {
+          "id": "id_u2_l1",
+          "title": { "id": "Keluarga", "en": "Family" },
+          "words": [
+            { "target": "ibu", "meaning": { "id": "mother", "en": "mother" }, "emoji": "👩" },
+            { "target": "ayah", "meaning": { "id": "father", "en": "father" }, "emoji": "👨" },
+            { "target": "kakak", "meaning": { "id": "older sibling", "en": "older sibling" }, "emoji": "🧑" },
+            { "target": "adik", "meaning": { "id": "younger sibling", "en": "younger sibling" }, "emoji": "🧒" },
+            { "target": "anak", "meaning": { "id": "child", "en": "child" }, "emoji": "👶" },
+            { "target": "keluarga", "meaning": { "id": "family", "en": "family" }, "emoji": "👨‍👩‍👧‍👦" }
+          ],
+          "sentences": [
+            { "target": "Ibu saya seorang guru", "tokens": ["Ibu", "saya", "seorang", "guru"], "meaning": { "id": "My mother is a teacher", "en": "My mother is a teacher" } },
+            { "target": "Saya sayang keluarga", "tokens": ["Saya", "sayang", "keluarga"], "meaning": { "id": "I love my family", "en": "I love my family" } }
+          ]
+        },
+        {
+          "id": "id_u2_l2",
+          "title": { "id": "Orang", "en": "People" },
+          "words": [
+            { "target": "pria", "meaning": { "id": "man", "en": "man" }, "emoji": "👨‍🦱" },
+            { "target": "wanita", "meaning": { "id": "woman", "en": "woman" }, "emoji": "👩‍🦰" },
+            { "target": "orang", "meaning": { "id": "person", "en": "person" }, "emoji": "🧍" },
+            { "target": "bayi", "meaning": { "id": "baby", "en": "baby" }, "emoji": "👶" },
+            { "target": "dewasa", "meaning": { "id": "adult", "en": "adult" }, "emoji": "🧑" },
+            { "target": "semua orang", "meaning": { "id": "everyone", "en": "everyone" }, "emoji": "👥" }
+          ],
+          "sentences": [
+            { "target": "Wanita itu guru saya", "tokens": ["Wanita", "itu", "guru", "saya"], "meaning": { "id": "That woman is my teacher", "en": "That woman is my teacher" } },
+            { "target": "Bayi itu kecil", "tokens": ["Bayi", "itu", "kecil"], "meaning": { "id": "The baby is small", "en": "The baby is small" } }
+          ]
+        },
+        {
+          "id": "id_u2_l3",
+          "title": { "id": "Rumah", "en": "Home" },
+          "words": [
+            { "target": "rumah", "meaning": { "id": "house", "en": "house" }, "emoji": "🏠" },
+            { "target": "kamar", "meaning": { "id": "room", "en": "room" }, "emoji": "🛏️" },
+            { "target": "pintu", "meaning": { "id": "door", "en": "door" }, "emoji": "🚪" },
+            { "target": "jendela", "meaning": { "id": "window", "en": "window" }, "emoji": "🪟" },
+            { "target": "meja", "meaning": { "id": "table", "en": "table" }, "emoji": "🪑" },
+            { "target": "kursi", "meaning": { "id": "chair", "en": "chair" }, "emoji": "💺" }
+          ],
+          "sentences": [
+            { "target": "Rumah saya besar", "tokens": ["Rumah", "saya", "besar"], "meaning": { "id": "My house is big", "en": "My house is big" } },
+            { "target": "Tolong buka pintu", "tokens": ["Tolong", "buka", "pintu"], "meaning": { "id": "Please open the door", "en": "Please open the door" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "id_u3",
+      "title": { "id": "Makanan & Minuman", "en": "Food & Drinks" },
+      "color": "#FF9600",
+      "icon": "🍛",
+      "lessons": [
+        {
+          "id": "id_u3_l1",
+          "title": { "id": "Makan & Minum", "en": "Eating & Drinking" },
+          "words": [
+            { "target": "makan", "meaning": { "id": "to eat", "en": "to eat" }, "emoji": "🍽️" },
+            { "target": "minum", "meaning": { "id": "to drink", "en": "to drink" }, "emoji": "🥤" },
+            { "target": "air", "meaning": { "id": "water", "en": "water" }, "emoji": "💧" },
+            { "target": "nasi", "meaning": { "id": "rice", "en": "rice" }, "emoji": "🍚" },
+            { "target": "roti", "meaning": { "id": "bread", "en": "bread" }, "emoji": "🍞" },
+            { "target": "susu", "meaning": { "id": "milk", "en": "milk" }, "emoji": "🥛" }
+          ],
+          "sentences": [
+            { "target": "Saya makan nasi", "tokens": ["Saya", "makan", "nasi"], "meaning": { "id": "I eat rice", "en": "I eat rice" } },
+            { "target": "Kamu minum air", "tokens": ["Kamu", "minum", "air"], "meaning": { "id": "You drink water", "en": "You drink water" } }
+          ]
+        },
+        {
+          "id": "id_u3_l2",
+          "title": { "id": "Bahan Makanan", "en": "Ingredients" },
+          "words": [
+            { "target": "apel", "meaning": { "id": "apple", "en": "apple" }, "emoji": "🍎" },
+            { "target": "ikan", "meaning": { "id": "fish", "en": "fish" }, "emoji": "🐟" },
+            { "target": "ayam", "meaning": { "id": "chicken", "en": "chicken" }, "emoji": "🍗" },
+            { "target": "telur", "meaning": { "id": "egg", "en": "egg" }, "emoji": "🥚" },
+            { "target": "buah", "meaning": { "id": "fruit", "en": "fruit" }, "emoji": "🍇" },
+            { "target": "sayur", "meaning": { "id": "vegetable", "en": "vegetable" }, "emoji": "🥦" }
+          ],
+          "sentences": [
+            { "target": "Apel itu merah", "tokens": ["Apel", "itu", "merah"], "meaning": { "id": "The apple is red", "en": "The apple is red" } },
+            { "target": "Saya makan ayam dan nasi", "tokens": ["Saya", "makan", "ayam", "dan", "nasi"], "meaning": { "id": "I eat chicken and rice", "en": "I eat chicken and rice" } }
+          ]
+        },
+        {
+          "id": "id_u3_l3",
+          "title": { "id": "Waktu Makan", "en": "Meal Times" },
+          "words": [
+            { "target": "sarapan", "meaning": { "id": "breakfast", "en": "breakfast" }, "emoji": "🍳" },
+            { "target": "makan siang", "meaning": { "id": "lunch", "en": "lunch" }, "emoji": "🍱" },
+            { "target": "makan malam", "meaning": { "id": "dinner", "en": "dinner" }, "emoji": "🍲" },
+            { "target": "lapar", "meaning": { "id": "hungry", "en": "hungry" }, "emoji": "😋" },
+            { "target": "haus", "meaning": { "id": "thirsty", "en": "thirsty" }, "emoji": "🥵" },
+            { "target": "enak", "meaning": { "id": "delicious", "en": "delicious" }, "emoji": "😍" }
+          ],
+          "sentences": [
+            { "target": "Saya lapar", "tokens": ["Saya", "lapar"], "meaning": { "id": "I am hungry", "en": "I am hungry" } },
+            { "target": "Makanan ini enak", "tokens": ["Makanan", "ini", "enak"], "meaning": { "id": "This food is delicious", "en": "This food is delicious" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "id_u4",
+      "title": { "id": "Aktivitas Sehari-hari", "en": "Daily Activities" },
+      "color": "#CE82FF",
+      "icon": "🌞",
+      "lessons": [
+        {
+          "id": "id_u4_l1",
+          "title": { "id": "Kata Kerja Dasar", "en": "Basic Verbs" },
+          "words": [
+            { "target": "pergi", "meaning": { "id": "to go", "en": "to go" }, "emoji": "🚶" },
+            { "target": "datang", "meaning": { "id": "to come", "en": "to come" }, "emoji": "👋" },
+            { "target": "tidur", "meaning": { "id": "to sleep", "en": "to sleep" }, "emoji": "😴" },
+            { "target": "bangun", "meaning": { "id": "to wake up", "en": "to wake up" }, "emoji": "⏰" },
+            { "target": "bekerja", "meaning": { "id": "to work", "en": "to work" }, "emoji": "💼" },
+            { "target": "belajar", "meaning": { "id": "to study", "en": "to study" }, "emoji": "📖" }
+          ],
+          "sentences": [
+            { "target": "Saya pergi ke sekolah", "tokens": ["Saya", "pergi", "ke", "sekolah"], "meaning": { "id": "I go to school", "en": "I go to school" } },
+            { "target": "Kamu belajar setiap hari", "tokens": ["Kamu", "belajar", "setiap", "hari"], "meaning": { "id": "You study every day", "en": "You study every day" } }
+          ]
+        },
+        {
+          "id": "id_u4_l2",
+          "title": { "id": "Keterampilan", "en": "Skills" },
+          "words": [
+            { "target": "membaca", "meaning": { "id": "to read", "en": "to read" }, "emoji": "📚" },
+            { "target": "menulis", "meaning": { "id": "to write", "en": "to write" }, "emoji": "✍️" },
+            { "target": "berbicara", "meaning": { "id": "to speak", "en": "to speak" }, "emoji": "🗣️" },
+            { "target": "mendengar", "meaning": { "id": "to listen", "en": "to listen" }, "emoji": "👂" },
+            { "target": "berjalan", "meaning": { "id": "to walk", "en": "to walk" }, "emoji": "🚶‍♂️" },
+            { "target": "berlari", "meaning": { "id": "to run", "en": "to run" }, "emoji": "🏃" }
+          ],
+          "sentences": [
+            { "target": "Saya membaca buku", "tokens": ["Saya", "membaca", "buku"], "meaning": { "id": "I read a book", "en": "I read a book" } },
+            { "target": "Dia bisa berbicara bahasa Indonesia", "tokens": ["Dia", "bisa", "berbicara", "bahasa", "Indonesia"], "meaning": { "id": "She can speak Indonesian", "en": "She can speak Indonesian" } }
+          ]
+        },
+        {
+          "id": "id_u4_l3",
+          "title": { "id": "Waktu", "en": "Time" },
+          "words": [
+            { "target": "hari ini", "meaning": { "id": "today", "en": "today" }, "emoji": "📅" },
+            { "target": "besok", "meaning": { "id": "tomorrow", "en": "tomorrow" }, "emoji": "➡️" },
+            { "target": "kemarin", "meaning": { "id": "yesterday", "en": "yesterday" }, "emoji": "⬅️" },
+            { "target": "sekarang", "meaning": { "id": "now", "en": "now" }, "emoji": "⏱️" },
+            { "target": "pagi", "meaning": { "id": "morning", "en": "morning" }, "emoji": "🌅" },
+            { "target": "malam", "meaning": { "id": "night", "en": "night" }, "emoji": "🌃" }
+          ],
+          "sentences": [
+            { "target": "Hari ini saya bekerja", "tokens": ["Hari", "ini", "saya", "bekerja"], "meaning": { "id": "Today I work", "en": "Today I work" } },
+            { "target": "Besok kita belajar", "tokens": ["Besok", "kita", "belajar"], "meaning": { "id": "Tomorrow we study", "en": "Tomorrow we study" } }
+          ]
+        }
+      ]
+    }
+  ]
+}

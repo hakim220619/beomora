@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "891762608871",
+    "project_id": "beomora-64d64",
+    "storage_bucket": "beomora-64d64.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:891762608871:android:81ffef328118d5537db042",
+        "android_client_info": {
+          "package_name": "com.example.beomora"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "891762608871-mluctvqgj8gvvmr9t9d96dimmba8mnuc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDb-RMgZwOPFdObDE93fDGBGc4h0RHF8aM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "891762608871-mluctvqgj8gvvmr9t9d96dimmba8mnuc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

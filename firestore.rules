@@ -1,0 +1,53 @@
+rules_version = '2';
+
+// Aturan keamanan Firestore untuk Beomora.
+// Terapkan di: Firebase Console → Firestore Database → Rules → tempel →
+// Publish. (Atau `firebase deploy --only firestore:rules` kalau CLI
+// sudah login.)
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Profil pengguna: hanya pemilik akun yang boleh menulis miliknya.
+    match /users/{uid} {
+      // Baca boleh oleh pengguna login mana pun (untuk leaderboard dsb.)
+      allow read: if request.auth != null;
+      // Tulis hanya oleh pemiliknya, dan data wajib berbentuk benar:
+      // nama string 1-40 karakter, email sesuai akun login, dan
+      // progres (kalau ada) berupa string JSON < 100rb karakter.
+      allow create, update: if request.auth != null
+        && request.auth.uid == uid
+        && request.resource.data.name is string
+        && request.resource.data.name.size() >= 1
+        && request.resource.data.name.size() <= 40
+        && request.resource.data.email == request.auth.token.email
+        && (!('progress' in request.resource.data)
+            || (request.resource.data.progress is string
+                && request.resource.data.progress.size() < 100000))
+        // Field papan juara (opsional): angka wajar & kunci minggu pendek.
+        && (!('weeklyXp' in request.resource.data)
+            || (request.resource.data.weeklyXp is int
+                && request.resource.data.weeklyXp >= 0
+                && request.resource.data.weeklyXp < 1000000))
+        && (!('xp' in request.resource.data)
+            || (request.resource.data.xp is int
+                && request.resource.data.xp >= 0))
+        && (!('weekKey' in request.resource.data)
+            || (request.resource.data.weekKey is string
+                && request.resource.data.weekKey.size() < 12));
+      allow delete: if false;
+    }
+
+    // Materi kursus: publik untuk dibaca (disinkron sebelum login),
+    // hanya admin yang boleh menulis. Email HARUS sama dengan
+    // AuthConfig.adminEmail di lib/config/auth_config.dart.
+    match /content/{doc} {
+      allow read: if true;
+      allow write: if request.auth != null
+        && request.auth.token.email == 'danilukman2206@gmail.com';
+    }
+
+    // Selain itu: tolak semua.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

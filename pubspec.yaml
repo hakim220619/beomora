@@ -1,0 +1,34 @@
+name: beomora
+description: "Beomora - Aplikasi belajar bahasa dengan gamifikasi (Duolingo clone)."
+publish_to: 'none'
+version: 1.0.0
+
+environment:
+  sdk: ^3.10.7
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  provider: ^6.1.2
+  shared_preferences: ^2.3.2
+  flutter_tts: ^4.2.0
+  confetti: ^0.8.0
+  # Login/daftar hanya lewat akun Google via Firebase Authentication;
+  # profil pengguna disimpan di Cloud Firestore.
+  firebase_core: ^4.14.0
+  firebase_auth: ^6.6.0
+  cloud_firestore: ^6.9.0
+  # Penyedia ID token Google di Android/iOS (web pakai popup Firebase).
+  google_sign_in: ^7.2.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/content/
