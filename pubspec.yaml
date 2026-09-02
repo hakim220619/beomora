@@ -1,7 +1,7 @@
 name: beomora
-description: "Beomora - Aplikasi belajar bahasa dengan gamifikasi (Duolingo clone)."
+description: "Beomora - Aplikasi belajar bahasa dengan gamifikasi."
 publish_to: 'none'
-version: 1.0.0
+version: 1.1.0+9
 
 environment:
   sdk: ^3.10.7
@@ -22,13 +22,28 @@ dependencies:
   cloud_firestore: ^6.9.0
   # Penyedia ID token Google di Android/iOS (web pakai popup Firebase).
   google_sign_in: ^7.2.0
+  in_app_purchase: ^3.3.0
+  # Akses detail pembelian Android (obfuscatedAccountId) untuk
+  # mengikat langganan ke akun Beomora yang membeli.
+  in_app_purchase_android: ^0.5.0
+  google_mobile_ads: ^9.1.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.14.4
 
 flutter:
   uses-material-design: true
   assets:
     - assets/content/
+
+# Ikon launcher Android — dibuat dari store_assets (tool/render_store_assets_test.dart).
+# Regenerasi: dart run flutter_launcher_icons
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: "store_assets/icon_1024.png"
+  adaptive_icon_background: "#F1ECDC"
+  adaptive_icon_foreground: "store_assets/icon_foreground.png"

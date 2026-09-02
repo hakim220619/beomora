@@ -88,6 +88,10 @@ class SettingsScreen extends StatelessWidget {
           if (context.watch<AuthProvider>().isAdmin) ...[
             const SizedBox(height: 20),
             const _AdminUploadTile(),
+            const SizedBox(height: 12),
+            const _AdminPremiumAllTile(),
+            const SizedBox(height: 12),
+            const _AdminGrantTile(),
           ],
           const SizedBox(height: 32),
           // Reset
@@ -183,6 +187,197 @@ class _AdminUploadTileState extends State<_AdminUploadTile> {
             style: const TextStyle(fontSize: 12.5)),
         onTap: _busy ? null : _upload,
       ),
+    );
+  }
+}
+
+/// Kartu admin: saklar "premium untuk semua pengguna" — menulis field
+/// `premiumForAll` di dokumen `content/config` (hanya admin yang boleh,
+/// ditegakkan firestore.rules). Perangkat pengguna membacanya saat
+/// aplikasi dibuka.
+class _AdminPremiumAllTile extends StatefulWidget {
+  const _AdminPremiumAllTile();
+
+  @override
+  State<_AdminPremiumAllTile> createState() =>
+      _AdminPremiumAllTileState();
+}
+
+class _AdminPremiumAllTileState extends State<_AdminPremiumAllTile> {
+  bool _busy = false;
+
+  Future<void> _toggle(bool on) async {
+    final l = L.read(context);
+    final auth = context.read<AuthProvider>();
+    final messenger = ScaffoldMessenger.of(context);
+    setState(() => _busy = true);
+    final error = await auth.setGlobalPremium(on);
+    if (!mounted) return;
+    setState(() => _busy = false);
+    messenger
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(
+        duration: const Duration(seconds: 6),
+        content: Text(error == null
+            ? l.t(on
+                ? 'admin_premium_all_on'
+                : 'admin_premium_all_off')
+            : '${l.t('admin_premium_all_failed')}\n($error)'),
+      ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = L.of(context);
+    final on = context.watch<AuthProvider>().globalPremium;
+    return Card(
+      child: SwitchListTile(
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        secondary: _busy
+            ? const SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(strokeWidth: 2.5),
+              )
+            : const Icon(Icons.workspace_premium_rounded,
+                color: DuoColors.purple),
+        title: Text(l.t('admin_premium_all'),
+            style: const TextStyle(fontWeight: FontWeight.w800)),
+        subtitle: Text(l.t('admin_premium_all_sub'),
+            style: const TextStyle(fontSize: 12.5)),
+        value: on,
+        activeThumbColor: DuoColors.green,
+        onChanged: _busy ? null : _toggle,
+      ),
+    );
+  }
+}
+
+/// Kartu admin: hadiahkan/cabut premium untuk pengguna tertentu lewat
+/// email — menulis field `premiumGrantUntil` di dokumen profilnya
+/// (hanya admin yang diizinkan firestore.rules; klien pemilik tidak
+/// pernah menulis field ini sehingga hadiah kebal tertimpa sync).
+class _AdminGrantTile extends StatelessWidget {
+  const _AdminGrantTile();
+
+  Future<void> _open(BuildContext context) async {
+    final l = L.read(context);
+    final auth = context.read<AuthProvider>();
+    final messenger = ScaffoldMessenger.of(context);
+    final result = await showDialog<(String, Duration?)>(
+      context: context,
+      builder: (_) => const _GrantDialog(),
+    );
+    if (result == null) return;
+    final (email, duration) = result;
+    final error = await auth.grantPremiumByEmail(email, duration);
+    messenger
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(
+        duration: const Duration(seconds: 6),
+        content: Text(error == null
+            ? '${l.t(duration == null ? 'admin_grant_revoked' : 'admin_grant_success')} $email'
+            : l.t(error)),
+      ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = L.of(context);
+    return Card(
+      child: ListTile(
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        leading: const Icon(Icons.card_giftcard_rounded,
+            color: DuoColors.orange),
+        title: Text(l.t('admin_grant'),
+            style: const TextStyle(fontWeight: FontWeight.w800)),
+        subtitle: Text(l.t('admin_grant_sub'),
+            style: const TextStyle(fontSize: 12.5)),
+        onTap: () => _open(context),
+      ),
+    );
+  }
+}
+
+/// Dialog isian hadiah: email penerima + durasi (atau cabut).
+class _GrantDialog extends StatefulWidget {
+  const _GrantDialog();
+
+  @override
+  State<_GrantDialog> createState() => _GrantDialogState();
+}
+
+class _GrantDialogState extends State<_GrantDialog> {
+  final _emailCtrl = TextEditingController();
+  int _days = 30; // 0 = cabut hadiah
+
+  @override
+  void dispose() {
+    _emailCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = L.of(context);
+    return AlertDialog(
+      shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      title: Text(l.t('admin_grant'),
+          style: const TextStyle(fontWeight: FontWeight.w900)),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextField(
+            controller: _emailCtrl,
+            keyboardType: TextInputType.emailAddress,
+            autofocus: true,
+            decoration:
+                InputDecoration(hintText: l.t('admin_grant_email')),
+            onChanged: (_) => setState(() {}),
+          ),
+          const SizedBox(height: 14),
+          Text(l.t('admin_grant_duration'),
+              style: const TextStyle(
+                  fontSize: 13, fontWeight: FontWeight.w800)),
+          const SizedBox(height: 6),
+          Wrap(
+            spacing: 6,
+            children: [
+              for (final d in const [7, 30, 90, 365])
+                ChoiceChip(
+                  label: Text('$d ${l.t('days_unit')}'),
+                  selected: _days == d,
+                  onSelected: (_) => setState(() => _days = d),
+                ),
+              ChoiceChip(
+                label: Text(l.t('admin_grant_revoke')),
+                selected: _days == 0,
+                selectedColor: DuoColors.red.withValues(alpha: 0.2),
+                onSelected: (_) => setState(() => _days = 0),
+              ),
+            ],
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text(l.t('cancel')),
+        ),
+        FilledButton(
+          onPressed: _emailCtrl.text.trim().isEmpty
+              ? null
+              : () => Navigator.of(context).pop((
+                    _emailCtrl.text.trim(),
+                    _days == 0 ? null : Duration(days: _days),
+                  )),
+          child: Text(l.t('admin_grant_apply')),
+        ),
+      ],
     );
   }
 }

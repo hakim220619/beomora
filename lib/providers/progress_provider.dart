@@ -74,9 +74,28 @@ class ProgressProvider extends ChangeNotifier {
   Map<String, int> dailyXp = {};
   static const dailyLogDays = 92;
 
+  /// Status premium (di-update AuthProvider via ProgressSyncService).
+  /// Dibaca dari cache prefs saat startup supaya pelindung streak
+  /// premium bekerja sebelum profil server termuat.
+  bool premiumActive = false;
+
   ProgressProvider(this._prefs) {
+    premiumActive = _prefs.getBool('auth_premium') ?? false;
     _load();
     _checkStreakOnLaunch();
+  }
+
+  void setPremium(bool value) {
+    if (value == premiumActive) return;
+    premiumActive = value;
+    notifyListeners();
+  }
+
+  /// Top-up permata (pembelian uang asli).
+  void addGems(int amount) {
+    gems += amount;
+    _save();
+    notifyListeners();
   }
 
   // ---------- Derivatif ----------
@@ -90,13 +109,16 @@ class ProgressProvider extends ChangeNotifier {
   bool get boostActive =>
       DateTime.now().millisecondsSinceEpoch < boostUntil;
 
-  int get xpMultiplier => boostActive ? 2 : 1;
+  /// Premium menikmati XP dobel permanen.
+  int get xpMultiplier => boostActive || premiumActive ? 2 : 1;
 
   int get wordsMasteredCount =>
       masteredWords.values.fold(0, (a, s) => a + s.length);
 
   /// Nyawa dengan regenerasi 1 per [heartRegenMinutes] menit.
+  /// Premium: hati tak terbatas (selalu penuh).
   int get hearts {
+    if (premiumActive) return maxHearts;
     _applyRegen();
     return _hearts;
   }
@@ -143,6 +165,7 @@ class ProgressProvider extends ChangeNotifier {
   }
 
   void loseHeart() {
+    if (premiumActive) return; // hati tak terbatas
     _applyRegen();
     if (_hearts > 0) {
       if (_hearts == maxHearts) {
@@ -350,7 +373,9 @@ class ProgressProvider extends ChangeNotifier {
     final today = _dayKey(now);
     final yesterday = _dayKey(now.subtract(const Duration(days: 1)));
     if (lastActiveDay == today || lastActiveDay == yesterday) return;
-    if (streakFreezes > 0) {
+    if (premiumActive) {
+      lastActiveDay = yesterday; // pelindung streak premium (gratis)
+    } else if (streakFreezes > 0) {
       streakFreezes--;
       lastActiveDay = yesterday; // streak diselamatkan
     } else {

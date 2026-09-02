@@ -10,6 +10,7 @@ import '../../widgets/duo_dialog.dart';
 import '../../widgets/google_sign_in_button.dart';
 import '../../widgets/study/pencil_progress_bar.dart';
 import '../leaderboard_screen.dart';
+import '../premium_screen.dart';
 import '../profile/achievements_screen.dart';
 import '../profile/calendar_screen.dart';
 import '../settings_screen.dart';
@@ -135,6 +136,15 @@ class CabinScreen extends StatelessWidget {
             title: l.t('calendar_title'),
             subtitle: '${l.t('streak_now')}: ${progress.streak} 🔥',
             onTap: () => _push(context, const CalendarScreen()),
+          ),
+          _CabinDoor(
+            emoji: '👑',
+            color: DuoColors.purple,
+            title: l.t('premium_title'),
+            subtitle: auth.isPremium
+                ? l.t('premium_active')
+                : l.t('premium_banner_sub'),
+            onTap: () => _push(context, const PremiumScreen()),
           ),
           _CabinDoor(
             emoji: '⚙️',

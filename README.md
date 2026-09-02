@@ -37,7 +37,7 @@ flutter test         # jalankan test
 ## Fitur
 
 ### Pembelajaran
-- **Learning path ala Duolingo** — 4 unit × 3 pelajaran per kursus, node terkunci
+- **Learning path bertingkat** — 4 unit × 3 pelajaran per kursus, node terkunci
   sampai pelajaran sebelumnya selesai
 - **7 tipe soal**: pilihan ganda (2 arah), listening (text-to-speech), ketik
   terjemahan (toleran typo), susun huruf (scramble), susun kalimat, mencocokkan pasangan
@@ -58,7 +58,7 @@ flutter test         # jalankan test
 - 🏅 12 pencapaian
 - 🥇 Peringkat mingguan lokal
 
-### Navigasi (bukan gaya Duolingo)
+### Navigasi
 Tiga ruang belajar di rak navigasi bawah:
 - 📚 **Belajar** — jalur belajar (learning path)
 - ✏️ **Latihan** — ruang latihan & mini-game

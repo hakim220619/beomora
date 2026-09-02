@@ -31,7 +31,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDb-RMgZwOPFdObDE93fDGBGc4h0RHF8aM',
-    appId: '1:891762608871:android:81ffef328118d5537db042',
+    appId: '1:891762608871:android:fa0dda466b13ac827db042',
     messagingSenderId: '891762608871',
     projectId: 'beomora-64d64',
     storageBucket: 'beomora-64d64.firebasestorage.app',

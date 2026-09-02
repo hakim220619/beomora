@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../data/mcq_bank.dart';
 import '../models/course.dart';
 
 /// Materi kursus: offline-first dengan sinkronisasi hemat kuota
@@ -19,9 +20,9 @@ import '../models/course.dart';
 /// Sinkronisasi ([sync]) berjalan di latar belakang saat aplikasi
 /// dibuka, maksimal sekali tiap [_checkInterval]:
 /// - baca `content/meta` (1 read) dan bandingkan `version` dengan cache;
-/// - hanya kalau berbeda, unduh dokumen `content/{en,ja,id}` (3 reads),
-///   validasi, lalu simpan ke cache — dipakai mulai peluncuran
-///   berikutnya.
+/// - hanya kalau berbeda, unduh dokumen `content/{en,ja,id}` plus bank
+///   Soal Pilihan Ganda `content/mcq_{ja,en}` (5 reads), validasi, lalu
+///   simpan ke cache — dipakai mulai peluncuran berikutnya.
 /// Dengan pola ini tiap perangkat rata-rata cuma ~1 read per hari,
 /// jadi kuota gratis 50rb reads/hari cukup untuk puluhan ribu pengguna
 /// — dan kalaupun kuota habis, semua orang tetap bisa belajar dari
@@ -33,6 +34,7 @@ class ContentService {
   static const _checkInterval = Duration(hours: 6);
 
   static String _kJson(String lang) => 'content_json_$lang';
+  static String _kMcq(String lang) => 'content_mcq_$lang';
   static String _assetPath(String lang) => 'assets/content/$lang.json';
 
   /// Muat materi untuk dipakai aplikasi: cache lokal dulu, fallback
@@ -57,6 +59,22 @@ class ContentService {
       courses.add(course);
     }
     return courses;
+  }
+
+  /// Muat bank Soal Pilihan Ganda hasil sinkron terakhir dari cache
+  /// dan pasang sebagai bank aktif; tanpa cache (install baru/offline/
+  /// rusak), bank bawaan aplikasi di mcq_bank.dart yang tetap dipakai.
+  static void loadMcqBanks(SharedPreferences prefs) {
+    for (final lang in mcqCourseIds) {
+      final cached = prefs.getString(_kMcq(lang));
+      if (cached == null) continue;
+      try {
+        applySyncedMcqBank(lang, mcqListFromJson(cached));
+      } catch (e) {
+        debugPrint('BeomoraContent: cache mcq $lang rusak, '
+            'pakai bawaan ($e)');
+      }
+    }
   }
 
   /// Sinkronkan cache lokal dengan Firestore. Aman dipanggil tanpa
@@ -94,8 +112,24 @@ class ContentService {
         Course.fromJson(jsonDecode(raw) as Map<String, dynamic>); // validasi
         fresh[lang] = raw;
       }
+      // Bank Soal Pilihan Ganda ikut versi yang sama; dokumen yang
+      // belum diunggah admin dilewati (bank bawaan jadi fallback).
+      final freshMcq = <String, String>{};
+      for (final lang in mcqCourseIds) {
+        final doc = await db
+            .doc('content/mcq_$lang')
+            .get()
+            .timeout(const Duration(seconds: 15));
+        final raw = doc.data()?['json'] as String?;
+        if (raw == null) continue;
+        mcqListFromJson(raw); // validasi
+        freshMcq[lang] = raw;
+      }
       for (final e in fresh.entries) {
         await prefs.setString(_kJson(e.key), e.value);
+      }
+      for (final e in freshMcq.entries) {
+        await prefs.setString(_kMcq(e.key), e.value);
       }
       await prefs.setInt(_kVersion, serverVersion);
       debugPrint(
@@ -120,6 +154,13 @@ class ContentService {
         Course.fromJson(jsonDecode(raw) as Map<String, dynamic>); // validasi
         batch.set(db.doc('content/$lang'), {
           'json': raw,
+          'updatedAt': FieldValue.serverTimestamp(),
+        });
+      }
+      // Bank Soal Pilihan Ganda dari mcq_bank.dart ikut diunggah.
+      for (final lang in mcqCourseIds) {
+        batch.set(db.doc('content/mcq_$lang'), {
+          'json': mcqListToJson(mcqBundledFor(lang)),
           'updatedAt': FieldValue.serverTimestamp(),
         });
       }

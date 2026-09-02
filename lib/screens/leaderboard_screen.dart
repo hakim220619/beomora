@@ -13,7 +13,12 @@ class _Entry {
   final String? photoUrl;
   final int xp;
   final bool isUser;
-  const _Entry(this.name, this.photoUrl, this.xp, {this.isUser = false});
+  final bool premium; // lencana 👑
+  const _Entry(this.name, this.photoUrl, this.xp,
+      {this.isUser = false, this.premium = false});
+
+  /// Nama tampil, plus mahkota untuk pelanggan premium.
+  String get displayName => premium ? '$name 👑' : name;
 }
 
 /// Papan Juara: podium kelas untuk 3 besar + daftar pelajar lain.
@@ -54,8 +59,10 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
 
     final entries = <_Entry>[
       for (final e in _server ?? const <LeaderEntry>[])
-        if (e.uid != myUid) _Entry(e.name, e.photoUrl, e.weeklyXp),
-      _Entry(myName, auth.photoUrl, myWeeklyXp, isUser: true),
+        if (e.uid != myUid)
+          _Entry(e.name, e.photoUrl, e.weeklyXp, premium: e.premium),
+      _Entry(myName, auth.photoUrl, myWeeklyXp,
+          isUser: true, premium: auth.isPremium),
     ]..sort((a, b) => b.xp.compareTo(a.xp));
     return entries;
   }
@@ -210,7 +217,7 @@ class _PodiumColumn extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           Text(
-            entry.name,
+            entry.displayName,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
@@ -308,7 +315,7 @@ class _RowTile extends StatelessWidget {
           const SizedBox(width: 10),
           Expanded(
             child: Text(
-              entry.name,
+              entry.displayName,
               style: TextStyle(
                 fontWeight: FontWeight.w800,
                 color: entry.isUser ? DuoColors.green : null,

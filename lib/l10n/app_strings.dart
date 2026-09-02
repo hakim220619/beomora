@@ -31,6 +31,9 @@ class L {
       // Materi
       'materials_title': 'Materi Belajar',
       'materials_sub': 'referensi lengkap untuk kursus ini',
+      'materials_vocab_title': 'Kosakata',
+      'materials_vocab_sub':
+          'kosakata tematik: pertanian, kelautan, kantoran, dll.',
       'tap_kana_hint': 'Ketuk huruf untuk mendengar pengucapannya',
       // Onboarding
       'onb_welcome_title': 'Selamat datang di Beomora!',
@@ -110,6 +113,53 @@ class L {
       'quiz_done': 'SELESAI',
       'practice_btn': 'Latihan',
       'letters': 'huruf',
+      'quiz_prompt_past': 'Apa bentuk lampaunya?',
+      'quiz_prompt_base': 'Apa bentuk dasarnya?',
+      // Soal Pilihan Ganda
+      'mcq_title': 'Soal Pilihan Ganda',
+      'mcq_desc': 'Kosakata & tata bahasa — pilih jawaban yang tepat',
+      'mcq_how_many': 'Mau latihan berapa soal?',
+      'mcq_available': 'soal tersedia',
+      'mcq_pick_pack': 'Pilih paket soal',
+      'mcq_free_limit': 'Versi gratis maksimal',
+      'mcq_unlock_all': 'Buka semua soal dengan Premium',
+      'mcq_count_hint': 'Jumlah soal',
+      'mcq_count_error': 'Masukkan angka',
+      'mcq_all': 'Semua',
+      // Premium & monetisasi
+      'premium_title': 'Beomora Premium',
+      'premium_sub':
+          'Belajar tanpa batas & dukung Beomora terus berkembang 💚',
+      'premium_banner_sub': 'Hati ∞ · XP 2× · bebas iklan',
+      'premium_b_hearts': 'Hati tak terbatas — belajar tanpa takut salah',
+      'premium_b_streak': 'Pelindung streak otomatis setiap hari',
+      'premium_b_xp': 'XP dobel permanen (2×)',
+      'premium_b_noads': 'Bebas iklan selamanya',
+      'premium_b_badge': 'Lencana 👑 di Papan Juara',
+      'premium_b_packs':
+          'Paket soal eksklusif: Kanji N5 & Kata Kerja Tak Beraturan',
+      'premium_monthly': 'Bulanan',
+      'premium_yearly': 'Tahunan',
+      'premium_lifetime': 'Seumur Hidup',
+      'premium_best': 'PALING HEMAT',
+      'premium_active': 'Premium aktif 👑',
+      'premium_thanks':
+          'Terima kasih sudah mendukung Beomora! Selamat belajar tanpa batas 💚',
+      'premium_locked': 'Khusus Premium 🔒',
+      'premium_cta': 'Coba Premium 👑',
+      'restore_purchases': 'Pulihkan pembelian',
+      'store_unavailable':
+          'Pembelian belum tersedia — produk belum dikonfigurasi di Play Console atau toko tidak terjangkau.',
+      'watch_ad_heart': 'TONTON IKLAN +1 ❤️',
+      'ad_reward_heart': '+1 hati! ❤️',
+      'ad_not_ready': 'Iklan belum siap, coba lagi sebentar ya.',
+      'free_heart_ad': 'Hati Gratis',
+      'free_heart_ad_desc': 'Tonton iklan singkat untuk +1 hati',
+      'free_label': '📺 GRATIS',
+      'gems_pack_small': '1.000 Permata',
+      'gems_pack_large': '5.000 Permata',
+      'topup_desc': 'Top-up permata (pembelian uang asli)',
+      'topup_label': 'TOP-UP',
       'time_challenge': 'Tantangan Waktu',
       'time_desc': 'Jawab sebanyak mungkin dalam 60 detik!',
       'free_practice': 'Latihan Bebas',
@@ -215,6 +265,26 @@ class L {
       'content_upload_success':
           'Materi terunggah & terverifikasi di server! 🎉',
       'content_upload_failed': 'Gagal mengunggah materi.',
+      'admin_premium_all': 'Premium untuk semua pengguna',
+      'admin_premium_all_sub':
+          'Selama menyala, semua akun diperlakukan premium — berlaku '
+              'saat aplikasi pengguna dibuka ulang',
+      'admin_premium_all_on': 'Premium untuk semua: AKTIF 👑',
+      'admin_premium_all_off': 'Premium untuk semua: nonaktif',
+      'admin_premium_all_failed': 'Gagal menyimpan pengaturan.',
+      'admin_grant': 'Hadiahkan premium',
+      'admin_grant_sub':
+          'Beri/cabut premium untuk pengguna tertentu lewat email',
+      'admin_grant_email': 'Email pengguna',
+      'admin_grant_duration': 'Durasi',
+      'admin_grant_revoke': 'Cabut',
+      'admin_grant_apply': 'TERAPKAN',
+      'admin_grant_success': 'Premium dihadiahkan ke',
+      'admin_grant_revoked': 'Hadiah premium dicabut dari',
+      'admin_grant_notfound':
+          'Pengguna dengan email itu tidak ditemukan — dia harus '
+              'pernah login ke Beomora dulu.',
+      'days_unit': 'hari',
       // Settings
       'settings_title': 'Pengaturan',
       'ui_language': 'Bahasa aplikasi',
@@ -268,6 +338,9 @@ class L {
       // Study guides
       'materials_title': 'Study Guides',
       'materials_sub': 'complete reference for this course',
+      'materials_vocab_title': 'Vocabulary',
+      'materials_vocab_sub':
+          'themed vocabulary: farming, maritime, office, etc.',
       'tap_kana_hint': 'Tap a character to hear how it sounds',
       // Onboarding
       'onb_welcome_title': 'Welcome to Beomora!',
@@ -347,6 +420,53 @@ class L {
       'quiz_done': 'DONE',
       'practice_btn': 'Practice',
       'letters': 'letters',
+      'quiz_prompt_past': 'What is the past form?',
+      'quiz_prompt_base': 'What is the base form?',
+      // Multiple Choice
+      'mcq_title': 'Multiple Choice',
+      'mcq_desc': 'Vocabulary & grammar — pick the right answer',
+      'mcq_how_many': 'How many questions do you want?',
+      'mcq_available': 'questions available',
+      'mcq_pick_pack': 'Choose a question pack',
+      'mcq_free_limit': 'Free version max',
+      'mcq_unlock_all': 'Unlock all questions with Premium',
+      'mcq_count_hint': 'Number of questions',
+      'mcq_count_error': 'Enter a number',
+      'mcq_all': 'All',
+      // Premium & monetization
+      'premium_title': 'Beomora Premium',
+      'premium_sub':
+          'Learn without limits & help Beomora keep growing 💚',
+      'premium_banner_sub': '∞ hearts · 2× XP · ad-free',
+      'premium_b_hearts': 'Unlimited hearts — learn without fear',
+      'premium_b_streak': 'Automatic streak protection every day',
+      'premium_b_xp': 'Permanent double XP (2×)',
+      'premium_b_noads': 'Ad-free forever',
+      'premium_b_badge': '👑 badge on the Class Champions board',
+      'premium_b_packs':
+          'Exclusive question packs: N5 Kanji & Irregular Verbs',
+      'premium_monthly': 'Monthly',
+      'premium_yearly': 'Yearly',
+      'premium_lifetime': 'Lifetime',
+      'premium_best': 'BEST VALUE',
+      'premium_active': 'Premium active 👑',
+      'premium_thanks':
+          'Thank you for supporting Beomora! Enjoy limitless learning 💚',
+      'premium_locked': 'Premium only 🔒',
+      'premium_cta': 'Try Premium 👑',
+      'restore_purchases': 'Restore purchases',
+      'store_unavailable':
+          'Purchases are not available yet — products are not configured in Play Console or the store is unreachable.',
+      'watch_ad_heart': 'WATCH AD +1 ❤️',
+      'ad_reward_heart': '+1 heart! ❤️',
+      'ad_not_ready': 'Ad not ready yet, try again shortly.',
+      'free_heart_ad': 'Free Heart',
+      'free_heart_ad_desc': 'Watch a short ad for +1 heart',
+      'free_label': '📺 FREE',
+      'gems_pack_small': '1,000 Gems',
+      'gems_pack_large': '5,000 Gems',
+      'topup_desc': 'Gem top-up (real money purchase)',
+      'topup_label': 'TOP-UP',
       'time_challenge': 'Time Challenge',
       'time_desc': 'Answer as many as you can in 60 seconds!',
       'free_practice': 'Free Practice',
@@ -450,6 +570,26 @@ class L {
       'content_upload_success':
           'Content uploaded & verified on the server! 🎉',
       'content_upload_failed': 'Failed to upload content.',
+      'admin_premium_all': 'Premium for all users',
+      'admin_premium_all_sub':
+          'While on, every account is treated as premium — applies '
+              'when users reopen the app',
+      'admin_premium_all_on': 'Premium for all: ON 👑',
+      'admin_premium_all_off': 'Premium for all: off',
+      'admin_premium_all_failed': 'Failed to save the setting.',
+      'admin_grant': 'Gift premium',
+      'admin_grant_sub':
+          'Grant/revoke premium for a specific user by email',
+      'admin_grant_email': 'User email',
+      'admin_grant_duration': 'Duration',
+      'admin_grant_revoke': 'Revoke',
+      'admin_grant_apply': 'APPLY',
+      'admin_grant_success': 'Premium gifted to',
+      'admin_grant_revoked': 'Premium gift revoked from',
+      'admin_grant_notfound':
+          'No user found with that email — they must have signed in '
+              'to Beomora before.',
+      'days_unit': 'days',
       // Settings
       'settings_title': 'Settings',
       'ui_language': 'App language',

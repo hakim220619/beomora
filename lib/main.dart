@@ -14,8 +14,10 @@ import 'providers/settings_provider.dart';
 import 'screens/login_screen.dart';
 import 'screens/main_screen.dart';
 import 'screens/onboarding_screen.dart';
+import 'services/ad_service.dart';
 import 'services/content_service.dart';
 import 'services/progress_sync_service.dart';
+import 'services/purchase_service.dart';
 import 'theme.dart';
 
 Future<void> main() async {
@@ -33,6 +35,8 @@ Future<void> main() async {
   final prefs = await SharedPreferences.getInstance();
   // Materi: cache lokal / asset bawaan — instan & selalu tersedia.
   final courses = await ContentService.loadCourses(prefs: prefs);
+  // Bank Soal Pilihan Ganda: cache hasil sinkron / bawaan aplikasi.
+  ContentService.loadMcqBanks(prefs);
   // Sinkron materi di latar belakang (maks. 1 cek tiap 6 jam);
   // pembaruan dipakai mulai peluncuran berikutnya.
   unawaited(ContentService.sync(prefs));
@@ -42,11 +46,16 @@ Future<void> main() async {
   // Cadangkan/pulihkan progres lewat dokumen profil Firestore —
   // hidup selama aplikasi karena terikat listener kedua provider.
   ProgressSyncService(auth: auth, progress: progress);
+  // Pembelian dalam aplikasi (premium & top-up permata).
+  final purchase = PurchaseService(auth: auth, progress: progress);
+  // Iklan untuk pengguna gratis (premium bebas iklan).
+  unawaited(AdService.init());
 
   runApp(
     MultiProvider(
       providers: [
         Provider<List<Course>>.value(value: courses),
+        Provider<PurchaseService>.value(value: purchase),
         ChangeNotifierProvider(create: (_) => SettingsProvider(prefs)),
         ChangeNotifierProvider.value(value: progress),
         ChangeNotifierProvider.value(value: auth),

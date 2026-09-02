@@ -7,12 +7,81 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:891762608871:android:fa0dda466b13ac827db042",
+        "android_client_info": {
+          "package_name": "com.beomora.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "891762608871-iad5ue0k9mrocdrs2hk3rhu4nd62tc2c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.beomora.app",
+            "certificate_hash": "9a956693f45305c91741b49bce09f7475082fe97"
+          }
+        },
+        {
+          "client_id": "891762608871-md1hfjovmnp1m45jfl1dupdv3ktbk60t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.beomora.app",
+            "certificate_hash": "7ceed8fc023498a9581a5ad36867277b5adfa20e"
+          }
+        },
+        {
+          "client_id": "891762608871-nlhk77seroc4acr3sc0romide36p3ge0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.beomora.app",
+            "certificate_hash": "ae0ec049546b41340071206cab9bfea776a3c8bf"
+          }
+        },
+        {
+          "client_id": "891762608871-mluctvqgj8gvvmr9t9d96dimmba8mnuc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDb-RMgZwOPFdObDE93fDGBGc4h0RHF8aM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "891762608871-mluctvqgj8gvvmr9t9d96dimmba8mnuc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:891762608871:android:81ffef328118d5537db042",
         "android_client_info": {
           "package_name": "com.example.beomora"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "891762608871-c65b696ki6t5ndeubr9vqciptdohjh24.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.beomora",
+            "certificate_hash": "9a956693f45305c91741b49bce09f7475082fe97"
+          }
+        },
+        {
+          "client_id": "891762608871-st0tqtgmnu8jsv5bk91s7oc3d4d4ng9b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.beomora",
+            "certificate_hash": "7ceed8fc023498a9581a5ad36867277b5adfa20e"
+          }
+        },
         {
           "client_id": "891762608871-mluctvqgj8gvvmr9t9d96dimmba8mnuc.apps.googleusercontent.com",
           "client_type": 3

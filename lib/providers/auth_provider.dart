@@ -29,6 +29,11 @@ class AuthProvider extends ChangeNotifier {
   static const _kEmail = 'auth_email';
   static const _kPhoto = 'auth_photo';
 
+  /// Kunci cache status premium — juga dibaca ProgressProvider saat
+  /// startup (sebelum profil server termuat).
+  static const kPremiumPref = 'auth_premium';
+  static const kPremiumUntilPref = 'auth_premium_until';
+
   final SharedPreferences _prefs;
 
   String? name;
@@ -60,7 +65,195 @@ class AuthProvider extends ChangeNotifier {
     name = _prefs.getString(_kName);
     email = _prefs.getString(_kEmail);
     photoUrl = _prefs.getString(_kPhoto);
+    _premiumFlag = _prefs.getBool(kPremiumPref) ?? false;
+    _premiumUntil = _prefs.getInt(kPremiumUntilPref);
+    _globalPremium = _prefs.getBool(kGlobalPremiumPref) ?? false;
+    _premiumGrantUntil = _prefs.getInt(kPremiumGrantPref);
     if (configured) _init();
+  }
+
+  // ---------- Premium ----------
+
+  bool _premiumFlag = false;
+  int? _premiumUntil; // epoch ms; null = seumur hidup
+
+  /// Premium aktif: saklar global admin menyala, ATAU hadiah admin
+  /// masih berlaku, ATAU premium pribadi (flag menyala dan — kalau
+  /// berlangganan — belum lewat masanya).
+  bool get isPremium =>
+      _globalPremium || _grantActive || _personalPremium;
+
+  bool get _personalPremium =>
+      _premiumFlag &&
+      (_premiumUntil == null ||
+          DateTime.now().millisecondsSinceEpoch < _premiumUntil!);
+
+  // ---------- Hadiah premium dari admin ----------
+
+  /// Batas hadiah premium (epoch ms) dari field `premiumGrantUntil`
+  /// dokumen profil. HANYA admin yang bisa menulis field itu
+  /// (firestore.rules), dan klien tidak pernah ikut menulisnya —
+  /// jadi hadiah kebal tertimpa sync progres, dan pencabutan langsung
+  /// berlaku saat profil dibaca ulang.
+  static const kPremiumGrantPref = 'auth_premium_grant';
+  int? _premiumGrantUntil;
+
+  bool get _grantActive =>
+      _premiumGrantUntil != null &&
+      DateTime.now().millisecondsSinceEpoch < _premiumGrantUntil!;
+
+  /// (Khusus admin) Hadiahkan premium berbatas waktu ke pengguna lain
+  /// berdasarkan email; [duration] null = cabut hadiah. Mengembalikan
+  /// kunci l10n/pesan galat, atau null kalau sukses. Berlaku di
+  /// perangkat penerima saat aplikasinya dibuka ulang.
+  Future<String?> grantPremiumByEmail(
+      String email, Duration? duration) async {
+    if (!configured) return 'Firebase belum dikonfigurasi';
+    try {
+      final q = await FirebaseFirestore.instance
+          .collection('users')
+          .where('email', isEqualTo: email.trim().toLowerCase())
+          .limit(1)
+          .get()
+          .timeout(const Duration(seconds: 15));
+      if (q.docs.isEmpty) return 'admin_grant_notfound';
+      await q.docs.first.reference.update({
+        'premiumGrantUntil': duration == null
+            ? FieldValue.delete()
+            : DateTime.now().add(duration).millisecondsSinceEpoch,
+      }).timeout(const Duration(seconds: 15));
+      return null;
+    } catch (e) {
+      debugPrint('BeomoraAuth grant gagal: $e');
+      return '$e';
+    }
+  }
+
+  // ---------- Premium untuk semua (saklar admin) ----------
+
+  /// Saklar global dari dokumen `content/config` field `premiumForAll`:
+  /// selama menyala, SEMUA pengguna diperlakukan premium tanpa membeli.
+  /// Dibaca tiap aplikasi dibuka (cache prefs untuk offline); hanya
+  /// admin yang bisa menulisnya — aturan Firestore koleksi `content`
+  /// menegakkan itu di sisi server.
+  static const kGlobalPremiumPref = 'global_premium';
+  static const _configDocPath = 'content/config';
+
+  bool _globalPremium = false;
+  bool get globalPremium => _globalPremium;
+
+  Future<void> _fetchGlobalPremium() async {
+    try {
+      final doc = await FirebaseFirestore.instance
+          .doc(_configDocPath)
+          .get()
+          .timeout(const Duration(seconds: 10));
+      applyGlobalPremium(doc.data()?['premiumForAll'] == true);
+    } catch (_) {
+      // Offline dsb. — pertahankan nilai cache dari prefs.
+    }
+  }
+
+  @visibleForTesting
+  void applyGlobalPremium(bool on) {
+    if (on == _globalPremium) return;
+    _globalPremium = on;
+    _prefs.setBool(kGlobalPremiumPref, on);
+    notifyListeners();
+  }
+
+  /// (Khusus admin) Nyalakan/matikan premium untuk semua pengguna.
+  /// Menulis `content/config` lalu memverifikasi baca-ulang dari
+  /// server. Mengembalikan pesan galat, atau null kalau sukses.
+  Future<String?> setGlobalPremium(bool on) async {
+    if (!configured) return 'Firebase belum dikonfigurasi';
+    try {
+      final doc = FirebaseFirestore.instance.doc(_configDocPath);
+      await doc.set({
+        'premiumForAll': on,
+        'updatedAt': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true)).timeout(const Duration(seconds: 15));
+      final check = await doc
+          .get(const GetOptions(source: Source.server))
+          .timeout(const Duration(seconds: 15));
+      if (check.data()?['premiumForAll'] != on) {
+        return 'Verifikasi gagal: nilai di server tidak cocok';
+      }
+      applyGlobalPremium(on);
+      return null;
+    } catch (e) {
+      debugPrint('BeomoraAuth setGlobalPremium gagal: $e');
+      return '$e';
+    }
+  }
+
+  /// Aktifkan premium (dipanggil PurchaseService setelah pembelian
+  /// sukses). [until] null = seumur hidup. Disimpan ke prefs + dokumen
+  /// profil Firestore agar ikut pindah perangkat.
+  Future<void> activatePremium({DateTime? until}) async {
+    _premiumFlag = true;
+    _premiumUntil = until?.millisecondsSinceEpoch;
+    _persistPremiumPrefs();
+    notifyListeners();
+    try {
+      final user = pendingUser;
+      if (user != null) {
+        await _userDoc(user.uid).set({
+          'premium': true,
+          'premiumUntil': _premiumUntil,
+        }, SetOptions(merge: true)).timeout(const Duration(seconds: 15));
+      }
+    } catch (e) {
+      // Tersimpan lokal; dokumen akan menyusul pada sesi berikutnya.
+      debugPrint('BeomoraAuth premium sync tertunda: $e');
+    }
+  }
+
+  /// Terapkan status premium dari dokumen profil server TANPA
+  /// menurunkan premium lokal yang masih aktif — dokumen bisa
+  /// ketinggalan (mis. Play Billing baru saja memulihkan langganan
+  /// sebelum profil tiba, atau write saat pembelian dulu gagal).
+  /// Server hanya boleh menaikkan/memperpanjang; penurunan terjadi
+  /// alami lewat kedaluwarsa [_premiumUntil] (langganan berhenti →
+  /// restore tidak memperpanjang lagi).
+  @visibleForTesting
+  void applyServerPremium(Map<String, dynamic> profile) {
+    // Hadiah admin: server otoritas penuh — selalu ikuti apa adanya
+    // (memberi maupun mencabut), karena klien tidak pernah menulisnya.
+    _premiumGrantUntil = (profile['premiumGrantUntil'] as num?)?.toInt();
+    if (_premiumGrantUntil != null) {
+      _prefs.setInt(kPremiumGrantPref, _premiumGrantUntil!);
+    } else {
+      _prefs.remove(kPremiumGrantPref);
+    }
+    final flag = profile['premium'] == true;
+    final until = (profile['premiumUntil'] as num?)?.toInt();
+    final serverActive = flag &&
+        (until == null ||
+            DateTime.now().millisecondsSinceEpoch < until);
+    // Bandingkan dengan premium PRIBADI — saklar global admin tidak
+    // boleh menghalangi penyimpanan premium pelanggan sungguhan.
+    if (!_personalPremium) {
+      // Lokal tidak aktif → ikuti server apa adanya.
+      _premiumFlag = flag;
+      _premiumUntil = until;
+    } else if (serverActive &&
+        _premiumUntil != null &&
+        (until == null || until > _premiumUntil!)) {
+      // Server lebih panjang (atau seumur hidup) → naikkan.
+      _premiumFlag = true;
+      _premiumUntil = until;
+    }
+    _persistPremiumPrefs();
+  }
+
+  void _persistPremiumPrefs() {
+    _prefs.setBool(kPremiumPref, _premiumFlag);
+    if (_premiumUntil != null) {
+      _prefs.setInt(kPremiumUntilPref, _premiumUntil!);
+    } else {
+      _prefs.remove(kPremiumUntilPref);
+    }
   }
 
   /// Firebase sudah di-init di main() — kalau belum, mode panduan.
@@ -88,6 +281,8 @@ class AuthProvider extends ChangeNotifier {
       FirebaseFirestore.instance.collection('users').doc(uid);
 
   Future<void> _init() async {
+    // Saklar "premium untuk semua" dari server — latar belakang.
+    unawaited(_fetchGlobalPremium());
     // Sesi Firebase dipulihkan otomatis; dengarkan untuk memulihkan
     // profil saat aplikasi dibuka ulang.
     FirebaseAuth.instance.authStateChanges().listen(_restore);
@@ -282,6 +477,7 @@ class AuthProvider extends ChangeNotifier {
     if (profile != null) {
       cloudProgressKnown = true;
       cloudProgress = profile['progress'] as String?;
+      applyServerPremium(profile);
     }
     name = (profile?['name'] as String?) ??
         user.displayName ??
@@ -304,6 +500,12 @@ class AuthProvider extends ChangeNotifier {
     photoUrl = null;
     cloudProgress = null;
     cloudProgressKnown = false;
+    _premiumFlag = false;
+    _premiumUntil = null;
+    _premiumGrantUntil = null;
+    _prefs.remove(kPremiumPref);
+    _prefs.remove(kPremiumUntilPref);
+    _prefs.remove(kPremiumGrantPref);
     _prefs.remove(_kName);
     _prefs.remove(_kEmail);
     _prefs.remove(_kPhoto);

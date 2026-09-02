@@ -6,12 +6,14 @@ import 'package:provider/provider.dart';
 import '../../l10n/app_strings.dart';
 import '../../models/course.dart';
 import '../../providers/progress_provider.dart';
+import '../../services/ad_service.dart';
 import '../../theme.dart';
 import '../../widgets/duo_button.dart';
 import '../../widgets/duo_dialog.dart';
 import '../../widgets/study/pencil_progress_bar.dart';
 import '../../widgets/stat_bar.dart';
 import '../lesson/lesson_screen.dart';
+import '../premium_screen.dart';
 
 Color hexColor(String hex) =>
     Color(int.parse(hex.replaceFirst('#', '0xFF')));
@@ -41,6 +43,7 @@ class SkillTreeScreen extends StatelessWidget {
     if (currentIndex == -1) currentIndex = allLessons.length;
 
     final goalReached = progress.xpToday >= progress.dailyGoal;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -68,9 +71,7 @@ class SkillTreeScreen extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w800,
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white70
-                        : DuoColors.eel,
+                    color: isDark ? StudyColors.chalk : DuoColors.eel,
                   ),
                 ),
               ],
@@ -87,7 +88,12 @@ class SkillTreeScreen extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: DuoColors.yellow.withValues(alpha: 0.25),
+                        // Tema gelap: alas gelap pekat (bukan kuning
+                        // transparan yang melebur jadi olive) supaya
+                        // teks kuning benar-benar menonjol.
+                        color: isDark
+                            ? Colors.black.withValues(alpha: 0.35)
+                            : DuoColors.yellow.withValues(alpha: 0.25),
                         borderRadius: BorderRadius.circular(14),
                         border:
                             Border.all(color: DuoColors.yellow, width: 1.5),
@@ -95,9 +101,12 @@ class SkillTreeScreen extends StatelessWidget {
                       child: Text(
                         l.t('daily_goal_reached'),
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.w800,
-                            color: Color(0xFF8A6100)),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          color: isDark
+                              ? const Color(0xFFFFD54F)
+                              : const Color(0xFF8A6100),
+                        ),
                       ),
                     ),
                   ),
@@ -476,7 +485,7 @@ class _IslandNode extends StatelessWidget {
                 fontSize: 11.5,
                 fontWeight: FontWeight.w700,
                 color: _locked
-                    ? (isDark ? Colors.white38 : DuoColors.gray)
+                    ? (isDark ? Colors.white60 : DuoColors.gray)
                     : (isDark ? Colors.white : DuoColors.eel),
               ),
             ),
@@ -578,18 +587,45 @@ class _IslandNode extends StatelessWidget {
     );
   }
 
-  void _showNoHeartsDialog(BuildContext context) {
+  Future<void> _showNoHeartsDialog(BuildContext context) async {
     final l = L.read(context);
-    showDuoDialog<void>(
+    final progress = context.read<ProgressProvider>();
+    final messenger = ScaffoldMessenger.of(context);
+    final navigator = Navigator.of(context);
+    final choice = await showDuoDialog<String>(
       context,
       emoji: '💔',
       color: DuoColors.red,
       title: l.t('no_hearts_title'),
       message: l.t('no_hearts_msg'),
       actions: [
-        DuoDialogAction(label: l.t('ok'), primary: true),
+        if (AdService.supported)
+          DuoDialogAction(
+              label: l.t('watch_ad_heart'), value: 'ad', primary: true),
+        DuoDialogAction(
+            label: l.t('premium_cta'),
+            value: 'premium',
+            color: DuoColors.purple),
+        DuoDialogAction(
+            label: l.t('ok'),
+            value: 'ok',
+            primary: !AdService.supported),
       ],
     );
+    switch (choice) {
+      case 'ad':
+        final shown = await AdService.showRewarded(
+            onReward: () => progress.restoreHeart());
+        messenger
+          ..hideCurrentSnackBar()
+          ..showSnackBar(SnackBar(
+            content:
+                Text(l.t(shown ? 'ad_reward_heart' : 'ad_not_ready')),
+          ));
+      case 'premium':
+        await navigator.push(MaterialPageRoute(
+            builder: (_) => const PremiumScreen()));
+    }
   }
 }
 

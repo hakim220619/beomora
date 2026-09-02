@@ -25,7 +25,10 @@ void main() {
     test('memuat 3 kursus (en, ja, id) dengan struktur lengkap', () {
       expect(courses.map((c) => c.id), containsAll(['en', 'ja', 'id']));
       for (final course in courses) {
-        expect(course.units.length, 4, reason: 'kursus ${course.id}');
+        // Bahasa Jepang punya 32 bab; kursus lain minimal 4.
+        expect(course.units.length,
+            greaterThanOrEqualTo(course.id == 'ja' ? 32 : 4),
+            reason: 'kursus ${course.id}');
         for (final unit in course.units) {
           expect(unit.lessons.length, 3, reason: 'unit ${unit.id}');
           for (final lesson in unit.lessons) {
@@ -34,6 +37,16 @@ void main() {
             expect(lesson.title['id'], isNotEmpty);
             expect(lesson.title['en'], isNotEmpty);
           }
+        }
+      }
+    });
+
+    test('kosakata tiap kursus unik (mencegah dua jawaban benar)', () {
+      for (final course in courses) {
+        final seen = <String>{};
+        for (final w in course.allWords) {
+          expect(seen.add(w.target), isTrue,
+              reason: 'kata dobel di ${course.id}: ${w.target}');
         }
       }
     });

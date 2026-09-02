@@ -1,4 +1,4 @@
-package com.example.beomora
+package com.beomora.app
 
 import io.flutter.embedding.android.FlutterActivity
 

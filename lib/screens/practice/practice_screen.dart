@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../data/mcq_packs.dart';
 import '../../l10n/app_strings.dart';
 import '../../models/course.dart';
 import '../../providers/progress_provider.dart';
@@ -8,6 +9,7 @@ import '../../theme.dart';
 import '../lesson/lesson_screen.dart';
 import 'flashcards_screen.dart';
 import 'letter_quiz_screen.dart';
+import 'mcq_pack_screen.dart';
 import 'memory_match_screen.dart';
 import 'time_challenge_screen.dart';
 
@@ -54,6 +56,15 @@ class PracticeScreen extends StatelessWidget {
             subtitle: l.t('letter_quiz_desc'),
             onTap: () => _push(context, LetterQuizScreen(course: course)),
           ),
+          // Hanya kursus yang punya bank soal pilihan ganda (ja/en).
+          if (mcqPacksFor(course.id).isNotEmpty)
+            _GameCard(
+              emoji: '📝',
+              color: DuoColors.yellow,
+              title: l.t('mcq_title'),
+              subtitle: l.t('mcq_desc'),
+              onTap: () => _push(context, McqPackScreen(course: course)),
+            ),
           _GameCard(
             emoji: '⏱️',
             color: DuoColors.orange,

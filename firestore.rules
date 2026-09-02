@@ -10,6 +10,12 @@ service cloud.firestore {
     match /users/{uid} {
       // Baca boleh oleh pengguna login mana pun (untuk leaderboard dsb.)
       allow read: if request.auth != null;
+      // Admin: boleh mengubah HANYA field hadiah premium di dokumen
+      // pengguna mana pun (fitur "Hadiahkan premium" di Pengaturan).
+      allow update: if request.auth != null
+        && request.auth.token.email == 'danilukman2206@gmail.com'
+        && request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['premiumGrantUntil']);
       // Tulis hanya oleh pemiliknya, dan data wajib berbentuk benar:
       // nama string 1-40 karakter, email sesuai akun login, dan
       // progres (kalau ada) berupa string JSON < 100rb karakter.
@@ -32,7 +38,20 @@ service cloud.firestore {
                 && request.resource.data.xp >= 0))
         && (!('weekKey' in request.resource.data)
             || (request.resource.data.weekKey is string
-                && request.resource.data.weekKey.size() < 12));
+                && request.resource.data.weekKey.size() < 12))
+        // Status premium (ditulis klien setelah pembelian Play Billing).
+        && (!('premium' in request.resource.data)
+            || request.resource.data.premium is bool)
+        && (!('premiumUntil' in request.resource.data)
+            || request.resource.data.premiumUntil == null
+            || request.resource.data.premiumUntil is int)
+        // Hadiah premium HANYA boleh diubah admin (aturan di atas) —
+        // pemilik tidak boleh menambah/mengubahnya sendiri; nilai lama
+        // yang terbawa merge harus sama persis dengan yang tersimpan.
+        && (!('premiumGrantUntil' in request.resource.data)
+            || ('premiumGrantUntil' in resource.data
+                && request.resource.data.premiumGrantUntil
+                    == resource.data.premiumGrantUntil));
       allow delete: if false;
     }
 

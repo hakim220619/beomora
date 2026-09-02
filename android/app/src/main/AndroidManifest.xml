@@ -3,6 +3,11 @@
         android:label="Beomora"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <!-- AdMob App ID (akun AdMob Beomora). Unit ID ada di
+             lib/services/ad_service.dart. -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-1133455930155291~4091518701"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

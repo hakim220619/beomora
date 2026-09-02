@@ -13,12 +13,14 @@ class LeaderEntry {
   final String name;
   final String? photoUrl;
   final int weeklyXp;
+  final bool premium; // lencana 👑
 
   const LeaderEntry({
     required this.uid,
     required this.name,
     required this.photoUrl,
     required this.weeklyXp,
+    this.premium = false,
   });
 
   Map<String, dynamic> toJson() => {
@@ -26,6 +28,7 @@ class LeaderEntry {
         'name': name,
         'photoUrl': photoUrl,
         'weeklyXp': weeklyXp,
+        'premium': premium,
       };
 
   factory LeaderEntry.fromJson(Map<String, dynamic> m) => LeaderEntry(
@@ -33,6 +36,7 @@ class LeaderEntry {
         name: m['name'] as String? ?? 'Pelajar',
         photoUrl: m['photoUrl'] as String?,
         weeklyXp: (m['weeklyXp'] as num?)?.toInt() ?? 0,
+        premium: m['premium'] == true,
       );
 }
 
@@ -72,6 +76,7 @@ class LeaderboardService {
               name: doc.data()['name'] as String? ?? 'Pelajar',
               photoUrl: doc.data()['photoUrl'] as String?,
               weeklyXp: (doc.data()['weeklyXp'] as num).toInt(),
+              premium: doc.data()['premium'] == true,
             ),
       ].take(topN).toList();
 

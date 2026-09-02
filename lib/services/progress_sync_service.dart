@@ -48,6 +48,9 @@ class ProgressSyncService {
   String? _lastPushed;
 
   void _onAuthChanged() {
+    // Teruskan status premium ke ProgressProvider (hati ∞, XP 2×,
+    // pelindung streak).
+    progress.setPremium(auth.isPremium);
     if (!auth.configured) return;
     if (!auth.signedIn) {
       _uid = null;
@@ -106,6 +109,7 @@ class ProgressSyncService {
           'xp': progress.xp,
           'weeklyXp': progress.weeklyXp,
           'weekKey': progress.weekKey,
+          'premium': auth.isPremium, // lencana 👑 di Papan Juara
         },
         SetOptions(merge: true),
       ).timeout(const Duration(seconds: 20));
