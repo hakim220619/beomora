@@ -1,14 +1,14 @@
 {
-  "id": "en",
+  "id": "ko",
   "name": {
-    "id": "Bahasa Inggris",
-    "en": "English"
+    "id": "Bahasa Korea",
+    "en": "Korean"
   },
-  "flag": "🇬🇧",
-  "ttsLocale": "en-US",
+  "flag": "🇰🇷",
+  "ttsLocale": "ko-KR",
   "units": [
     {
-      "id": "en_u1",
+      "id": "ko_u1",
       "title": {
         "id": "Dasar-dasar",
         "en": "Basics"
@@ -17,287 +17,281 @@
       "icon": "👋",
       "lessons": [
         {
-          "id": "en_u1_l1",
+          "id": "ko_u1_l1",
           "title": {
             "id": "Salam",
             "en": "Greetings"
           },
           "words": [
             {
-              "target": "hello",
+              "target": "안녕하세요",
               "meaning": {
                 "id": "halo",
                 "en": "hi (a greeting)"
               },
               "emoji": "👋",
-              "romaji": "he-lou"
+              "romaji": "annyeonghaseyo"
             },
             {
-              "target": "good morning",
+              "target": "좋은 아침이에요",
               "meaning": {
                 "id": "selamat pagi",
                 "en": "morning greeting"
               },
               "emoji": "🌅",
-              "romaji": "gud mor-ning"
+              "romaji": "joeun achimieyo"
             },
             {
-              "target": "good night",
+              "target": "안녕히 주무세요",
               "meaning": {
                 "id": "selamat malam",
                 "en": "night farewell"
               },
               "emoji": "🌙",
-              "romaji": "gud nait"
+              "romaji": "annyeonghi jumuseyo"
             },
             {
-              "target": "goodbye",
+              "target": "안녕히 가세요",
               "meaning": {
                 "id": "selamat tinggal",
                 "en": "bye (a farewell)"
               },
               "emoji": "🚪",
-              "romaji": "gud-bai"
+              "romaji": "annyeonghi gaseyo"
             },
             {
-              "target": "please",
+              "target": "주세요",
               "meaning": {
                 "id": "tolong / silakan",
                 "en": "polite request word"
               },
               "emoji": "🙏",
-              "romaji": "plis"
+              "romaji": "juseyo"
             },
             {
-              "target": "thank you",
+              "target": "감사합니다",
               "meaning": {
                 "id": "terima kasih",
                 "en": "thanks (gratitude)"
               },
               "emoji": "💚",
-              "romaji": "teng-kyu"
+              "romaji": "gamsahamnida"
             }
           ],
           "sentences": [
             {
-              "target": "Good morning my friend",
+              "target": "좋은 아침이에요 친구야",
               "tokens": [
-                "Good",
-                "morning",
-                "my",
-                "friend"
+                "좋은",
+                "아침이에요",
+                "친구야"
               ],
               "meaning": {
                 "id": "Selamat pagi temanku",
                 "en": "greet your friend in the morning"
               },
-              "romaji": "gud mor-ning mai frend"
+              "romaji": "joeun achimieyo chinguya"
             },
             {
-              "target": "Thank you very much",
+              "target": "정말 감사합니다",
               "tokens": [
-                "Thank",
-                "you",
-                "very",
-                "much"
+                "정말",
+                "감사합니다"
               ],
               "meaning": {
                 "id": "Terima kasih banyak",
                 "en": "express big gratitude"
               },
-              "romaji": "teng-kyu ve-ri mach"
+              "romaji": "jeongmal gamsahamnida"
             }
           ]
         },
         {
-          "id": "en_u1_l2",
+          "id": "ko_u1_l2",
           "title": {
             "id": "Perkenalan",
             "en": "Introductions"
           },
           "words": [
             {
-              "target": "I",
+              "target": "저",
               "meaning": {
                 "id": "saya / aku",
                 "en": "me, myself"
               },
               "emoji": "🙋",
-              "romaji": "ai"
+              "romaji": "jeo"
             },
             {
-              "target": "you",
+              "target": "당신",
               "meaning": {
                 "id": "kamu / anda",
                 "en": "the person spoken to"
               },
               "emoji": "👉",
-              "romaji": "yu"
+              "romaji": "dangsin"
             },
             {
-              "target": "name",
+              "target": "이름",
               "meaning": {
                 "id": "nama",
                 "en": "what someone is called"
               },
               "emoji": "📛",
-              "romaji": "neim"
+              "romaji": "ireum"
             },
             {
-              "target": "friend",
+              "target": "친구",
               "meaning": {
                 "id": "teman",
                 "en": "buddy, companion"
               },
               "emoji": "🤝",
-              "romaji": "frend"
+              "romaji": "chingu"
             },
             {
-              "target": "teacher",
+              "target": "선생님",
               "meaning": {
                 "id": "guru",
                 "en": "one who teaches"
               },
               "emoji": "👩‍🏫",
-              "romaji": "ti-cher"
+              "romaji": "seonsaengnim"
             },
             {
-              "target": "student",
+              "target": "학생",
               "meaning": {
                 "id": "murid / pelajar",
                 "en": "one who studies"
               },
               "emoji": "🎒",
-              "romaji": "styu-dent"
+              "romaji": "haksaeng"
             }
           ],
           "sentences": [
             {
-              "target": "My name is Dani",
+              "target": "제 이름은 다니예요",
               "tokens": [
-                "My",
-                "name",
-                "is",
-                "Dani"
+                "제",
+                "이름은",
+                "다니예요"
               ],
               "meaning": {
                 "id": "Nama saya Dani",
                 "en": "introduce yourself as Dani"
               },
-              "romaji": "mai neim iz da-ni"
+              "romaji": "je ireumeun Daniyeyo"
             },
             {
-              "target": "I am a student",
+              "target": "저는 학생이에요",
               "tokens": [
-                "I",
-                "am",
-                "a",
-                "student"
+                "저는",
+                "학생이에요"
               ],
               "meaning": {
                 "id": "Saya seorang pelajar",
                 "en": "say that you study"
               },
-              "romaji": "ai em e styu-dent"
+              "romaji": "jeoneun haksaengieyo"
             }
           ]
         },
         {
-          "id": "en_u1_l3",
+          "id": "ko_u1_l3",
           "title": {
             "id": "Angka",
             "en": "Numbers"
           },
           "words": [
             {
-              "target": "one",
+              "target": "하나",
               "meaning": {
                 "id": "satu",
                 "en": "1"
               },
               "emoji": "1️⃣",
-              "romaji": "wan"
+              "romaji": "hana"
             },
             {
-              "target": "two",
+              "target": "둘",
               "meaning": {
                 "id": "dua",
                 "en": "2"
               },
               "emoji": "2️⃣",
-              "romaji": "tu"
+              "romaji": "dul"
             },
             {
-              "target": "three",
+              "target": "셋",
               "meaning": {
                 "id": "tiga",
                 "en": "3"
               },
               "emoji": "3️⃣",
-              "romaji": "thri"
+              "romaji": "set"
             },
             {
-              "target": "four",
+              "target": "넷",
               "meaning": {
                 "id": "empat",
                 "en": "4"
               },
               "emoji": "4️⃣",
-              "romaji": "for"
+              "romaji": "net"
             },
             {
-              "target": "five",
+              "target": "다섯",
               "meaning": {
                 "id": "lima",
                 "en": "5"
               },
               "emoji": "5️⃣",
-              "romaji": "faiv"
+              "romaji": "daseot"
             },
             {
-              "target": "ten",
+              "target": "열",
               "meaning": {
                 "id": "sepuluh",
                 "en": "10"
               },
               "emoji": "🔟",
-              "romaji": "ten"
+              "romaji": "yeol"
             }
           ],
           "sentences": [
             {
-              "target": "I have two friends",
+              "target": "친구가 두 명 있어요",
               "tokens": [
-                "I",
-                "have",
-                "two",
-                "friends"
+                "친구가",
+                "두",
+                "명",
+                "있어요"
               ],
               "meaning": {
                 "id": "Saya punya dua teman",
                 "en": "say you have 2 friends"
               },
-              "romaji": "ai hev tu frends"
+              "romaji": "chinguga du myeong isseoyo"
             },
             {
-              "target": "Three four five",
+              "target": "셋 넷 다섯",
               "tokens": [
-                "Three",
-                "four",
-                "five"
+                "셋",
+                "넷",
+                "다섯"
               ],
               "meaning": {
                 "id": "Tiga empat lima",
                 "en": "count 3 4 5"
               },
-              "romaji": "thri for faiv"
+              "romaji": "set net daseot"
             }
           ]
         }
       ]
     },
     {
-      "id": "en_u2",
+      "id": "ko_u2",
       "title": {
         "id": "Keluarga & Orang",
         "en": "Family & People"
@@ -306,290 +300,282 @@
       "icon": "👨‍👩‍👧",
       "lessons": [
         {
-          "id": "en_u2_l1",
+          "id": "ko_u2_l1",
           "title": {
             "id": "Keluarga",
             "en": "Family"
           },
           "words": [
             {
-              "target": "mother",
+              "target": "어머니",
               "meaning": {
                 "id": "ibu",
                 "en": "mom"
               },
               "emoji": "👩",
-              "romaji": "ma-dher"
+              "romaji": "eomeoni"
             },
             {
-              "target": "father",
+              "target": "아버지",
               "meaning": {
                 "id": "ayah",
                 "en": "dad"
               },
               "emoji": "👨",
-              "romaji": "fa-dher"
+              "romaji": "abeoji"
             },
             {
-              "target": "sister",
+              "target": "언니",
               "meaning": {
                 "id": "saudara perempuan",
                 "en": "female sibling"
               },
               "emoji": "👧",
-              "romaji": "sis-ter"
+              "romaji": "eonni"
             },
             {
-              "target": "brother",
+              "target": "오빠",
               "meaning": {
                 "id": "saudara laki-laki",
                 "en": "male sibling"
               },
               "emoji": "👦",
-              "romaji": "bra-dher"
+              "romaji": "oppa"
             },
             {
-              "target": "child",
+              "target": "아이",
               "meaning": {
                 "id": "anak",
                 "en": "kid"
               },
               "emoji": "🧒",
-              "romaji": "chaild"
+              "romaji": "ai"
             },
             {
-              "target": "family",
+              "target": "가족",
               "meaning": {
                 "id": "keluarga",
                 "en": "parents and children"
               },
               "emoji": "👨‍👩‍👧‍👦",
-              "romaji": "fem-i-li"
+              "romaji": "gajok"
             }
           ],
           "sentences": [
             {
-              "target": "My mother is a teacher",
+              "target": "우리 어머니는 선생님이에요",
               "tokens": [
-                "My",
-                "mother",
-                "is",
-                "a",
-                "teacher"
+                "우리",
+                "어머니는",
+                "선생님이에요"
               ],
               "meaning": {
                 "id": "Ibu saya seorang guru",
                 "en": "say mom teaches"
               },
-              "romaji": "mai ma-dher iz e ti-cher"
+              "romaji": "uri eomeonineun seonsaengnimieyo"
             },
             {
-              "target": "I love my family",
+              "target": "저는 가족을 사랑해요",
               "tokens": [
-                "I",
-                "love",
-                "my",
-                "family"
+                "저는",
+                "가족을",
+                "사랑해요"
               ],
               "meaning": {
                 "id": "Saya sayang keluarga saya",
                 "en": "express love for your family"
               },
-              "romaji": "ai lav mai fem-i-li"
+              "romaji": "jeoneun gajogeul saranghaeyo"
             }
           ]
         },
         {
-          "id": "en_u2_l2",
+          "id": "ko_u2_l2",
           "title": {
             "id": "Orang",
             "en": "People"
           },
           "words": [
             {
-              "target": "man",
+              "target": "남자",
               "meaning": {
                 "id": "pria",
                 "en": "adult male"
               },
               "emoji": "👨‍🦱",
-              "romaji": "men"
+              "romaji": "namja"
             },
             {
-              "target": "woman",
+              "target": "여자",
               "meaning": {
                 "id": "wanita",
                 "en": "adult female"
               },
               "emoji": "👩‍🦰",
-              "romaji": "wu-men"
+              "romaji": "yeoja"
             },
             {
-              "target": "boy",
+              "target": "소년",
               "meaning": {
                 "id": "anak laki-laki",
                 "en": "young male"
               },
               "emoji": "👦",
-              "romaji": "boi"
+              "romaji": "sonyeon"
             },
             {
-              "target": "girl",
+              "target": "소녀",
               "meaning": {
                 "id": "anak perempuan",
                 "en": "young female"
               },
               "emoji": "👧",
-              "romaji": "gerl"
+              "romaji": "sonyeo"
             },
             {
-              "target": "baby",
+              "target": "아기",
               "meaning": {
                 "id": "bayi",
                 "en": "very young child"
               },
               "emoji": "👶",
-              "romaji": "bei-bi"
+              "romaji": "agi"
             },
             {
-              "target": "person",
+              "target": "사람",
               "meaning": {
                 "id": "orang",
                 "en": "a human"
               },
               "emoji": "🧍",
-              "romaji": "per-sen"
+              "romaji": "saram"
             }
           ],
           "sentences": [
             {
-              "target": "The woman is my teacher",
+              "target": "그 여자는 제 선생님이에요",
               "tokens": [
-                "The",
-                "woman",
-                "is",
-                "my",
-                "teacher"
+                "그",
+                "여자는",
+                "제",
+                "선생님이에요"
               ],
               "meaning": {
                 "id": "Wanita itu guru saya",
                 "en": "say that woman teaches you"
               },
-              "romaji": "dhe wu-men iz mai ti-cher"
+              "romaji": "geu yeojaneun je seonsaengnimieyo"
             },
             {
-              "target": "The baby is small",
+              "target": "아기가 작아요",
               "tokens": [
-                "The",
-                "baby",
-                "is",
-                "small"
+                "아기가",
+                "작아요"
               ],
               "meaning": {
                 "id": "Bayi itu kecil",
                 "en": "describe the baby as small"
               },
-              "romaji": "dhe bei-bi iz smol"
+              "romaji": "agiga jagayo"
             }
           ]
         },
         {
-          "id": "en_u2_l3",
+          "id": "ko_u2_l3",
           "title": {
             "id": "Rumah",
             "en": "Home"
           },
           "words": [
             {
-              "target": "house",
+              "target": "집",
               "meaning": {
                 "id": "rumah",
                 "en": "a building to live in"
               },
               "emoji": "🏠",
-              "romaji": "haus"
+              "romaji": "jip"
             },
             {
-              "target": "room",
+              "target": "방",
               "meaning": {
                 "id": "kamar",
                 "en": "a space in a house"
               },
               "emoji": "🛏️",
-              "romaji": "rum"
+              "romaji": "bang"
             },
             {
-              "target": "door",
+              "target": "문",
               "meaning": {
                 "id": "pintu",
                 "en": "you open it to enter"
               },
               "emoji": "🚪",
-              "romaji": "dor"
+              "romaji": "mun"
             },
             {
-              "target": "window",
+              "target": "창문",
               "meaning": {
                 "id": "jendela",
                 "en": "glass opening in a wall"
               },
               "emoji": "🪟",
-              "romaji": "win-dou"
+              "romaji": "changmun"
             },
             {
-              "target": "table",
+              "target": "탁자",
               "meaning": {
                 "id": "meja",
                 "en": "furniture with a flat top"
               },
               "emoji": "🪑",
-              "romaji": "tei-bel"
+              "romaji": "takja"
             },
             {
-              "target": "chair",
+              "target": "의자",
               "meaning": {
                 "id": "kursi",
                 "en": "furniture to sit on"
               },
               "emoji": "💺",
-              "romaji": "cher"
+              "romaji": "uija"
             }
           ],
           "sentences": [
             {
-              "target": "My house is big",
+              "target": "우리 집은 커요",
               "tokens": [
-                "My",
-                "house",
-                "is",
-                "big"
+                "우리",
+                "집은",
+                "커요"
               ],
               "meaning": {
                 "id": "Rumah saya besar",
                 "en": "describe your big house"
               },
-              "romaji": "mai haus iz big"
+              "romaji": "uri jibeun keoyo"
             },
             {
-              "target": "Open the door please",
+              "target": "문을 열어 주세요",
               "tokens": [
-                "Open",
-                "the",
-                "door",
-                "please"
+                "문을",
+                "열어",
+                "주세요"
               ],
               "meaning": {
                 "id": "Tolong buka pintunya",
                 "en": "politely ask to open the door"
               },
-              "romaji": "ou-pen dhe dor plis"
+              "romaji": "muneul yeoreo juseyo"
             }
           ]
         }
       ]
     },
     {
-      "id": "en_u3",
+      "id": "ko_u3",
       "title": {
         "id": "Makanan & Minuman",
         "en": "Food & Drinks"
@@ -598,286 +584,280 @@
       "icon": "🍜",
       "lessons": [
         {
-          "id": "en_u3_l1",
+          "id": "ko_u3_l1",
           "title": {
             "id": "Makan & Minum",
             "en": "Eating & Drinking"
           },
           "words": [
             {
-              "target": "eat",
+              "target": "먹다",
               "meaning": {
                 "id": "makan",
                 "en": "to consume food"
               },
               "emoji": "🍽️",
-              "romaji": "it"
+              "romaji": "meokda"
             },
             {
-              "target": "drink",
+              "target": "마시다",
               "meaning": {
                 "id": "minum",
                 "en": "to swallow liquid"
               },
               "emoji": "🥤",
-              "romaji": "dringk"
+              "romaji": "masida"
             },
             {
-              "target": "water",
+              "target": "물",
               "meaning": {
                 "id": "air",
                 "en": "clear liquid we drink"
               },
               "emoji": "💧",
-              "romaji": "wo-ter"
+              "romaji": "mul"
             },
             {
-              "target": "rice",
+              "target": "밥",
               "meaning": {
                 "id": "nasi",
                 "en": "staple grain food"
               },
               "emoji": "🍚",
-              "romaji": "rais"
+              "romaji": "bap"
             },
             {
-              "target": "bread",
+              "target": "빵",
               "meaning": {
                 "id": "roti",
                 "en": "baked food from flour"
               },
               "emoji": "🍞",
-              "romaji": "bred"
+              "romaji": "ppang"
             },
             {
-              "target": "milk",
+              "target": "우유",
               "meaning": {
                 "id": "susu",
                 "en": "white drink from cows"
               },
               "emoji": "🥛",
-              "romaji": "milk"
+              "romaji": "uyu"
             }
           ],
           "sentences": [
             {
-              "target": "I eat rice",
+              "target": "저는 밥을 먹어요",
               "tokens": [
-                "I",
-                "eat",
-                "rice"
+                "저는",
+                "밥을",
+                "먹어요"
               ],
               "meaning": {
                 "id": "Saya makan nasi",
                 "en": "say you eat rice"
               },
-              "romaji": "ai it rais"
+              "romaji": "jeoneun babeul meogeoyo"
             },
             {
-              "target": "You drink water",
+              "target": "당신은 물을 마셔요",
               "tokens": [
-                "You",
-                "drink",
-                "water"
+                "당신은",
+                "물을",
+                "마셔요"
               ],
               "meaning": {
                 "id": "Kamu minum air",
                 "en": "say they drink water"
               },
-              "romaji": "yu dringk wo-ter"
+              "romaji": "dangsineun mureul masyeoyo"
             }
           ]
         },
         {
-          "id": "en_u3_l2",
+          "id": "ko_u3_l2",
           "title": {
             "id": "Bahan Makanan",
             "en": "Ingredients"
           },
           "words": [
             {
-              "target": "apple",
+              "target": "사과",
               "meaning": {
                 "id": "apel",
                 "en": "red or green fruit"
               },
               "emoji": "🍎",
-              "romaji": "e-pel"
+              "romaji": "sagwa"
             },
             {
-              "target": "fish",
+              "target": "생선",
               "meaning": {
                 "id": "ikan",
                 "en": "animal that swims"
               },
               "emoji": "🐟",
-              "romaji": "fisy"
+              "romaji": "saengseon"
             },
             {
-              "target": "chicken",
+              "target": "닭고기",
               "meaning": {
                 "id": "ayam",
                 "en": "bird we often eat"
               },
               "emoji": "🍗",
-              "romaji": "chi-ken"
+              "romaji": "dakgogi"
             },
             {
-              "target": "egg",
+              "target": "달걀",
               "meaning": {
                 "id": "telur",
                 "en": "oval food from hens"
               },
               "emoji": "🥚",
-              "romaji": "eg"
+              "romaji": "dalgyal"
             },
             {
-              "target": "fruit",
+              "target": "과일",
               "meaning": {
                 "id": "buah",
                 "en": "sweet plant food"
               },
               "emoji": "🍇",
-              "romaji": "frut"
+              "romaji": "gwail"
             },
             {
-              "target": "vegetable",
+              "target": "채소",
               "meaning": {
                 "id": "sayur",
                 "en": "healthy plant food"
               },
               "emoji": "🥦",
-              "romaji": "vej-te-bel"
+              "romaji": "chaeso"
             }
           ],
           "sentences": [
             {
-              "target": "The apple is red",
+              "target": "사과가 빨개요",
               "tokens": [
-                "The",
-                "apple",
-                "is",
-                "red"
+                "사과가",
+                "빨개요"
               ],
               "meaning": {
                 "id": "Apel itu merah",
                 "en": "describe the red apple"
               },
-              "romaji": "dhe e-pel iz red"
+              "romaji": "sagwaga ppalgaeyo"
             },
             {
-              "target": "I eat chicken and rice",
+              "target": "저는 닭고기와 밥을 먹어요",
               "tokens": [
-                "I",
-                "eat",
-                "chicken",
-                "and",
-                "rice"
+                "저는",
+                "닭고기와",
+                "밥을",
+                "먹어요"
               ],
               "meaning": {
                 "id": "Saya makan ayam dan nasi",
                 "en": "say you eat chicken with rice"
               },
-              "romaji": "ai it chi-ken end rais"
+              "romaji": "jeoneun dakgogiwa babeul meogeoyo"
             }
           ]
         },
         {
-          "id": "en_u3_l3",
+          "id": "ko_u3_l3",
           "title": {
             "id": "Waktu Makan",
             "en": "Meal Times"
           },
           "words": [
             {
-              "target": "breakfast",
+              "target": "아침 식사",
               "meaning": {
                 "id": "sarapan",
                 "en": "morning meal"
               },
               "emoji": "🍳",
-              "romaji": "brek-fes"
+              "romaji": "achim siksa"
             },
             {
-              "target": "lunch",
+              "target": "점심",
               "meaning": {
                 "id": "makan siang",
                 "en": "midday meal"
               },
               "emoji": "🍱",
-              "romaji": "lanch"
+              "romaji": "jeomsim"
             },
             {
-              "target": "dinner",
+              "target": "저녁",
               "meaning": {
                 "id": "makan malam",
                 "en": "evening meal"
               },
               "emoji": "🍲",
-              "romaji": "di-ner"
+              "romaji": "jeonyeok"
             },
             {
-              "target": "hungry",
+              "target": "배고파요",
               "meaning": {
                 "id": "lapar",
                 "en": "wanting food"
               },
               "emoji": "😋",
-              "romaji": "hang-gri"
+              "romaji": "baegopayo"
             },
             {
-              "target": "thirsty",
+              "target": "목말라요",
               "meaning": {
                 "id": "haus",
                 "en": "wanting a drink"
               },
               "emoji": "🥵",
-              "romaji": "thers-ti"
+              "romaji": "mongmallayo"
             },
             {
-              "target": "delicious",
+              "target": "맛있어요",
               "meaning": {
                 "id": "enak / lezat",
                 "en": "very tasty"
               },
               "emoji": "😍",
-              "romaji": "de-li-syes"
+              "romaji": "masisseoyo"
             }
           ],
           "sentences": [
             {
-              "target": "I am hungry",
+              "target": "배가 고파요",
               "tokens": [
-                "I",
-                "am",
-                "hungry"
+                "배가",
+                "고파요"
               ],
               "meaning": {
                 "id": "Saya lapar",
                 "en": "say you want food"
               },
-              "romaji": "ai em hang-gri"
+              "romaji": "baega gopayo"
             },
             {
-              "target": "The dinner is delicious",
+              "target": "저녁이 맛있어요",
               "tokens": [
-                "The",
-                "dinner",
-                "is",
-                "delicious"
+                "저녁이",
+                "맛있어요"
               ],
               "meaning": {
                 "id": "Makan malamnya enak",
                 "en": "praise the tasty dinner"
               },
-              "romaji": "dhe di-ner iz de-li-syes"
+              "romaji": "jeonyeogi masisseoyo"
             }
           ]
         }
       ]
     },
     {
-      "id": "en_u4",
+      "id": "ko_u4",
       "title": {
         "id": "Aktivitas Sehari-hari",
         "en": "Daily Activities"
@@ -886,279 +866,277 @@
       "icon": "🌞",
       "lessons": [
         {
-          "id": "en_u4_l1",
+          "id": "ko_u4_l1",
           "title": {
             "id": "Kata Kerja Dasar",
             "en": "Basic Verbs"
           },
           "words": [
             {
-              "target": "go",
+              "target": "가다",
               "meaning": {
                 "id": "pergi",
                 "en": "move away to a place"
               },
               "emoji": "🚶",
-              "romaji": "gou"
+              "romaji": "gada"
             },
             {
-              "target": "come",
+              "target": "오다",
               "meaning": {
                 "id": "datang",
                 "en": "move toward here"
               },
               "emoji": "👋",
-              "romaji": "kam"
+              "romaji": "oda"
             },
             {
-              "target": "sleep",
+              "target": "자다",
               "meaning": {
                 "id": "tidur",
                 "en": "rest with eyes closed"
               },
               "emoji": "😴",
-              "romaji": "slip"
+              "romaji": "jada"
             },
             {
-              "target": "wake up",
+              "target": "일어나다",
               "meaning": {
                 "id": "bangun",
                 "en": "stop sleeping"
               },
               "emoji": "⏰",
-              "romaji": "weik ap"
+              "romaji": "ireonada"
             },
             {
-              "target": "work",
+              "target": "일하다",
               "meaning": {
                 "id": "bekerja",
                 "en": "do a job"
               },
               "emoji": "💼",
-              "romaji": "werk"
+              "romaji": "ilhada"
             },
             {
-              "target": "study",
+              "target": "공부하다",
               "meaning": {
                 "id": "belajar",
                 "en": "learn something"
               },
               "emoji": "📖",
-              "romaji": "sta-di"
+              "romaji": "gongbuhada"
             }
           ],
           "sentences": [
             {
-              "target": "I go to school",
+              "target": "저는 학교에 가요",
               "tokens": [
-                "I",
-                "go",
-                "to",
-                "school"
+                "저는",
+                "학교에",
+                "가요"
               ],
               "meaning": {
                 "id": "Saya pergi ke sekolah",
                 "en": "say you head to school"
               },
-              "romaji": "ai gou tu skul"
+              "romaji": "jeoneun hakgyoe gayo"
             },
             {
-              "target": "You study every day",
+              "target": "당신은 매일 공부해요",
               "tokens": [
-                "You",
-                "study",
-                "every",
-                "day"
+                "당신은",
+                "매일",
+                "공부해요"
               ],
               "meaning": {
                 "id": "Kamu belajar setiap hari",
                 "en": "say they learn daily"
               },
-              "romaji": "yu sta-di ev-ri dei"
+              "romaji": "dangsineun maeil gongbuhaeyo"
             }
           ]
         },
         {
-          "id": "en_u4_l2",
+          "id": "ko_u4_l2",
           "title": {
             "id": "Keterampilan",
             "en": "Skills"
           },
           "words": [
             {
-              "target": "read",
+              "target": "읽다",
               "meaning": {
                 "id": "membaca",
                 "en": "look at words"
               },
               "emoji": "📚",
-              "romaji": "rid"
+              "romaji": "ikda"
             },
             {
-              "target": "write",
+              "target": "쓰다",
               "meaning": {
                 "id": "menulis",
                 "en": "put words on paper"
               },
               "emoji": "✍️",
-              "romaji": "rait"
+              "romaji": "sseuda"
             },
             {
-              "target": "speak",
+              "target": "말하다",
               "meaning": {
                 "id": "berbicara",
                 "en": "say words"
               },
               "emoji": "🗣️",
-              "romaji": "spik"
+              "romaji": "malhada"
             },
             {
-              "target": "listen",
+              "target": "듣다",
               "meaning": {
                 "id": "mendengarkan",
                 "en": "hear with attention"
               },
               "emoji": "👂",
-              "romaji": "li-sen"
+              "romaji": "deutda"
             },
             {
-              "target": "walk",
+              "target": "걷다",
               "meaning": {
                 "id": "berjalan",
                 "en": "move on foot slowly"
               },
               "emoji": "🚶‍♂️",
-              "romaji": "wok"
+              "romaji": "geotda"
             },
             {
-              "target": "run",
+              "target": "달리다",
               "meaning": {
                 "id": "berlari",
                 "en": "move on foot fast"
               },
               "emoji": "🏃",
-              "romaji": "ran"
+              "romaji": "dallida"
             }
           ],
           "sentences": [
             {
-              "target": "I read a book",
+              "target": "저는 책을 읽어요",
               "tokens": [
-                "I",
-                "read",
-                "a",
-                "book"
+                "저는",
+                "책을",
+                "읽어요"
               ],
               "meaning": {
                 "id": "Saya membaca buku",
                 "en": "say you read a book"
               },
-              "romaji": "ai rid e buk"
+              "romaji": "jeoneun chaegeul ilgeoyo"
             },
             {
-              "target": "She can speak English",
+              "target": "그녀는 영어를 할 수 있어요",
               "tokens": [
-                "She",
-                "can",
-                "speak",
-                "English"
+                "그녀는",
+                "영어를",
+                "할",
+                "수",
+                "있어요"
               ],
               "meaning": {
                 "id": "Dia bisa berbicara bahasa Inggris",
                 "en": "say she speaks English"
               },
-              "romaji": "syi ken spik ing-glisy"
+              "romaji": "geunyeoneun yeongeoreul hal su isseoyo"
             }
           ]
         },
         {
-          "id": "en_u4_l3",
+          "id": "ko_u4_l3",
           "title": {
             "id": "Waktu",
             "en": "Time"
           },
           "words": [
             {
-              "target": "today",
+              "target": "오늘",
               "meaning": {
                 "id": "hari ini",
                 "en": "this day"
               },
               "emoji": "📅",
-              "romaji": "tu-dei"
+              "romaji": "oneul"
             },
             {
-              "target": "tomorrow",
+              "target": "내일",
               "meaning": {
                 "id": "besok",
                 "en": "the day after today"
               },
               "emoji": "➡️",
-              "romaji": "tu-mo-rou"
+              "romaji": "naeil"
             },
             {
-              "target": "yesterday",
+              "target": "어제",
               "meaning": {
                 "id": "kemarin",
                 "en": "the day before today"
               },
               "emoji": "⬅️",
-              "romaji": "yes-ter-dei"
+              "romaji": "eoje"
             },
             {
-              "target": "now",
+              "target": "지금",
               "meaning": {
                 "id": "sekarang",
                 "en": "at this moment"
               },
               "emoji": "⏱️",
-              "romaji": "nau"
+              "romaji": "jigeum"
             },
             {
-              "target": "morning",
+              "target": "아침",
               "meaning": {
                 "id": "pagi",
                 "en": "early part of the day"
               },
               "emoji": "🌅",
-              "romaji": "mor-ning"
+              "romaji": "achim"
             },
             {
-              "target": "night",
+              "target": "밤",
               "meaning": {
                 "id": "malam",
                 "en": "dark part of the day"
               },
               "emoji": "🌃",
-              "romaji": "nait"
+              "romaji": "bam"
             }
           ],
           "sentences": [
             {
-              "target": "Today I work",
+              "target": "오늘 저는 일해요",
               "tokens": [
-                "Today",
-                "I",
-                "work"
+                "오늘",
+                "저는",
+                "일해요"
               ],
               "meaning": {
                 "id": "Hari ini saya bekerja",
                 "en": "say you work this day"
               },
-              "romaji": "tu-dei ai werk"
+              "romaji": "oneul jeoneun ilhaeyo"
             },
             {
-              "target": "Tomorrow we study",
+              "target": "내일 우리는 공부해요",
               "tokens": [
-                "Tomorrow",
-                "we",
-                "study"
+                "내일",
+                "우리는",
+                "공부해요"
               ],
               "meaning": {
                 "id": "Besok kita belajar",
                 "en": "say the group learns tomorrow"
               },
-              "romaji": "tu-mo-rou wi sta-di"
+              "romaji": "naeil urineun gongbuhaeyo"
             }
           ]
         }

@@ -28,7 +28,7 @@ import '../models/course.dart';
 /// — dan kalaupun kuota habis, semua orang tetap bisa belajar dari
 /// cache/asset.
 class ContentService {
-  static const _langs = ['en', 'ja', 'id'];
+  static const _langs = ['en', 'ja', 'id', 'ko', 'de'];
   static const _kVersion = 'content_version';
   static const _kLastCheck = 'content_last_check';
   static const _checkInterval = Duration(hours: 6);

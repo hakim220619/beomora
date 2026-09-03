@@ -35,7 +35,18 @@ class LessonReward {
 class ProgressProvider extends ChangeNotifier {
   static const _key = 'progress_v1';
   static const maxHearts = 5;
-  static const heartRegenMinutes = 30;
+
+  /// Menit per 1 nyawa pulih. Bisa diubah admin lewat field
+  /// `heartRegenMinutes` di dokumen `content/config` (berlaku global);
+  /// di-cache ke prefs supaya tetap berlaku saat offline.
+  static const kHeartRegenPref = 'heart_regen_minutes';
+  static const defaultHeartRegenMinutes = 30;
+  int heartRegenMinutes = defaultHeartRegenMinutes;
+  // Hadiah permata target harian & target bonus (2x), sekali per hari.
+  static const goalRewardGems = 10;
+  static const bonusRewardGems = 20;
+  // Hadiah menyelesaikan tantangan streak (10/30/50/90/120 hari).
+  static const streakGoalRewardGems = 50;
 
   final SharedPreferences _prefs;
 
@@ -48,11 +59,23 @@ class ProgressProvider extends ChangeNotifier {
   int longestStreak = 0;
   String lastActiveDay = ''; // yyyy-MM-dd
   int streakFreezes = 0;
+
+  /// Tantangan streak: target hari belajar yang dipilih pengguna
+  /// (onboarding/pengaturan). Berbeda dari [streak]: hitungannya
+  /// TIDAK hangus saat bolos — bolos hanya memunculkan pemberitahuan.
+  int streakGoalDays = 30;
+  int goalDaysDone = 0; // total hari belajar menuju target
+  int goalCelebrated = 0; // target yang perayaannya sudah tampil
+  String missNoticeDate = ''; // yyyy-MM-dd notice bolos terakhir
+  /// Menunggu ditampilkan UI saat aplikasi dibuka (tidak disimpan).
+  bool pendingMissNotice = false;
   int dailyGoal = 20;
   int xpToday = 0;
   String xpTodayDate = '';
   int weeklyXp = 0;
   String weekKey = '';
+  String goalRewardDate = ''; // yyyy-MM-dd hadiah harian diklaim
+  String bonusRewardDate = ''; // yyyy-MM-dd hadiah bonus diklaim
   int boostUntil = 0; // epoch ms XP ganda
   int totalLessonsDone = 0;
   int totalAnswers = 0;
@@ -81,8 +104,19 @@ class ProgressProvider extends ChangeNotifier {
 
   ProgressProvider(this._prefs) {
     premiumActive = _prefs.getBool('auth_premium') ?? false;
+    heartRegenMinutes =
+        _prefs.getInt(kHeartRegenPref) ?? defaultHeartRegenMinutes;
     _load();
     _checkStreakOnLaunch();
+  }
+
+  /// Terapkan menit regenerasi nyawa dari server/admin (dijepit 1-1440).
+  void applyHeartRegenMinutes(int minutes) {
+    final m = minutes.clamp(1, 1440);
+    if (m == heartRegenMinutes) return;
+    heartRegenMinutes = m;
+    _prefs.setInt(kHeartRegenPref, m);
+    notifyListeners();
   }
 
   void setPremium(bool value) {
@@ -114,6 +148,37 @@ class ProgressProvider extends ChangeNotifier {
 
   int get wordsMasteredCount =>
       masteredWords.values.fold(0, (a, s) => a + s.length);
+
+  // ---------- Target harian & hadiah ----------
+
+  /// XP hari ini yang sadar tanggal — [xpToday] baru di-reset saat XP
+  /// pertama masuk, jadi tanpa ini nilai kemarin ikut terbawa.
+  int get xpTodayLive =>
+      xpTodayDate == _dayKey(DateTime.now()) ? xpToday : 0;
+
+  /// Target bonus setelah target harian diklaim: 2x target harian.
+  int get bonusGoal => dailyGoal * 2;
+
+  bool get dailyGoalReached => xpTodayLive >= dailyGoal;
+
+  bool get canClaimGoalReward =>
+      dailyGoalReached && goalRewardDate != _dayKey(DateTime.now());
+
+  /// Target bonus aktif: hadiah harian sudah diklaim hari ini,
+  /// hadiah bonus belum.
+  bool get bonusGoalActive =>
+      goalRewardDate == _dayKey(DateTime.now()) &&
+      bonusRewardDate != _dayKey(DateTime.now());
+
+  bool get canClaimBonusReward =>
+      bonusGoalActive && xpTodayLive >= bonusGoal;
+
+  bool get bonusRewardClaimed =>
+      bonusRewardDate == _dayKey(DateTime.now());
+
+  /// Tantangan streak selesai tapi perayaannya belum ditampilkan.
+  bool get pendingGoalCelebration =>
+      goalDaysDone >= streakGoalDays && goalCelebrated < streakGoalDays;
 
   /// Nyawa dengan regenerasi 1 per [heartRegenMinutes] menit.
   /// Premium: hati tak terbatas (selalu penuh).
@@ -162,6 +227,55 @@ class ProgressProvider extends ChangeNotifier {
     dailyGoal = goal;
     _save();
     notifyListeners();
+  }
+
+  /// Ubah target tantangan streak (10/30/50/90/120 hari).
+  void setStreakGoal(int days) {
+    streakGoalDays = days;
+    // Target yang sudah terlampaui dianggap selesai tanpa perayaan
+    // ulang; target lebih tinggi membuka perayaan berikutnya.
+    if (goalDaysDone >= days) goalCelebrated = days;
+    _save();
+    notifyListeners();
+  }
+
+  /// Rayakan tantangan streak yang selesai: +permata, sekali per
+  /// target. Mengembalikan jumlah permata (0 jika tidak ada perayaan).
+  int celebrateStreakGoal() {
+    if (!pendingGoalCelebration) return 0;
+    goalCelebrated = streakGoalDays;
+    gems += streakGoalRewardGems;
+    _save();
+    notifyListeners();
+    return streakGoalRewardGems;
+  }
+
+  /// Tandai notice bolos sudah ditampilkan hari ini.
+  void markMissNoticeShown() {
+    pendingMissNotice = false;
+    missNoticeDate = _dayKey(DateTime.now());
+    _save();
+  }
+
+  /// Klaim hadiah target harian (sekali per hari).
+  /// Mengembalikan jumlah permata; 0 jika belum berhak.
+  int claimGoalReward() {
+    if (!canClaimGoalReward) return 0;
+    goalRewardDate = _dayKey(DateTime.now());
+    gems += goalRewardGems;
+    _save();
+    notifyListeners();
+    return goalRewardGems;
+  }
+
+  /// Klaim hadiah target bonus 2x (sekali per hari).
+  int claimBonusReward() {
+    if (!canClaimBonusReward) return 0;
+    bonusRewardDate = _dayKey(DateTime.now());
+    gems += bonusRewardGems;
+    _save();
+    notifyListeners();
+    return bonusRewardGems;
   }
 
   void loseHeart() {
@@ -297,8 +411,15 @@ class ProgressProvider extends ChangeNotifier {
     longestStreak = 0;
     lastActiveDay = '';
     streakFreezes = 0;
+    streakGoalDays = 30;
+    goalDaysDone = 0;
+    goalCelebrated = 0;
+    missNoticeDate = '';
+    pendingMissNotice = false;
     xpToday = 0;
     weeklyXp = 0;
+    goalRewardDate = '';
+    bonusRewardDate = '';
     boostUntil = 0;
     totalLessonsDone = 0;
     totalAnswers = 0;
@@ -363,15 +484,25 @@ class ProgressProvider extends ChangeNotifier {
     }
     lastActiveDay = today;
     if (streak > longestStreak) longestStreak = streak;
+    // Tantangan streak: setiap hari belajar dihitung, bolos tidak
+    // menghanguskan hitungan.
+    goalDaysDone++;
   }
 
   /// Saat aplikasi dibuka: kalau bolos >1 hari, pakai pembeku streak
-  /// (jika ada) atau reset streak.
+  /// (jika ada) atau reset streak. Bolos juga memunculkan notice
+  /// (sekali per hari) — tantangan streak sendiri tidak hangus.
   void _checkStreakOnLaunch() {
-    if (lastActiveDay.isEmpty || streak == 0) return;
     final now = DateTime.now();
     final today = _dayKey(now);
     final yesterday = _dayKey(now.subtract(const Duration(days: 1)));
+    if (lastActiveDay.isNotEmpty &&
+        lastActiveDay != today &&
+        lastActiveDay != yesterday &&
+        missNoticeDate != today) {
+      pendingMissNotice = true;
+    }
+    if (lastActiveDay.isEmpty || streak == 0) return;
     if (lastActiveDay == today || lastActiveDay == yesterday) return;
     if (premiumActive) {
       lastActiveDay = yesterday; // pelindung streak premium (gratis)
@@ -453,11 +584,17 @@ class ProgressProvider extends ChangeNotifier {
     longestStreak = m['longestStreak'] ?? 0;
     lastActiveDay = m['lastActiveDay'] ?? '';
     streakFreezes = m['streakFreezes'] ?? 0;
+    streakGoalDays = m['streakGoalDays'] ?? 30;
+    goalDaysDone = m['goalDaysDone'] ?? 0;
+    goalCelebrated = m['goalCelebrated'] ?? 0;
+    missNoticeDate = m['missNoticeDate'] ?? '';
     dailyGoal = m['dailyGoal'] ?? 20;
     xpToday = m['xpToday'] ?? 0;
     xpTodayDate = m['xpTodayDate'] ?? '';
     weeklyXp = m['weeklyXp'] ?? 0;
     weekKey = m['weekKey'] ?? '';
+    goalRewardDate = m['goalRewardDate'] ?? '';
+    bonusRewardDate = m['bonusRewardDate'] ?? '';
     boostUntil = m['boostUntil'] ?? 0;
     totalLessonsDone = m['totalLessonsDone'] ?? 0;
     totalAnswers = m['totalAnswers'] ?? 0;
@@ -488,11 +625,17 @@ class ProgressProvider extends ChangeNotifier {
         'longestStreak': longestStreak,
         'lastActiveDay': lastActiveDay,
         'streakFreezes': streakFreezes,
+        'streakGoalDays': streakGoalDays,
+        'goalDaysDone': goalDaysDone,
+        'goalCelebrated': goalCelebrated,
+        'missNoticeDate': missNoticeDate,
         'dailyGoal': dailyGoal,
         'xpToday': xpToday,
         'xpTodayDate': xpTodayDate,
         'weeklyXp': weeklyXp,
         'weekKey': weekKey,
+        'goalRewardDate': goalRewardDate,
+        'bonusRewardDate': bonusRewardDate,
         'boostUntil': boostUntil,
         'totalLessonsDone': totalLessonsDone,
         'totalAnswers': totalAnswers,

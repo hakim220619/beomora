@@ -162,6 +162,11 @@ void main() {
     await settle();
     expect(find.text('Tentukan target harianmu'), findsOneWidget);
 
+    // Langkah baru: pilih tantangan streak (10/30/50/90/120 hari).
+    await tester.tap(find.text('LANJUT'));
+    await settle();
+    expect(find.text('Pilih tantangan streak-mu 🔥'), findsOneWidget);
+
     await tester.tap(find.text('MULAI BELAJAR'));
     await settle();
 

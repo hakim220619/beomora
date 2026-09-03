@@ -164,8 +164,10 @@ class _FlipCardState extends State<_FlipCard>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(word.emoji, style: const TextStyle(fontSize: 56)),
-          const SizedBox(height: 16),
+          if (context.watch<SettingsProvider>().showIcons) ...[
+            Text(word.emoji, style: const TextStyle(fontSize: 56)),
+            const SizedBox(height: 16),
+          ],
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Text(

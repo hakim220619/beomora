@@ -9,12 +9,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../config/auth_config.dart';
 
-/// Login/daftar HANYA lewat akun Google via Firebase Authentication,
-/// dengan profil pengguna di Cloud Firestore (`users/{uid}`).
+/// Login/daftar lewat akun Google ATAU email+sandi via Firebase
+/// Authentication, dengan profil pengguna di Cloud Firestore
+/// (`users/{uid}`).
 ///
 /// Alur:
-/// 1. Google memberi identitas (popup di web; google_sign_in di
-///    Android/iOS lalu ditukar ke FirebaseAuth.signInWithCredential).
+/// 1. Firebase Auth memberi identitas (Google: popup di web /
+///    google_sign_in di Android-iOS; atau email+sandi).
 /// 2. Setelah terautentikasi, profil dicek di `users/{uid}`:
 ///    - ada  → langsung masuk ([signedIn]);
 ///    - tidak ada → [needsRegistration] menyala dan UI membuka halaman
@@ -142,6 +143,10 @@ class AuthProvider extends ChangeNotifier {
   bool _globalPremium = false;
   bool get globalPremium => _globalPremium;
 
+  /// Kait ke ProgressProvider (dipasang main.dart): terapkan menit
+  /// regenerasi nyawa dari `content/config` field `heartRegenMinutes`.
+  void Function(int minutes)? onHeartRegenMinutes;
+
   Future<void> _fetchGlobalPremium() async {
     try {
       final doc = await FirebaseFirestore.instance
@@ -149,8 +154,36 @@ class AuthProvider extends ChangeNotifier {
           .get()
           .timeout(const Duration(seconds: 10));
       applyGlobalPremium(doc.data()?['premiumForAll'] == true);
+      final regen = (doc.data()?['heartRegenMinutes'] as num?)?.toInt();
+      if (regen != null) onHeartRegenMinutes?.call(regen);
     } catch (_) {
       // Offline dsb. — pertahankan nilai cache dari prefs.
+    }
+  }
+
+  /// (Khusus admin) Ubah menit regenerasi nyawa untuk SEMUA pengguna.
+  /// Menulis `content/config` lalu memverifikasi baca-ulang server.
+  /// Mengembalikan pesan galat, atau null kalau sukses.
+  Future<String?> setHeartRegenMinutes(int minutes) async {
+    if (!configured) return 'Firebase belum dikonfigurasi';
+    try {
+      final doc = FirebaseFirestore.instance.doc(_configDocPath);
+      await doc.set({
+        'heartRegenMinutes': minutes,
+        'updatedAt': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true)).timeout(const Duration(seconds: 15));
+      final check = await doc
+          .get(const GetOptions(source: Source.server))
+          .timeout(const Duration(seconds: 15));
+      if ((check.data()?['heartRegenMinutes'] as num?)?.toInt() !=
+          minutes) {
+        return 'Verifikasi gagal: nilai di server tidak cocok';
+      }
+      onHeartRegenMinutes?.call(minutes);
+      return null;
+    } catch (e) {
+      debugPrint('BeomoraAuth setHeartRegenMinutes gagal: $e');
+      return '$e';
     }
   }
 
@@ -267,7 +300,8 @@ class AuthProvider extends ChangeNotifier {
 
   /// Admin konten: boleh mengunggah materi ke server (lihat
   /// firestore.rules).
-  bool get isAdmin => signedIn && email == AuthConfig.adminEmail;
+  bool get isAdmin =>
+      signedIn && AuthConfig.adminEmails.contains(email);
 
   /// Info akun Google untuk pra-isi formulir pendaftaran.
   User? get pendingUser =>
@@ -395,6 +429,100 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
+  /// Masuk dengan email & sandi. Mengembalikan kunci l10n pesan galat,
+  /// atau null kalau sukses — setelahnya cek [needsRegistration].
+  Future<String?> signInWithEmail(String email, String password) =>
+      _emailAuth(() => FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email.trim(), password: password));
+
+  /// Buat akun baru email & sandi. Setelah sukses [needsRegistration]
+  /// menyala — profil (nama) dilengkapi di halaman pendaftaran, sama
+  /// seperti alur Google.
+  Future<String?> signUpWithEmail(String email, String password) =>
+      _emailAuth(
+          () => FirebaseAuth.instance.createUserWithEmailAndPassword(
+              email: email.trim(), password: password));
+
+  Future<String?> _emailAuth(
+      Future<UserCredential> Function() authenticate) async {
+    if (!configured) return 'login_not_configured';
+    busy = true;
+    notifyListeners();
+    try {
+      await authenticate().timeout(const Duration(seconds: 20));
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        lastErrorDetail = 'Sesi Firebase kosong setelah login';
+        return 'login_failed';
+      }
+      final doc = await _userDoc(user.uid)
+          .get()
+          .timeout(const Duration(seconds: 15));
+      if (doc.exists) {
+        _store(user, doc.data());
+      } else {
+        needsRegistration = true;
+      }
+      return null;
+    } on FirebaseAuthException catch (e) {
+      lastErrorDetail = '${e.code}: ${e.message}';
+      debugPrint('BeomoraAuth email auth failed: $lastErrorDetail');
+      return switch (e.code) {
+        'user-not-found' ||
+        'wrong-password' ||
+        'invalid-credential' =>
+          'email_login_invalid',
+        'email-already-in-use' => 'email_in_use',
+        'invalid-email' => 'email_invalid',
+        'weak-password' => 'password_weak',
+        'too-many-requests' => 'too_many_requests',
+        'operation-not-allowed' => 'provider_disabled',
+        _ => 'login_failed',
+      };
+    } on FirebaseException catch (e) {
+      lastErrorDetail = '${e.code}: ${e.message}';
+      debugPrint('BeomoraAuth email auth failed: $lastErrorDetail');
+      return e.code == 'permission-denied'
+          ? 'rules_not_published'
+          : 'login_failed';
+    } catch (e) {
+      lastErrorDetail = '$e';
+      debugPrint('BeomoraAuth email auth failed: $lastErrorDetail');
+      return 'login_failed';
+    } finally {
+      busy = false;
+      notifyListeners();
+    }
+  }
+
+  /// Kirim email reset sandi. Mengembalikan kunci l10n galat / null.
+  Future<String?> sendPasswordReset(String email) async {
+    if (!configured) return 'login_not_configured';
+    try {
+      await FirebaseAuth.instance
+          .sendPasswordResetEmail(email: email.trim())
+          .timeout(const Duration(seconds: 15));
+      return null;
+    } on FirebaseAuthException catch (e) {
+      lastErrorDetail = '${e.code}: ${e.message}';
+      return switch (e.code) {
+        'invalid-email' => 'email_invalid',
+        'user-not-found' => 'email_not_found',
+        'too-many-requests' => 'too_many_requests',
+        _ => 'login_failed',
+      };
+    } catch (e) {
+      lastErrorDetail = '$e';
+      return 'login_failed';
+    }
+  }
+
+  /// Validasi longgar nomor telepon: 9-15 digit (boleh +, spasi, -).
+  static bool isValidPhone(String phone) {
+    final digits = phone.replaceAll(RegExp(r'[^0-9]'), '');
+    return digits.length >= 9 && digits.length <= 15;
+  }
+
   /// Simpan profil pendaftaran ke Firestore. Mengembalikan kunci l10n
   /// pesan galat, atau null kalau sukses.
   ///
@@ -402,17 +530,21 @@ class AuthProvider extends ChangeNotifier {
   /// tulisan (bukan sekadar cache lokal), lalu dokumen DIBACA ULANG
   /// langsung dari server ([Source.server]) — pengguna baru dianggap
   /// terdaftar setelah data terbukti tersimpan.
-  Future<String?> register(String displayName) async {
+  Future<String?> register(String displayName, {String phone = ''}) async {
     final user = pendingUser;
     final trimmed = displayName.trim();
+    final phoneTrimmed = phone.trim();
     if (user == null) return 'login_failed';
     if (trimmed.isEmpty) return 'register_name_empty';
+    if (phoneTrimmed.isEmpty) return 'register_phone_empty';
+    if (!isValidPhone(phoneTrimmed)) return 'phone_invalid';
     busy = true;
     notifyListeners();
     try {
       final doc = _userDoc(user.uid);
       await doc.set({
         'name': trimmed,
+        'phone': phoneTrimmed,
         'email': user.email,
         'photoUrl': user.photoURL,
         'createdAt': FieldValue.serverTimestamp(),

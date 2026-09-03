@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../l10n/app_strings.dart';
 import '../../models/exercise.dart';
+import '../../providers/settings_provider.dart';
 import '../../services/tts_service.dart';
 import '../../theme.dart';
 
@@ -49,7 +51,8 @@ class _TypingExerciseState extends State<TypingExercise> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (ex.word != null)
+            if (ex.word != null &&
+                context.watch<SettingsProvider>().showIcons)
               Padding(
                 padding: const EdgeInsets.only(right: 8),
                 child:

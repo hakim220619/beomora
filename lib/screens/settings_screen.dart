@@ -6,8 +6,8 @@ import '../providers/auth_provider.dart';
 import '../providers/progress_provider.dart';
 import '../providers/settings_provider.dart';
 import '../services/content_service.dart';
+import '../services/notification_service.dart';
 import '../theme.dart';
-import '../widgets/duo_dialog.dart';
 import '../widgets/study/study_background.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -68,6 +68,52 @@ class SettingsScreen extends StatelessWidget {
             activeThumbColor: DuoColors.green,
             onChanged: settings.setSoundOn,
           ),
+          // Ikon emoji di layar Belajar & Latihan
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text(l.t('show_icons'),
+                style: const TextStyle(fontWeight: FontWeight.w800)),
+            subtitle: Text(l.t('show_icons_sub')),
+            value: settings.showIcons,
+            activeThumbColor: DuoColors.green,
+            onChanged: settings.setShowIcons,
+          ),
+          // Pengingat belajar harian
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text(l.t('reminder_setting'),
+                style: const TextStyle(fontWeight: FontWeight.w800)),
+            subtitle: Text(l.t('reminder_sub')),
+            value: settings.reminderOn,
+            activeThumbColor: DuoColors.green,
+            onChanged: (on) async {
+              settings.setReminderOn(on);
+              if (on) {
+                // Izin Android 13+/iOS — lalu jadwal dipasang oleh
+                // listener pengaturan di main().
+                await NotificationService.requestPermission();
+                await NotificationService.sync(settings, progress);
+              }
+            },
+          ),
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            enabled: settings.reminderOn,
+            title: Text(l.t('reminder_time'),
+                style: const TextStyle(fontWeight: FontWeight.w800)),
+            trailing: Text(
+              settings.reminderTime.format(context),
+              style: const TextStyle(
+                  fontSize: 16, fontWeight: FontWeight.w800),
+            ),
+            onTap: () async {
+              final picked = await showTimePicker(
+                context: context,
+                initialTime: settings.reminderTime,
+              );
+              if (picked != null) settings.setReminderTime(picked);
+            },
+          ),
           const SizedBox(height: 8),
           // Target harian
           Text(l.t('daily_goal_setting'),
@@ -83,6 +129,26 @@ class SettingsScreen extends StatelessWidget {
             selected: {progress.dailyGoal},
             onSelectionChanged: (s) => progress.setDailyGoal(s.first),
           ),
+          const SizedBox(height: 20),
+          // Tantangan streak (hitungan tidak hangus saat bolos)
+          Text(
+            '${l.t('streak_goal_setting')} 🔥 '
+            '${progress.goalDaysDone}/${progress.streakGoalDays} '
+            '${l.t('streak_days_label')}',
+            style: const TextStyle(fontWeight: FontWeight.w800),
+          ),
+          const SizedBox(height: 8),
+          SegmentedButton<int>(
+            segments: const [
+              ButtonSegment(value: 10, label: Text('10')),
+              ButtonSegment(value: 30, label: Text('30')),
+              ButtonSegment(value: 50, label: Text('50')),
+              ButtonSegment(value: 90, label: Text('90')),
+              ButtonSegment(value: 120, label: Text('120')),
+            ],
+            selected: {progress.streakGoalDays},
+            onSelectionChanged: (s) => progress.setStreakGoal(s.first),
+          ),
           // Khusus admin: unggah materi dari asset bawaan ke Firestore
           // supaya semua perangkat tersinkron.
           if (context.watch<AuthProvider>().isAdmin) ...[
@@ -92,47 +158,13 @@ class SettingsScreen extends StatelessWidget {
             const _AdminPremiumAllTile(),
             const SizedBox(height: 12),
             const _AdminGrantTile(),
+            const SizedBox(height: 12),
+            const _AdminHeartRegenTile(),
           ],
           const SizedBox(height: 32),
-          // Reset
-          OutlinedButton.icon(
-            style: OutlinedButton.styleFrom(
-              foregroundColor: DuoColors.red,
-              side: const BorderSide(color: DuoColors.red, width: 2),
-              padding: const EdgeInsets.symmetric(vertical: 14),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14)),
-            ),
-            icon: const Icon(Icons.delete_forever_rounded),
-            label: Text(l.t('reset_progress'),
-                style: const TextStyle(fontWeight: FontWeight.w800)),
-            onPressed: () => _confirmReset(context, l),
-          ),
-          const SizedBox(height: 24),
-          Center(
-            child: Text(
-              l.t('about'),
-              style: TextStyle(
-                  fontSize: 12, color: Theme.of(context).hintColor),
-            ),
-          ),
         ],
       ),
     );
-  }
-
-  static Future<void> _confirmReset(BuildContext context, L l) async {
-    final progress = context.read<ProgressProvider>();
-    final confirmed = await showDuoConfirm(
-      context,
-      emoji: '🗑️',
-      color: DuoColors.red,
-      title: l.t('reset_title'),
-      message: l.t('reset_msg'),
-      confirmLabel: l.t('delete'),
-      cancelLabel: l.t('cancel'),
-    );
-    if (confirmed) progress.resetAll();
   }
 }
 
@@ -249,6 +281,110 @@ class _AdminPremiumAllTileState extends State<_AdminPremiumAllTile> {
         value: on,
         activeThumbColor: DuoColors.green,
         onChanged: _busy ? null : _toggle,
+      ),
+    );
+  }
+}
+
+/// Kartu admin: atur menit regenerasi nyawa untuk SEMUA pengguna —
+/// menulis `heartRegenMinutes` di dokumen `content/config`.
+class _AdminHeartRegenTile extends StatefulWidget {
+  const _AdminHeartRegenTile();
+
+  @override
+  State<_AdminHeartRegenTile> createState() =>
+      _AdminHeartRegenTileState();
+}
+
+class _AdminHeartRegenTileState extends State<_AdminHeartRegenTile> {
+  bool _busy = false;
+
+  Future<void> _open() async {
+    final l = L.read(context);
+    final auth = context.read<AuthProvider>();
+    final progress = context.read<ProgressProvider>();
+    final messenger = ScaffoldMessenger.of(context);
+
+    final controller = TextEditingController(
+        text: '${progress.heartRegenMinutes}');
+    final minutes = await showDialog<int>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l.t('admin_heart_regen')),
+        content: TextField(
+          controller: controller,
+          keyboardType: TextInputType.number,
+          autofocus: true,
+          decoration: InputDecoration(
+            labelText: l.t('admin_heart_regen_label'),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(14),
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: Text(l.t('cancel')),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogContext)
+                .pop(int.tryParse(controller.text.trim())),
+            child: Text(l.t('save')),
+          ),
+        ],
+      ),
+    );
+    if (minutes == null) return;
+    if (minutes < 1 || minutes > 1440) {
+      messenger
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+            SnackBar(content: Text(l.t('admin_heart_regen_invalid'))));
+      return;
+    }
+
+    setState(() => _busy = true);
+    final error = await auth.setHeartRegenMinutes(minutes);
+    if (!mounted) return;
+    setState(() => _busy = false);
+    messenger
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(
+        duration: const Duration(seconds: 6),
+        content: Text(error == null
+            ? l
+                .t('admin_heart_regen_saved')
+                .replaceFirst('{n}', '$minutes')
+            : '${l.t('admin_heart_regen_failed')}\n($error)'),
+      ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = L.of(context);
+    final progress = context.watch<ProgressProvider>();
+    return Card(
+      child: ListTile(
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        leading: _busy
+            ? const SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(strokeWidth: 2.5),
+              )
+            : const Icon(Icons.favorite_rounded, color: DuoColors.red),
+        title: Text(l.t('admin_heart_regen'),
+            style: const TextStyle(fontWeight: FontWeight.w800)),
+        subtitle: Text(
+          l
+              .t('admin_heart_regen_sub')
+              .replaceFirst('{n}', '${progress.heartRegenMinutes}'),
+          style: const TextStyle(fontSize: 12.5),
+        ),
+        trailing: const Icon(Icons.chevron_right_rounded),
+        onTap: _busy ? null : _open,
       ),
     );
   }

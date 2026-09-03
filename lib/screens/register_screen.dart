@@ -22,6 +22,7 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   late final TextEditingController _nameController;
+  final _phoneController = TextEditingController();
 
   @override
   void initState() {
@@ -35,6 +36,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   void dispose() {
     _nameController.dispose();
+    _phoneController.dispose();
     super.dispose();
   }
 
@@ -44,7 +46,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final messenger = ScaffoldMessenger.of(context);
     final navigator = Navigator.of(context);
 
-    final errorKey = await auth.register(_nameController.text);
+    final errorKey = await auth.register(_nameController.text,
+        phone: _phoneController.text);
     if (!mounted) return;
     if (errorKey == null) {
       // Gerbang di main.dart sudah menukar home menjadi MainScreen;
@@ -59,7 +62,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ..hideCurrentSnackBar()
         ..showSnackBar(SnackBar(
           duration: const Duration(seconds: 6),
-          content: Text(errorKey == 'register_name_empty' || detail == null
+          content: Text(errorKey == 'register_name_empty' ||
+                  errorKey == 'register_phone_empty' ||
+                  errorKey == 'phone_invalid' ||
+                  detail == null
               ? l.t(errorKey)
               : '${l.t(errorKey)}\n($detail)'),
         ));
@@ -123,8 +129,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       controller: _nameController,
                       textCapitalization: TextCapitalization.words,
                       maxLength: 40,
+                      textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
                         labelText: l.t('register_name_label'),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    TextField(
+                      controller: _phoneController,
+                      keyboardType: TextInputType.phone,
+                      decoration: InputDecoration(
+                        labelText: l.t('register_phone_label'),
+                        prefixIcon: const Icon(Icons.phone_outlined),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(14),
                         ),

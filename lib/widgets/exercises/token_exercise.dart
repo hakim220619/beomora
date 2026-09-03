@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 import '../../l10n/app_strings.dart';
 import '../../models/exercise.dart';
+import '../../providers/settings_provider.dart';
 import '../../theme.dart';
 
 /// Soal susun token: scramble (huruf) dan sentenceBuild (kata).
@@ -53,7 +55,8 @@ class _TokenExerciseState extends State<TokenExercise> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (ex.word != null)
+            if (ex.word != null &&
+                context.watch<SettingsProvider>().showIcons)
               Padding(
                 padding: const EdgeInsets.only(right: 8),
                 child:

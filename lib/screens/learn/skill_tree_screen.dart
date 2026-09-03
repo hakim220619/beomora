@@ -24,8 +24,71 @@ const _kFractions = [0.5, 0.25, 0.5, 0.75];
 
 /// Jalur belajar: tiap pelajaran adalah buku, dihubungkan garis
 /// pensil putus-putus; pensil ✏️ menandai posisi belajar saat ini.
-class SkillTreeScreen extends StatelessWidget {
+/// Saat dibuka, daftar otomatis menggulir ke pelajaran aktif.
+class SkillTreeScreen extends StatefulWidget {
   const SkillTreeScreen({super.key});
+
+  @override
+  State<SkillTreeScreen> createState() => _SkillTreeScreenState();
+}
+
+class _SkillTreeScreenState extends State<SkillTreeScreen> {
+  final _scroll = ScrollController();
+
+  // Perkiraan tinggi papan kayu judul unit (padding + isi + border).
+  static const _kUnitHeaderHeight = 100.0;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => _scrollToCurrent());
+  }
+
+  @override
+  void dispose() {
+    _scroll.dispose();
+    super.dispose();
+  }
+
+  /// Gulir ke pelajaran yang sedang dikerjakan (sekali, saat layar
+  /// pertama tampil) — hanya kalau sudah ada progres.
+  void _scrollToCurrent() {
+    if (!mounted || !_scroll.hasClients) return;
+    final progress = context.read<ProgressProvider>();
+    final courses = context.read<List<Course>>();
+    final course = courses.firstWhere(
+      (c) => c.id == progress.activeCourseId,
+      orElse: () => courses.first,
+    );
+    final allLessons = course.allLessons;
+    var current = allLessons.indexWhere(
+        (les) => !progress.isLessonCompleted(course.id, les.id));
+    if (current == -1) current = allLessons.length - 1;
+    if (current <= 0) return;
+
+    var offset = 0.0;
+    var found = false;
+    for (final unit in course.units) {
+      final idxInUnit = unit.lessons.indexOf(allLessons[current]);
+      if (idxInUnit != -1) {
+        offset += _kUnitHeaderHeight + idxInUnit * _kNodeItemHeight;
+        found = true;
+        break;
+      }
+      offset +=
+          _kUnitHeaderHeight + unit.lessons.length * _kNodeItemHeight;
+    }
+    if (!found) return;
+    // Sisakan ruang atas supaya node aktif tampil di tengah layar.
+    offset -= 170;
+    if (offset <= 0) return;
+    _scroll.animateTo(
+      offset.clamp(0.0, _scroll.position.maxScrollExtent),
+      duration: const Duration(milliseconds: 650),
+      curve: Curves.easeOutCubic,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,8 +105,27 @@ class SkillTreeScreen extends StatelessWidget {
         .indexWhere((les) => !progress.isLessonCompleted(course.id, les.id));
     if (currentIndex == -1) currentIndex = allLessons.length;
 
-    final goalReached = progress.xpToday >= progress.dailyGoal;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    // Tahapan target harian: menuju target → klaim hadiah → target
+    // bonus 2x → klaim bonus → selesai untuk hari ini.
+    final xpNow = progress.xpTodayLive;
+    final goalReached = progress.dailyGoalReached;
+    final bonusInProgress =
+        progress.bonusGoalActive && !progress.canClaimBonusReward;
+    final barTarget =
+        progress.bonusGoalActive ? progress.bonusGoal : progress.dailyGoal;
+    final barColor = !goalReached
+        ? DuoColors.green
+        : bonusInProgress
+            ? DuoColors.blue
+            : DuoColors.yellow;
+    // Setelah target tercapai, "77/10" diganti tanda selesai.
+    final xpLabel = !goalReached
+        ? '$xpNow/${progress.dailyGoal} XP'
+        : bonusInProgress
+            ? '$xpNow/${progress.bonusGoal} XP'
+            : '✓ $xpNow XP';
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -59,15 +141,14 @@ class SkillTreeScreen extends StatelessWidget {
                 const SizedBox(width: 8),
                 Expanded(
                   child: PencilProgressBar(
-                    value: progress.xpToday / progress.dailyGoal,
+                    value: xpNow / barTarget,
                     height: 14,
-                    color:
-                        goalReached ? DuoColors.yellow : DuoColors.green,
+                    color: barColor,
                   ),
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  '${progress.xpToday}/${progress.dailyGoal} XP',
+                  xpLabel,
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w800,
@@ -80,36 +161,33 @@ class SkillTreeScreen extends StatelessWidget {
           const SizedBox(height: 4),
           Expanded(
             child: ListView(
+              controller: _scroll,
               padding: const EdgeInsets.only(bottom: 110),
               children: [
-                if (goalReached)
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-                    child: Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        // Tema gelap: alas gelap pekat (bukan kuning
-                        // transparan yang melebur jadi olive) supaya
-                        // teks kuning benar-benar menonjol.
-                        color: isDark
-                            ? Colors.black.withValues(alpha: 0.35)
-                            : DuoColors.yellow.withValues(alpha: 0.25),
-                        borderRadius: BorderRadius.circular(14),
-                        border:
-                            Border.all(color: DuoColors.yellow, width: 1.5),
-                      ),
-                      child: Text(
-                        l.t('daily_goal_reached'),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w800,
-                          color: isDark
-                              ? const Color(0xFFFFD54F)
-                              : const Color(0xFF8A6100),
-                        ),
-                      ),
-                    ),
-                  ),
+                if (progress.canClaimGoalReward)
+                  _GoalBanner(
+                    text: l.t('daily_goal_reached'),
+                    buttonLabel:
+                        '${l.t('claim')} +${ProgressProvider.goalRewardGems} 💎',
+                    onClaim: () => _claimReward(context, bonus: false),
+                  )
+                else if (progress.canClaimBonusReward)
+                  _GoalBanner(
+                    text: l.t('bonus_goal_reached'),
+                    buttonLabel:
+                        '${l.t('claim')} +${ProgressProvider.bonusRewardGems} 💎',
+                    onClaim: () => _claimReward(context, bonus: true),
+                  )
+                else if (bonusInProgress)
+                  _GoalBanner(
+                    text: l
+                        .t('bonus_goal_hint')
+                        .replaceFirst('{xp}', '${progress.bonusGoal}')
+                        .replaceFirst('{gems}',
+                            '${ProgressProvider.bonusRewardGems}'),
+                  )
+                else if (progress.bonusRewardClaimed)
+                  _GoalBanner(text: l.t('daily_all_done')),
                 for (final unit in course.units)
                   _UnitSection(
                     course: course,
@@ -121,6 +199,95 @@ class SkillTreeScreen extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Future<void> _claimReward(BuildContext context,
+      {required bool bonus}) async {
+    final progress = context.read<ProgressProvider>();
+    final l = L.read(context);
+    final got =
+        bonus ? progress.claimBonusReward() : progress.claimGoalReward();
+    if (got == 0) return;
+    if (!context.mounted) return;
+    await showDuoDialog<void>(
+      context,
+      emoji: '🎁',
+      color: DuoColors.yellow,
+      title: '+$got 💎',
+      message: l.t('gems_added'),
+      actions: [DuoDialogAction(label: l.t('ok'), primary: true)],
+    );
+  }
+}
+
+/// Banner target harian: pengumuman pasif, atau tombol klaim hadiah
+/// bila [buttonLabel] & [onClaim] diisi.
+class _GoalBanner extends StatelessWidget {
+  final String text;
+  final String? buttonLabel;
+  final VoidCallback? onClaim;
+
+  const _GoalBanner({required this.text, this.buttonLabel, this.onClaim});
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+      child: GestureDetector(
+        onTap: onClaim,
+        child: Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            // Tema gelap: alas gelap pekat (bukan kuning transparan
+            // yang melebur jadi olive) supaya teks kuning menonjol.
+            color: isDark
+                ? Colors.black.withValues(alpha: 0.35)
+                : DuoColors.yellow.withValues(alpha: 0.25),
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: DuoColors.yellow, width: 1.5),
+          ),
+          child: Column(
+            children: [
+              Text(
+                text,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontWeight: FontWeight.w800,
+                  color: isDark
+                      ? const Color(0xFFFFD54F)
+                      : const Color(0xFF8A6100),
+                ),
+              ),
+              if (buttonLabel != null) ...[
+                const SizedBox(height: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 18, vertical: 7),
+                  decoration: BoxDecoration(
+                    color: DuoColors.yellow,
+                    borderRadius: BorderRadius.circular(999),
+                    boxShadow: [
+                      BoxShadow(
+                        color: DuoColors.yellow.withValues(alpha: 0.45),
+                        blurRadius: 10,
+                      ),
+                    ],
+                  ),
+                  child: Text(
+                    buttonLabel!,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w900,
+                      color: Color(0xFF5B4300),
+                    ),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
       ),
     );
   }

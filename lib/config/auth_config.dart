@@ -18,10 +18,18 @@ class AuthConfig {
     defaultValue: '',
   );
 
-  /// Email admin: satu-satunya akun yang boleh mengunggah materi ke
-  /// Firestore. HARUS sama dengan email di firestore.rules.
+  /// Email admin utama: boleh mengunggah materi ke Firestore.
+  /// HARUS sama dengan email di firestore.rules.
   static const String adminEmail = String.fromEnvironment(
     'BEOMORA_ADMIN_EMAIL',
     defaultValue: 'danilukman2206@gmail.com',
   );
+
+  /// Semua akun dengan akses admin (fitur admin di Pengaturan +
+  /// izin tulis konten/premium). Daftar ini HARUS sama dengan daftar
+  /// email admin di firestore.rules.
+  static const List<String> adminEmails = [
+    adminEmail,
+    'beomora.review@gmail.com',
+  ];
 }

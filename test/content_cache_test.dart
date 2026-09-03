@@ -12,7 +12,7 @@ void main() {
     final prefs = (await tester.runAsync(SharedPreferences.getInstance))!;
     final courses = (await tester
         .runAsync(() => ContentService.loadCourses(prefs: prefs)))!;
-    expect(courses.length, 3);
+    expect(courses.length, 5);
   });
 
   testWidgets('cache rusak → jatuh kembali ke asset bawaan',
@@ -24,7 +24,7 @@ void main() {
     final prefs = (await tester.runAsync(SharedPreferences.getInstance))!;
     final courses = (await tester
         .runAsync(() => ContentService.loadCourses(prefs: prefs)))!;
-    expect(courses.length, 3);
+    expect(courses.length, 5);
     expect(courses.every((c) => c.units.isNotEmpty), isTrue);
   });
 }

@@ -42,6 +42,20 @@ class L {
       'onb_ui_lang': 'Pilih bahasa aplikasi',
       'onb_pick_course': 'Mau belajar bahasa apa?',
       'onb_daily_goal': 'Tentukan target harianmu',
+      'onb_streak_goal': 'Pilih tantangan streak-mu 🔥',
+      'onb_streak_goal_sub':
+          'Berapa hari kamu mau belajar? Tenang, bolos sehari tidak '
+          'menghanguskan hitungan tantanganmu.',
+      'streak_days_label': 'hari',
+      'streak_goal_setting': 'Tantangan streak',
+      'miss_notice_title': 'Kamu sempat bolos 😴',
+      'miss_notice_msg':
+          'Tenang, tantangan streak-mu tidak hangus. Progresmu tetap '
+          '{done}/{goal} hari — lanjutkan belajar hari ini! 🔥',
+      'streak_goal_done_title': 'Tantangan {goal} hari selesai! 🏆',
+      'streak_goal_done_msg':
+          'Luar biasa, kamu sudah belajar {goal} hari! Hadiah +{gems} 💎. '
+          'Pilih tantangan berikutnya di Pengaturan.',
       'goal_casual': 'Santai',
       'goal_regular': 'Rutin',
       'goal_serious': 'Serius',
@@ -212,6 +226,29 @@ class L {
       'login_gate_sub':
           'Masuk dengan akun Google (Gmail) kamu untuk mulai belajar dan menyimpan progresmu.',
       'sign_in_google': 'MASUK DENGAN GOOGLE',
+      'sign_in_email': 'MASUK DENGAN EMAIL',
+      'or': 'atau',
+      'email_label': 'Email',
+      'password_label': 'Sandi',
+      'email_login_title': 'Masuk dengan Email',
+      'email_signup_title': 'Daftar dengan Email',
+      'email_login_btn': 'MASUK',
+      'email_signup_btn': 'DAFTAR',
+      'no_account_yet': 'Belum punya akun? Daftar',
+      'have_account': 'Sudah punya akun? Masuk',
+      'forgot_password': 'Lupa sandi?',
+      'reset_sent': 'Email reset sandi terkirim. Cek kotak masukmu.',
+      'email_fill_all': 'Isi email dan sandi dulu.',
+      'email_login_invalid': 'Email atau sandi salah.',
+      'email_in_use': 'Email ini sudah terdaftar. Coba masuk.',
+      'email_invalid': 'Format email tidak valid.',
+      'email_not_found': 'Email ini belum terdaftar.',
+      'password_weak': 'Sandi minimal 6 karakter.',
+      'register_phone_label': 'No. telepon',
+      'register_phone_empty': 'Isi nomor teleponmu dulu.',
+      'phone_invalid': 'Nomor telepon tidak valid (9-15 digit).',
+      'too_many_requests':
+          'Terlalu banyak percobaan. Coba lagi beberapa saat lagi.',
       'provider_disabled':
           'Login Google belum diaktifkan di Firebase Console: Authentication → Sign-in method → Google → Enable.',
       'rules_not_published':
@@ -266,6 +303,15 @@ class L {
           'Materi terunggah & terverifikasi di server! 🎉',
       'content_upload_failed': 'Gagal mengunggah materi.',
       'admin_premium_all': 'Premium untuk semua pengguna',
+      'save': 'SIMPAN',
+      'admin_heart_regen': 'Regenerasi nyawa',
+      'admin_heart_regen_label': 'Menit per 1 nyawa (1-1440)',
+      'admin_heart_regen_sub':
+          'Berlaku untuk semua pengguna. Saat ini: {n} menit per nyawa',
+      'admin_heart_regen_saved':
+          'Regenerasi nyawa diubah jadi {n} menit per nyawa.',
+      'admin_heart_regen_failed': 'Gagal menyimpan regenerasi nyawa.',
+      'admin_heart_regen_invalid': 'Isi angka antara 1 sampai 1440.',
       'admin_premium_all_sub':
           'Selama menyala, semua akun diperlakukan premium — berlaku '
               'saat aplikasi pengguna dibuka ulang',
@@ -293,6 +339,18 @@ class L {
       'theme_dark': 'Papan Tulis',
       'sound_effects': 'Suara & getar',
       'daily_goal_setting': 'Target harian',
+      'show_icons': 'Tampilkan gambar kosakata',
+      'show_icons_sub': 'Emoji kata pada soal & flashcards',
+      'reminder_setting': 'Pengingat belajar',
+      'reminder_sub': 'Notifikasi harian agar streak tetap menyala',
+      'reminder_time': 'Jam pengingat',
+      'reminder_channel_name': 'Pengingat belajar harian',
+      'reminder_channel_desc':
+          'Mengingatkanmu belajar agar streak tetap menyala',
+      'reminder_title': 'Waktunya belajar! 🦉',
+      'reminder_body_streak':
+          'Jaga streak {n} harimu tetap menyala — 5 menit saja cukup 🔥',
+      'reminder_body': 'Luangkan 5 menit untuk belajar hari ini 📚',
       'reset_progress': 'Hapus semua progres',
       'reset_title': 'Hapus progres?',
       'reset_msg': 'Semua XP, streak, dan progres akan hilang permanen.',
@@ -301,6 +359,11 @@ class L {
       // Course select
       'course_select_title': 'Pilih Kursus',
       'daily_goal_reached': 'Target harian tercapai! 🎉',
+      'claim': 'Klaim',
+      'gems_added': 'Permata masuk ke sakumu!',
+      'bonus_goal_hint': 'Target bonus 🎁 raih {xp} XP untuk +{gems} 💎',
+      'bonus_goal_reached': 'Target bonus tercapai! 🎁',
+      'daily_all_done': 'Semua target hari ini beres! Sampai besok 🌙',
       // Achievements
       'ach_first_lesson': 'Langkah Pertama',
       'ach_first_lesson_desc': 'Selesaikan pelajaran pertamamu',
@@ -349,6 +412,20 @@ class L {
       'onb_ui_lang': 'Choose app language',
       'onb_pick_course': 'What do you want to learn?',
       'onb_daily_goal': 'Set your daily goal',
+      'onb_streak_goal': 'Pick your streak challenge 🔥',
+      'onb_streak_goal_sub':
+          'How many days do you want to learn? Missing a day never '
+          'wipes out your challenge progress.',
+      'streak_days_label': 'days',
+      'streak_goal_setting': 'Streak challenge',
+      'miss_notice_title': 'You missed a day 😴',
+      'miss_notice_msg':
+          "Don't worry, your streak challenge isn't lost. You're still "
+          'at {done}/{goal} days — keep learning today! 🔥',
+      'streak_goal_done_title': '{goal}-day challenge complete! 🏆',
+      'streak_goal_done_msg':
+          "Amazing, you've studied for {goal} days! Reward: +{gems} 💎. "
+          'Pick your next challenge in Settings.',
       'goal_casual': 'Casual',
       'goal_regular': 'Regular',
       'goal_serious': 'Serious',
@@ -518,6 +595,29 @@ class L {
       'login_gate_sub':
           'Sign in with your Google (Gmail) account to start learning and keep your progress.',
       'sign_in_google': 'SIGN IN WITH GOOGLE',
+      'sign_in_email': 'SIGN IN WITH EMAIL',
+      'or': 'or',
+      'email_label': 'Email',
+      'password_label': 'Password',
+      'email_login_title': 'Sign in with Email',
+      'email_signup_title': 'Sign up with Email',
+      'email_login_btn': 'SIGN IN',
+      'email_signup_btn': 'SIGN UP',
+      'no_account_yet': "Don't have an account? Sign up",
+      'have_account': 'Already have an account? Sign in',
+      'forgot_password': 'Forgot password?',
+      'reset_sent': 'Password reset email sent. Check your inbox.',
+      'email_fill_all': 'Fill in email and password first.',
+      'email_login_invalid': 'Wrong email or password.',
+      'email_in_use':
+          'This email is already registered. Try signing in.',
+      'email_invalid': 'Invalid email format.',
+      'email_not_found': 'This email is not registered yet.',
+      'password_weak': 'Password must be at least 6 characters.',
+      'register_phone_label': 'Phone number',
+      'register_phone_empty': 'Enter your phone number first.',
+      'phone_invalid': 'Invalid phone number (9-15 digits).',
+      'too_many_requests': 'Too many attempts. Try again later.',
       'provider_disabled':
           'Google sign-in is not enabled yet in the Firebase Console: Authentication → Sign-in method → Google → Enable.',
       'rules_not_published':
@@ -571,6 +671,15 @@ class L {
           'Content uploaded & verified on the server! 🎉',
       'content_upload_failed': 'Failed to upload content.',
       'admin_premium_all': 'Premium for all users',
+      'save': 'SAVE',
+      'admin_heart_regen': 'Heart regeneration',
+      'admin_heart_regen_label': 'Minutes per heart (1-1440)',
+      'admin_heart_regen_sub':
+          'Applies to all users. Currently: {n} minutes per heart',
+      'admin_heart_regen_saved':
+          'Heart regen set to {n} minutes per heart.',
+      'admin_heart_regen_failed': 'Failed to save heart regen.',
+      'admin_heart_regen_invalid': 'Enter a number between 1 and 1440.',
       'admin_premium_all_sub':
           'While on, every account is treated as premium — applies '
               'when users reopen the app',
@@ -598,6 +707,18 @@ class L {
       'theme_dark': 'Chalkboard',
       'sound_effects': 'Sound & haptics',
       'daily_goal_setting': 'Daily goal',
+      'show_icons': 'Show word images',
+      'show_icons_sub': 'Word emoji on exercises & flashcards',
+      'reminder_setting': 'Study reminder',
+      'reminder_sub': 'A daily notification to keep your streak alive',
+      'reminder_time': 'Reminder time',
+      'reminder_channel_name': 'Daily study reminder',
+      'reminder_channel_desc':
+          'Reminds you to study so your streak stays alive',
+      'reminder_title': 'Time to study! 🦉',
+      'reminder_body_streak':
+          'Keep your {n}-day streak alive — 5 minutes is enough 🔥',
+      'reminder_body': 'Take 5 minutes to learn something today 📚',
       'reset_progress': 'Reset all progress',
       'reset_title': 'Reset progress?',
       'reset_msg': 'All XP, streaks, and progress will be permanently lost.',
@@ -606,6 +727,11 @@ class L {
       // Course select
       'course_select_title': 'Choose a Course',
       'daily_goal_reached': 'Daily goal reached! 🎉',
+      'claim': 'Claim',
+      'gems_added': 'Gems added to your pouch!',
+      'bonus_goal_hint': 'Bonus goal 🎁 reach {xp} XP for +{gems} 💎',
+      'bonus_goal_reached': 'Bonus goal reached! 🎁',
+      'daily_all_done': 'All goals done for today! See you tomorrow 🌙',
       // Achievements
       'ach_first_lesson': 'First Steps',
       'ach_first_lesson_desc': 'Complete your first lesson',

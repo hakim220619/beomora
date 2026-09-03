@@ -13,7 +13,7 @@ service cloud.firestore {
       // Admin: boleh mengubah HANYA field hadiah premium di dokumen
       // pengguna mana pun (fitur "Hadiahkan premium" di Pengaturan).
       allow update: if request.auth != null
-        && request.auth.token.email == 'danilukman2206@gmail.com'
+        && request.auth.token.email in ['danilukman2206@gmail.com', 'beomora.review@gmail.com']
         && request.resource.data.diff(resource.data).affectedKeys()
             .hasOnly(['premiumGrantUntil']);
       // Tulis hanya oleh pemiliknya, dan data wajib berbentuk benar:
@@ -25,6 +25,10 @@ service cloud.firestore {
         && request.resource.data.name.size() >= 1
         && request.resource.data.name.size() <= 40
         && request.resource.data.email == request.auth.token.email
+        // No. telepon (opsional): string pendek.
+        && (!('phone' in request.resource.data)
+            || (request.resource.data.phone is string
+                && request.resource.data.phone.size() <= 20))
         && (!('progress' in request.resource.data)
             || (request.resource.data.progress is string
                 && request.resource.data.progress.size() < 100000))
@@ -56,12 +60,12 @@ service cloud.firestore {
     }
 
     // Materi kursus: publik untuk dibaca (disinkron sebelum login),
-    // hanya admin yang boleh menulis. Email HARUS sama dengan
-    // AuthConfig.adminEmail di lib/config/auth_config.dart.
+    // hanya admin yang boleh menulis. Daftar email HARUS sama
+    // dengan AuthConfig.adminEmails di lib/config/auth_config.dart.
     match /content/{doc} {
       allow read: if true;
       allow write: if request.auth != null
-        && request.auth.token.email == 'danilukman2206@gmail.com';
+        && request.auth.token.email in ['danilukman2206@gmail.com', 'beomora.review@gmail.com'];
     }
 
     // Selain itu: tolak semua.

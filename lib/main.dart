@@ -16,6 +16,7 @@ import 'screens/main_screen.dart';
 import 'screens/onboarding_screen.dart';
 import 'services/ad_service.dart';
 import 'services/content_service.dart';
+import 'services/notification_service.dart';
 import 'services/progress_sync_service.dart';
 import 'services/purchase_service.dart';
 import 'theme.dart';
@@ -43,6 +44,8 @@ Future<void> main() async {
 
   final progress = ProgressProvider(prefs);
   final auth = AuthProvider(prefs);
+  // Menit regenerasi nyawa dari server (content/config, diatur admin).
+  auth.onHeartRegenMinutes = progress.applyHeartRegenMinutes;
   // Cadangkan/pulihkan progres lewat dokumen profil Firestore —
   // hidup selama aplikasi karena terikat listener kedua provider.
   ProgressSyncService(auth: auth, progress: progress);
@@ -51,12 +54,26 @@ Future<void> main() async {
   // Iklan untuk pengguna gratis (premium bebas iklan).
   unawaited(AdService.init());
 
+  final settings = SettingsProvider(prefs);
+  // Pengingat belajar harian: pasang jadwal saat aplikasi dibuka, dan
+  // jadwalkan ulang setiap pengaturan berubah atau hari aktif berubah
+  // (selesai belajar hari ini → pengingat mundur ke besok).
+  unawaited(NotificationService.sync(settings, progress));
+  settings.addListener(
+      () => unawaited(NotificationService.sync(settings, progress)));
+  var lastActive = progress.lastActiveDay;
+  progress.addListener(() {
+    if (progress.lastActiveDay == lastActive) return;
+    lastActive = progress.lastActiveDay;
+    unawaited(NotificationService.sync(settings, progress));
+  });
+
   runApp(
     MultiProvider(
       providers: [
         Provider<List<Course>>.value(value: courses),
         Provider<PurchaseService>.value(value: purchase),
-        ChangeNotifierProvider(create: (_) => SettingsProvider(prefs)),
+        ChangeNotifierProvider.value(value: settings),
         ChangeNotifierProvider.value(value: progress),
         ChangeNotifierProvider.value(value: auth),
       ],

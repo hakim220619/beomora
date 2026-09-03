@@ -33,8 +33,11 @@ class LetterQuizCategory {
 }
 
 /// Semua huruf kana dari topik Materi Belajar (dasar + tambahan).
-List<KanaItem> _kanaOf(String topicId) => [
-      for (final topic in kStudyGuides['ja'] ?? <GuideTopic>[])
+List<KanaItem> _kanaOf(String topicId) => _guideKana('ja', topicId);
+
+/// Grid huruf dari topik Materi Belajar kursus mana pun.
+List<KanaItem> _guideKana(String courseId, String topicId) => [
+      for (final topic in kStudyGuides[courseId] ?? <GuideTopic>[])
         if (topic.id == topicId)
           for (final section in topic.sections) ...section.kana,
     ];
@@ -162,6 +165,56 @@ List<LetterQuizCategory> letterQuizFor(String courseId) {
           ttsLocale: 'id-ID',
         ),
       ];
+    case 'ko':
+      return [
+        LetterQuizCategory(
+          id: 'hangul',
+          emoji: '한',
+          title: const {'id': 'Hangul', 'en': 'Hangul'},
+          items: _guideKana('ko', 'hangul'),
+          ttsLocale: 'ko-KR',
+        ),
+        LetterQuizCategory(
+          id: 'ko_numbers',
+          emoji: '🔢',
+          title: const {
+            'id': 'Angka Korea',
+            'en': 'Korean Numbers',
+          },
+          items: _guideKana('ko', 'ko_numbers'),
+          ttsLocale: 'ko-KR',
+        ),
+      ];
+    case 'de':
+      return [
+        LetterQuizCategory(
+          id: 'alphabet_de',
+          emoji: '🔤',
+          title: const {
+            'id': 'Alfabet Jerman',
+            'en': 'German Alphabet',
+          },
+          items: _germanAlphabet,
+          ttsLocale: 'de-DE',
+        ),
+        LetterQuizCategory(
+          id: 'de_numbers',
+          emoji: '🔢',
+          title: const {
+            'id': 'Angka Jerman',
+            'en': 'German Numbers',
+          },
+          items: _guideKana('de', 'de_numbers'),
+          ttsLocale: 'de-DE',
+        ),
+      ];
   }
   return const [];
 }
+
+/// Nama huruf alfabet Jerman (a = "a", w = "ve", z = "tset", dst.).
+final List<KanaItem> _germanAlphabet = _letters('''
+a:a b:be c:tse d:de e:e f:ef g:ge h:ha i:i j:yot k:ka l:el m:em
+n:en o:o p:pe q:ku r:er s:es t:te u:u v:fau w:ve x:iks
+y:ipsilon z:tset ä:ae ö:oe ü:ue ß:es-tset
+''');

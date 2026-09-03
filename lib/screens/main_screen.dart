@@ -1,8 +1,15 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 import '../l10n/app_strings.dart';
+import '../providers/progress_provider.dart';
+import '../providers/settings_provider.dart';
+import '../services/notification_service.dart';
 import '../theme.dart';
+import '../widgets/duo_dialog.dart';
 import '../widgets/study/study_background.dart';
 import 'cabin/cabin_screen.dart';
 import 'learn/skill_tree_screen.dart';
@@ -21,6 +28,64 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _index = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => _showStreakNotices());
+  }
+
+  /// Pemberitahuan saat menu utama terbuka: (1) notice bolos —
+  /// tantangan streak tetap lanjut; (2) perayaan tantangan selesai.
+  Future<void> _showStreakNotices() async {
+    if (!mounted) return;
+    final l = L.read(context);
+    final progress = context.read<ProgressProvider>();
+    final settings = context.read<SettingsProvider>();
+
+    // Pengingat harian: minta izin notifikasi (Android 13+/iOS) lalu
+    // pastikan jadwalnya terpasang. Aman dipanggil tiap kali dibuka.
+    if (settings.reminderOn) {
+      unawaited(NotificationService.requestPermission()
+          .then((_) => NotificationService.sync(settings, progress)));
+    }
+
+    if (progress.pendingMissNotice) {
+      progress.markMissNoticeShown();
+      await showDuoDialog<void>(
+        context,
+        emoji: '😴',
+        color: DuoColors.blue,
+        title: l.t('miss_notice_title'),
+        message: l
+            .t('miss_notice_msg')
+            .replaceFirst('{done}', '${progress.goalDaysDone}')
+            .replaceFirst('{goal}', '${progress.streakGoalDays}'),
+        actions: [DuoDialogAction(label: l.t('ok'), primary: true)],
+      );
+      if (!mounted) return;
+    }
+
+    if (progress.pendingGoalCelebration) {
+      final goal = progress.streakGoalDays;
+      final got = progress.celebrateStreakGoal();
+      if (got == 0) return;
+      await showDuoDialog<void>(
+        context,
+        emoji: '🏆',
+        color: DuoColors.yellow,
+        title: l
+            .t('streak_goal_done_title')
+            .replaceFirst('{goal}', '$goal'),
+        message: l
+            .t('streak_goal_done_msg')
+            .replaceFirst('{goal}', '$goal')
+            .replaceFirst('{gems}', '$got'),
+        actions: [DuoDialogAction(label: l.t('ok'), primary: true)],
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

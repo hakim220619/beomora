@@ -1,14 +1,14 @@
 {
-  "id": "en",
+  "id": "de",
   "name": {
-    "id": "Bahasa Inggris",
-    "en": "English"
+    "id": "Bahasa Jerman",
+    "en": "German"
   },
-  "flag": "🇬🇧",
-  "ttsLocale": "en-US",
+  "flag": "🇩🇪",
+  "ttsLocale": "de-DE",
   "units": [
     {
-      "id": "en_u1",
+      "id": "de_u1",
       "title": {
         "id": "Dasar-dasar",
         "en": "Basics"
@@ -17,287 +17,283 @@
       "icon": "👋",
       "lessons": [
         {
-          "id": "en_u1_l1",
+          "id": "de_u1_l1",
           "title": {
             "id": "Salam",
             "en": "Greetings"
           },
           "words": [
             {
-              "target": "hello",
+              "target": "hallo",
               "meaning": {
                 "id": "halo",
                 "en": "hi (a greeting)"
               },
               "emoji": "👋",
-              "romaji": "he-lou"
+              "romaji": "ha-lo"
             },
             {
-              "target": "good morning",
+              "target": "guten Morgen",
               "meaning": {
                 "id": "selamat pagi",
                 "en": "morning greeting"
               },
               "emoji": "🌅",
-              "romaji": "gud mor-ning"
+              "romaji": "gu-ten mor-gen"
             },
             {
-              "target": "good night",
+              "target": "gute Nacht",
               "meaning": {
                 "id": "selamat malam",
                 "en": "night farewell"
               },
               "emoji": "🌙",
-              "romaji": "gud nait"
+              "romaji": "gu-te nakht"
             },
             {
-              "target": "goodbye",
+              "target": "auf Wiedersehen",
               "meaning": {
                 "id": "selamat tinggal",
                 "en": "bye (a farewell)"
               },
               "emoji": "🚪",
-              "romaji": "gud-bai"
+              "romaji": "auf vi-der-ze-en"
             },
             {
-              "target": "please",
+              "target": "bitte",
               "meaning": {
                 "id": "tolong / silakan",
                 "en": "polite request word"
               },
               "emoji": "🙏",
-              "romaji": "plis"
+              "romaji": "bi-te"
             },
             {
-              "target": "thank you",
+              "target": "danke",
               "meaning": {
                 "id": "terima kasih",
                 "en": "thanks (gratitude)"
               },
               "emoji": "💚",
-              "romaji": "teng-kyu"
+              "romaji": "dang-ke"
             }
           ],
           "sentences": [
             {
-              "target": "Good morning my friend",
+              "target": "Guten Morgen mein Freund",
               "tokens": [
-                "Good",
-                "morning",
-                "my",
-                "friend"
+                "Guten",
+                "Morgen",
+                "mein",
+                "Freund"
               ],
               "meaning": {
                 "id": "Selamat pagi temanku",
                 "en": "greet your friend in the morning"
               },
-              "romaji": "gud mor-ning mai frend"
+              "romaji": "gu-ten mor-gen main froind"
             },
             {
-              "target": "Thank you very much",
+              "target": "Vielen Dank",
               "tokens": [
-                "Thank",
-                "you",
-                "very",
-                "much"
+                "Vielen",
+                "Dank"
               ],
               "meaning": {
                 "id": "Terima kasih banyak",
                 "en": "express big gratitude"
               },
-              "romaji": "teng-kyu ve-ri mach"
+              "romaji": "fi-len dangk"
             }
           ]
         },
         {
-          "id": "en_u1_l2",
+          "id": "de_u1_l2",
           "title": {
             "id": "Perkenalan",
             "en": "Introductions"
           },
           "words": [
             {
-              "target": "I",
+              "target": "ich",
               "meaning": {
                 "id": "saya / aku",
                 "en": "me, myself"
               },
               "emoji": "🙋",
-              "romaji": "ai"
+              "romaji": "ikh"
             },
             {
-              "target": "you",
+              "target": "du",
               "meaning": {
                 "id": "kamu / anda",
                 "en": "the person spoken to"
               },
               "emoji": "👉",
-              "romaji": "yu"
+              "romaji": "du"
             },
             {
-              "target": "name",
+              "target": "der Name",
               "meaning": {
                 "id": "nama",
                 "en": "what someone is called"
               },
               "emoji": "📛",
-              "romaji": "neim"
+              "romaji": "der na-me"
             },
             {
-              "target": "friend",
+              "target": "der Freund",
               "meaning": {
                 "id": "teman",
                 "en": "buddy, companion"
               },
               "emoji": "🤝",
-              "romaji": "frend"
+              "romaji": "der froind"
             },
             {
-              "target": "teacher",
+              "target": "der Lehrer",
               "meaning": {
                 "id": "guru",
                 "en": "one who teaches"
               },
               "emoji": "👩‍🏫",
-              "romaji": "ti-cher"
+              "romaji": "der le-rer"
             },
             {
-              "target": "student",
+              "target": "der Schüler",
               "meaning": {
                 "id": "murid / pelajar",
                 "en": "one who studies"
               },
               "emoji": "🎒",
-              "romaji": "styu-dent"
+              "romaji": "der syu-ler"
             }
           ],
           "sentences": [
             {
-              "target": "My name is Dani",
+              "target": "Ich heiße Dani",
               "tokens": [
-                "My",
-                "name",
-                "is",
+                "Ich",
+                "heiße",
                 "Dani"
               ],
               "meaning": {
                 "id": "Nama saya Dani",
                 "en": "introduce yourself as Dani"
               },
-              "romaji": "mai neim iz da-ni"
+              "romaji": "ikh hai-se da-ni"
             },
             {
-              "target": "I am a student",
+              "target": "Ich bin Schüler",
               "tokens": [
-                "I",
-                "am",
-                "a",
-                "student"
+                "Ich",
+                "bin",
+                "Schüler"
               ],
               "meaning": {
                 "id": "Saya seorang pelajar",
                 "en": "say that you study"
               },
-              "romaji": "ai em e styu-dent"
+              "romaji": "ikh bin syu-ler"
             }
           ]
         },
         {
-          "id": "en_u1_l3",
+          "id": "de_u1_l3",
           "title": {
             "id": "Angka",
             "en": "Numbers"
           },
           "words": [
             {
-              "target": "one",
+              "target": "eins",
               "meaning": {
                 "id": "satu",
                 "en": "1"
               },
               "emoji": "1️⃣",
-              "romaji": "wan"
+              "romaji": "ains"
             },
             {
-              "target": "two",
+              "target": "zwei",
               "meaning": {
                 "id": "dua",
                 "en": "2"
               },
               "emoji": "2️⃣",
-              "romaji": "tu"
+              "romaji": "tsvai"
             },
             {
-              "target": "three",
+              "target": "drei",
               "meaning": {
                 "id": "tiga",
                 "en": "3"
               },
               "emoji": "3️⃣",
-              "romaji": "thri"
+              "romaji": "drai"
             },
             {
-              "target": "four",
+              "target": "vier",
               "meaning": {
                 "id": "empat",
                 "en": "4"
               },
               "emoji": "4️⃣",
-              "romaji": "for"
+              "romaji": "fir"
             },
             {
-              "target": "five",
+              "target": "fünf",
               "meaning": {
                 "id": "lima",
                 "en": "5"
               },
               "emoji": "5️⃣",
-              "romaji": "faiv"
+              "romaji": "fünf"
             },
             {
-              "target": "ten",
+              "target": "zehn",
               "meaning": {
                 "id": "sepuluh",
                 "en": "10"
               },
               "emoji": "🔟",
-              "romaji": "ten"
+              "romaji": "tseen"
             }
           ],
           "sentences": [
             {
-              "target": "I have two friends",
+              "target": "Ich habe zwei Freunde",
               "tokens": [
-                "I",
-                "have",
-                "two",
-                "friends"
+                "Ich",
+                "habe",
+                "zwei",
+                "Freunde"
               ],
               "meaning": {
                 "id": "Saya punya dua teman",
                 "en": "say you have 2 friends"
               },
-              "romaji": "ai hev tu frends"
+              "romaji": "ikh ha-be tsvai froin-de"
             },
             {
-              "target": "Three four five",
+              "target": "drei vier fünf",
               "tokens": [
-                "Three",
-                "four",
-                "five"
+                "drei",
+                "vier",
+                "fünf"
               ],
               "meaning": {
                 "id": "Tiga empat lima",
                 "en": "count 3 4 5"
               },
-              "romaji": "thri for faiv"
+              "romaji": "drai fir fünf"
             }
           ]
         }
       ]
     },
     {
-      "id": "en_u2",
+      "id": "de_u2",
       "title": {
         "id": "Keluarga & Orang",
         "en": "Family & People"
@@ -306,290 +302,289 @@
       "icon": "👨‍👩‍👧",
       "lessons": [
         {
-          "id": "en_u2_l1",
+          "id": "de_u2_l1",
           "title": {
             "id": "Keluarga",
             "en": "Family"
           },
           "words": [
             {
-              "target": "mother",
+              "target": "die Mutter",
               "meaning": {
                 "id": "ibu",
                 "en": "mom"
               },
               "emoji": "👩",
-              "romaji": "ma-dher"
+              "romaji": "di mu-ter"
             },
             {
-              "target": "father",
+              "target": "der Vater",
               "meaning": {
                 "id": "ayah",
                 "en": "dad"
               },
               "emoji": "👨",
-              "romaji": "fa-dher"
+              "romaji": "der fa-ter"
             },
             {
-              "target": "sister",
+              "target": "die Schwester",
               "meaning": {
                 "id": "saudara perempuan",
                 "en": "female sibling"
               },
               "emoji": "👧",
-              "romaji": "sis-ter"
+              "romaji": "di syves-ter"
             },
             {
-              "target": "brother",
+              "target": "der Bruder",
               "meaning": {
                 "id": "saudara laki-laki",
                 "en": "male sibling"
               },
               "emoji": "👦",
-              "romaji": "bra-dher"
+              "romaji": "der bru-der"
             },
             {
-              "target": "child",
+              "target": "das Kind",
               "meaning": {
                 "id": "anak",
                 "en": "kid"
               },
               "emoji": "🧒",
-              "romaji": "chaild"
+              "romaji": "das kint"
             },
             {
-              "target": "family",
+              "target": "die Familie",
               "meaning": {
                 "id": "keluarga",
                 "en": "parents and children"
               },
               "emoji": "👨‍👩‍👧‍👦",
-              "romaji": "fem-i-li"
+              "romaji": "di fa-mi-li-e"
             }
           ],
           "sentences": [
             {
-              "target": "My mother is a teacher",
+              "target": "Meine Mutter ist Lehrerin",
               "tokens": [
-                "My",
-                "mother",
-                "is",
-                "a",
-                "teacher"
+                "Meine",
+                "Mutter",
+                "ist",
+                "Lehrerin"
               ],
               "meaning": {
                 "id": "Ibu saya seorang guru",
                 "en": "say mom teaches"
               },
-              "romaji": "mai ma-dher iz e ti-cher"
+              "romaji": "mai-ne mu-ter ist le-re-rin"
             },
             {
-              "target": "I love my family",
+              "target": "Ich liebe meine Familie",
               "tokens": [
-                "I",
-                "love",
-                "my",
-                "family"
+                "Ich",
+                "liebe",
+                "meine",
+                "Familie"
               ],
               "meaning": {
                 "id": "Saya sayang keluarga saya",
                 "en": "express love for your family"
               },
-              "romaji": "ai lav mai fem-i-li"
+              "romaji": "ikh li-be mai-ne fa-mi-li-e"
             }
           ]
         },
         {
-          "id": "en_u2_l2",
+          "id": "de_u2_l2",
           "title": {
             "id": "Orang",
             "en": "People"
           },
           "words": [
             {
-              "target": "man",
+              "target": "der Mann",
               "meaning": {
                 "id": "pria",
                 "en": "adult male"
               },
               "emoji": "👨‍🦱",
-              "romaji": "men"
+              "romaji": "der man"
             },
             {
-              "target": "woman",
+              "target": "die Frau",
               "meaning": {
                 "id": "wanita",
                 "en": "adult female"
               },
               "emoji": "👩‍🦰",
-              "romaji": "wu-men"
+              "romaji": "di frau"
             },
             {
-              "target": "boy",
+              "target": "der Junge",
               "meaning": {
                 "id": "anak laki-laki",
                 "en": "young male"
               },
               "emoji": "👦",
-              "romaji": "boi"
+              "romaji": "der yung-e"
             },
             {
-              "target": "girl",
+              "target": "das Mädchen",
               "meaning": {
                 "id": "anak perempuan",
                 "en": "young female"
               },
               "emoji": "👧",
-              "romaji": "gerl"
+              "romaji": "das med-khen"
             },
             {
-              "target": "baby",
+              "target": "das Baby",
               "meaning": {
                 "id": "bayi",
                 "en": "very young child"
               },
               "emoji": "👶",
-              "romaji": "bei-bi"
+              "romaji": "das be-bi"
             },
             {
-              "target": "person",
+              "target": "die Person",
               "meaning": {
                 "id": "orang",
                 "en": "a human"
               },
               "emoji": "🧍",
-              "romaji": "per-sen"
+              "romaji": "di per-zon"
             }
           ],
           "sentences": [
             {
-              "target": "The woman is my teacher",
+              "target": "Die Frau ist meine Lehrerin",
               "tokens": [
-                "The",
-                "woman",
-                "is",
-                "my",
-                "teacher"
+                "Die",
+                "Frau",
+                "ist",
+                "meine",
+                "Lehrerin"
               ],
               "meaning": {
                 "id": "Wanita itu guru saya",
                 "en": "say that woman teaches you"
               },
-              "romaji": "dhe wu-men iz mai ti-cher"
+              "romaji": "di frau ist mai-ne le-re-rin"
             },
             {
-              "target": "The baby is small",
+              "target": "Das Baby ist klein",
               "tokens": [
-                "The",
-                "baby",
-                "is",
-                "small"
+                "Das",
+                "Baby",
+                "ist",
+                "klein"
               ],
               "meaning": {
                 "id": "Bayi itu kecil",
                 "en": "describe the baby as small"
               },
-              "romaji": "dhe bei-bi iz smol"
+              "romaji": "das be-bi ist klain"
             }
           ]
         },
         {
-          "id": "en_u2_l3",
+          "id": "de_u2_l3",
           "title": {
             "id": "Rumah",
             "en": "Home"
           },
           "words": [
             {
-              "target": "house",
+              "target": "das Haus",
               "meaning": {
                 "id": "rumah",
                 "en": "a building to live in"
               },
               "emoji": "🏠",
-              "romaji": "haus"
+              "romaji": "das haus"
             },
             {
-              "target": "room",
+              "target": "das Zimmer",
               "meaning": {
                 "id": "kamar",
                 "en": "a space in a house"
               },
               "emoji": "🛏️",
-              "romaji": "rum"
+              "romaji": "das tsi-mer"
             },
             {
-              "target": "door",
+              "target": "die Tür",
               "meaning": {
                 "id": "pintu",
                 "en": "you open it to enter"
               },
               "emoji": "🚪",
-              "romaji": "dor"
+              "romaji": "di tuur"
             },
             {
-              "target": "window",
+              "target": "das Fenster",
               "meaning": {
                 "id": "jendela",
                 "en": "glass opening in a wall"
               },
               "emoji": "🪟",
-              "romaji": "win-dou"
+              "romaji": "das fens-ter"
             },
             {
-              "target": "table",
+              "target": "der Tisch",
               "meaning": {
                 "id": "meja",
                 "en": "furniture with a flat top"
               },
               "emoji": "🪑",
-              "romaji": "tei-bel"
+              "romaji": "der tisy"
             },
             {
-              "target": "chair",
+              "target": "der Stuhl",
               "meaning": {
                 "id": "kursi",
                 "en": "furniture to sit on"
               },
               "emoji": "💺",
-              "romaji": "cher"
+              "romaji": "der sytul"
             }
           ],
           "sentences": [
             {
-              "target": "My house is big",
+              "target": "Mein Haus ist groß",
               "tokens": [
-                "My",
-                "house",
-                "is",
-                "big"
+                "Mein",
+                "Haus",
+                "ist",
+                "groß"
               ],
               "meaning": {
                 "id": "Rumah saya besar",
                 "en": "describe your big house"
               },
-              "romaji": "mai haus iz big"
+              "romaji": "main haus ist gros"
             },
             {
-              "target": "Open the door please",
+              "target": "Öffne bitte die Tür",
               "tokens": [
-                "Open",
-                "the",
-                "door",
-                "please"
+                "Öffne",
+                "bitte",
+                "die",
+                "Tür"
               ],
               "meaning": {
                 "id": "Tolong buka pintunya",
                 "en": "politely ask to open the door"
               },
-              "romaji": "ou-pen dhe dor plis"
+              "romaji": "of-ne bi-te di tuur"
             }
           ]
         }
       ]
     },
     {
-      "id": "en_u3",
+      "id": "de_u3",
       "title": {
         "id": "Makanan & Minuman",
         "en": "Food & Drinks"
@@ -598,286 +593,286 @@
       "icon": "🍜",
       "lessons": [
         {
-          "id": "en_u3_l1",
+          "id": "de_u3_l1",
           "title": {
             "id": "Makan & Minum",
             "en": "Eating & Drinking"
           },
           "words": [
             {
-              "target": "eat",
+              "target": "essen",
               "meaning": {
                 "id": "makan",
                 "en": "to consume food"
               },
               "emoji": "🍽️",
-              "romaji": "it"
+              "romaji": "e-sen"
             },
             {
-              "target": "drink",
+              "target": "trinken",
               "meaning": {
                 "id": "minum",
                 "en": "to swallow liquid"
               },
               "emoji": "🥤",
-              "romaji": "dringk"
+              "romaji": "tring-ken"
             },
             {
-              "target": "water",
+              "target": "das Wasser",
               "meaning": {
                 "id": "air",
                 "en": "clear liquid we drink"
               },
               "emoji": "💧",
-              "romaji": "wo-ter"
+              "romaji": "das va-ser"
             },
             {
-              "target": "rice",
+              "target": "der Reis",
               "meaning": {
                 "id": "nasi",
                 "en": "staple grain food"
               },
               "emoji": "🍚",
-              "romaji": "rais"
+              "romaji": "der rais"
             },
             {
-              "target": "bread",
+              "target": "das Brot",
               "meaning": {
                 "id": "roti",
                 "en": "baked food from flour"
               },
               "emoji": "🍞",
-              "romaji": "bred"
+              "romaji": "das brot"
             },
             {
-              "target": "milk",
+              "target": "die Milch",
               "meaning": {
                 "id": "susu",
                 "en": "white drink from cows"
               },
               "emoji": "🥛",
-              "romaji": "milk"
+              "romaji": "di milkh"
             }
           ],
           "sentences": [
             {
-              "target": "I eat rice",
+              "target": "Ich esse Reis",
               "tokens": [
-                "I",
-                "eat",
-                "rice"
+                "Ich",
+                "esse",
+                "Reis"
               ],
               "meaning": {
                 "id": "Saya makan nasi",
                 "en": "say you eat rice"
               },
-              "romaji": "ai it rais"
+              "romaji": "ikh e-se rais"
             },
             {
-              "target": "You drink water",
+              "target": "Du trinkst Wasser",
               "tokens": [
-                "You",
-                "drink",
-                "water"
+                "Du",
+                "trinkst",
+                "Wasser"
               ],
               "meaning": {
                 "id": "Kamu minum air",
                 "en": "say they drink water"
               },
-              "romaji": "yu dringk wo-ter"
+              "romaji": "du tringkst va-ser"
             }
           ]
         },
         {
-          "id": "en_u3_l2",
+          "id": "de_u3_l2",
           "title": {
             "id": "Bahan Makanan",
             "en": "Ingredients"
           },
           "words": [
             {
-              "target": "apple",
+              "target": "der Apfel",
               "meaning": {
                 "id": "apel",
                 "en": "red or green fruit"
               },
               "emoji": "🍎",
-              "romaji": "e-pel"
+              "romaji": "der ap-fel"
             },
             {
-              "target": "fish",
+              "target": "der Fisch",
               "meaning": {
                 "id": "ikan",
                 "en": "animal that swims"
               },
               "emoji": "🐟",
-              "romaji": "fisy"
+              "romaji": "der fisy"
             },
             {
-              "target": "chicken",
+              "target": "das Hähnchen",
               "meaning": {
                 "id": "ayam",
                 "en": "bird we often eat"
               },
               "emoji": "🍗",
-              "romaji": "chi-ken"
+              "romaji": "das hen-khen"
             },
             {
-              "target": "egg",
+              "target": "das Ei",
               "meaning": {
                 "id": "telur",
                 "en": "oval food from hens"
               },
               "emoji": "🥚",
-              "romaji": "eg"
+              "romaji": "das ai"
             },
             {
-              "target": "fruit",
+              "target": "das Obst",
               "meaning": {
                 "id": "buah",
                 "en": "sweet plant food"
               },
               "emoji": "🍇",
-              "romaji": "frut"
+              "romaji": "das opst"
             },
             {
-              "target": "vegetable",
+              "target": "das Gemüse",
               "meaning": {
                 "id": "sayur",
                 "en": "healthy plant food"
               },
               "emoji": "🥦",
-              "romaji": "vej-te-bel"
+              "romaji": "das ge-mu-ze"
             }
           ],
           "sentences": [
             {
-              "target": "The apple is red",
+              "target": "Der Apfel ist rot",
               "tokens": [
-                "The",
-                "apple",
-                "is",
-                "red"
+                "Der",
+                "Apfel",
+                "ist",
+                "rot"
               ],
               "meaning": {
                 "id": "Apel itu merah",
                 "en": "describe the red apple"
               },
-              "romaji": "dhe e-pel iz red"
+              "romaji": "der ap-fel ist rot"
             },
             {
-              "target": "I eat chicken and rice",
+              "target": "Ich esse Hähnchen und Reis",
               "tokens": [
-                "I",
-                "eat",
-                "chicken",
-                "and",
-                "rice"
+                "Ich",
+                "esse",
+                "Hähnchen",
+                "und",
+                "Reis"
               ],
               "meaning": {
                 "id": "Saya makan ayam dan nasi",
                 "en": "say you eat chicken with rice"
               },
-              "romaji": "ai it chi-ken end rais"
+              "romaji": "ikh e-se hen-khen unt rais"
             }
           ]
         },
         {
-          "id": "en_u3_l3",
+          "id": "de_u3_l3",
           "title": {
             "id": "Waktu Makan",
             "en": "Meal Times"
           },
           "words": [
             {
-              "target": "breakfast",
+              "target": "das Frühstück",
               "meaning": {
                 "id": "sarapan",
                 "en": "morning meal"
               },
               "emoji": "🍳",
-              "romaji": "brek-fes"
+              "romaji": "das fru-sytuk"
             },
             {
-              "target": "lunch",
+              "target": "das Mittagessen",
               "meaning": {
                 "id": "makan siang",
                 "en": "midday meal"
               },
               "emoji": "🍱",
-              "romaji": "lanch"
+              "romaji": "das mi-tak-e-sen"
             },
             {
-              "target": "dinner",
+              "target": "das Abendessen",
               "meaning": {
                 "id": "makan malam",
                 "en": "evening meal"
               },
               "emoji": "🍲",
-              "romaji": "di-ner"
+              "romaji": "das a-bent-e-sen"
             },
             {
-              "target": "hungry",
+              "target": "hungrig",
               "meaning": {
                 "id": "lapar",
                 "en": "wanting food"
               },
               "emoji": "😋",
-              "romaji": "hang-gri"
+              "romaji": "hung-rikh"
             },
             {
-              "target": "thirsty",
+              "target": "durstig",
               "meaning": {
                 "id": "haus",
                 "en": "wanting a drink"
               },
               "emoji": "🥵",
-              "romaji": "thers-ti"
+              "romaji": "durs-tikh"
             },
             {
-              "target": "delicious",
+              "target": "lecker",
               "meaning": {
                 "id": "enak / lezat",
                 "en": "very tasty"
               },
               "emoji": "😍",
-              "romaji": "de-li-syes"
+              "romaji": "le-ker"
             }
           ],
           "sentences": [
             {
-              "target": "I am hungry",
+              "target": "Ich bin hungrig",
               "tokens": [
-                "I",
-                "am",
-                "hungry"
+                "Ich",
+                "bin",
+                "hungrig"
               ],
               "meaning": {
                 "id": "Saya lapar",
                 "en": "say you want food"
               },
-              "romaji": "ai em hang-gri"
+              "romaji": "ikh bin hung-rikh"
             },
             {
-              "target": "The dinner is delicious",
+              "target": "Das Abendessen ist lecker",
               "tokens": [
-                "The",
-                "dinner",
-                "is",
-                "delicious"
+                "Das",
+                "Abendessen",
+                "ist",
+                "lecker"
               ],
               "meaning": {
                 "id": "Makan malamnya enak",
                 "en": "praise the tasty dinner"
               },
-              "romaji": "dhe di-ner iz de-li-syes"
+              "romaji": "das a-bent-e-sen ist le-ker"
             }
           ]
         }
       ]
     },
     {
-      "id": "en_u4",
+      "id": "de_u4",
       "title": {
         "id": "Aktivitas Sehari-hari",
         "en": "Daily Activities"
@@ -886,279 +881,279 @@
       "icon": "🌞",
       "lessons": [
         {
-          "id": "en_u4_l1",
+          "id": "de_u4_l1",
           "title": {
             "id": "Kata Kerja Dasar",
             "en": "Basic Verbs"
           },
           "words": [
             {
-              "target": "go",
+              "target": "gehen",
               "meaning": {
                 "id": "pergi",
                 "en": "move away to a place"
               },
               "emoji": "🚶",
-              "romaji": "gou"
+              "romaji": "ge-en"
             },
             {
-              "target": "come",
+              "target": "kommen",
               "meaning": {
                 "id": "datang",
                 "en": "move toward here"
               },
               "emoji": "👋",
-              "romaji": "kam"
+              "romaji": "ko-men"
             },
             {
-              "target": "sleep",
+              "target": "schlafen",
               "meaning": {
                 "id": "tidur",
                 "en": "rest with eyes closed"
               },
               "emoji": "😴",
-              "romaji": "slip"
+              "romaji": "syla-fen"
             },
             {
-              "target": "wake up",
+              "target": "aufwachen",
               "meaning": {
                 "id": "bangun",
                 "en": "stop sleeping"
               },
               "emoji": "⏰",
-              "romaji": "weik ap"
+              "romaji": "auf-va-khen"
             },
             {
-              "target": "work",
+              "target": "arbeiten",
               "meaning": {
                 "id": "bekerja",
                 "en": "do a job"
               },
               "emoji": "💼",
-              "romaji": "werk"
+              "romaji": "ar-bai-ten"
             },
             {
-              "target": "study",
+              "target": "lernen",
               "meaning": {
                 "id": "belajar",
                 "en": "learn something"
               },
               "emoji": "📖",
-              "romaji": "sta-di"
+              "romaji": "ler-nen"
             }
           ],
           "sentences": [
             {
-              "target": "I go to school",
+              "target": "Ich gehe zur Schule",
               "tokens": [
-                "I",
-                "go",
-                "to",
-                "school"
+                "Ich",
+                "gehe",
+                "zur",
+                "Schule"
               ],
               "meaning": {
                 "id": "Saya pergi ke sekolah",
                 "en": "say you head to school"
               },
-              "romaji": "ai gou tu skul"
+              "romaji": "ikh ge-e tsur syu-le"
             },
             {
-              "target": "You study every day",
+              "target": "Du lernst jeden Tag",
               "tokens": [
-                "You",
-                "study",
-                "every",
-                "day"
+                "Du",
+                "lernst",
+                "jeden",
+                "Tag"
               ],
               "meaning": {
                 "id": "Kamu belajar setiap hari",
                 "en": "say they learn daily"
               },
-              "romaji": "yu sta-di ev-ri dei"
+              "romaji": "du lernst ye-den tak"
             }
           ]
         },
         {
-          "id": "en_u4_l2",
+          "id": "de_u4_l2",
           "title": {
             "id": "Keterampilan",
             "en": "Skills"
           },
           "words": [
             {
-              "target": "read",
+              "target": "lesen",
               "meaning": {
                 "id": "membaca",
                 "en": "look at words"
               },
               "emoji": "📚",
-              "romaji": "rid"
+              "romaji": "le-zen"
             },
             {
-              "target": "write",
+              "target": "schreiben",
               "meaning": {
                 "id": "menulis",
                 "en": "put words on paper"
               },
               "emoji": "✍️",
-              "romaji": "rait"
+              "romaji": "syrai-ben"
             },
             {
-              "target": "speak",
+              "target": "sprechen",
               "meaning": {
                 "id": "berbicara",
                 "en": "say words"
               },
               "emoji": "🗣️",
-              "romaji": "spik"
+              "romaji": "sypre-khen"
             },
             {
-              "target": "listen",
+              "target": "hören",
               "meaning": {
                 "id": "mendengarkan",
                 "en": "hear with attention"
               },
               "emoji": "👂",
-              "romaji": "li-sen"
+              "romaji": "ho-ren"
             },
             {
-              "target": "walk",
+              "target": "laufen",
               "meaning": {
                 "id": "berjalan",
                 "en": "move on foot slowly"
               },
               "emoji": "🚶‍♂️",
-              "romaji": "wok"
+              "romaji": "lau-fen"
             },
             {
-              "target": "run",
+              "target": "rennen",
               "meaning": {
                 "id": "berlari",
                 "en": "move on foot fast"
               },
               "emoji": "🏃",
-              "romaji": "ran"
+              "romaji": "re-nen"
             }
           ],
           "sentences": [
             {
-              "target": "I read a book",
+              "target": "Ich lese ein Buch",
               "tokens": [
-                "I",
-                "read",
-                "a",
-                "book"
+                "Ich",
+                "lese",
+                "ein",
+                "Buch"
               ],
               "meaning": {
                 "id": "Saya membaca buku",
                 "en": "say you read a book"
               },
-              "romaji": "ai rid e buk"
+              "romaji": "ikh le-ze ain bukh"
             },
             {
-              "target": "She can speak English",
+              "target": "Sie kann Englisch sprechen",
               "tokens": [
-                "She",
-                "can",
-                "speak",
-                "English"
+                "Sie",
+                "kann",
+                "Englisch",
+                "sprechen"
               ],
               "meaning": {
                 "id": "Dia bisa berbicara bahasa Inggris",
                 "en": "say she speaks English"
               },
-              "romaji": "syi ken spik ing-glisy"
+              "romaji": "zi kan eng-lisy sypre-khen"
             }
           ]
         },
         {
-          "id": "en_u4_l3",
+          "id": "de_u4_l3",
           "title": {
             "id": "Waktu",
             "en": "Time"
           },
           "words": [
             {
-              "target": "today",
+              "target": "heute",
               "meaning": {
                 "id": "hari ini",
                 "en": "this day"
               },
               "emoji": "📅",
-              "romaji": "tu-dei"
+              "romaji": "hoi-te"
             },
             {
-              "target": "tomorrow",
+              "target": "morgen",
               "meaning": {
                 "id": "besok",
                 "en": "the day after today"
               },
               "emoji": "➡️",
-              "romaji": "tu-mo-rou"
+              "romaji": "mor-gen"
             },
             {
-              "target": "yesterday",
+              "target": "gestern",
               "meaning": {
                 "id": "kemarin",
                 "en": "the day before today"
               },
               "emoji": "⬅️",
-              "romaji": "yes-ter-dei"
+              "romaji": "ges-tern"
             },
             {
-              "target": "now",
+              "target": "jetzt",
               "meaning": {
                 "id": "sekarang",
                 "en": "at this moment"
               },
               "emoji": "⏱️",
-              "romaji": "nau"
+              "romaji": "yetst"
             },
             {
-              "target": "morning",
+              "target": "der Morgen",
               "meaning": {
                 "id": "pagi",
                 "en": "early part of the day"
               },
               "emoji": "🌅",
-              "romaji": "mor-ning"
+              "romaji": "der mor-gen"
             },
             {
-              "target": "night",
+              "target": "die Nacht",
               "meaning": {
                 "id": "malam",
                 "en": "dark part of the day"
               },
               "emoji": "🌃",
-              "romaji": "nait"
+              "romaji": "di nakht"
             }
           ],
           "sentences": [
             {
-              "target": "Today I work",
+              "target": "Heute arbeite ich",
               "tokens": [
-                "Today",
-                "I",
-                "work"
+                "Heute",
+                "arbeite",
+                "ich"
               ],
               "meaning": {
                 "id": "Hari ini saya bekerja",
                 "en": "say you work this day"
               },
-              "romaji": "tu-dei ai werk"
+              "romaji": "hoi-te ar-bai-te ikh"
             },
             {
-              "target": "Tomorrow we study",
+              "target": "Morgen lernen wir",
               "tokens": [
-                "Tomorrow",
-                "we",
-                "study"
+                "Morgen",
+                "lernen",
+                "wir"
               ],
               "meaning": {
                 "id": "Besok kita belajar",
                 "en": "say the group learns tomorrow"
               },
-              "romaji": "tu-mo-rou wi sta-di"
+              "romaji": "mor-gen ler-nen vir"
             }
           ]
         }
