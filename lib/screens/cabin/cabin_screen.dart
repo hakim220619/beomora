@@ -105,7 +105,7 @@ class CabinScreen extends StatelessWidget {
                   value: '${progress.bestTimeChallenge}'),
             ],
           ),
-          const SizedBox(height: 18),
+          const SizedBox(height: 8),
           // Pintu-pintu kabin
           _CabinDoor(
             emoji: '👑',
