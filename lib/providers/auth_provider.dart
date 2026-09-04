@@ -523,6 +523,13 @@ class AuthProvider extends ChangeNotifier {
     return digits.length >= 9 && digits.length <= 15;
   }
 
+  /// Dokumen kontak privat: no. telepon TIDAK disimpan di profil
+  /// publik (yang bisa dibaca semua pengguna login demi papan juara),
+  /// melainkan di `users/{uid}/private/contact` yang menurut
+  /// firestore.rules hanya bisa dibaca pemiliknya sendiri.
+  DocumentReference<Map<String, dynamic>> _contactDoc(String uid) =>
+      _userDoc(uid).collection('private').doc('contact');
+
   /// Simpan profil pendaftaran ke Firestore. Mengembalikan kunci l10n
   /// pesan galat, atau null kalau sukses.
   ///
@@ -542,14 +549,20 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
     try {
       final doc = _userDoc(user.uid);
-      await doc.set({
+      // Profil publik + kontak privat ditulis atomik dalam satu batch.
+      final batch = FirebaseFirestore.instance.batch();
+      batch.set(doc, {
         'name': trimmed,
-        'phone': phoneTrimmed,
         'email': user.email,
         'photoUrl': user.photoURL,
         'createdAt': FieldValue.serverTimestamp(),
         'updatedAt': FieldValue.serverTimestamp(),
-      }).timeout(const Duration(seconds: 20));
+      });
+      batch.set(_contactDoc(user.uid), {
+        'phone': phoneTrimmed,
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+      await batch.commit().timeout(const Duration(seconds: 20));
 
       // Verifikasi: baca ulang dari server, bukan dari cache.
       final saved = await doc
@@ -603,6 +616,28 @@ class AuthProvider extends ChangeNotifier {
     onSignedOut?.call();
   }
 
+  /// Migrasi akun lama: no. telepon yang dulu tersimpan di profil
+  /// publik dipindah ke dokumen kontak privat lalu dihapus dari
+  /// profil (best effort — dicoba lagi di sesi berikutnya bila gagal).
+  void _migratePhone(String uid, String phone) {
+    Future(() async {
+      try {
+        final batch = FirebaseFirestore.instance.batch();
+        batch.set(
+            _contactDoc(uid),
+            {
+              'phone': phone,
+              'updatedAt': FieldValue.serverTimestamp(),
+            },
+            SetOptions(merge: true));
+        batch.update(_userDoc(uid), {'phone': FieldValue.delete()});
+        await batch.commit().timeout(const Duration(seconds: 15));
+      } catch (e) {
+        debugPrint('BeomoraAuth migrasi phone tertunda: $e');
+      }
+    });
+  }
+
   /// Simpan profil aktif (prioritas data Firestore, fallback data
   /// akun Google) ke memori + cache lokal.
   void _store(User user, Map<String, dynamic>? profile) {
@@ -610,6 +645,8 @@ class AuthProvider extends ChangeNotifier {
       cloudProgressKnown = true;
       cloudProgress = profile['progress'] as String?;
       applyServerPremium(profile);
+      final legacyPhone = profile['phone'] as String?;
+      if (legacyPhone != null) _migratePhone(user.uid, legacyPhone);
     }
     name = (profile?['name'] as String?) ??
         user.displayName ??

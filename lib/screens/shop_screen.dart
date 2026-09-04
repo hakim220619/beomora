@@ -133,7 +133,7 @@ class ShopScreen extends StatelessWidget {
           ],
           // Top-up permata (uang asli, via Play Billing).
           _ShopItem(
-            emoji: '💎',
+            emoji: '🪙',
             color: DuoColors.purple,
             title: l.t('gems_pack_small'),
             subtitle: l.t('topup_desc'),

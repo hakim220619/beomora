@@ -57,6 +57,19 @@ service cloud.firestore {
                 && request.resource.data.premiumGrantUntil
                     == resource.data.premiumGrantUntil));
       allow delete: if false;
+
+      // Kontak privat (no. telepon): HANYA pemiliknya yang boleh
+      // baca/tulis — tidak ikut terekspos saat pengguna lain membaca
+      // profil untuk papan juara.
+      match /private/{doc} {
+        allow read, delete: if request.auth != null
+          && request.auth.uid == uid;
+        allow create, update: if request.auth != null
+          && request.auth.uid == uid
+          && (!('phone' in request.resource.data)
+              || (request.resource.data.phone is string
+                  && request.resource.data.phone.size() <= 20));
+      }
     }
 
     // Materi kursus: publik untuk dibaca (disinkron sebelum login),

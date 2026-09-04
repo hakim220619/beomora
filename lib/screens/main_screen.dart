@@ -8,6 +8,7 @@ import '../l10n/app_strings.dart';
 import '../providers/progress_provider.dart';
 import '../providers/settings_provider.dart';
 import '../services/notification_service.dart';
+import '../services/update_service.dart';
 import '../theme.dart';
 import '../widgets/duo_dialog.dart';
 import '../widgets/study/study_background.dart';
@@ -32,8 +33,29 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => _showStreakNotices());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showStreakNotices();
+      _checkAppUpdate();
+    });
+  }
+
+  /// Play In-App Update (flexible): unduh versi baru di latar
+  /// belakang, lalu tawarkan mulai ulang lewat snackbar.
+  void _checkAppUpdate() {
+    unawaited(UpdateService.checkForUpdate(onDownloaded: () {
+      if (!mounted) return;
+      final l = L.read(context);
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(
+          duration: const Duration(seconds: 12),
+          content: Text(l.t('update_ready')),
+          action: SnackBarAction(
+            label: l.t('update_restart'),
+            onPressed: UpdateService.completeUpdate,
+          ),
+        ));
+    }));
   }
 
   /// Pemberitahuan saat menu utama terbuka: (1) notice bolos —
@@ -91,6 +113,9 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     final l = L.of(context);
     return StudyScaffold(
+      // Dock navigasi sudah punya SafeArea sendiri; konten tab boleh
+      // menggulir di belakangnya.
+      bottomSafe: false,
       body: IndexedStack(
         index: _index,
         children: const [

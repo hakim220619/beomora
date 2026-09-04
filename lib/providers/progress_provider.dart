@@ -584,17 +584,23 @@ class ProgressProvider extends ChangeNotifier {
     longestStreak = m['longestStreak'] ?? 0;
     lastActiveDay = m['lastActiveDay'] ?? '';
     streakFreezes = m['streakFreezes'] ?? 0;
-    streakGoalDays = m['streakGoalDays'] ?? 30;
-    goalDaysDone = m['goalDaysDone'] ?? 0;
-    goalCelebrated = m['goalCelebrated'] ?? 0;
-    missNoticeDate = m['missNoticeDate'] ?? '';
+    // Field baru (tak dikenal versi aplikasi lama): kalau kuncinya
+    // absen dari payload — berarti ditulis versi lama — pertahankan
+    // nilai lokal supaya progres fitur baru tidak hilang saat
+    // pengguna bolak-balik versi. Reset sungguhan tetap bekerja
+    // karena resetAll selalu menulis semua kunci secara eksplisit.
+    streakGoalDays = m['streakGoalDays'] ?? streakGoalDays;
+    goalDaysDone = m['goalDaysDone'] ?? goalDaysDone;
+    goalCelebrated = m['goalCelebrated'] ?? goalCelebrated;
+    missNoticeDate = m['missNoticeDate'] ?? missNoticeDate;
     dailyGoal = m['dailyGoal'] ?? 20;
     xpToday = m['xpToday'] ?? 0;
     xpTodayDate = m['xpTodayDate'] ?? '';
     weeklyXp = m['weeklyXp'] ?? 0;
     weekKey = m['weekKey'] ?? '';
-    goalRewardDate = m['goalRewardDate'] ?? '';
-    bonusRewardDate = m['bonusRewardDate'] ?? '';
+    // Sama seperti di atas: kunci absen → pertahankan nilai lokal.
+    goalRewardDate = m['goalRewardDate'] ?? goalRewardDate;
+    bonusRewardDate = m['bonusRewardDate'] ?? bonusRewardDate;
     boostUntil = m['boostUntil'] ?? 0;
     totalLessonsDone = m['totalLessonsDone'] ?? 0;
     totalAnswers = m['totalAnswers'] ?? 0;

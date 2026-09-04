@@ -232,6 +232,11 @@ class StudyScaffold extends StatelessWidget {
   final Widget? floatingActionButton;
   final bool paintBackground;
 
+  /// Sisipkan SafeArea bawah agar tombol/konten tidak tertutup bar
+  /// navigasi 3 tombol Android (edge-to-edge). Matikan hanya untuk
+  /// layar yang mengelola area bawah sendiri (mis. dock menu utama).
+  final bool bottomSafe;
+
   const StudyScaffold({
     super.key,
     this.appBar,
@@ -239,6 +244,7 @@ class StudyScaffold extends StatelessWidget {
     this.bottomNavigationBar,
     this.floatingActionButton,
     this.paintBackground = true,
+    this.bottomSafe = true,
   });
 
   @override
@@ -246,7 +252,7 @@ class StudyScaffold extends StatelessWidget {
     final scaffold = Scaffold(
       backgroundColor: Colors.transparent,
       appBar: appBar,
-      body: body,
+      body: bottomSafe ? SafeArea(top: false, child: body) : body,
       extendBody: bottomNavigationBar != null,
       bottomNavigationBar: bottomNavigationBar,
       floatingActionButton: floatingActionButton,

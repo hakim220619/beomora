@@ -168,14 +168,14 @@ class _SkillTreeScreenState extends State<SkillTreeScreen> {
                   _GoalBanner(
                     text: l.t('daily_goal_reached'),
                     buttonLabel:
-                        '${l.t('claim')} +${ProgressProvider.goalRewardGems} 💎',
+                        '${l.t('claim')} +${ProgressProvider.goalRewardGems} 🪙',
                     onClaim: () => _claimReward(context, bonus: false),
                   )
                 else if (progress.canClaimBonusReward)
                   _GoalBanner(
                     text: l.t('bonus_goal_reached'),
                     buttonLabel:
-                        '${l.t('claim')} +${ProgressProvider.bonusRewardGems} 💎',
+                        '${l.t('claim')} +${ProgressProvider.bonusRewardGems} 🪙',
                     onClaim: () => _claimReward(context, bonus: true),
                   )
                 else if (bonusInProgress)
@@ -215,7 +215,7 @@ class _SkillTreeScreenState extends State<SkillTreeScreen> {
       context,
       emoji: '🎁',
       color: DuoColors.yellow,
-      title: '+$got 💎',
+      title: '+$got 🪙',
       message: l.t('gems_added'),
       actions: [DuoDialogAction(label: l.t('ok'), primary: true)],
     );
@@ -682,7 +682,10 @@ class _IslandNode extends StatelessWidget {
       context: context,
       backgroundColor: Colors.transparent,
       builder: (sheetContext) => Container(
-        padding: const EdgeInsets.fromLTRB(24, 12, 24, 28),
+        // SafeArea di dalam (bukan padding statis) supaya tombol MULAI
+        // tidak tertutup bar navigasi 3 tombol Android.
+        padding: EdgeInsets.fromLTRB(24, 12, 24,
+            16 + MediaQuery.viewPaddingOf(sheetContext).bottom),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,

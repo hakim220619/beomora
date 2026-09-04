@@ -54,7 +54,7 @@ class L {
           '{done}/{goal} hari — lanjutkan belajar hari ini! 🔥',
       'streak_goal_done_title': 'Tantangan {goal} hari selesai! 🏆',
       'streak_goal_done_msg':
-          'Luar biasa, kamu sudah belajar {goal} hari! Hadiah +{gems} 💎. '
+          'Luar biasa, kamu sudah belajar {goal} hari! Hadiah +{gems} 🪙. '
           'Pilih tantangan berikutnya di Pengaturan.',
       'goal_casual': 'Santai',
       'goal_regular': 'Rutin',
@@ -170,9 +170,9 @@ class L {
       'free_heart_ad': 'Hati Gratis',
       'free_heart_ad_desc': 'Tonton iklan singkat untuk +1 hati',
       'free_label': '📺 GRATIS',
-      'gems_pack_small': '1.000 Permata',
-      'gems_pack_large': '5.000 Permata',
-      'topup_desc': 'Top-up permata (pembelian uang asli)',
+      'gems_pack_small': '1.000 Koin',
+      'gems_pack_large': '5.000 Koin',
+      'topup_desc': 'Top-up koin (pembelian uang asli)',
       'topup_label': 'TOP-UP',
       'time_challenge': 'Tantangan Waktu',
       'time_desc': 'Jawab sebanyak mungkin dalam 60 detik!',
@@ -304,6 +304,9 @@ class L {
       'content_upload_failed': 'Gagal mengunggah materi.',
       'admin_premium_all': 'Premium untuk semua pengguna',
       'save': 'SIMPAN',
+      'update_ready':
+          'Versi baru sudah terunduh. Mulai ulang untuk menerapkan?',
+      'update_restart': 'MULAI ULANG',
       'admin_heart_regen': 'Regenerasi nyawa',
       'admin_heart_regen_label': 'Menit per 1 nyawa (1-1440)',
       'admin_heart_regen_sub':
@@ -360,8 +363,8 @@ class L {
       'course_select_title': 'Pilih Kursus',
       'daily_goal_reached': 'Target harian tercapai! 🎉',
       'claim': 'Klaim',
-      'gems_added': 'Permata masuk ke sakumu!',
-      'bonus_goal_hint': 'Target bonus 🎁 raih {xp} XP untuk +{gems} 💎',
+      'gems_added': 'Koin masuk ke sakumu!',
+      'bonus_goal_hint': 'Target bonus 🎁 raih {xp} XP untuk +{gems} 🪙',
       'bonus_goal_reached': 'Target bonus tercapai! 🎁',
       'daily_all_done': 'Semua target hari ini beres! Sampai besok 🌙',
       // Achievements
@@ -424,7 +427,7 @@ class L {
           'at {done}/{goal} days — keep learning today! 🔥',
       'streak_goal_done_title': '{goal}-day challenge complete! 🏆',
       'streak_goal_done_msg':
-          "Amazing, you've studied for {goal} days! Reward: +{gems} 💎. "
+          "Amazing, you've studied for {goal} days! Reward: +{gems} 🪙. "
           'Pick your next challenge in Settings.',
       'goal_casual': 'Casual',
       'goal_regular': 'Regular',
@@ -540,8 +543,8 @@ class L {
       'free_heart_ad': 'Free Heart',
       'free_heart_ad_desc': 'Watch a short ad for +1 heart',
       'free_label': '📺 FREE',
-      'gems_pack_small': '1,000 Gems',
-      'gems_pack_large': '5,000 Gems',
+      'gems_pack_small': '1,000 Coins',
+      'gems_pack_large': '5,000 Coins',
       'topup_desc': 'Gem top-up (real money purchase)',
       'topup_label': 'TOP-UP',
       'time_challenge': 'Time Challenge',
@@ -672,6 +675,9 @@ class L {
       'content_upload_failed': 'Failed to upload content.',
       'admin_premium_all': 'Premium for all users',
       'save': 'SAVE',
+      'update_ready':
+          'A new version has been downloaded. Restart to apply?',
+      'update_restart': 'RESTART',
       'admin_heart_regen': 'Heart regeneration',
       'admin_heart_regen_label': 'Minutes per heart (1-1440)',
       'admin_heart_regen_sub':
@@ -728,8 +734,8 @@ class L {
       'course_select_title': 'Choose a Course',
       'daily_goal_reached': 'Daily goal reached! 🎉',
       'claim': 'Claim',
-      'gems_added': 'Gems added to your pouch!',
-      'bonus_goal_hint': 'Bonus goal 🎁 reach {xp} XP for +{gems} 💎',
+      'gems_added': 'Coins added to your pouch!',
+      'bonus_goal_hint': 'Bonus goal 🎁 reach {xp} XP for +{gems} 🪙',
       'bonus_goal_reached': 'Bonus goal reached! 🎁',
       'daily_all_done': 'All goals done for today! See you tomorrow 🌙',
       // Achievements
