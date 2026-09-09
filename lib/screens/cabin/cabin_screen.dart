@@ -74,6 +74,9 @@ class CabinScreen extends StatelessWidget {
           GridView.count(
             crossAxisCount: 2,
             shrinkWrap: true,
+            // Tanpa ini grid mewarisi inset safe-area bawah sebagai
+            // padding, membuat jarak ke seksi berikutnya melebar.
+            padding: EdgeInsets.zero,
             physics: const NeverScrollableScrollPhysics(),
             mainAxisSpacing: 10,
             crossAxisSpacing: 10,
@@ -105,7 +108,11 @@ class CabinScreen extends StatelessWidget {
                   value: '${progress.bestTimeChallenge}'),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 14),
+          Text(l.t('cabin_menu'),
+              style: const TextStyle(
+                  fontSize: 18, fontWeight: FontWeight.w900)),
+          const SizedBox(height: 10),
           // Pintu-pintu kabin
           _CabinDoor(
             emoji: '👑',
@@ -385,13 +392,13 @@ class _CabinDoor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: const EdgeInsets.only(bottom: 8),
       child: InkWell(
         borderRadius: BorderRadius.circular(20),
         onTap: onTap,
         child: Padding(
           padding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 11),
           child: Row(
             children: [
               Container(

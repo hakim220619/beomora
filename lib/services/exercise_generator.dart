@@ -30,7 +30,7 @@ class ExerciseGenerator {
     }
 
     for (final sentence in lesson.sentences.take(3)) {
-      exercises.add(_sentenceBuild(sentence, lesson.sentences, uiLang));
+      exercises.add(_sentenceBuild(sentence, course, uiLang));
     }
 
     exercises.shuffle(_rng);
@@ -49,11 +49,13 @@ class ExerciseGenerator {
 
   /// Soal campuran dari kata-kata yang sudah dipelajari (latihan bebas).
   List<Exercise> freePractice(
-      Course course, Set<String> learnedTargets, String uiLang,
-      {int count = 8}) {
+    Course course,
+    Set<String> learnedTargets,
+    String uiLang, {
+    int count = 8,
+  }) {
     final pool = course.allWords;
-    var learned =
-        pool.where((w) => learnedTargets.contains(w.target)).toList();
+    var learned = pool.where((w) => learnedTargets.contains(w.target)).toList();
     if (learned.length < 4) learned = pool;
     learned.shuffle(_rng);
     final exercises = <Exercise>[];
@@ -65,7 +67,9 @@ class ExerciseGenerator {
         ExerciseType.typing,
         if (_canScramble(word.target)) ExerciseType.scramble,
       ];
-      exercises.add(_forWord(types[_rng.nextInt(types.length)], word, pool, uiLang));
+      exercises.add(
+        _forWord(types[_rng.nextInt(types.length)], word, pool, uiLang),
+      );
     }
     return exercises;
   }
@@ -76,7 +80,11 @@ class ExerciseGenerator {
       !target.contains(' ') && target.length >= 3 && target.length <= 10;
 
   Exercise _forWord(
-      ExerciseType type, WordItem word, List<WordItem> pool, String uiLang) {
+    ExerciseType type,
+    WordItem word,
+    List<WordItem> pool,
+    String uiLang,
+  ) {
     switch (type) {
       case ExerciseType.multipleChoice:
         return Exercise(
@@ -85,10 +93,11 @@ class ExerciseGenerator {
           promptSub: word.romaji,
           answer: word.meaningFor(uiLang),
           options: _choiceOptions(
-              word.meaningFor(uiLang),
-              pool
-                  .where((w) => w.target != word.target)
-                  .map((w) => w.meaningFor(uiLang))),
+            word.meaningFor(uiLang),
+            pool
+                .where((w) => w.target != word.target)
+                .map((w) => w.meaningFor(uiLang)),
+          ),
           ttsText: word.target,
           word: word,
         );
@@ -98,10 +107,11 @@ class ExerciseGenerator {
           prompt: word.meaningFor(uiLang),
           answer: word.target,
           options: _choiceOptions(
-              word.target,
-              pool
-                  .where((w) => w.meaningFor(uiLang) != word.meaningFor(uiLang))
-                  .map((w) => w.target)),
+            word.target,
+            pool
+                .where((w) => w.meaningFor(uiLang) != word.meaningFor(uiLang))
+                .map((w) => w.target),
+          ),
           word: word,
         );
       case ExerciseType.listening:
@@ -110,10 +120,9 @@ class ExerciseGenerator {
           prompt: '',
           answer: word.target,
           options: _choiceOptions(
-              word.target,
-              pool
-                  .where((w) => w.target != word.target)
-                  .map((w) => w.target)),
+            word.target,
+            pool.where((w) => w.target != word.target).map((w) => w.target),
+          ),
           ttsText: word.target,
           word: word,
         );
@@ -166,16 +175,44 @@ class ExerciseGenerator {
     );
   }
 
-  Exercise _sentenceBuild(
-      SentenceItem sentence, List<SentenceItem> all, String uiLang) {
-    final distractorTokens = all
-        .where((s) => s.target != sentence.target)
-        .expand((s) => s.tokens)
-        .where((t) => !sentence.tokens.contains(t))
-        .toSet()
-        .toList()
-      ..shuffle(_rng);
-    final tokens = [...sentence.tokens, ...distractorTokens.take(3)]
+  /// Jumlah minimum kotak kata pada soal susun kalimat (token jawaban +
+  /// distraktor). Distraktor diambil dari semua kalimat kursus, lalu
+  /// kosakata satu kata sebagai cadangan.
+  static const int kSentenceBuildOptions = 12;
+
+  /// Kunci pembanding token: huruf kecil tanpa tanda baca, supaya "My" dan
+  /// "my" (atau "family." dan "family") dianggap kata yang sama.
+  static String _tokenKey(String t) =>
+      t.toLowerCase().replaceAll(RegExp(r"[^\p{L}\p{N}]", unicode: true), '');
+
+  Exercise _sentenceBuild(SentenceItem sentence, Course course, String uiLang) {
+    final used = sentence.tokens.map(_tokenKey).toSet();
+    final distractors = <String>[];
+    void addAll(Iterable<String> candidates) {
+      final fresh =
+          candidates
+              .where((t) => t.trim().isNotEmpty && !used.contains(_tokenKey(t)))
+              .toList()
+            ..shuffle(_rng);
+      for (final t in fresh) {
+        if (used.add(_tokenKey(t))) distractors.add(t);
+      }
+    }
+
+    final need = max(0, kSentenceBuildOptions - sentence.tokens.length);
+    // Dari kalimat lain di seluruh kursus (kata yang wajar sebagai pengecoh).
+    addAll(
+      course.allSentences
+          .where((s) => s.target != sentence.target)
+          .expand((s) => s.tokens),
+    );
+    if (distractors.length < need) {
+      // Cadangan: kosakata satu kata dari kursus.
+      addAll(
+        course.allWords.map((w) => w.target).where((t) => !t.contains(' ')),
+      );
+    }
+    final tokens = [...sentence.tokens, ...distractors.take(need)]
       ..shuffle(_rng);
     return Exercise(
       type: ExerciseType.sentenceBuild,

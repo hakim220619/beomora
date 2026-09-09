@@ -1,0 +1,359 @@
+# Daftar gambar mode anak — sumber Microsoft Fluent Emoji 3D (lisensi MIT).
+# Satu nama per baris, persis seperti nama folder di
+# https://github.com/microsoft/fluentui-emoji/tree/main/assets
+# Baris "# kategori" menjadi nilai kategori di manifest.json.
+# Jalankan: python3 tool/fetch_kids_images.py
+
+# hewan
+Dog
+Cat
+Mouse
+Hamster
+Rabbit
+Fox
+Bear
+Panda
+Koala
+Tiger
+Lion
+Leopard
+Cow
+Ox
+Water buffalo
+Pig
+Boar
+Goat
+Ram
+Ewe
+Horse
+Zebra
+Deer
+Giraffe
+Elephant
+Mammoth
+Hippopotamus
+Rhinoceros
+Camel
+Two-hump camel
+Kangaroo
+Monkey
+Gorilla
+Orangutan
+Sloth
+Otter
+Beaver
+Hedgehog
+Skunk
+Badger
+Raccoon
+Wolf
+Bison
+Llama
+Chipmunk
+Rat
+Bat
+Frog
+Crocodile
+Turtle
+Snake
+Lizard
+T-rex
+Sauropod
+Dragon
+Bird
+Chicken
+Rooster
+Baby chick
+Hatching chick
+Duck
+Swan
+Eagle
+Owl
+Penguin
+Flamingo
+Peacock
+Parrot
+Dove
+Turkey
+Dodo
+Fish
+Tropical fish
+Blowfish
+Shark
+Dolphin
+Whale
+Spouting whale
+Seal
+Octopus
+Squid
+Crab
+Lobster
+Shrimp
+Snail
+Bug
+Ant
+Honeybee
+Lady beetle
+Butterfly
+Cricket
+Spider
+Scorpion
+Worm
+
+# buah
+Red apple
+Green apple
+Pear
+Tangerine
+Lemon
+Banana
+Watermelon
+Grapes
+Strawberry
+Blueberries
+Melon
+Cherries
+Peach
+Mango
+Pineapple
+Coconut
+Kiwi fruit
+Tomato
+Avocado
+Olive
+
+# sayur
+Eggplant
+Potato
+Carrot
+Ear of corn
+Hot pepper
+Bell pepper
+Cucumber
+Leafy green
+Broccoli
+Garlic
+Onion
+Mushroom
+Peanuts
+Chestnut
+
+# makanan
+Bread
+Croissant
+Cheese wedge
+Egg
+Cooked rice
+Rice ball
+Pizza
+Hamburger
+French fries
+Hot dog
+Sandwich
+Spaghetti
+Poultry leg
+Meat on bone
+Soft ice cream
+Ice cream
+Shaved ice
+Doughnut
+Cookie
+Birthday cake
+Shortcake
+Chocolate bar
+Candy
+Lollipop
+Honey pot
+Glass of milk
+Hot beverage
+Cup with straw
+Baby bottle
+
+# tubuh
+Ear
+Nose
+Eye
+Eyes
+Mouth
+Tongue
+Tooth
+Bone
+Brain
+Foot
+Leg
+Raised hand
+
+# alam
+Sun
+Crescent moon
+Full moon
+Star
+Cloud
+Cloud with rain
+Cloud with lightning
+Snowflake
+Snowman
+Rainbow
+High voltage
+Fire
+Droplet
+Water wave
+Deciduous tree
+Evergreen tree
+Palm tree
+Cactus
+Seedling
+Herb
+Four leaf clover
+Sunflower
+Rose
+Tulip
+Cherry blossom
+Hibiscus
+Blossom
+Maple leaf
+Fallen leaf
+Rock
+Wood
+Volcano
+Snow-capped mountain
+Beach with umbrella
+Desert island
+Globe showing asia-australia
+
+# kendaraan
+Automobile
+Taxi
+Bus
+Trolleybus
+Fire engine
+Police car
+Ambulance
+Delivery truck
+Tractor
+Racing car
+Motorcycle
+Bicycle
+Kick scooter
+Locomotive
+High-speed train
+Tram
+Airplane
+Helicopter
+Rocket
+Flying saucer
+Sailboat
+Ship
+Speedboat
+Canoe
+Anchor
+
+# rumah
+House
+House with garden
+School
+Hospital
+Bed
+Couch and lamp
+Chair
+Door
+Window
+Toilet
+Shower
+Bathtub
+Toothbrush
+Soap
+Sponge
+Bucket
+Broom
+Light bulb
+Television
+Radio
+Telephone
+Mobile phone
+Laptop
+Alarm clock
+Watch
+Key
+Fork and knife
+Spoon
+Kitchen knife
+Bowl with spoon
+Teapot
+Umbrella
+Basket
+Lotion bottle
+Roll of paper
+
+# sekolah
+Books
+Open book
+Notebook
+Pencil
+Pen
+Fountain pen
+Paintbrush
+Crayon
+Scissors
+Straight ruler
+Triangular ruler
+Backpack
+Graduation cap
+Bell
+Artist palette
+Abacus
+Magnifying glass tilted left
+Globe with meridians
+Alarm clock
+Paperclip
+Pushpin
+
+# mainan
+Balloon
+Teddy bear
+Kite
+Yo-yo
+Puzzle piece
+Video game
+Joystick
+Nesting dolls
+Magic wand
+Party popper
+Wrapped gift
+Soccer ball
+Basketball
+Baseball
+Tennis
+American football
+Volleyball
+Trophy
+Bullseye
+Guitar
+Drum
+Trumpet
+Violin
+Musical keyboard
+Saxophone
+Long drum
+
+# pakaian
+T-shirt
+Jeans
+Dress
+Coat
+Socks
+Gloves
+Scarf
+Running shoe
+Hiking boot
+Thong sandal
+Top hat
+Billed cap
+Glasses
+Sunglasses
+Handbag
+Crown
+Ring
+Necktie
+Shorts
+Bikini

@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:beomora/data/question_bank.dart';
 import 'package:beomora/data/study_guides.dart';
 import 'package:beomora/models/course.dart';
 import 'package:beomora/models/exercise.dart';
@@ -26,14 +27,19 @@ void main() {
       expect(courses.map((c) => c.id), containsAll(['en', 'ja', 'id']));
       for (final course in courses) {
         // Bahasa Jepang punya 32 bab; kursus lain minimal 4.
-        expect(course.units.length,
-            greaterThanOrEqualTo(course.id == 'ja' ? 32 : 4),
-            reason: 'kursus ${course.id}');
+        expect(
+          course.units.length,
+          greaterThanOrEqualTo(course.id == 'ja' ? 32 : 4),
+          reason: 'kursus ${course.id}',
+        );
         for (final unit in course.units) {
           expect(unit.lessons.length, 3, reason: 'unit ${unit.id}');
           for (final lesson in unit.lessons) {
-            expect(lesson.words.length, greaterThanOrEqualTo(4),
-                reason: 'lesson ${lesson.id}');
+            expect(
+              lesson.words.length,
+              greaterThanOrEqualTo(4),
+              reason: 'lesson ${lesson.id}',
+            );
             expect(lesson.title['id'], isNotEmpty);
             expect(lesson.title['en'], isNotEmpty);
           }
@@ -45,8 +51,11 @@ void main() {
       for (final course in courses) {
         final seen = <String>{};
         for (final w in course.allWords) {
-          expect(seen.add(w.target), isTrue,
-              reason: 'kata dobel di ${course.id}: ${w.target}');
+          expect(
+            seen.add(w.target),
+            isTrue,
+            reason: 'kata dobel di ${course.id}: ${w.target}',
+          );
         }
       }
     });
@@ -54,8 +63,9 @@ void main() {
     test('generator menghasilkan soal valid untuk semua pelajaran', () {
       for (final course in courses) {
         for (final lesson in course.allLessons) {
-          final exercises = ExerciseGenerator(seed: 42)
-              .forLesson(course, lesson, 'id');
+          final exercises = ExerciseGenerator(
+            seed: 42,
+          ).forLesson(course, lesson, 'id');
           expect(exercises, isNotEmpty, reason: 'lesson ${lesson.id}');
           for (final ex in exercises) {
             if (ex.type == ExerciseType.matching) {
@@ -73,6 +83,26 @@ void main() {
                 for (final token in ex.answer.split(' ')) {
                   expect(ex.options, contains(token));
                 }
+                // Cukup banyak pengecoh, dan tidak ada kotak yang sama
+                // hanya beda huruf besar/tanda baca (misal "My" vs "my").
+                expect(
+                  ex.options.length,
+                  greaterThanOrEqualTo(ExerciseGenerator.kSentenceBuildOptions),
+                  reason: '${lesson.id}: ${ex.options}',
+                );
+                final keys = ex.options
+                    .map(
+                      (t) => t.toLowerCase().replaceAll(
+                        RegExp(r'[^\p{L}\p{N}]', unicode: true),
+                        '',
+                      ),
+                    )
+                    .toList();
+                expect(
+                  keys.toSet().length,
+                  keys.length,
+                  reason: '${lesson.id}: kotak ganda ${ex.options}',
+                );
               } else {
                 expect(ex.options, contains(ex.answer));
               }
@@ -88,18 +118,42 @@ void main() {
       expect(kStudyGuides.keys, containsAll(['ja', 'en', 'id']));
       final ja = kStudyGuides['ja']!;
       final hiragana = ja.firstWhere((t) => t.id == 'hiragana');
-      expect(hiragana.sections.first.kana.length, 46,
-          reason: 'gojūon hiragana harus 46 huruf');
+      expect(
+        hiragana.sections.first.kana.length,
+        46,
+        reason: 'gojūon hiragana harus 46 huruf',
+      );
       final katakana = ja.firstWhere((t) => t.id == 'katakana');
-      expect(katakana.sections.first.kana.length, 46,
-          reason: 'gojūon katakana harus 46 huruf');
+      expect(
+        katakana.sections.first.kana.length,
+        46,
+        reason: 'gojūon katakana harus 46 huruf',
+      );
+      // Materi kanji harus memuat kanji yang sama dengan paket kuis
+      // 'kanji_n5' (id sama → tombol Latihan di detail materi).
+      final kanji = ja.firstWhere((t) => t.id == 'kanji_n5');
+      final kanjiInGuide = {
+        for (final s in kanji.sections) ...s.kana.map((k) => k.kana),
+      };
+      final quizPack = letterQuizFor(
+        'ja',
+      ).firstWhere((c) => c.id == 'kanji_n5');
+      expect(
+        kanjiInGuide,
+        equals(quizPack.items.map((k) => k.kana).toSet()),
+        reason: 'kanji di materi dan paket kuis harus sama',
+      );
+      expect(kanjiInGuide.length, 62);
       for (final topics in kStudyGuides.values) {
         expect(topics, isNotEmpty);
         for (final topic in topics) {
           expect(topic.title['id'], isNotEmpty);
           expect(topic.title['en'], isNotEmpty);
-          expect(topic.sections, isNotEmpty,
-              reason: 'topik ${topic.id} tanpa isi');
+          expect(
+            topic.sections,
+            isNotEmpty,
+            reason: 'topik ${topic.id} tanpa isi',
+          );
         }
       }
     });
@@ -117,15 +171,12 @@ void main() {
     });
   });
 
-  testWidgets('aplikasi boot ke onboarding lalu bisa lanjut',
-      (tester) async {
+  testWidgets('aplikasi boot ke onboarding lalu bisa lanjut', (tester) async {
     SharedPreferences.setMockInitialValues({});
     // I/O asli (asset & prefs) harus lewat runAsync di dalam testWidgets,
     // kalau tidak future-nya tak pernah selesai di zona fake-async.
-    final prefs =
-        (await tester.runAsync(SharedPreferences.getInstance))!;
-    final courses =
-        (await tester.runAsync(ContentService.loadCourses))!;
+    final prefs = (await tester.runAsync(SharedPreferences.getInstance))!;
+    final courses = (await tester.runAsync(ContentService.loadCourses))!;
 
     // Beberapa widget Material punya animasi berkelanjutan, jadi pakai
     // pump berdurasi tetap, bukan pumpAndSettle.
@@ -158,13 +209,11 @@ void main() {
 
     await tester.tap(find.textContaining('Bahasa Inggris'));
     await settle();
+    // Target XP harian tidak ditanya lagi (bawaan 20 XP, ubah di
+    // Pengaturan); langsung ke pilihan tantangan streak.
     await tester.tap(find.text('LANJUT'));
     await settle();
-    expect(find.text('Tentukan target harianmu'), findsOneWidget);
-
-    // Langkah baru: pilih tantangan streak (10/30/50/90/120 hari).
-    await tester.tap(find.text('LANJUT'));
-    await settle();
+    expect(find.text('Tentukan target harianmu'), findsNothing);
     expect(find.text('Pilih tantangan streak-mu 🔥'), findsOneWidget);
 
     await tester.tap(find.text('MULAI BELAJAR'));

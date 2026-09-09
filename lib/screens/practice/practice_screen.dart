@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../data/listening_bank.dart';
 import '../../data/mcq_packs.dart';
 import '../../l10n/app_strings.dart';
 import '../../models/course.dart';
@@ -9,6 +10,7 @@ import '../../theme.dart';
 import '../lesson/lesson_screen.dart';
 import 'flashcards_screen.dart';
 import 'letter_quiz_screen.dart';
+import 'listening_pack_screen.dart';
 import 'mcq_pack_screen.dart';
 import 'memory_match_screen.dart';
 import 'time_challenge_screen.dart';
@@ -64,6 +66,16 @@ class PracticeScreen extends StatelessWidget {
               title: l.t('mcq_title'),
               subtitle: l.t('mcq_desc'),
               onTap: () => _push(context, McqPackScreen(course: course)),
+            ),
+          // Hanya kursus yang punya bank bacaan dengar (ja/en).
+          if (listeningPacksFor(course.id).isNotEmpty)
+            _GameCard(
+              emoji: '🎧',
+              color: DuoColors.blue,
+              title: l.t('listening_title'),
+              subtitle: l.t('listening_desc'),
+              onTap: () =>
+                  _push(context, ListeningPackScreen(course: course)),
             ),
           _GameCard(
             emoji: '⏱️',

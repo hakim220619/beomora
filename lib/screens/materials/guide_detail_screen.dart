@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 import '../../data/question_bank.dart';
 import '../../l10n/app_strings.dart';
 import '../../models/course.dart';
 import '../../models/guide.dart';
+import '../../providers/auth_provider.dart';
 import '../../services/tts_service.dart';
 import '../../theme.dart';
 import '../../widgets/study/study_background.dart';
 import '../practice/letter_quiz_screen.dart';
+import '../premium_screen.dart';
 
 /// Detail satu topik materi: grid kana yang bisa diketuk untuk
 /// mendengar pengucapan, paragraf penjelasan, dan contoh berbunyi.
 /// Topik yang punya paket di bank soal (mis. Hiragana/Katakana)
-/// menampilkan tombol mengapung menuju latihan khusus paket itu.
+/// menampilkan tombol mengapung menuju latihan khusus paket itu;
+/// paket premium (mis. Kanji N5) tampil bergembok dan mengarah ke
+/// halaman Premium bila pengguna belum berlangganan.
 class GuideDetailScreen extends StatefulWidget {
   final Course course;
   final GuideTopic topic;
@@ -30,13 +35,67 @@ class GuideDetailScreen extends StatefulWidget {
   State<GuideDetailScreen> createState() => _GuideDetailScreenState();
 }
 
+/// Kunci label hint pencarian sesuai bahasa kursus. Kolom `romaji` di
+/// data dipakai juga sebagai panduan pelafalan (Inggris "sei-lor",
+/// Jerman "ikh bin"), jadi sebutannya dibedakan: Jepang "romaji",
+/// Korea "romanisasi", lainnya "cara baca"; tanpa panduan cukup
+/// "kata atau arti".
+String vocabSearchHintKey(String courseId, {required bool hasReading}) {
+  if (!hasReading) return 'vocab_search_hint_plain';
+  return switch (courseId) {
+    'ja' => 'vocab_search_hint_romaji',
+    'ko' => 'vocab_search_hint_romanization',
+    _ => 'vocab_search_hint_reading',
+  };
+}
+
 class _GuideDetailScreenState extends State<GuideDetailScreen> {
   String? _activeKana; // huruf yang barusan diketuk (disorot sebentar)
+  final _searchCtrl = TextEditingController();
+  String _query = '';
+
+  late final bool _searchable = widget.topic.sections
+      .any((s) => s.examples.isNotEmpty || s.kana.isNotEmpty);
+  late final String _hintKey = vocabSearchHintKey(
+    widget.course.id,
+    hasReading: widget.topic.sections
+        .any((s) => s.examples.any((e) => e.romaji != null)),
+  );
 
   @override
   void dispose() {
+    _searchCtrl.dispose();
     TtsService.instance.stop();
     super.dispose();
+  }
+
+  String get _needle => _query.trim().toLowerCase();
+  bool get _searching => _needle.isNotEmpty;
+
+  bool _matchExample(GuideExample e, String uiLang) {
+    final q = _needle;
+    final meaning = (e.meaning[uiLang] ?? e.meaning.values.first);
+    return e.target.toLowerCase().contains(q) ||
+        (e.romaji?.toLowerCase().contains(q) ?? false) ||
+        meaning.toLowerCase().contains(q);
+  }
+
+  bool _matchKana(KanaItem k) =>
+      k.kana.contains(_needle) || k.romaji.toLowerCase().contains(_needle);
+
+  /// Bagian dengan isi yang cocok saja; kana & contoh disaring. Saat
+  /// tidak mencari, semua bagian dikembalikan apa adanya.
+  List<GuideSection> _visibleSections(String uiLang) {
+    if (!_searching) return widget.topic.sections;
+    final out = <GuideSection>[];
+    for (final s in widget.topic.sections) {
+      final kana = s.kana.where(_matchKana).toList();
+      final ex = s.examples.where((e) => _matchExample(e, uiLang)).toList();
+      if (kana.isEmpty && ex.isEmpty) continue;
+      out.add(GuideSection(
+          title: s.title, body: null, kana: kana, examples: ex));
+    }
+    return out;
   }
 
   void _speak(String text) {
@@ -54,6 +113,9 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
         .where((c) => c.id == widget.topic.id)
         .toList();
     final quizCat = quizMatches.isEmpty ? null : quizMatches.first;
+    final isPremium = context.watch<AuthProvider>().isPremium;
+    final locked = quizCat != null && quizCat.premium && !isPremium;
+    final visible = _visibleSections(l.code);
 
     return StudyScaffold(
       appBar: AppBar(
@@ -62,20 +124,26 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
       floatingActionButton: quizCat == null
           ? null
           : FloatingActionButton.extended(
-              backgroundColor: DuoColors.green,
+              backgroundColor: locked ? DuoColors.purple : DuoColors.green,
               foregroundColor: Colors.white,
-              icon: const Icon(Icons.fitness_center_rounded),
+              icon: Icon(locked
+                  ? Icons.lock_rounded
+                  : Icons.fitness_center_rounded),
               label: Text(
-                '${l.t('practice_btn')} ${quizCat.title[l.code] ?? ''}',
+                locked
+                    ? l.t('premium_locked')
+                    : '${l.t('practice_btn')} ${quizCat.title[l.code] ?? ''}',
                 style: const TextStyle(
                     fontWeight: FontWeight.w900, letterSpacing: 0.4),
               ),
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (_) => LetterQuizScreen(
-                    course: widget.course,
-                    initialCategoryId: quizCat.id,
-                  ),
+                  builder: (_) => locked
+                      ? const PremiumScreen()
+                      : LetterQuizScreen(
+                          course: widget.course,
+                          initialCategoryId: quizCat.id,
+                        ),
                 ),
               ),
             ),
@@ -83,7 +151,46 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
         padding:
             EdgeInsets.fromLTRB(16, 4, 16, quizCat == null ? 32 : 96),
         children: [
-          if (hasKana)
+          if (_searchable) ...[
+            TextField(
+              controller: _searchCtrl,
+              onChanged: (v) => setState(() => _query = v),
+              textInputAction: TextInputAction.search,
+              decoration: InputDecoration(
+                hintText: l.t(_hintKey),
+                prefixIcon: const Icon(Icons.search_rounded),
+                suffixIcon: _searching
+                    ? IconButton(
+                        icon: const Icon(Icons.close_rounded),
+                        onPressed: () {
+                          _searchCtrl.clear();
+                          setState(() => _query = '');
+                        },
+                      )
+                    : null,
+                isDense: true,
+                filled: true,
+                fillColor: Theme.of(context).cardTheme.color,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(14),
+                  borderSide: BorderSide(
+                      color: Theme.of(context).dividerColor, width: 1.5),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(14),
+                  borderSide: BorderSide(
+                      color: Theme.of(context).dividerColor, width: 1.5),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(14),
+                  borderSide:
+                      const BorderSide(color: DuoColors.blue, width: 2),
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+          ],
+          if (hasKana && !_searching)
             Padding(
               padding: const EdgeInsets.only(bottom: 8),
               child: Text(
@@ -93,8 +200,25 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
                     fontSize: 13, color: Theme.of(context).hintColor),
               ),
             ),
-          for (final section in widget.topic.sections)
-            _buildSection(context, l, section),
+          if (_searching && visible.isEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 40),
+              child: Column(
+                children: [
+                  const Text('🔍', style: TextStyle(fontSize: 40)),
+                  const SizedBox(height: 10),
+                  Text(
+                    l.t('vocab_search_empty'),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: Theme.of(context).hintColor),
+                  ),
+                ],
+              ),
+            ),
+          for (final section in visible) _buildSection(context, l, section),
         ],
       ),
     );

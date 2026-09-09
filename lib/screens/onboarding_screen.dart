@@ -22,15 +22,7 @@ class OnboardingScreen extends StatefulWidget {
 class _OnboardingScreenState extends State<OnboardingScreen> {
   int _step = 0;
   String? _courseId;
-  int _goal = 20;
   int _streakGoal = 30;
-
-  static const _goals = [
-    (10, 'goal_casual'),
-    (20, 'goal_regular'),
-    (30, 'goal_serious'),
-    (50, 'goal_intense'),
-  ];
 
   static const _streakGoals = [10, 30, 50, 90, 120];
 
@@ -40,14 +32,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   void _next() {
-    if (_step < 3) {
+    if (_step < 2) {
       setState(() => _step++);
       return;
     }
     final settings = context.read<SettingsProvider>();
     final progress = context.read<ProgressProvider>();
     progress.setActiveCourse(_courseId!);
-    progress.setDailyGoal(_goal);
+    // Target XP harian memakai bawaan provider (20 XP); bisa diubah
+    // kapan saja di Pengaturan.
     progress.setStreakGoal(_streakGoal);
     // Cukup tandai selesai — gerbang di main.dart yang menentukan
     // layar berikutnya (wajib login dulu sebelum menu utama).
@@ -65,7 +58,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               PencilProgressBar(
-                value: (_step + 1) / 4,
+                value: (_step + 1) / 3,
                 height: 14,
                 color: DuoColors.green,
                 showPencil: true,
@@ -75,12 +68,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 child: switch (_step) {
                   0 => _buildLangStep(l),
                   1 => _buildCourseStep(l),
-                  2 => _buildGoalStep(l),
                   _ => _buildStreakGoalStep(l),
                 },
               ),
               DuoButton(
-                label: _step < 3 ? l.t('continue_btn') : l.t('start_btn'),
+                label: _step < 2 ? l.t('continue_btn') : l.t('start_btn'),
                 onPressed: _canContinue ? _next : null,
               ),
             ],
@@ -149,27 +141,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ? ChoiceState.selected
                 : ChoiceState.idle,
             onTap: () => setState(() => _courseId = course.id),
-          ),
-          const SizedBox(height: 12),
-        ],
-      ],
-    );
-  }
-
-  Widget _buildGoalStep(L l) {
-    return ListView(
-      children: [
-        Text(
-          l.t('onb_daily_goal'),
-          textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w800),
-        ),
-        const SizedBox(height: 24),
-        for (final (xp, key) in _goals) ...[
-          ChoiceCard(
-            label: '${l.t(key)} — $xp ${l.t('xp_per_day')}',
-            state: _goal == xp ? ChoiceState.selected : ChoiceState.idle,
-            onTap: () => setState(() => _goal = xp),
           ),
           const SizedBox(height: 12),
         ],

@@ -35,13 +35,18 @@ class L {
       'materials_vocab_sub':
           'kosakata tematik: pertanian, kelautan, kantoran, dll.',
       'tap_kana_hint': 'Ketuk huruf untuk mendengar pengucapannya',
+      'vocab_search_hint_romaji': 'Cari kata, romaji, atau arti…',
+      'vocab_search_hint_reading': 'Cari kata, cara baca, atau arti…',
+      'vocab_search_hint_romanization': 'Cari kata, romanisasi, atau arti…',
+      'vocab_search_hint_plain': 'Cari kata atau arti…',
+      'vocab_search_empty': 'Tidak ada kosakata yang cocok',
+      'vocab_search_count': 'kata ditemukan',
       // Onboarding
       'onb_welcome_title': 'Selamat datang di Beomora!',
       'onb_welcome_sub':
           'Naik kelas demi kelas, kuasai bahasa baru! 🎓',
       'onb_ui_lang': 'Pilih bahasa aplikasi',
       'onb_pick_course': 'Mau belajar bahasa apa?',
-      'onb_daily_goal': 'Tentukan target harianmu',
       'onb_streak_goal': 'Pilih tantangan streak-mu 🔥',
       'onb_streak_goal_sub':
           'Berapa hari kamu mau belajar? Tenang, bolos sehari tidak '
@@ -54,8 +59,11 @@ class L {
           '{done}/{goal} hari — lanjutkan belajar hari ini! 🔥',
       'streak_goal_done_title': 'Tantangan {goal} hari selesai! 🏆',
       'streak_goal_done_msg':
-          'Luar biasa, kamu sudah belajar {goal} hari! Hadiah +{gems} 🪙. '
-          'Pilih tantangan berikutnya di Pengaturan.',
+          'Luar biasa, kamu konsisten belajar sampai {goal} hari! '
+          'Hadiah +{gems} 🪙 sudah masuk ke koinmu.',
+      'miss_notice_cta': 'LANJUT BELAJAR',
+      'miss_notice_days_left': 'Tinggal {n} hari lagi menuju target 🎯',
+      'streak_goal_pick_next': 'PILIH TANTANGAN BERIKUTNYA',
       'goal_casual': 'Santai',
       'goal_regular': 'Rutin',
       'goal_serious': 'Serius',
@@ -140,6 +148,30 @@ class L {
       'mcq_count_hint': 'Jumlah soal',
       'mcq_count_error': 'Masukkan angka',
       'mcq_all': 'Semua',
+      'listening_title': 'Latihan Dengar',
+      'listening_desc': 'Dengar paragraf lalu jawab soalnya, gaya TOEFL/IELTS/JLPT',
+      'listening_pick_pack': 'Pilih paket dengar',
+      'listening_pick_passage': 'Pilih bacaan',
+      'listening_passages': 'bacaan',
+      'listening_questions': 'soal',
+      'listening_plays_per_passage': 'putar per bacaan',
+      'listening_unlimited': 'Putar bebas',
+      'listening_free_prefix': 'Versi gratis: bacaan 1 sampai',
+      'listening_unlock': 'Buka semua bacaan dengan Premium',
+      'listening_play': 'Putar audio',
+      'listening_playing': 'Memutar… ketuk untuk berhenti',
+      'listening_replay': 'Putar lagi',
+      'listening_resume': 'Lanjutkan',
+      'listening_restart': 'Dari awal',
+      'listening_pause_note': 'Jeda & lanjutkan tidak memakai jatah putar',
+      'listening_seek_note': 'Geser garis untuk melompat ke bagian lain',
+      'listening_plays_left': 'sisa putar',
+      'listening_no_plays': 'Batas putar habis',
+      'listening_slow': 'Lambat',
+      'listening_normal': 'Normal',
+      'listening_hint': 'Dengarkan baik-baik. Transkrip dibuka setelah semua soal dijawab.',
+      'listening_transcript': 'Transkrip',
+      'listening_translation': 'Terjemahan',
       // Premium & monetisasi
       'premium_title': 'Beomora Premium',
       'premium_sub':
@@ -288,6 +320,7 @@ class L {
       'register_canceled':
           'Pendaftaran dibatalkan — kamu dikeluarkan dari akun.',
       'stats': 'Statistik',
+      'cabin_menu': 'Menu',
       'total_xp': 'Total XP',
       'words_learned': 'Kata dikuasai',
       'longest_streak': 'Streak terpanjang',
@@ -408,13 +441,18 @@ class L {
       'materials_vocab_sub':
           'themed vocabulary: farming, maritime, office, etc.',
       'tap_kana_hint': 'Tap a character to hear how it sounds',
+      'vocab_search_hint_romaji': 'Search word, romaji, or meaning…',
+      'vocab_search_hint_reading': 'Search word, pronunciation, or meaning…',
+      'vocab_search_hint_romanization': 'Search word, romanization, or meaning…',
+      'vocab_search_hint_plain': 'Search word or meaning…',
+      'vocab_search_empty': 'No matching vocabulary',
+      'vocab_search_count': 'words found',
       // Onboarding
       'onb_welcome_title': 'Welcome to Beomora!',
       'onb_welcome_sub':
           'Level up class by class and master new languages! 🎓',
       'onb_ui_lang': 'Choose app language',
       'onb_pick_course': 'What do you want to learn?',
-      'onb_daily_goal': 'Set your daily goal',
       'onb_streak_goal': 'Pick your streak challenge 🔥',
       'onb_streak_goal_sub':
           'How many days do you want to learn? Missing a day never '
@@ -427,8 +465,11 @@ class L {
           'at {done}/{goal} days — keep learning today! 🔥',
       'streak_goal_done_title': '{goal}-day challenge complete! 🏆',
       'streak_goal_done_msg':
-          "Amazing, you've studied for {goal} days! Reward: +{gems} 🪙. "
-          'Pick your next challenge in Settings.',
+          "Amazing, you've kept learning all the way to {goal} days! "
+          'Your +{gems} 🪙 reward has been added to your coins.',
+      'miss_notice_cta': 'KEEP LEARNING',
+      'miss_notice_days_left': '{n} more days to reach your target 🎯',
+      'streak_goal_pick_next': 'PICK NEXT CHALLENGE',
       'goal_casual': 'Casual',
       'goal_regular': 'Regular',
       'goal_serious': 'Serious',
@@ -513,6 +554,30 @@ class L {
       'mcq_count_hint': 'Number of questions',
       'mcq_count_error': 'Enter a number',
       'mcq_all': 'All',
+      'listening_title': 'Listening Practice',
+      'listening_desc': 'Hear a passage, then answer questions, TOEFL/IELTS/JLPT style',
+      'listening_pick_pack': 'Choose a listening pack',
+      'listening_pick_passage': 'Choose a passage',
+      'listening_passages': 'passages',
+      'listening_questions': 'questions',
+      'listening_plays_per_passage': 'plays per passage',
+      'listening_unlimited': 'Unlimited plays',
+      'listening_free_prefix': 'Free version: passages 1 to',
+      'listening_unlock': 'Unlock all passages with Premium',
+      'listening_play': 'Play audio',
+      'listening_playing': 'Playing… tap to stop',
+      'listening_replay': 'Play again',
+      'listening_resume': 'Resume',
+      'listening_restart': 'From start',
+      'listening_pause_note': 'Pause & resume don\'t use up your plays',
+      'listening_seek_note': 'Drag the line to jump to another part',
+      'listening_plays_left': 'plays left',
+      'listening_no_plays': 'No plays left',
+      'listening_slow': 'Slow',
+      'listening_normal': 'Normal',
+      'listening_hint': 'Listen carefully. The transcript unlocks after you answer all questions.',
+      'listening_transcript': 'Transcript',
+      'listening_translation': 'Translation',
       // Premium & monetization
       'premium_title': 'Beomora Premium',
       'premium_sub':
@@ -659,6 +724,7 @@ class L {
           'Registration failed — your data was NOT saved. Check your connection and try again.',
       'register_canceled': 'Registration canceled — you were signed out.',
       'stats': 'Statistics',
+      'cabin_menu': 'Menu',
       'total_xp': 'Total XP',
       'words_learned': 'Words mastered',
       'longest_streak': 'Longest streak',

@@ -26,7 +26,11 @@ const _kFractions = [0.5, 0.25, 0.5, 0.75];
 /// pensil putus-putus; pensil ✏️ menandai posisi belajar saat ini.
 /// Saat dibuka, daftar otomatis menggulir ke pelajaran aktif.
 class SkillTreeScreen extends StatefulWidget {
-  const SkillTreeScreen({super.key});
+  /// Dipicu (notify) oleh menu utama saat tab Belajar diketuk agar peta
+  /// menggulir ke pelajaran yang sedang dikerjakan.
+  final Listenable? focusSignal;
+
+  const SkillTreeScreen({super.key, this.focusSignal});
 
   @override
   State<SkillTreeScreen> createState() => _SkillTreeScreenState();
@@ -43,17 +47,35 @@ class _SkillTreeScreenState extends State<SkillTreeScreen> {
     super.initState();
     WidgetsBinding.instance
         .addPostFrameCallback((_) => _scrollToCurrent());
+    widget.focusSignal?.addListener(_onFocusSignal);
+  }
+
+  @override
+  void didUpdateWidget(covariant SkillTreeScreen old) {
+    super.didUpdateWidget(old);
+    if (old.focusSignal != widget.focusSignal) {
+      old.focusSignal?.removeListener(_onFocusSignal);
+      widget.focusSignal?.addListener(_onFocusSignal);
+    }
   }
 
   @override
   void dispose() {
+    widget.focusSignal?.removeListener(_onFocusSignal);
     _scroll.dispose();
     super.dispose();
   }
 
-  /// Gulir ke pelajaran yang sedang dikerjakan (sekali, saat layar
-  /// pertama tampil) — hanya kalau sudah ada progres.
-  void _scrollToCurrent() {
+  /// Tab Belajar diketuk: tunggu frame agar layar sudah tampil, lalu
+  /// gulir ke pelajaran terakhir (selalu, termasuk kembali ke atas).
+  void _onFocusSignal() {
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => _scrollToCurrent(force: true));
+  }
+
+  /// Gulir ke pelajaran yang sedang dikerjakan. Saat pertama tampil
+  /// hanya kalau sudah ada progres; dengan [force] selalu digulir.
+  void _scrollToCurrent({bool force = false}) {
     if (!mounted || !_scroll.hasClients) return;
     final progress = context.read<ProgressProvider>();
     final courses = context.read<List<Course>>();
@@ -65,7 +87,7 @@ class _SkillTreeScreenState extends State<SkillTreeScreen> {
     var current = allLessons.indexWhere(
         (les) => !progress.isLessonCompleted(course.id, les.id));
     if (current == -1) current = allLessons.length - 1;
-    if (current <= 0) return;
+    if (current <= 0 && !force) return;
 
     var offset = 0.0;
     var found = false;
@@ -82,7 +104,7 @@ class _SkillTreeScreenState extends State<SkillTreeScreen> {
     if (!found) return;
     // Sisakan ruang atas supaya node aktif tampil di tengah layar.
     offset -= 170;
-    if (offset <= 0) return;
+    if (offset <= 0 && !force) return;
     _scroll.animateTo(
       offset.clamp(0.0, _scroll.position.maxScrollExtent),
       duration: const Duration(milliseconds: 650),

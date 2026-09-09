@@ -10,12 +10,12 @@ import '../providers/settings_provider.dart';
 import '../services/notification_service.dart';
 import '../services/update_service.dart';
 import '../theme.dart';
-import '../widgets/duo_dialog.dart';
 import '../widgets/study/study_background.dart';
 import 'cabin/cabin_screen.dart';
 import 'learn/skill_tree_screen.dart';
 import 'materials/materials_screen.dart';
 import 'practice/practice_screen.dart';
+import 'streak_notice_screen.dart';
 
 /// Empat ruang belajar utama: Jalur Belajar, Materi (referensi
 /// lengkap: kana, grammar), Ruang Latihan, dan Kampus (akun, papan
@@ -29,6 +29,15 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _index = 0;
+  // Sinyal ke peta Belajar: gulir ke pelajaran terakhir tiap kali tab
+  // Belajar diketuk (pindah tab maupun ketuk ulang).
+  final _learnFocus = _TapSignal();
+
+  @override
+  void dispose() {
+    _learnFocus.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -58,11 +67,11 @@ class _MainScreenState extends State<MainScreen> {
     }));
   }
 
-  /// Pemberitahuan saat menu utama terbuka: (1) notice bolos —
+  /// Pemberitahuan saat menu utama terbuka, masing-masing satu
+  /// halaman penuh ([StreakNoticeScreen]): (1) notice bolos —
   /// tantangan streak tetap lanjut; (2) perayaan tantangan selesai.
   Future<void> _showStreakNotices() async {
     if (!mounted) return;
-    final l = L.read(context);
     final progress = context.read<ProgressProvider>();
     final settings = context.read<SettingsProvider>();
 
@@ -75,17 +84,10 @@ class _MainScreenState extends State<MainScreen> {
 
     if (progress.pendingMissNotice) {
       progress.markMissNoticeShown();
-      await showDuoDialog<void>(
-        context,
-        emoji: '😴',
-        color: DuoColors.blue,
-        title: l.t('miss_notice_title'),
-        message: l
-            .t('miss_notice_msg')
-            .replaceFirst('{done}', '${progress.goalDaysDone}')
-            .replaceFirst('{goal}', '${progress.streakGoalDays}'),
-        actions: [DuoDialogAction(label: l.t('ok'), primary: true)],
-      );
+      await _pushNotice(StreakNoticeScreen.missed(
+        goalDays: progress.streakGoalDays,
+        daysDone: progress.goalDaysDone,
+      ));
       if (!mounted) return;
     }
 
@@ -93,21 +95,16 @@ class _MainScreenState extends State<MainScreen> {
       final goal = progress.streakGoalDays;
       final got = progress.celebrateStreakGoal();
       if (got == 0) return;
-      await showDuoDialog<void>(
-        context,
-        emoji: '🏆',
-        color: DuoColors.yellow,
-        title: l
-            .t('streak_goal_done_title')
-            .replaceFirst('{goal}', '$goal'),
-        message: l
-            .t('streak_goal_done_msg')
-            .replaceFirst('{goal}', '$goal')
-            .replaceFirst('{gems}', '$got'),
-        actions: [DuoDialogAction(label: l.t('ok'), primary: true)],
-      );
+      await _pushNotice(
+          StreakNoticeScreen.goalDone(goalDays: goal, gems: got));
     }
   }
+
+  Future<void> _pushNotice(Widget screen) =>
+      Navigator.of(context).push<void>(MaterialPageRoute(
+        fullscreenDialog: true,
+        builder: (_) => screen,
+      ));
 
   @override
   Widget build(BuildContext context) {
@@ -118,16 +115,19 @@ class _MainScreenState extends State<MainScreen> {
       bottomSafe: false,
       body: IndexedStack(
         index: _index,
-        children: const [
-          SkillTreeScreen(),
-          MaterialsScreen(),
-          PracticeScreen(),
-          CabinScreen(),
+        children: [
+          SkillTreeScreen(focusSignal: _learnFocus),
+          const MaterialsScreen(),
+          const PracticeScreen(),
+          const CabinScreen(),
         ],
       ),
       bottomNavigationBar: _DockNav(
         index: _index,
-        onTap: (i) => setState(() => _index = i),
+        onTap: (i) {
+          setState(() => _index = i);
+          if (i == 0) _learnFocus.ping();
+        },
         items: [
           ('📚', l.t('nav_learn'), DuoColors.green),
           ('📖', l.t('nav_materials'), DuoColors.blue),
@@ -137,6 +137,11 @@ class _MainScreenState extends State<MainScreen> {
       ),
     );
   }
+}
+
+/// Listenable sederhana tanpa nilai: cukup "ketuk" para pendengar.
+class _TapSignal extends ChangeNotifier {
+  void ping() => notifyListeners();
 }
 
 /// Navigasi bawah berbentuk rak alat tulis yang mengapung di atas

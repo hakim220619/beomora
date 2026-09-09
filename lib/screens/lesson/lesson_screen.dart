@@ -28,11 +28,8 @@ class LessonScreen extends StatefulWidget {
   final Lesson? lesson; // null saat latihan bebas
   final bool isPractice;
 
-  const LessonScreen({
-    super.key,
-    required this.course,
-    this.lesson,
-  }) : isPractice = lesson == null;
+  const LessonScreen({super.key, required this.course, this.lesson})
+    : isPractice = lesson == null;
 
   @override
   State<LessonScreen> createState() => _LessonScreenState();
@@ -55,8 +52,7 @@ class _LessonScreenState extends State<LessonScreen> {
     final generator = ExerciseGenerator();
     if (widget.isPractice) {
       final progress = context.read<ProgressProvider>();
-      final learned =
-          progress.masteredWords[widget.course.id] ?? <String>{};
+      final learned = progress.masteredWords[widget.course.id] ?? <String>{};
       _queue = generator.freePractice(widget.course, learned, uiLang);
     } else {
       _queue = generator.forLesson(widget.course, widget.lesson!, uiLang);
@@ -78,6 +74,11 @@ class _LessonScreenState extends State<LessonScreen> {
     final int grade;
     if (ex.type == ExerciseType.typing) {
       grade = AnswerGrader.grade(_pendingAnswer, ex.answer);
+    } else if (ex.type == ExerciseType.sentenceBuild) {
+      // Urutan kata yang dinilai, bukan huruf besar/kecil kotaknya.
+      grade = _pendingAnswer.trim().toLowerCase() == ex.answer.toLowerCase()
+          ? 2
+          : 0;
     } else {
       grade = _pendingAnswer.trim() == ex.answer ? 2 : 0;
     }
@@ -147,11 +148,12 @@ class _LessonScreenState extends State<LessonScreen> {
       reward = progress.completeLesson(
         courseId: widget.course.id,
         lessonId: widget.lesson!.id,
-        wordTargets:
-            widget.lesson!.words.map((w) => w.target).toList(),
+        wordTargets: widget.lesson!.words.map((w) => w.target).toList(),
         perfect: _mistakes == 0,
         firstTime: !progress.isLessonCompleted(
-            widget.course.id, widget.lesson!.id),
+          widget.course.id,
+          widget.lesson!.id,
+        ),
       );
     }
 
@@ -176,9 +178,7 @@ class _LessonScreenState extends State<LessonScreen> {
       color: DuoColors.red,
       title: l.t('no_hearts_title'),
       message: l.t('lesson_failed'),
-      actions: [
-        DuoDialogAction(label: l.t('ok'), primary: true),
-      ],
+      actions: [DuoDialogAction(label: l.t('ok'), primary: true)],
     );
     if (mounted) Navigator.of(context).pop();
   }
@@ -194,12 +194,12 @@ class _LessonScreenState extends State<LessonScreen> {
       message: l.t('quit_msg'),
       actions: [
         DuoDialogAction(
-            label: l.t('stay'),
-            value: false,
-            primary: true,
-            color: DuoColors.green),
-        DuoDialogAction(
-            label: l.t('quit'), value: true, color: DuoColors.red),
+          label: l.t('stay'),
+          value: false,
+          primary: true,
+          color: DuoColors.green,
+        ),
+        DuoDialogAction(label: l.t('quit'), value: true, color: DuoColors.red),
       ],
     );
     if (quit == true && mounted) Navigator.of(context).pop();
@@ -213,9 +213,9 @@ class _LessonScreenState extends State<LessonScreen> {
     final progress = context.watch<ProgressProvider>();
     final ex = _current;
     final isMatching = ex.type == ExerciseType.matching;
-    final isNewWord = ex.word != null &&
-        !(progress.masteredWords[widget.course.id]
-                ?.contains(ex.word!.target) ??
+    final isNewWord =
+        ex.word != null &&
+        !(progress.masteredWords[widget.course.id]?.contains(ex.word!.target) ??
             false);
 
     return PopScope(
@@ -234,8 +234,10 @@ class _LessonScreenState extends State<LessonScreen> {
                   children: [
                     IconButton(
                       onPressed: _confirmQuit,
-                      icon: Icon(Icons.close_rounded,
-                          color: Theme.of(context).hintColor),
+                      icon: Icon(
+                        Icons.close_rounded,
+                        color: Theme.of(context).hintColor,
+                      ),
                     ),
                     Expanded(
                       child: PencilProgressBar(
@@ -274,10 +276,11 @@ class _LessonScreenState extends State<LessonScreen> {
                           child: Container(
                             margin: const EdgeInsets.only(bottom: 12),
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 4),
+                              horizontal: 10,
+                              vertical: 4,
+                            ),
                             decoration: BoxDecoration(
-                              color:
-                                  DuoColors.purple.withValues(alpha: 0.2),
+                              color: DuoColors.purple.withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/jlpt_vocab.dart';
@@ -7,6 +8,7 @@ import '../../l10n/app_strings.dart';
 import '../../models/course.dart';
 import '../../models/guide.dart';
 import '../../providers/progress_provider.dart';
+import '../../services/tts_service.dart';
 import '../../theme.dart';
 import '../../widgets/study/study_background.dart';
 import '../course_select_screen.dart';
@@ -117,15 +119,75 @@ class MaterialsScreen extends StatelessWidget {
 
 /// Daftar topik kosakata tematik (pertanian, kelautan, kantoran, dst.)
 /// di balik kartu "Kosakata" pada tab Materi.
-class _VocabListScreen extends StatelessWidget {
+class _VocabListScreen extends StatefulWidget {
   final Course course;
   final List<GuideTopic> topics;
 
   const _VocabListScreen({required this.course, required this.topics});
 
   @override
+  State<_VocabListScreen> createState() => _VocabListScreenState();
+}
+
+/// Satu kata hasil pencarian beserta topik asalnya.
+class _VocabHit {
+  final GuideTopic topic;
+  final GuideExample word;
+  const _VocabHit(this.topic, this.word);
+}
+
+class _VocabListScreenState extends State<_VocabListScreen> {
+  final _searchCtrl = TextEditingController();
+  String _query = '';
+  late final String _hintKey = vocabSearchHintKey(
+    widget.course.id,
+    hasReading: widget.topics.any((t) =>
+        t.sections.any((s) => s.examples.any((e) => e.romaji != null))),
+  );
+
+  @override
+  void dispose() {
+    _searchCtrl.dispose();
+    TtsService.instance.stop();
+    super.dispose();
+  }
+
+  /// Cari di semua topik kosakata: kata target, romaji, atau arti
+  /// (bahasa UI aktif). Dibatasi 60 hasil agar tetap ringan.
+  List<_VocabHit> _search(String q, String uiLang) {
+    final needle = q.trim().toLowerCase();
+    if (needle.isEmpty) return const [];
+    final hits = <_VocabHit>[];
+    for (final topic in widget.topics) {
+      for (final section in topic.sections) {
+        for (final w in section.examples) {
+          final meaning =
+              (w.meaning[uiLang] ?? w.meaning.values.first).toLowerCase();
+          if (w.target.toLowerCase().contains(needle) ||
+              (w.romaji?.toLowerCase().contains(needle) ?? false) ||
+              meaning.contains(needle)) {
+            hits.add(_VocabHit(topic, w));
+            if (hits.length >= 60) return hits;
+          }
+        }
+      }
+    }
+    return hits;
+  }
+
+  void _speak(String text) {
+    HapticFeedback.selectionClick();
+    TtsService.instance.speak(text, widget.course.ttsLocale);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final l = L.of(context);
+    final course = widget.course;
+    final topics = widget.topics;
+    final searching = _query.trim().isNotEmpty;
+    final hits = searching ? _search(_query, l.code) : const <_VocabHit>[];
+
     return StudyScaffold(
       appBar: AppBar(
         title: Text('${l.t('materials_vocab_title')} ${course.flag}'),
@@ -133,21 +195,168 @@ class _VocabListScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
         children: [
-          for (var i = 0; i < topics.length; i++)
-            _TopicCard(
-              topic: topics[i],
-              color: MaterialsScreen
-                  ._accentCycle[i % MaterialsScreen._accentCycle.length],
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => GuideDetailScreen(
-                    course: course,
-                    topic: topics[i],
-                    ttsLocale: course.ttsLocale,
-                  ),
-                ),
+          TextField(
+            controller: _searchCtrl,
+            onChanged: (v) => setState(() => _query = v),
+            textInputAction: TextInputAction.search,
+            decoration: InputDecoration(
+              hintText: l.t(_hintKey),
+              prefixIcon: const Icon(Icons.search_rounded),
+              suffixIcon: searching
+                  ? IconButton(
+                      icon: const Icon(Icons.close_rounded),
+                      onPressed: () {
+                        _searchCtrl.clear();
+                        setState(() => _query = '');
+                      },
+                    )
+                  : null,
+              isDense: true,
+              filled: true,
+              fillColor: Theme.of(context).cardTheme.color,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(14),
+                borderSide: BorderSide(
+                    color: Theme.of(context).dividerColor, width: 1.5),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(14),
+                borderSide: BorderSide(
+                    color: Theme.of(context).dividerColor, width: 1.5),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(14),
+                borderSide:
+                    const BorderSide(color: DuoColors.blue, width: 2),
               ),
             ),
+          ),
+          const SizedBox(height: 12),
+          if (!searching)
+            for (var i = 0; i < topics.length; i++)
+              _TopicCard(
+                topic: topics[i],
+                color: MaterialsScreen
+                    ._accentCycle[i % MaterialsScreen._accentCycle.length],
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => GuideDetailScreen(
+                      course: course,
+                      topic: topics[i],
+                      ttsLocale: course.ttsLocale,
+                    ),
+                  ),
+                ),
+              )
+          else if (hits.isEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 40),
+              child: Column(
+                children: [
+                  const Text('🔍', style: TextStyle(fontSize: 40)),
+                  const SizedBox(height: 10),
+                  Text(
+                    l.t('vocab_search_empty'),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: Theme.of(context).hintColor),
+                  ),
+                ],
+              ),
+            )
+          else ...[
+            Padding(
+              padding: const EdgeInsets.only(left: 4, bottom: 4),
+              child: Text(
+                '${hits.length} ${l.t('vocab_search_count')}',
+                style: TextStyle(
+                    fontSize: 12.5,
+                    fontWeight: FontWeight.w700,
+                    color: Theme.of(context).hintColor),
+              ),
+            ),
+            for (final h in hits)
+              _VocabHitRow(
+                hit: h,
+                uiLang: l.code,
+                onSpeak: () => _speak(h.word.target),
+              ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+/// Baris hasil pencarian: kata, romaji, arti, label topik, tombol dengar.
+class _VocabHitRow extends StatelessWidget {
+  final _VocabHit hit;
+  final String uiLang;
+  final VoidCallback onSpeak;
+
+  const _VocabHitRow({
+    required this.hit,
+    required this.uiLang,
+    required this.onSpeak,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final w = hit.word;
+    return Container(
+      margin: const EdgeInsets.only(top: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(
+        color: isDark ? Colors.white.withValues(alpha: 0.05) : DuoColors.snow,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: isDark ? const Color(0x26FFFFFF) : const Color(0xFFEDE6CF),
+          width: 1.5,
+        ),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  w.target,
+                  style: const TextStyle(
+                      fontSize: 15, fontWeight: FontWeight.w800),
+                ),
+                if (w.romaji != null)
+                  Text(
+                    w.romaji!,
+                    style: TextStyle(
+                        fontSize: 12,
+                        fontStyle: FontStyle.italic,
+                        color: Theme.of(context).hintColor),
+                  ),
+                Text(
+                  w.meaning[uiLang] ?? w.meaning.values.first,
+                  style: TextStyle(
+                      fontSize: 12.5, color: Theme.of(context).hintColor),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  '${hit.topic.emoji} ${hit.topic.title[uiLang] ?? ''}',
+                  style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      color: DuoColors.blue.withValues(alpha: 0.9)),
+                ),
+              ],
+            ),
+          ),
+          IconButton(
+            tooltip: hit.word.target,
+            icon: const Icon(Icons.volume_up_rounded, color: DuoColors.blue),
+            onPressed: onSpeak,
+          ),
         ],
       ),
     );

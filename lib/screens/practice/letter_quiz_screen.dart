@@ -71,11 +71,17 @@ class _LetterQuizScreenState extends State<LetterQuizScreen> {
   void initState() {
     super.initState();
     // Lompat langsung ke paket yang diminta (mis. dari halaman Materi).
+    // Paket premium tidak dilompati untuk pengguna gratis: pemilih
+    // paket tetap tampil dengan kartu bergembok.
     final id = widget.initialCategoryId;
     if (id != null) {
       final matches =
           letterQuizFor(widget.course.id).where((c) => c.id == id);
-      if (matches.isNotEmpty) _startInternal(matches.first);
+      if (matches.isNotEmpty) {
+        final cat = matches.first;
+        final isPremium = context.read<AuthProvider>().isPremium;
+        if (!cat.premium || isPremium) _startInternal(cat);
+      }
     }
   }
 
