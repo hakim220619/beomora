@@ -49,8 +49,9 @@ class _FlashcardsScreenState extends State<FlashcardsScreen> {
               child: Text(
                 '${_page + 1}/${_words.length}',
                 style: TextStyle(
-                    color: Theme.of(context).hintColor,
-                    fontWeight: FontWeight.w700),
+                  color: Theme.of(context).hintColor,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
           ),
@@ -63,8 +64,10 @@ class _FlashcardsScreenState extends State<FlashcardsScreen> {
               itemCount: _words.length,
               onPageChanged: (i) => setState(() => _page = i),
               itemBuilder: (_, i) => Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 32,
+                ),
                 child: _FlipCard(
                   word: _words[i],
                   uiLang: uiLang,
@@ -149,9 +152,7 @@ class _FlipCardState extends State<_FlipCard>
   Widget _face(BuildContext context, {required bool front}) {
     final word = widget.word;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final color = front
-        ? DuoColors.blue
-        : DuoColors.green;
+    final color = front ? DuoColors.blue : DuoColors.green;
 
     return Container(
       width: double.infinity,
@@ -173,8 +174,7 @@ class _FlipCardState extends State<_FlipCard>
             child: Text(
               front ? word.target : word.meaningFor(widget.uiLang),
               textAlign: TextAlign.center,
-              style:
-                  const TextStyle(fontSize: 32, fontWeight: FontWeight.w800),
+              style: const TextStyle(fontSize: 32, fontWeight: FontWeight.w800),
             ),
           ),
           if (front && word.romaji != null)
@@ -183,16 +183,21 @@ class _FlipCardState extends State<_FlipCard>
               child: Text(
                 word.romaji!,
                 style: TextStyle(
-                    fontSize: 18, color: Theme.of(context).hintColor),
+                  fontSize: 18,
+                  color: Theme.of(context).hintColor,
+                ),
               ),
             ),
           if (front) ...[
             const SizedBox(height: 16),
             IconButton(
-              onPressed: () => TtsService.instance
-                  .speak(word.target, widget.ttsLocale),
-              icon: const Icon(Icons.volume_up_rounded,
-                  color: DuoColors.blue, size: 32),
+              onPressed: () =>
+                  TtsService.instance.speak(word.target, widget.ttsLocale),
+              icon: const Icon(
+                Icons.volume_up_rounded,
+                color: DuoColors.blue,
+                size: 32,
+              ),
             ),
           ],
         ],

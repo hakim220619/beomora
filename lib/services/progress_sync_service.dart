@@ -68,8 +68,7 @@ class ProgressSyncService {
     if (_uid == null) return;
     if (progress.exportCloudJson() == _lastPushed) return;
     _debounce?.cancel();
-    _debounce =
-        Timer(const Duration(seconds: 8), () => unawaited(_push()));
+    _debounce = Timer(const Duration(seconds: 8), () => unawaited(_push()));
   }
 
   void _reconcile() {
@@ -101,18 +100,19 @@ class ProgressSyncService {
     final json = progress.exportCloudJson();
     if (json == _lastPushed) return;
     try {
-      await FirebaseFirestore.instance.collection('users').doc(uid).set(
-        {
-          'progress': json,
-          'progressUpdatedAt': FieldValue.serverTimestamp(),
-          // Field lepas yang bisa di-query — bahan Papan Juara.
-          'xp': progress.xp,
-          'weeklyXp': progress.weeklyXp,
-          'weekKey': progress.weekKey,
-          'premium': auth.isPremium, // lencana 👑 di Papan Juara
-        },
-        SetOptions(merge: true),
-      ).timeout(const Duration(seconds: 20));
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .set({
+            'progress': json,
+            'progressUpdatedAt': FieldValue.serverTimestamp(),
+            // Field lepas yang bisa di-query — bahan Papan Juara.
+            'xp': progress.xp,
+            'weeklyXp': progress.weeklyXp,
+            'weekKey': progress.weekKey,
+            'premium': auth.isPremium, // lencana 👑 di Papan Juara
+          }, SetOptions(merge: true))
+          .timeout(const Duration(seconds: 20));
       _lastPushed = json;
     } catch (e) {
       // Gagal (offline dsb.) — perubahan berikutnya atau peluncuran

@@ -37,8 +37,9 @@ class ListeningPack {
   final Map<String, String> title;
   final Map<String, String> subtitle;
 
-  /// Paket premium: non-premium hanya bisa membuka
-  /// [kFreeListeningPassages] bacaan pertama.
+  /// Paket ujian (batas putar berlaku untuk pengguna gratis). Pembatasan
+  /// bacaan tidak bergantung pada ini: pengguna gratis hanya bisa membuka
+  /// [kFreeListeningPassages] bacaan pertama di SEMUA paket.
   final bool premium;
 
   /// Batas pemutaran audio per bacaan (0 = tanpa batas).
@@ -58,7 +59,8 @@ class ListeningPack {
   int get questionCount => passages.fold(0, (n, p) => n + p.questions.length);
 }
 
-/// Jumlah bacaan pertama yang bisa dibuka pengguna gratis di paket premium.
+/// Jumlah bacaan pertama yang bisa dibuka pengguna gratis di setiap paket;
+/// Premium membuka semuanya.
 const int kFreeListeningPassages = 2;
 
 /// Soal yang keluar per bacaan sekali main; dipilih acak dari bank bacaan

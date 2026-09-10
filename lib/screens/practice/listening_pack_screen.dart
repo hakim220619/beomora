@@ -11,8 +11,9 @@ import '../../widgets/study/study_background.dart';
 import 'listening_screen.dart';
 
 /// Pemilih paket "Latihan Dengar": Dasar/TOEFL/IELTS/PTE (Inggris) atau
-/// Choukai N5/N4 (Jepang). Paket premium ditandai mahkota; non-premium
-/// hanya bisa membuka [kFreeListeningPassages] bacaan pertama.
+/// Choukai N5/N4 (Jepang). Pengguna gratis hanya bisa membuka
+/// [kFreeListeningPassages] bacaan pertama di setiap paket (ditandai
+/// mahkota); Premium membuka semua.
 class ListeningPackScreen extends StatelessWidget {
   final Course course;
 
@@ -77,7 +78,7 @@ class _PackCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = L.of(context);
     final total = pack.passages.length;
-    final capped = pack.premium && !premium;
+    final capped = !premium;
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       child: InkWell(
@@ -94,11 +95,12 @@ class _PackCard extends StatelessWidget {
                   color: color.withValues(alpha: 0.16),
                   borderRadius: BorderRadius.circular(14),
                   border: Border.all(
-                      color: color.withValues(alpha: 0.6), width: 1.5),
+                    color: color.withValues(alpha: 0.6),
+                    width: 1.5,
+                  ),
                 ),
                 alignment: Alignment.center,
-                child:
-                    Text(pack.emoji, style: const TextStyle(fontSize: 26)),
+                child: Text(pack.emoji, style: const TextStyle(fontSize: 26)),
               ),
               const SizedBox(width: 14),
               Expanded(
@@ -112,13 +114,17 @@ class _PackCard extends StatelessWidget {
                             pack.title[l.code] ?? '',
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w900),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w900,
+                            ),
                           ),
                         ),
                         const SizedBox(width: 8),
                         Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 2),
+                            horizontal: 8,
+                            vertical: 2,
+                          ),
                           decoration: BoxDecoration(
                             color: color.withValues(alpha: 0.16),
                             borderRadius: BorderRadius.circular(10),
@@ -145,14 +151,17 @@ class _PackCard extends StatelessWidget {
                       '${pack.subtitle[l.code] ?? ''} · '
                       '${pack.maxPlays == 0 || premium ? l.t('listening_unlimited') : '${pack.maxPlays}x ${l.t('listening_plays_per_passage')}'}',
                       style: TextStyle(
-                          fontSize: 12.5,
-                          color: Theme.of(context).hintColor),
+                        fontSize: 12.5,
+                        color: Theme.of(context).hintColor,
+                      ),
                     ),
                   ],
                 ),
               ),
-              Icon(Icons.chevron_right_rounded,
-                  color: Theme.of(context).hintColor),
+              Icon(
+                Icons.chevron_right_rounded,
+                color: Theme.of(context).hintColor,
+              ),
             ],
           ),
         ),

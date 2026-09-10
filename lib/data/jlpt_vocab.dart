@@ -8,7 +8,6 @@ class JVocab {
   const JVocab(this.kana, this.romaji, this.meaning);
 }
 
-
 const List<JVocab> jlptN5 = [
   JVocab('ゼロ', 'zero', {'id': 'nol', 'en': 'zero'}),
   JVocab('いち', 'ichi', {'id': 'satu', 'en': 'one'}),
@@ -69,8 +68,14 @@ const List<JVocab> jlptN5 = [
   JVocab('こども', 'kodomo', {'id': 'anak', 'en': 'child'}),
   JVocab('おとうさん', 'otousan', {'id': 'ayah (sopan)', 'en': 'father (polite)'}),
   JVocab('おかあさん', 'okaasan', {'id': 'ibu (sopan)', 'en': 'mother (polite)'}),
-  JVocab('おにいさん', 'oniisan', {'id': 'kakak lk (sopan)', 'en': 'older brother (polite)'}),
-  JVocab('おねえさん', 'oneesan', {'id': 'kakak pr (sopan)', 'en': 'older sister (polite)'}),
+  JVocab('おにいさん', 'oniisan', {
+    'id': 'kakak lk (sopan)',
+    'en': 'older brother (polite)',
+  }),
+  JVocab('おねえさん', 'oneesan', {
+    'id': 'kakak pr (sopan)',
+    'en': 'older sister (polite)',
+  }),
   JVocab('おじいさん', 'ojiisan', {'id': 'kakek', 'en': 'grandfather'}),
   JVocab('おばあさん', 'obaasan', {'id': 'nenek', 'en': 'grandmother'}),
   JVocab('ひと', 'hito', {'id': 'orang', 'en': 'person'}),
@@ -310,7 +315,10 @@ const List<JVocab> jlptN4 = [
   JVocab('ひろう', 'hirou', {'id': 'memungut', 'en': 'to pick up'}),
   JVocab('はこぶ', 'hakobu', {'id': 'mengangkut', 'en': 'to carry'}),
   JVocab('おくる', 'okuru', {'id': 'mengirim', 'en': 'to send'}),
-  JVocab('うける', 'ukeru', {'id': 'menerima; mengikuti', 'en': 'to receive; to take'}),
+  JVocab('うける', 'ukeru', {
+    'id': 'menerima; mengikuti',
+    'en': 'to receive; to take',
+  }),
   JVocab('わたす', 'watasu', {'id': 'menyerahkan', 'en': 'to hand over'}),
   JVocab('つたえる', 'tsutaeru', {'id': 'menyampaikan', 'en': 'to convey'}),
   JVocab('しらべる', 'shiraberu', {'id': 'memeriksa', 'en': 'to investigate'}),
@@ -331,7 +339,10 @@ const List<JVocab> jlptN4 = [
   JVocab('しっぱいする', 'shippaisuru', {'id': 'gagal', 'en': 'to fail'}),
   JVocab('せいこうする', 'seikousuru', {'id': 'berhasil', 'en': 'to succeed'}),
   JVocab('よやくする', 'yoyakusuru', {'id': 'memesan', 'en': 'to reserve'}),
-  JVocab('しょうかいする', 'shoukaisuru', {'id': 'memperkenalkan', 'en': 'to introduce'}),
+  JVocab('しょうかいする', 'shoukaisuru', {
+    'id': 'memperkenalkan',
+    'en': 'to introduce',
+  }),
   JVocab('あんないする', 'annaisuru', {'id': 'memandu', 'en': 'to guide'}),
   JVocab('せつめいする', 'setsumeisuru', {'id': 'menjelaskan', 'en': 'to explain'}),
   JVocab('べんり', 'benri', {'id': 'praktis', 'en': 'convenient'}),
@@ -383,7 +394,10 @@ const List<JVocab> jlptN3 = [
   JVocab('せいど', 'seido', {'id': 'sistem', 'en': 'system'}),
   JVocab('せいふ', 'seifu', {'id': 'pemerintah', 'en': 'government'}),
   JVocab('しみん', 'shimin', {'id': 'warga', 'en': 'citizen'}),
-  JVocab('しゃかいじん', 'shakaijin', {'id': 'anggota masyarakat', 'en': 'working adult'}),
+  JVocab('しゃかいじん', 'shakaijin', {
+    'id': 'anggota masyarakat',
+    'en': 'working adult',
+  }),
   JVocab('こじん', 'kojin', {'id': 'individu', 'en': 'individual'}),
   JVocab('だんたい', 'dantai', {'id': 'kelompok; organisasi', 'en': 'group'}),
   JVocab('そしき', 'soshiki', {'id': 'organisasi', 'en': 'organization'}),
@@ -397,13 +411,19 @@ const List<JVocab> jlptN3 = [
   JVocab('そんがい', 'songai', {'id': 'kerugian', 'en': 'loss; damage'}),
   JVocab('しげん', 'shigen', {'id': 'sumber daya', 'en': 'resources'}),
   JVocab('エネルギー', 'enerugii', {'id': 'energi', 'en': 'energy'}),
-  JVocab('かんきょうもんだい', 'kankyoumondai', {'id': 'masalah lingkungan', 'en': 'environmental issue'}),
+  JVocab('かんきょうもんだい', 'kankyoumondai', {
+    'id': 'masalah lingkungan',
+    'en': 'environmental issue',
+  }),
   JVocab('おせん', 'osen', {'id': 'polusi', 'en': 'pollution'}),
   JVocab('さいがい', 'saigai', {'id': 'bencana', 'en': 'disaster'}),
   JVocab('じしん', 'jishin', {'id': 'gempa bumi', 'en': 'earthquake'}),
   JVocab('たいふう', 'taifuu', {'id': 'topan', 'en': 'typhoon'}),
   JVocab('こうずい', 'kouzui', {'id': 'banjir', 'en': 'flood'}),
-  JVocab('あらわす', 'arawasu', {'id': 'menunjukkan; mengungkap', 'en': 'to express'}),
+  JVocab('あらわす', 'arawasu', {
+    'id': 'menunjukkan; mengungkap',
+    'en': 'to express',
+  }),
   JVocab('しめす', 'shimesu', {'id': 'memperlihatkan', 'en': 'to show'}),
   JVocab('ふくむ', 'fukumu', {'id': 'mencakup', 'en': 'to include'}),
   JVocab('のぞく', 'nozoku', {'id': 'mengecualikan', 'en': 'to exclude'}),
@@ -416,8 +436,14 @@ const List<JVocab> jlptN3 = [
   JVocab('たしかめる', 'tashikameru', {'id': 'memastikan', 'en': 'to confirm'}),
   JVocab('みとめる', 'mitomeru', {'id': 'mengakui', 'en': 'to admit'}),
   JVocab('ことわる', 'kotowaru', {'id': 'menolak', 'en': 'to refuse'}),
-  JVocab('ゆるす', 'yurusu', {'id': 'memaafkan; mengizinkan', 'en': 'to forgive; to permit'}),
-  JVocab('まもる', 'mamoru', {'id': 'melindungi; menaati', 'en': 'to protect; to obey'}),
+  JVocab('ゆるす', 'yurusu', {
+    'id': 'memaafkan; mengizinkan',
+    'en': 'to forgive; to permit',
+  }),
+  JVocab('まもる', 'mamoru', {
+    'id': 'melindungi; menaati',
+    'en': 'to protect; to obey',
+  }),
   JVocab('せめる', 'semeru', {'id': 'menyalahkan', 'en': 'to blame'}),
   JVocab('あきらめる', 'akirameru', {'id': 'menyerah', 'en': 'to give up'}),
   JVocab('がまんする', 'gamansuru', {'id': 'menahan diri', 'en': 'to endure'}),
@@ -426,10 +452,16 @@ const List<JVocab> jlptN3 = [
   JVocab('はんたいする', 'hantaisuru', {'id': 'menentang', 'en': 'to oppose'}),
   JVocab('さんせいする', 'sanseisuru', {'id': 'menyetujui', 'en': 'to agree'}),
   JVocab('そうだんする', 'soudansuru', {'id': 'berkonsultasi', 'en': 'to consult'}),
-  JVocab('はっぴょうする', 'happyousuru', {'id': 'mempresentasikan', 'en': 'to present'}),
+  JVocab('はっぴょうする', 'happyousuru', {
+    'id': 'mempresentasikan',
+    'en': 'to present',
+  }),
   JVocab('ほうこくする', 'houkokusuru', {'id': 'melaporkan', 'en': 'to report'}),
   JVocab('かくにんする', 'kakuninsuru', {'id': 'mengonfirmasi', 'en': 'to verify'}),
-  JVocab('かんしゃする', 'kanshasuru', {'id': 'berterima kasih', 'en': 'to be grateful'}),
+  JVocab('かんしゃする', 'kanshasuru', {
+    'id': 'berterima kasih',
+    'en': 'to be grateful',
+  }),
   JVocab('そんけいする', 'sonkeisuru', {'id': 'menghormati', 'en': 'to respect'}),
   JVocab('はんだんする', 'handansuru', {'id': 'menilai', 'en': 'to judge'}),
   JVocab('よそうする', 'yosousuru', {'id': 'memperkirakan', 'en': 'to predict'}),

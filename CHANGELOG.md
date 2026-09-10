@@ -3,17 +3,59 @@
 Semua perubahan penting dicatat di sini. Versi mengikuti `pubspec.yaml`
 (`versi+kode build`).
 
-## Belum dirilis
+## 1.7.0 (build 18) — 9 September 2026
+
+### Baru (Tulis Huruf)
+- **Tulis Huruf** di Ruang Latihan (semua kursus): tulis kana, kanji N5,
+  hangul, atau alfabet dengan jari di kanvas kertas latihan, dinilai oleh
+  pengenalan tulisan tangan ML Kit yang berjalan offline di perangkat.
+  Benar kalau lambang ada di 3 kandidat teratas (alfabet tanpa peduli
+  huruf besar). Tombol hapus goresan, bersihkan, dengar bacaan; umpan
+  balik menampilkan lambang jawaban dan teks yang terbaca. 10 soal per
+  paket, 2 XP per huruf benar; paket kanji N5 premium. Sebelum mulai,
+  cakupan huruf bisa dipilih per kelompok materi (mis. Gojūon saja,
+  ditambah Dakuten & Handakuten, Yōon, atau semua; hangul per jenis
+  vokal/konsonan; kanji per tema), bawaan kelompok pertama.
+- **Saklar di Pengaturan** (bawaan mati). Menyalakan memunculkan dialog
+  kebutuhan: RAM disarankan 3 GB dan ruang kosong minimal 200 MB dibanding
+  kondisi perangkat (dibaca lewat kanal native `beomora/device`). RAM
+  rendah hanya peringatan; ruang kurang menonaktifkan tombol unduh dengan
+  jumlah yang perlu dikosongkan. Saklar aktif hanya setelah model kursus
+  aktif selesai diunduh; batal/gagal = tetap mati.
+- Pilihan **unduh model hanya lewat Wi-Fi** (bawaan ya) dan daftar model
+  per bahasa dengan status, perkiraan ukuran (20–30 MB), tombol unduh dan
+  hapus. Model disimpan ML Kit di penyimpanan internal app dan tidak ikut
+  disinkron; mematikan saklar tidak menghapus model.
+- Kartu Tulis Huruf di Ruang Latihan selalu tampil; kalau belum aktif atau
+  model bahasanya belum ada, ketuk membuka alur aktivasi yang sama.
+- Teknis: plugin `google_mlkit_digital_ink_recognition` 0.15.0 punya nama
+  kanal yang tidak cocok antara Dart/iOS ("…_recognizer") dan Android
+  ("…_recognition"), sehingga unduh model selalu gagal
+  MissingPluginException di Android. Layanan tulis memanggil kanal native
+  langsung dan mencoba kedua nama; dialog gagal unduh menampilkan pesan
+  error asli plugin.
+
+### Perubahan
+- **Batas gratis vs Premium** untuk Latihan Dengar dan Tulis Huruf.
+  Dengar: pengguna gratis hanya bisa membuka 2 bacaan pertama di setiap
+  paket (termasuk paket dasar), Premium semua bacaan. Tulis: pengguna
+  gratis 3 huruf per sesi dengan catatan dan ajakan Premium di kuis dan
+  hasil, Premium 10 huruf. Kartu di Ruang Latihan menampilkan batasnya.
 
 ### Perbaikan
+- **Suara kanji**: tombol dengar di Materi Kanji N5, Tebak Huruf, dan Tulis
+  Huruf kini mengucapkan bacaan yang ditampilkan (よん untuk 四, なな untuk
+  七, ひ untuk 日) alih-alih kanji tunggal yang dibaca semaunya oleh mesin
+  suara (shi, shichi, nichi). Romaji diubah ke hiragana dengan tabel dari
+  materi hiragana (`lib/services/kana_speech.dart`).
 - **Susun kalimat**: kotak kata yang sama hanya beda huruf besar atau tanda
   baca (misal "My" dan "my") tidak lagi muncul dua kali, dan jawaban
   dinilai tanpa memedulikan huruf besar. Pengecoh kini diambil dari semua
   kalimat kursus (cadangan: kosakata) sehingga tiap soal punya minimal
   12 kotak kata, bukan 3 pengecoh dari satu kalimat lain.
 
-### Baru
-- **Latihan Dengar** di Ruang Latihan (kursus Inggris dan Jepang): paragraf
+### Baru (Latihan Dengar)
+- **Latihan Dengar** di Ruang Latihan (lima kursus): paragraf
   dibacakan TTS lalu 3 soal pemahaman per bacaan, gaya ujian internasional.
   Transkrip dan terjemahan dibuka setelah semua soal dijawab.
   - Inggris: Listening Dasar (10 bacaan, gratis, putar bebas), TOEFL
@@ -32,13 +74,38 @@ Semua perubahan penting dicatat di sini. Versi mengikuti `pubspec.yaml`
     durasi nyata setelah sekali selesai), tombol jeda/lanjutkan
     (melanjutkan dari kata terakhir, tidak memakai jatah putar), tombol
     "dari awal", dan garis bisa digeser saat putar bebas.
-  - Paket ujian premium; pengguna gratis dapat mencoba 2 bacaan pertama.
+  - Pengguna gratis dapat membuka 2 bacaan pertama tiap paket; Premium
+    semua bacaan.
   - Setiap bacaan punya bank 5 soal; tiap kali bacaan dibuka, 3 soal
     diambil acak (urutan soal dan pilihan ikut diacak), jadi mengulang
     bacaan yang sama memberi soal berbeda. Total 520 soal (104 bacaan
     di lima kursus).
 - TTS: mode "bicara sampai selesai" dengan kecepatan yang bisa diatur dan
   callback progres per kata (Android 8+ dan iOS).
+
+### Teks "Yang baru" untuk Play Store (≤ 500 karakter)
+Indonesia (456 karakter):
+```
+✍️ Baru: Tulis Huruf
+Tulis hiragana, katakana, kanji N5, hangul, atau alfabet dengan jari, langsung dinilai tanpa internet. Pilih cakupannya dulu: Gojūon saja, plus Dakuten, Yōon, atau semua.
+
+🎧 Latihan Dengar kini 5 bahasa
+Korea, Jerman, dan Indonesia menyusul Inggris dan Jepang. 104 bacaan, soal acak tiap kali diulang.
+
+✨ Lebih rapi
+Susun kalimat punya lebih banyak kotak kata, dan suara kanji kini dibaca sesuai bacaan yang tampil (四 = yon, 七 = nana).
+```
+Inggris (478 karakter):
+```
+✍️ New: Write Letters
+Draw hiragana, katakana, N5 kanji, hangul, or the alphabet with your finger and get graded instantly, fully offline. Pick your scope first: Gojūon only, plus Dakuten, Yōon, or everything.
+
+🎧 Listening Practice in 5 languages
+Korean, German, and Indonesian join English and Japanese. 104 passages with fresh random questions every time.
+
+✨ Polished
+Sentence building offers more word tiles, and kanji audio now matches the reading shown (四 = yon, 七 = nana).
+```
 
 ## 1.6.0 (build 17) — 8 September 2026
 

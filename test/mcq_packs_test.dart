@@ -15,8 +15,11 @@ void main() {
           expect(v.romaji.trim(), isNotEmpty, reason: level);
           expect(v.meaning['id'], isNotEmpty, reason: level);
           expect(v.meaning['en'], isNotEmpty, reason: level);
-          expect(keys.add('${v.kana}|${v.romaji}'), isTrue,
-              reason: '$level dobel: ${v.kana}');
+          expect(
+            keys.add('${v.kana}|${v.romaji}'),
+            isTrue,
+            reason: '$level dobel: ${v.kana}',
+          );
         }
       }
     });
@@ -24,10 +27,14 @@ void main() {
 
   group('Paket soal (McqPack)', () {
     test('Jepang: Umum + N5/N4/N3; Inggris: Umum + TOEFL/IELTS/PTE', () {
-      expect(mcqPacksFor('ja').map((p) => p.id),
-          containsAll(['ja_general', 'ja_n5', 'ja_n4', 'ja_n3']));
-      expect(mcqPacksFor('en').map((p) => p.id),
-          containsAll(['en_general', 'en_toefl', 'en_ielts', 'en_pte']));
+      expect(
+        mcqPacksFor('ja').map((p) => p.id),
+        containsAll(['ja_general', 'ja_n5', 'ja_n4', 'ja_n3']),
+      );
+      expect(
+        mcqPacksFor('en').map((p) => p.id),
+        containsAll(['en_general', 'en_toefl', 'en_ielts', 'en_pte']),
+      );
       expect(mcqPacksFor('id'), isEmpty);
     });
 
@@ -37,8 +44,11 @@ void main() {
           expect(pack.questions, isNotEmpty, reason: pack.id);
           for (final q in pack.questions) {
             expect(q.options.length, 4, reason: pack.id);
-            expect(q.options.toSet().length, 4,
-                reason: '${pack.id}: pilihan dobel di "${q.question['id']}"');
+            expect(
+              q.options.toSet().length,
+              4,
+              reason: '${pack.id}: pilihan dobel di "${q.question['id']}"',
+            );
             expect(q.answer, inInclusiveRange(0, 3), reason: pack.id);
             expect(q.question['id'], isNotEmpty, reason: pack.id);
             expect(q.question['en'], isNotEmpty, reason: pack.id);
@@ -47,14 +57,24 @@ void main() {
       }
     });
 
-    test('paket JLPT/ujian melebihi batas gratis (agar premium bermakna)',
-        () {
-      for (final id in ['ja_n5', 'ja_n4', 'ja_n3', 'en_toefl', 'en_ielts',
-        'en_pte']) {
-        final pack = [...mcqPacksFor('ja'), ...mcqPacksFor('en')]
-            .firstWhere((p) => p.id == id);
-        expect(pack.questions.length, greaterThan(kFreeMcqLimit),
-            reason: '$id harus > $kFreeMcqLimit soal');
+    test('paket JLPT/ujian melebihi batas gratis (agar premium bermakna)', () {
+      for (final id in [
+        'ja_n5',
+        'ja_n4',
+        'ja_n3',
+        'en_toefl',
+        'en_ielts',
+        'en_pte',
+      ]) {
+        final pack = [
+          ...mcqPacksFor('ja'),
+          ...mcqPacksFor('en'),
+        ].firstWhere((p) => p.id == id);
+        expect(
+          pack.questions.length,
+          greaterThan(kFreeMcqLimit),
+          reason: '$id harus > $kFreeMcqLimit soal',
+        );
       }
     });
 

@@ -36,8 +36,7 @@ class _MatchingExerciseState extends State<MatchingExercise> {
     super.initState();
     final rng = Random();
     _lefts = widget.exercise.pairs.map((p) => p.left).toList()..shuffle(rng);
-    _rights = widget.exercise.pairs.map((p) => p.right).toList()
-      ..shuffle(rng);
+    _rights = widget.exercise.pairs.map((p) => p.right).toList()..shuffle(rng);
   }
 
   String _rightFor(String left) =>
@@ -54,8 +53,9 @@ class _MatchingExerciseState extends State<MatchingExercise> {
 
   void _tapRight(String right) {
     if (_selectedLeft == null) return;
-    if (widget.exercise.pairs
-        .any((p) => p.right == right && _matchedLefts.contains(p.left))) {
+    if (widget.exercise.pairs.any(
+      (p) => p.right == right && _matchedLefts.contains(p.left),
+    )) {
       return;
     }
     if (_rightFor(_selectedLeft!) == right) {
@@ -93,8 +93,9 @@ class _MatchingExerciseState extends State<MatchingExercise> {
   }
 
   ChoiceState _rightState(String right) {
-    final matched = widget.exercise.pairs
-        .any((p) => p.right == right && _matchedLefts.contains(p.left));
+    final matched = widget.exercise.pairs.any(
+      (p) => p.right == right && _matchedLefts.contains(p.left),
+    );
     if (matched) return ChoiceState.correct;
     if (_errorRight == right) return ChoiceState.wrong;
     return ChoiceState.idle;

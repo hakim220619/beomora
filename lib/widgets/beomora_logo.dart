@@ -28,11 +28,7 @@ enum BeomoraLogoBackground {
 /// meridian — sayap kiri (teal) dan kanan (oranye) sekaligus menjadi
 /// balon obrolan, simbol percakapan lintas bahasa.
 class BeomoraLogo extends StatelessWidget {
-  const BeomoraLogo({
-    super.key,
-    this.size = 96,
-    this.withBackground = false,
-  });
+  const BeomoraLogo({super.key, this.size = 96, this.withBackground = false});
 
   final double size;
   final bool withBackground;
@@ -87,7 +83,11 @@ class BeomoraLogoPainter extends CustomPainter {
     _paintBeak(canvas, at, u);
   }
 
-  void _paintGlobe(Canvas canvas, Offset Function(double, double) at, double u) {
+  void _paintGlobe(
+    Canvas canvas,
+    Offset Function(double, double) at,
+    double u,
+  ) {
     final globeCenter = at(0, 0);
     final r = _r * u;
 
@@ -115,8 +115,7 @@ class BeomoraLogoPainter extends CustomPainter {
     canvas.drawLine(at(0, -_r), at(0, _r), line);
     for (final rx in const [0.17, 0.31]) {
       canvas.drawOval(
-        Rect.fromCenter(
-            center: globeCenter, width: 2 * rx * u, height: 2 * r),
+        Rect.fromCenter(center: globeCenter, width: 2 * rx * u, height: 2 * r),
         line,
       );
     }
@@ -126,7 +125,11 @@ class BeomoraLogoPainter extends CustomPainter {
       final arc = Path()
         ..moveTo(at(-x, y).dx, at(-x, y).dy)
         ..quadraticBezierTo(
-            at(0, y + 0.05).dx, at(0, y + 0.05).dy, at(x, y).dx, at(x, y).dy);
+          at(0, y + 0.05).dx,
+          at(0, y + 0.05).dy,
+          at(x, y).dx,
+          at(x, y).dy,
+        );
       canvas.drawPath(arc, line);
     }
     canvas.restore();
@@ -142,7 +145,11 @@ class BeomoraLogoPainter extends CustomPainter {
     );
   }
 
-  void _paintTufts(Canvas canvas, Offset Function(double, double) at, double u) {
+  void _paintTufts(
+    Canvas canvas,
+    Offset Function(double, double) at,
+    double u,
+  ) {
     final fill = Paint()..color = _navy;
     for (final side in const [-1.0, 1.0]) {
       Offset m(double dx, double dy) => at(side * dx, dy);
@@ -157,7 +164,11 @@ class BeomoraLogoPainter extends CustomPainter {
     }
   }
 
-  void _paintWings(Canvas canvas, Offset Function(double, double) at, double u) {
+  void _paintWings(
+    Canvas canvas,
+    Offset Function(double, double) at,
+    double u,
+  ) {
     final outline = Paint()
       ..color = _navy
       ..style = PaintingStyle.stroke
@@ -172,20 +183,48 @@ class BeomoraLogoPainter extends CustomPainter {
       // Kipas sayap: ujung runcing di atas, tiga jari bulu di sisi luar.
       final fan = Path()
         ..moveTo(m(0.13, -0.04).dx, m(0.13, -0.04).dy)
-        ..cubicTo(m(0.20, -0.05).dx, m(0.20, -0.05).dy, m(0.33, -0.10).dx,
-            m(0.33, -0.10).dy, m(0.44, -0.20).dx, m(0.44, -0.20).dy)
-        ..cubicTo(m(0.47, -0.14).dx, m(0.47, -0.14).dy, m(0.49, -0.06).dx,
-            m(0.49, -0.06).dy, m(0.49, 0.02).dx, m(0.49, 0.02).dy)
+        ..cubicTo(
+          m(0.20, -0.05).dx,
+          m(0.20, -0.05).dy,
+          m(0.33, -0.10).dx,
+          m(0.33, -0.10).dy,
+          m(0.44, -0.20).dx,
+          m(0.44, -0.20).dy,
+        )
+        ..cubicTo(
+          m(0.47, -0.14).dx,
+          m(0.47, -0.14).dy,
+          m(0.49, -0.06).dx,
+          m(0.49, -0.06).dy,
+          m(0.49, 0.02).dx,
+          m(0.49, 0.02).dy,
+        )
         ..lineTo(m(0.395, 0.075).dx, m(0.395, 0.075).dy)
-        ..quadraticBezierTo(m(0.49, 0.10).dx, m(0.49, 0.10).dy,
-            m(0.475, 0.17).dx, m(0.475, 0.17).dy)
+        ..quadraticBezierTo(
+          m(0.49, 0.10).dx,
+          m(0.49, 0.10).dy,
+          m(0.475, 0.17).dx,
+          m(0.475, 0.17).dy,
+        )
         ..lineTo(m(0.365, 0.19).dx, m(0.365, 0.19).dy)
-        ..quadraticBezierTo(m(0.46, 0.22).dx, m(0.46, 0.22).dy,
-            m(0.415, 0.30).dx, m(0.415, 0.30).dy)
-        ..quadraticBezierTo(m(0.38, 0.36).dx, m(0.38, 0.36).dy,
-            m(0.29, 0.35).dx, m(0.29, 0.35).dy)
-        ..quadraticBezierTo(m(0.22, 0.24).dx, m(0.22, 0.24).dy,
-            m(0.15, 0.08).dx, m(0.15, 0.08).dy)
+        ..quadraticBezierTo(
+          m(0.46, 0.22).dx,
+          m(0.46, 0.22).dy,
+          m(0.415, 0.30).dx,
+          m(0.415, 0.30).dy,
+        )
+        ..quadraticBezierTo(
+          m(0.38, 0.36).dx,
+          m(0.38, 0.36).dy,
+          m(0.29, 0.35).dx,
+          m(0.29, 0.35).dy,
+        )
+        ..quadraticBezierTo(
+          m(0.22, 0.24).dx,
+          m(0.22, 0.24).dy,
+          m(0.15, 0.08).dx,
+          m(0.15, 0.08).dy,
+        )
         ..close();
       canvas.drawPath(fan, fill);
       canvas.drawPath(fan, outline);
@@ -198,12 +237,16 @@ class BeomoraLogoPainter extends CustomPainter {
         ..close();
       final bubble = Path.combine(
         PathOperation.union,
-        Path()
-          ..addRRect(RRect.fromRectAndRadius(
+        Path()..addRRect(
+          RRect.fromRectAndRadius(
             Rect.fromCenter(
-                center: m(0.235, 0.115), width: 0.28 * u, height: 0.24 * u),
+              center: m(0.235, 0.115),
+              width: 0.28 * u,
+              height: 0.24 * u,
+            ),
             Radius.circular(0.09 * u),
-          )),
+          ),
+        ),
         tail,
       );
       canvas.drawPath(bubble, fill);

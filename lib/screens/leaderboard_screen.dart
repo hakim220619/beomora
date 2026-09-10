@@ -14,8 +14,13 @@ class _Entry {
   final int xp;
   final bool isUser;
   final bool premium; // lencana 👑
-  const _Entry(this.name, this.photoUrl, this.xp,
-      {this.isUser = false, this.premium = false});
+  const _Entry(
+    this.name,
+    this.photoUrl,
+    this.xp, {
+    this.isUser = false,
+    this.premium = false,
+  });
 
   /// Nama tampil, plus mahkota untuk pelanggan premium.
   String get displayName => premium ? '$name 👑' : name;
@@ -61,8 +66,13 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
       for (final e in _server ?? const <LeaderEntry>[])
         if (e.uid != myUid)
           _Entry(e.name, e.photoUrl, e.weeklyXp, premium: e.premium),
-      _Entry(myName, auth.photoUrl, myWeeklyXp,
-          isUser: true, premium: auth.isPremium),
+      _Entry(
+        myName,
+        auth.photoUrl,
+        myWeeklyXp,
+        isUser: true,
+        premium: auth.isPremium,
+      ),
     ]..sort((a, b) => b.xp.compareTo(a.xp));
     return entries;
   }
@@ -88,8 +98,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
             Text(
               l.t('leaderboard_info'),
               textAlign: TextAlign.center,
-              style: TextStyle(
-                  color: isDark ? Colors.white70 : DuoColors.eel),
+              style: TextStyle(color: isDark ? Colors.white70 : DuoColors.eel),
             ),
             const SizedBox(height: 16),
             if (loading)
@@ -106,25 +115,31 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                 children: [
                   if (top3.length > 1)
                     Expanded(
-                        child: _PodiumColumn(
-                            entry: top3[1],
-                            rank: 2,
-                            height: 86,
-                            l: l)),
+                      child: _PodiumColumn(
+                        entry: top3[1],
+                        rank: 2,
+                        height: 86,
+                        l: l,
+                      ),
+                    ),
                   if (top3.isNotEmpty)
                     Expanded(
-                        child: _PodiumColumn(
-                            entry: top3[0],
-                            rank: 1,
-                            height: 116,
-                            l: l)),
+                      child: _PodiumColumn(
+                        entry: top3[0],
+                        rank: 1,
+                        height: 116,
+                        l: l,
+                      ),
+                    ),
                   if (top3.length > 2)
                     Expanded(
-                        child: _PodiumColumn(
-                            entry: top3[2],
-                            rank: 3,
-                            height: 66,
-                            l: l)),
+                      child: _PodiumColumn(
+                        entry: top3[2],
+                        rank: 3,
+                        height: 66,
+                        l: l,
+                      ),
+                    ),
                 ],
               ),
               const SizedBox(height: 18),
@@ -184,7 +199,11 @@ class _PodiumColumn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final medal = switch (rank) { 1 => '🥇', 2 => '🥈', _ => '🥉' };
+    final medal = switch (rank) {
+      1 => '🥇',
+      2 => '🥈',
+      _ => '🥉',
+    };
     final ringColor = switch (rank) {
       1 => DuoColors.yellow,
       2 => const Color(0xFFC0CDD6),
@@ -226,8 +245,8 @@ class _PodiumColumn extends StatelessWidget {
               color: entry.isUser
                   ? DuoColors.green
                   : (Theme.of(context).brightness == Brightness.dark
-                      ? Colors.white
-                      : DuoColors.eel),
+                        ? Colors.white
+                        : DuoColors.eel),
             ),
           ),
           Text(
@@ -248,10 +267,10 @@ class _PodiumColumn extends StatelessWidget {
                 end: Alignment.bottomCenter,
                 colors: [StudyColors.wood, StudyColors.woodDark],
               ),
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(12)),
-              border:
-                  Border.all(color: const Color(0xFF4E2F1A), width: 2),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(12),
+              ),
+              border: Border.all(color: const Color(0xFF4E2F1A), width: 2),
             ),
             alignment: Alignment.topCenter,
             padding: const EdgeInsets.only(top: 8),
@@ -275,8 +294,7 @@ class _RowTile extends StatelessWidget {
   final int rank;
   final L l;
 
-  const _RowTile(
-      {required this.entry, required this.rank, required this.l});
+  const _RowTile({required this.entry, required this.rank, required this.l});
 
   @override
   Widget build(BuildContext context) {
@@ -288,8 +306,8 @@ class _RowTile extends StatelessWidget {
         color: entry.isUser
             ? DuoColors.green.withValues(alpha: 0.18)
             : (isDark
-                ? Colors.white.withValues(alpha: 0.08)
-                : Colors.white.withValues(alpha: 0.72)),
+                  ? Colors.white.withValues(alpha: 0.08)
+                  : Colors.white.withValues(alpha: 0.72)),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: entry.isUser

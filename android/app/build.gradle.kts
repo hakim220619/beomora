@@ -68,4 +68,8 @@ flutter {
 
 dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
+    // Dipakai MainActivity untuk kelola model tulisan tangan sendiri
+    // (plugin google_mlkit_digital_ink_recognition 0.15.0 tidak
+    // mengimplementasikan manageModel di Android). Versi sama dengan plugin.
+    implementation("com.google.mlkit:digital-ink-recognition:19.0.0")
 }

@@ -55,8 +55,7 @@ class _DuoButtonState extends State<DuoButton> {
     final BoxDecoration decoration;
     final Color fg;
     if (widget.outlined) {
-      final border =
-          isDark ? const Color(0x4DFFFFFF) : Colors.white;
+      final border = isDark ? const Color(0x4DFFFFFF) : Colors.white;
       fg = enabled
           ? widget.color
           : (isDark ? const Color(0xFF52656D) : DuoColors.gray);
@@ -94,7 +93,9 @@ class _DuoButtonState extends State<DuoButton> {
         ),
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-            color: Colors.white.withValues(alpha: 0.45), width: 1.5),
+          color: Colors.white.withValues(alpha: 0.45),
+          width: 1.5,
+        ),
         boxShadow: [
           BoxShadow(color: deep, offset: Offset(0, depth)),
           BoxShadow(

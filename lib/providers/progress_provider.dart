@@ -137,11 +137,9 @@ class ProgressProvider extends ChangeNotifier {
   int get level => xp ~/ 100 + 1;
   int get xpIntoLevel => xp % 100;
 
-  double get accuracy =>
-      totalAnswers == 0 ? 0 : correctAnswers / totalAnswers;
+  double get accuracy => totalAnswers == 0 ? 0 : correctAnswers / totalAnswers;
 
-  bool get boostActive =>
-      DateTime.now().millisecondsSinceEpoch < boostUntil;
+  bool get boostActive => DateTime.now().millisecondsSinceEpoch < boostUntil;
 
   /// Premium menikmati XP dobel permanen.
   int get xpMultiplier => boostActive || premiumActive ? 2 : 1;
@@ -153,8 +151,7 @@ class ProgressProvider extends ChangeNotifier {
 
   /// XP hari ini yang sadar tanggal — [xpToday] baru di-reset saat XP
   /// pertama masuk, jadi tanpa ini nilai kemarin ikut terbawa.
-  int get xpTodayLive =>
-      xpTodayDate == _dayKey(DateTime.now()) ? xpToday : 0;
+  int get xpTodayLive => xpTodayDate == _dayKey(DateTime.now()) ? xpToday : 0;
 
   /// Target bonus setelah target harian diklaim: 2x target harian.
   int get bonusGoal => dailyGoal * 2;
@@ -170,11 +167,9 @@ class ProgressProvider extends ChangeNotifier {
       goalRewardDate == _dayKey(DateTime.now()) &&
       bonusRewardDate != _dayKey(DateTime.now());
 
-  bool get canClaimBonusReward =>
-      bonusGoalActive && xpTodayLive >= bonusGoal;
+  bool get canClaimBonusReward => bonusGoalActive && xpTodayLive >= bonusGoal;
 
-  bool get bonusRewardClaimed =>
-      bonusRewardDate == _dayKey(DateTime.now());
+  bool get bonusRewardClaimed => bonusRewardDate == _dayKey(DateTime.now());
 
   /// Tantangan streak selesai tapi perayaannya belum ditampilkan.
   bool get pendingGoalCelebration =>
@@ -192,8 +187,7 @@ class ProgressProvider extends ChangeNotifier {
     _applyRegen();
     if (_hearts >= maxHearts) return null;
     final next = _heartsUpdatedAt + heartRegenMinutes * 60000;
-    return Duration(
-        milliseconds: next - DateTime.now().millisecondsSinceEpoch);
+    return Duration(milliseconds: next - DateTime.now().millisecondsSinceEpoch);
   }
 
   void _applyRegen() {
@@ -320,8 +314,7 @@ class ProgressProvider extends ChangeNotifier {
   }
 
   void activateBoost(Duration duration) {
-    boostUntil =
-        DateTime.now().add(duration).millisecondsSinceEpoch;
+    boostUntil = DateTime.now().add(duration).millisecondsSinceEpoch;
     _save();
     notifyListeners();
   }
@@ -465,7 +458,8 @@ class ProgressProvider extends ChangeNotifier {
     // Catatan kalender: XP per hari, buang yang lebih tua dari jendela.
     dailyXp[today] = (dailyXp[today] ?? 0) + earnedXp;
     final cutoff = _dayKey(
-        DateTime.now().subtract(const Duration(days: dailyLogDays)));
+      DateTime.now().subtract(const Duration(days: dailyLogDays)),
+    );
     dailyXp.removeWhere((k, _) => k.compareTo(cutoff) < 0);
   }
 
@@ -608,56 +602,56 @@ class ProgressProvider extends ChangeNotifier {
     bestTimeChallenge = m['bestTimeChallenge'] ?? 0;
     bestMemoryMoves = m['bestMemoryMoves'] ?? 0;
     hadPerfectLesson = m['hadPerfectLesson'] ?? false;
-    completedLessons = (m['completedLessons'] as Map<String, dynamic>? ??
-            {})
+    completedLessons = (m['completedLessons'] as Map<String, dynamic>? ?? {})
         .map((k, v) => MapEntry(k, Set<String>.from(v as List)));
-    masteredWords = (m['masteredWords'] as Map<String, dynamic>? ?? {})
-        .map((k, v) => MapEntry(k, Set<String>.from(v as List)));
-    unlockedAchievements =
-        Set<String>.from(m['unlockedAchievements'] as List? ?? []);
+    masteredWords = (m['masteredWords'] as Map<String, dynamic>? ?? {}).map(
+      (k, v) => MapEntry(k, Set<String>.from(v as List)),
+    );
+    unlockedAchievements = Set<String>.from(
+      m['unlockedAchievements'] as List? ?? [],
+    );
     coursesTried = Set<String>.from(m['coursesTried'] as List? ?? []);
-    dailyXp = (m['dailyXp'] as Map<String, dynamic>? ?? {})
-        .map((k, v) => MapEntry(k, (v as num).toInt()));
+    dailyXp = (m['dailyXp'] as Map<String, dynamic>? ?? {}).map(
+      (k, v) => MapEntry(k, (v as num).toInt()),
+    );
     savedAt = (m['savedAt'] as num?)?.toInt() ?? 0;
   }
 
   Map<String, dynamic> _toMap() => {
-        'activeCourseId': activeCourseId,
-        'xp': xp,
-        'gems': gems,
-        'hearts': _hearts,
-        'heartsUpdatedAt': _heartsUpdatedAt,
-        'streak': streak,
-        'longestStreak': longestStreak,
-        'lastActiveDay': lastActiveDay,
-        'streakFreezes': streakFreezes,
-        'streakGoalDays': streakGoalDays,
-        'goalDaysDone': goalDaysDone,
-        'goalCelebrated': goalCelebrated,
-        'missNoticeDate': missNoticeDate,
-        'dailyGoal': dailyGoal,
-        'xpToday': xpToday,
-        'xpTodayDate': xpTodayDate,
-        'weeklyXp': weeklyXp,
-        'weekKey': weekKey,
-        'goalRewardDate': goalRewardDate,
-        'bonusRewardDate': bonusRewardDate,
-        'boostUntil': boostUntil,
-        'totalLessonsDone': totalLessonsDone,
-        'totalAnswers': totalAnswers,
-        'correctAnswers': correctAnswers,
-        'bestTimeChallenge': bestTimeChallenge,
-        'bestMemoryMoves': bestMemoryMoves,
-        'hadPerfectLesson': hadPerfectLesson,
-        'completedLessons':
-            completedLessons.map((k, v) => MapEntry(k, v.toList())),
-        'masteredWords':
-            masteredWords.map((k, v) => MapEntry(k, v.toList())),
-        'unlockedAchievements': unlockedAchievements.toList(),
-        'coursesTried': coursesTried.toList(),
-        'dailyXp': dailyXp,
-        'savedAt': savedAt,
-      };
+    'activeCourseId': activeCourseId,
+    'xp': xp,
+    'gems': gems,
+    'hearts': _hearts,
+    'heartsUpdatedAt': _heartsUpdatedAt,
+    'streak': streak,
+    'longestStreak': longestStreak,
+    'lastActiveDay': lastActiveDay,
+    'streakFreezes': streakFreezes,
+    'streakGoalDays': streakGoalDays,
+    'goalDaysDone': goalDaysDone,
+    'goalCelebrated': goalCelebrated,
+    'missNoticeDate': missNoticeDate,
+    'dailyGoal': dailyGoal,
+    'xpToday': xpToday,
+    'xpTodayDate': xpTodayDate,
+    'weeklyXp': weeklyXp,
+    'weekKey': weekKey,
+    'goalRewardDate': goalRewardDate,
+    'bonusRewardDate': bonusRewardDate,
+    'boostUntil': boostUntil,
+    'totalLessonsDone': totalLessonsDone,
+    'totalAnswers': totalAnswers,
+    'correctAnswers': correctAnswers,
+    'bestTimeChallenge': bestTimeChallenge,
+    'bestMemoryMoves': bestMemoryMoves,
+    'hadPerfectLesson': hadPerfectLesson,
+    'completedLessons': completedLessons.map((k, v) => MapEntry(k, v.toList())),
+    'masteredWords': masteredWords.map((k, v) => MapEntry(k, v.toList())),
+    'unlockedAchievements': unlockedAchievements.toList(),
+    'coursesTried': coursesTried.toList(),
+    'dailyXp': dailyXp,
+    'savedAt': savedAt,
+  };
 
   /// [touch] memajukan [savedAt] — false hanya saat menerapkan data
   /// server agar stempel waktunya ikut persis (untuk pencocokan).

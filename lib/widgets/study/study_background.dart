@@ -47,7 +47,7 @@ class _StudyPainter extends CustomPainter {
   final bool chalkboard;
 
   _StudyPainter({required this.animation, required this.chalkboard})
-      : super(repaint: animation);
+    : super(repaint: animation);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -89,10 +89,20 @@ class _StudyPainter extends CustomPainter {
     canvas.drawLine(Offset(34, 0), Offset(34, h), margin);
     canvas.drawLine(Offset(39, 0), Offset(39, h), margin);
 
-    _doodles(canvas, w, h, t,
-        color: StudyColors.pencil.withValues(alpha: 0.35));
-    _paperPlane(canvas, w, h, t,
-        color: StudyColors.pencil.withValues(alpha: 0.75));
+    _doodles(
+      canvas,
+      w,
+      h,
+      t,
+      color: StudyColors.pencil.withValues(alpha: 0.35),
+    );
+    _paperPlane(
+      canvas,
+      w,
+      h,
+      t,
+      color: StudyColors.pencil.withValues(alpha: 0.75),
+    );
   }
 
   // ---------- Mode gelap: papan tulis ----------
@@ -115,11 +125,9 @@ class _StudyPainter extends CustomPainter {
     for (var i = 0; i < 44; i++) {
       final fx = (sin(i * 12.9898) * 43758.5453).abs() % 1;
       final fy = (sin(i * 78.233) * 12345.6789).abs() % 1;
-      final twinkle =
-          0.15 + 0.55 * (0.5 + 0.5 * sin(t * 4 * pi + i * 1.7));
+      final twinkle = 0.15 + 0.55 * (0.5 + 0.5 * sin(t * 4 * pi + i * 1.7));
       speck.color = StudyColors.chalk.withValues(alpha: twinkle);
-      canvas.drawCircle(
-          Offset(fx * w, fy * h), i % 7 == 0 ? 1.6 : 1.0, speck);
+      canvas.drawCircle(Offset(fx * w, fy * h), i % 7 == 0 ? 1.6 : 1.0, speck);
     }
 
     // Bekas hapusan kapur: garis lengkung samar yang bergeser pelan.
@@ -132,23 +140,31 @@ class _StudyPainter extends CustomPainter {
       final y = h * (0.18 + k * 0.22) + sin(t * 2 * pi + k) * 4;
       final path = Path()..moveTo(-20, y);
       for (double x = 0; x <= w + 20; x += 24) {
-        path.quadraticBezierTo(
-            x + 12, y + sin(x / 60 + k * 2) * 10, x + 24, y);
+        path.quadraticBezierTo(x + 12, y + sin(x / 60 + k * 2) * 10, x + 24, y);
       }
       canvas.drawPath(path, smear);
     }
 
-    _doodles(canvas, w, h, t,
-        color: StudyColors.chalk.withValues(alpha: 0.30));
-    _paperPlane(canvas, w, h, t,
-        color: StudyColors.chalk.withValues(alpha: 0.8));
+    _doodles(canvas, w, h, t, color: StudyColors.chalk.withValues(alpha: 0.30));
+    _paperPlane(
+      canvas,
+      w,
+      h,
+      t,
+      color: StudyColors.chalk.withValues(alpha: 0.8),
+    );
   }
 
   // ---------- Elemen bersama ----------
 
   /// Coretan kecil (bintang & lingkaran) yang melayang pelan.
-  void _doodles(Canvas canvas, double w, double h, double t,
-      {required Color color}) {
+  void _doodles(
+    Canvas canvas,
+    double w,
+    double h,
+    double t, {
+    required Color color,
+  }) {
     final paint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.6
@@ -179,8 +195,13 @@ class _StudyPainter extends CustomPainter {
   }
 
   /// Pesawat kertas melintas dengan jejak putus-putus.
-  void _paperPlane(Canvas canvas, double w, double h, double t,
-      {required Color color}) {
+  void _paperPlane(
+    Canvas canvas,
+    double w,
+    double h,
+    double t, {
+    required Color color,
+  }) {
     final x = ((t * 0.9) % 1.3) * (w + 220) - 110;
     final y = h * 0.10 + sin(t * 4 * pi) * 8;
     final tilt = cos(t * 4 * pi) * 0.12;
@@ -210,11 +231,12 @@ class _StudyPainter extends CustomPainter {
     canvas.drawPath(plane, body);
     // Lipatan tengah.
     canvas.drawLine(
-        const Offset(16, 0),
-        const Offset(-6, 0),
-        Paint()
-          ..color = color.withValues(alpha: 0.5)
-          ..strokeWidth = 1);
+      const Offset(16, 0),
+      const Offset(-6, 0),
+      Paint()
+        ..color = color.withValues(alpha: 0.5)
+        ..strokeWidth = 1,
+    );
     canvas.restore();
   }
 

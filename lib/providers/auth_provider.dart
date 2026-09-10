@@ -81,8 +81,7 @@ class AuthProvider extends ChangeNotifier {
   /// Premium aktif: saklar global admin menyala, ATAU hadiah admin
   /// masih berlaku, ATAU premium pribadi (flag menyala dan — kalau
   /// berlangganan — belum lewat masanya).
-  bool get isPremium =>
-      _globalPremium || _grantActive || _personalPremium;
+  bool get isPremium => _globalPremium || _grantActive || _personalPremium;
 
   bool get _personalPremium =>
       _premiumFlag &&
@@ -107,8 +106,7 @@ class AuthProvider extends ChangeNotifier {
   /// berdasarkan email; [duration] null = cabut hadiah. Mengembalikan
   /// kunci l10n/pesan galat, atau null kalau sukses. Berlaku di
   /// perangkat penerima saat aplikasinya dibuka ulang.
-  Future<String?> grantPremiumByEmail(
-      String email, Duration? duration) async {
+  Future<String?> grantPremiumByEmail(String email, Duration? duration) async {
     if (!configured) return 'Firebase belum dikonfigurasi';
     try {
       final q = await FirebaseFirestore.instance
@@ -118,11 +116,13 @@ class AuthProvider extends ChangeNotifier {
           .get()
           .timeout(const Duration(seconds: 15));
       if (q.docs.isEmpty) return 'admin_grant_notfound';
-      await q.docs.first.reference.update({
-        'premiumGrantUntil': duration == null
-            ? FieldValue.delete()
-            : DateTime.now().add(duration).millisecondsSinceEpoch,
-      }).timeout(const Duration(seconds: 15));
+      await q.docs.first.reference
+          .update({
+            'premiumGrantUntil': duration == null
+                ? FieldValue.delete()
+                : DateTime.now().add(duration).millisecondsSinceEpoch,
+          })
+          .timeout(const Duration(seconds: 15));
       return null;
     } catch (e) {
       debugPrint('BeomoraAuth grant gagal: $e');
@@ -168,15 +168,16 @@ class AuthProvider extends ChangeNotifier {
     if (!configured) return 'Firebase belum dikonfigurasi';
     try {
       final doc = FirebaseFirestore.instance.doc(_configDocPath);
-      await doc.set({
-        'heartRegenMinutes': minutes,
-        'updatedAt': FieldValue.serverTimestamp(),
-      }, SetOptions(merge: true)).timeout(const Duration(seconds: 15));
+      await doc
+          .set({
+            'heartRegenMinutes': minutes,
+            'updatedAt': FieldValue.serverTimestamp(),
+          }, SetOptions(merge: true))
+          .timeout(const Duration(seconds: 15));
       final check = await doc
           .get(const GetOptions(source: Source.server))
           .timeout(const Duration(seconds: 15));
-      if ((check.data()?['heartRegenMinutes'] as num?)?.toInt() !=
-          minutes) {
+      if ((check.data()?['heartRegenMinutes'] as num?)?.toInt() != minutes) {
         return 'Verifikasi gagal: nilai di server tidak cocok';
       }
       onHeartRegenMinutes?.call(minutes);
@@ -202,10 +203,12 @@ class AuthProvider extends ChangeNotifier {
     if (!configured) return 'Firebase belum dikonfigurasi';
     try {
       final doc = FirebaseFirestore.instance.doc(_configDocPath);
-      await doc.set({
-        'premiumForAll': on,
-        'updatedAt': FieldValue.serverTimestamp(),
-      }, SetOptions(merge: true)).timeout(const Duration(seconds: 15));
+      await doc
+          .set({
+            'premiumForAll': on,
+            'updatedAt': FieldValue.serverTimestamp(),
+          }, SetOptions(merge: true))
+          .timeout(const Duration(seconds: 15));
       final check = await doc
           .get(const GetOptions(source: Source.server))
           .timeout(const Duration(seconds: 15));
@@ -231,10 +234,12 @@ class AuthProvider extends ChangeNotifier {
     try {
       final user = pendingUser;
       if (user != null) {
-        await _userDoc(user.uid).set({
-          'premium': true,
-          'premiumUntil': _premiumUntil,
-        }, SetOptions(merge: true)).timeout(const Duration(seconds: 15));
+        await _userDoc(user.uid)
+            .set({
+              'premium': true,
+              'premiumUntil': _premiumUntil,
+            }, SetOptions(merge: true))
+            .timeout(const Duration(seconds: 15));
       }
     } catch (e) {
       // Tersimpan lokal; dokumen akan menyusul pada sesi berikutnya.
@@ -261,9 +266,9 @@ class AuthProvider extends ChangeNotifier {
     }
     final flag = profile['premium'] == true;
     final until = (profile['premiumUntil'] as num?)?.toInt();
-    final serverActive = flag &&
-        (until == null ||
-            DateTime.now().millisecondsSinceEpoch < until);
+    final serverActive =
+        flag &&
+        (until == null || DateTime.now().millisecondsSinceEpoch < until);
     // Bandingkan dengan premium PRIBADI — saklar global admin tidak
     // boleh menghalangi penyimpanan premium pelanggan sungguhan.
     if (!_personalPremium) {
@@ -300,16 +305,14 @@ class AuthProvider extends ChangeNotifier {
 
   /// Admin konten: boleh mengunggah materi ke server (lihat
   /// firestore.rules).
-  bool get isAdmin =>
-      signedIn && AuthConfig.adminEmails.contains(email);
+  bool get isAdmin => signedIn && AuthConfig.adminEmails.contains(email);
 
   /// Info akun Google untuk pra-isi formulir pendaftaran.
   User? get pendingUser =>
       configured ? FirebaseAuth.instance.currentUser : null;
 
   /// UID Firebase sesi aktif (null saat mode tamu/belum login).
-  String? get uid =>
-      configured ? FirebaseAuth.instance.currentUser?.uid : null;
+  String? get uid => configured ? FirebaseAuth.instance.currentUser?.uid : null;
 
   DocumentReference<Map<String, dynamic>> _userDoc(String uid) =>
       FirebaseFirestore.instance.collection('users').doc(uid);
@@ -384,9 +387,9 @@ class AuthProvider extends ChangeNotifier {
         lastErrorDetail = 'Sesi Firebase kosong setelah login';
         return 'login_failed';
       }
-      final doc = await _userDoc(user.uid)
-          .get()
-          .timeout(const Duration(seconds: 15));
+      final doc = await _userDoc(
+        user.uid,
+      ).get().timeout(const Duration(seconds: 15));
       if (doc.exists) {
         _store(user, doc.data());
       } else {
@@ -431,20 +434,26 @@ class AuthProvider extends ChangeNotifier {
 
   /// Masuk dengan email & sandi. Mengembalikan kunci l10n pesan galat,
   /// atau null kalau sukses — setelahnya cek [needsRegistration].
-  Future<String?> signInWithEmail(String email, String password) =>
-      _emailAuth(() => FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: email.trim(), password: password));
+  Future<String?> signInWithEmail(String email, String password) => _emailAuth(
+    () => FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: email.trim(),
+      password: password,
+    ),
+  );
 
   /// Buat akun baru email & sandi. Setelah sukses [needsRegistration]
   /// menyala — profil (nama) dilengkapi di halaman pendaftaran, sama
   /// seperti alur Google.
-  Future<String?> signUpWithEmail(String email, String password) =>
-      _emailAuth(
-          () => FirebaseAuth.instance.createUserWithEmailAndPassword(
-              email: email.trim(), password: password));
+  Future<String?> signUpWithEmail(String email, String password) => _emailAuth(
+    () => FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: email.trim(),
+      password: password,
+    ),
+  );
 
   Future<String?> _emailAuth(
-      Future<UserCredential> Function() authenticate) async {
+    Future<UserCredential> Function() authenticate,
+  ) async {
     if (!configured) return 'login_not_configured';
     busy = true;
     notifyListeners();
@@ -455,9 +464,9 @@ class AuthProvider extends ChangeNotifier {
         lastErrorDetail = 'Sesi Firebase kosong setelah login';
         return 'login_failed';
       }
-      final doc = await _userDoc(user.uid)
-          .get()
-          .timeout(const Duration(seconds: 15));
+      final doc = await _userDoc(
+        user.uid,
+      ).get().timeout(const Duration(seconds: 15));
       if (doc.exists) {
         _store(user, doc.data());
       } else {
@@ -470,8 +479,7 @@ class AuthProvider extends ChangeNotifier {
       return switch (e.code) {
         'user-not-found' ||
         'wrong-password' ||
-        'invalid-credential' =>
-          'email_login_invalid',
+        'invalid-credential' => 'email_login_invalid',
         'email-already-in-use' => 'email_in_use',
         'invalid-email' => 'email_invalid',
         'weak-password' => 'password_weak',
@@ -623,13 +631,10 @@ class AuthProvider extends ChangeNotifier {
     Future(() async {
       try {
         final batch = FirebaseFirestore.instance.batch();
-        batch.set(
-            _contactDoc(uid),
-            {
-              'phone': phone,
-              'updatedAt': FieldValue.serverTimestamp(),
-            },
-            SetOptions(merge: true));
+        batch.set(_contactDoc(uid), {
+          'phone': phone,
+          'updatedAt': FieldValue.serverTimestamp(),
+        }, SetOptions(merge: true));
         batch.update(_userDoc(uid), {'phone': FieldValue.delete()});
         await batch.commit().timeout(const Duration(seconds: 15));
       } catch (e) {
@@ -648,7 +653,8 @@ class AuthProvider extends ChangeNotifier {
       final legacyPhone = profile['phone'] as String?;
       if (legacyPhone != null) _migratePhone(user.uid, legacyPhone);
     }
-    name = (profile?['name'] as String?) ??
+    name =
+        (profile?['name'] as String?) ??
         user.displayName ??
         (user.email ?? 'Pelajar').split('@').first;
     email = user.email ?? '';

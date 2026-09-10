@@ -15,7 +15,9 @@ import 'package:beomora/services/content_service.dart';
 
 void main() {
   Future<void> pumpApp(
-      WidgetTester tester, Map<String, Object> initialPrefs) async {
+    WidgetTester tester,
+    Map<String, Object> initialPrefs,
+  ) async {
     SharedPreferences.setMockInitialValues(initialPrefs);
     final prefs = (await tester.runAsync(SharedPreferences.getInstance))!;
     final courses = (await tester.runAsync(ContentService.loadCourses))!;
@@ -41,8 +43,7 @@ void main() {
     expect(find.byType(MainScreen), findsNothing);
   });
 
-  testWidgets('sesi login tersimpan → langsung ke menu utama',
-      (tester) async {
+  testWidgets('sesi login tersimpan → langsung ke menu utama', (tester) async {
     await pumpApp(tester, {
       'onboarded': true,
       'auth_name': 'Dani',

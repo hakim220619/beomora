@@ -29,10 +29,12 @@ class ShopScreen extends StatelessWidget {
     if (errorKey != null) {
       messenger
         ..hideCurrentSnackBar()
-        ..showSnackBar(SnackBar(
-          duration: const Duration(seconds: 6),
-          content: Text(l.t(errorKey)),
-        ));
+        ..showSnackBar(
+          SnackBar(
+            duration: const Duration(seconds: 6),
+            content: Text(l.t(errorKey)),
+          ),
+        );
     }
   }
 
@@ -45,12 +47,15 @@ class ShopScreen extends StatelessWidget {
       return;
     }
     final shown = await AdService.showRewarded(
-        onReward: () => progress.restoreHeart());
+      onReward: () => progress.restoreHeart(),
+    );
     messenger
       ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(
-        content: Text(l.t(shown ? 'ad_reward_heart' : 'ad_not_ready')),
-      ));
+      ..showSnackBar(
+        SnackBar(
+          content: Text(l.t(shown ? 'ad_reward_heart' : 'ad_not_ready')),
+        ),
+      );
   }
 
   @override
@@ -69,9 +74,10 @@ class ShopScreen extends StatelessWidget {
               child: Text(
                 '🪙 ${progress.gems}',
                 style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w800,
-                    color: DuoColors.blue),
+                  fontSize: 18,
+                  fontWeight: FontWeight.w800,
+                  color: DuoColors.blue,
+                ),
               ),
             ),
           ),
@@ -87,8 +93,7 @@ class ShopScreen extends StatelessWidget {
               child: InkWell(
                 borderRadius: BorderRadius.circular(16),
                 onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                      builder: (_) => const PremiumScreen()),
+                  MaterialPageRoute(builder: (_) => const PremiumScreen()),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(16),
@@ -100,21 +105,28 @@ class ShopScreen extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(l.t('premium_title'),
-                                style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w900,
-                                    color: DuoColors.purple)),
-                            Text(l.t('premium_banner_sub'),
-                                style: TextStyle(
-                                    fontSize: 12.5,
-                                    color:
-                                        Theme.of(context).hintColor)),
+                            Text(
+                              l.t('premium_title'),
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w900,
+                                color: DuoColors.purple,
+                              ),
+                            ),
+                            Text(
+                              l.t('premium_banner_sub'),
+                              style: TextStyle(
+                                fontSize: 12.5,
+                                color: Theme.of(context).hintColor,
+                              ),
+                            ),
                           ],
                         ),
                       ),
-                      const Icon(Icons.chevron_right_rounded,
-                          color: DuoColors.purple),
+                      const Icon(
+                        Icons.chevron_right_rounded,
+                        color: DuoColors.purple,
+                      ),
                     ],
                   ),
                 ),
@@ -137,24 +149,24 @@ class ShopScreen extends StatelessWidget {
             color: DuoColors.purple,
             title: l.t('gems_pack_small'),
             subtitle: l.t('topup_desc'),
-            priceLabel: context
-                    .read<PurchaseService>()
-                    .priceOf(PurchaseService.gemsSmallId) ??
+            priceLabel:
+                context.read<PurchaseService>().priceOf(
+                  PurchaseService.gemsSmallId,
+                ) ??
                 l.t('topup_label'),
-            onBuy: () =>
-                _buyGems(context, PurchaseService.gemsSmallId),
+            onBuy: () => _buyGems(context, PurchaseService.gemsSmallId),
           ),
           _ShopItem(
             emoji: '💰',
             color: DuoColors.orange,
             title: l.t('gems_pack_large'),
             subtitle: l.t('topup_desc'),
-            priceLabel: context
-                    .read<PurchaseService>()
-                    .priceOf(PurchaseService.gemsLargeId) ??
+            priceLabel:
+                context.read<PurchaseService>().priceOf(
+                  PurchaseService.gemsLargeId,
+                ) ??
                 l.t('topup_label'),
-            onBuy: () =>
-                _buyGems(context, PurchaseService.gemsLargeId),
+            onBuy: () => _buyGems(context, PurchaseService.gemsLargeId),
           ),
           _ShopItem(
             emoji: '❤️',
@@ -180,8 +192,7 @@ class ShopScreen extends StatelessWidget {
             color: DuoColors.blue,
             title: l.t('streak_freeze'),
             subtitle: l.t('streak_freeze_desc'),
-            badge:
-                '${l.t('owned_count')}: ${progress.streakFreezes}',
+            badge: '${l.t('owned_count')}: ${progress.streakFreezes}',
             price: 200,
             onBuy: () {
               if (!progress.spendGems(200)) {
@@ -259,30 +270,39 @@ class _ShopItem extends StatelessWidget {
                 borderRadius: BorderRadius.circular(14),
               ),
               child: Center(
-                  child: Text(emoji, style: const TextStyle(fontSize: 30))),
+                child: Text(emoji, style: const TextStyle(fontSize: 30)),
+              ),
             ),
             const SizedBox(width: 14),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title,
-                      style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.w800)),
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
                   const SizedBox(height: 2),
-                  Text(subtitle,
-                      style: TextStyle(
-                          fontSize: 13,
-                          color: Theme.of(context).hintColor)),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Theme.of(context).hintColor,
+                    ),
+                  ),
                   if (badge != null)
                     Padding(
                       padding: const EdgeInsets.only(top: 4),
                       child: Text(
                         badge!,
                         style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w700,
-                            color: color),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: color,
+                        ),
                       ),
                     ),
                 ],

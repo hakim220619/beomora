@@ -50,8 +50,9 @@ void main() {
     await tester.pump(const Duration(milliseconds: 600));
   }
 
-  testWidgets('notice bolos: progres tantangan tampil satu halaman penuh',
-      (tester) async {
+  testWidgets('notice bolos: progres tantangan tampil satu halaman penuh', (
+    tester,
+  ) async {
     await pumpAndOpen(
       tester,
       const StreakNoticeScreen.missed(goalDays: 30, daysDone: 12),
@@ -59,8 +60,7 @@ void main() {
 
     expect(find.text('Kamu sempat bolos 😴'), findsOneWidget);
     expect(find.text('12/30 hari'), findsOneWidget);
-    expect(find.text('Tinggal 18 hari lagi menuju target 🎯'),
-        findsOneWidget);
+    expect(find.text('Tinggal 18 hari lagi menuju target 🎯'), findsOneWidget);
     expect(find.text('LANJUT BELAJAR'), findsOneWidget);
     // Bukan dialog: tidak ada AlertDialog/Dialog di pohon widget.
     expect(find.byType(Dialog), findsNothing);
@@ -74,8 +74,9 @@ void main() {
     expect(find.text('buka'), findsOneWidget);
   });
 
-  testWidgets('tantangan selesai: hadiah koin dan tombol pilih berikutnya',
-      (tester) async {
+  testWidgets('tantangan selesai: hadiah koin dan tombol pilih berikutnya', (
+    tester,
+  ) async {
     await pumpAndOpen(
       tester,
       const StreakNoticeScreen.goalDone(goalDays: 30, gems: 50),

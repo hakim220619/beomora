@@ -59,14 +59,10 @@ class PurchaseService {
       if (!_available) return;
       _sub = InAppPurchase.instance.purchaseStream.listen(
         _onPurchases,
-        onError: (Object e) =>
-            debugPrint('BeomoraIAP stream error: $e'),
+        onError: (Object e) => debugPrint('BeomoraIAP stream error: $e'),
       );
-      final resp =
-          await InAppPurchase.instance.queryProductDetails(_allIds);
-      _products = {
-        for (final p in resp.productDetails) p.id: p,
-      };
+      final resp = await InAppPurchase.instance.queryProductDetails(_allIds);
+      _products = {for (final p in resp.productDetails) p.id: p};
       // Auto-restore tiap aplikasi dibuka: Play hanya mengembalikan
       // langganan yang MASIH aktif, jadi masa premium diperbarui
       // bergulir selama pengguna terus berlangganan; begitu berhenti,
@@ -97,13 +93,11 @@ class PurchaseService {
         productDetails: product,
         applicationUserName: auth.uid,
       );
-      final isConsumable =
-          productId == gemsSmallId || productId == gemsLargeId;
+      final isConsumable = productId == gemsSmallId || productId == gemsLargeId;
       if (isConsumable) {
         await InAppPurchase.instance.buyConsumable(purchaseParam: param);
       } else {
-        await InAppPurchase.instance
-            .buyNonConsumable(purchaseParam: param);
+        await InAppPurchase.instance.buyNonConsumable(purchaseParam: param);
       }
       return null;
     } catch (e) {
@@ -127,8 +121,7 @@ class PurchaseService {
       if (p.status == PurchaseStatus.purchased || restored) {
         // Permata itu konsumabel: hanya diberikan pada pembelian baru
         // — saat restore dilewati agar saldo tidak dobel.
-        final isGems =
-            p.productID == gemsSmallId || p.productID == gemsLargeId;
+        final isGems = p.productID == gemsSmallId || p.productID == gemsLargeId;
         if ((!restored || !isGems) && _ownedByActiveAccount(p)) {
           await _grant(p.productID);
         }
@@ -158,10 +151,12 @@ class PurchaseService {
     switch (productId) {
       case premiumMonthlyId:
         await auth.activatePremium(
-            until: DateTime.now().add(const Duration(days: 31)));
+          until: DateTime.now().add(const Duration(days: 31)),
+        );
       case premiumYearlyId:
         await auth.activatePremium(
-            until: DateTime.now().add(const Duration(days: 366)));
+          until: DateTime.now().add(const Duration(days: 366)),
+        );
       case premiumLifetimeId:
         await auth.activatePremium(); // seumur hidup
       case gemsSmallId:

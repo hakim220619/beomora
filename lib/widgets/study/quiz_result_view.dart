@@ -35,18 +35,17 @@ class QuizResultView extends StatefulWidget {
 }
 
 class _QuizResultViewState extends State<QuizResultView> {
-  late final ConfettiController _confetti =
-      ConfettiController(duration: const Duration(seconds: 2));
+  late final ConfettiController _confetti = ConfettiController(
+    duration: const Duration(seconds: 2),
+  );
 
-  double get _accuracy =>
-      widget.total == 0 ? 0 : widget.correct / widget.total;
+  double get _accuracy => widget.total == 0 ? 0 : widget.correct / widget.total;
 
   @override
   void initState() {
     super.initState();
     if (_accuracy >= 0.7) {
-      WidgetsBinding.instance
-          .addPostFrameCallback((_) => _confetti.play());
+      WidgetsBinding.instance.addPostFrameCallback((_) => _confetti.play());
     }
   }
 
@@ -66,8 +65,8 @@ class _QuizResultViewState extends State<QuizResultView> {
   Color get _ringColor => _accuracy >= 0.7
       ? DuoColors.green
       : _accuracy >= 0.5
-          ? DuoColors.orange
-          : DuoColors.red;
+      ? DuoColors.orange
+      : DuoColors.red;
 
   @override
   Widget build(BuildContext context) {
@@ -83,8 +82,7 @@ class _QuizResultViewState extends State<QuizResultView> {
             Text(
               l.t('quiz_result_title'),
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                  fontSize: 22, fontWeight: FontWeight.w900),
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
             ),
             const SizedBox(height: 18),
             // Ring skor + hitungan berjalan — satu animasi penggerak.
@@ -121,9 +119,9 @@ class _QuizResultViewState extends State<QuizResultView> {
                               Text(
                                 l.t('accuracy_label'),
                                 style: TextStyle(
-                                    fontSize: 12,
-                                    color:
-                                        Theme.of(context).hintColor),
+                                  fontSize: 12,
+                                  color: Theme.of(context).hintColor,
+                                ),
                               ),
                             ],
                           ),
@@ -184,7 +182,9 @@ class _QuizResultViewState extends State<QuizResultView> {
                     l.t(_verdictKey()),
                     textAlign: TextAlign.center,
                     style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.w800),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                   const SizedBox(height: 18),
                   if (widget.review == null)
@@ -202,8 +202,9 @@ class _QuizResultViewState extends State<QuizResultView> {
                       l.t('quiz_review'),
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                          fontSize: 13,
-                          color: Theme.of(context).hintColor),
+                        fontSize: 13,
+                        color: Theme.of(context).hintColor,
+                      ),
                     ),
                     const SizedBox(height: 10),
                     widget.review!,
@@ -272,13 +273,11 @@ class _CountChip extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Expanded(
       child: Container(
-        padding:
-            const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         decoration: BoxDecoration(
           color: color.withValues(alpha: isDark ? 0.18 : 0.12),
           borderRadius: BorderRadius.circular(14),
-          border:
-              Border.all(color: color.withValues(alpha: 0.5), width: 1.5),
+          border: Border.all(color: color.withValues(alpha: 0.5), width: 1.5),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -288,15 +287,19 @@ class _CountChip extends StatelessWidget {
             Text(
               '$value',
               style: TextStyle(
-                  fontSize: 20, fontWeight: FontWeight.w900, color: color),
+                fontSize: 20,
+                fontWeight: FontWeight.w900,
+                color: color,
+              ),
             ),
             const SizedBox(width: 6),
             Text(
               label,
               style: TextStyle(
-                  fontSize: 12.5,
-                  fontWeight: FontWeight.w800,
-                  color: Theme.of(context).hintColor),
+                fontSize: 12.5,
+                fontWeight: FontWeight.w800,
+                color: Theme.of(context).hintColor,
+              ),
             ),
           ],
         ),

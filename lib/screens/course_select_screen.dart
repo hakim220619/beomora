@@ -25,10 +25,14 @@ class CourseSelectScreen extends StatelessWidget {
             Card(
               margin: const EdgeInsets.only(bottom: 12),
               child: ListTile(
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                leading:
-                    Text(course.flag, style: const TextStyle(fontSize: 32)),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                leading: Text(
+                  course.flag,
+                  style: const TextStyle(fontSize: 32),
+                ),
                 title: Text(
                   course.name[l.code] ?? '',
                   style: const TextStyle(fontWeight: FontWeight.w700),
@@ -39,18 +43,21 @@ class CourseSelectScreen extends StatelessWidget {
                     value: course.allLessons.isEmpty
                         ? 0
                         : progress.completedInCourse(course.id) /
-                            course.allLessons.length,
+                              course.allLessons.length,
                     minHeight: 8,
                     borderRadius: BorderRadius.circular(6),
                     color: DuoColors.green,
-                    backgroundColor: Theme.of(context)
-                        .dividerColor
-                        .withValues(alpha: 0.5),
+                    backgroundColor: Theme.of(
+                      context,
+                    ).dividerColor.withValues(alpha: 0.5),
                   ),
                 ),
                 trailing: progress.activeCourseId == course.id
-                    ? const Icon(Icons.check_circle,
-                        color: DuoColors.green, size: 28)
+                    ? const Icon(
+                        Icons.check_circle,
+                        color: DuoColors.green,
+                        size: 28,
+                      )
                     : null,
                 onTap: () {
                   context.read<ProgressProvider>().setActiveCourse(course.id);

@@ -102,9 +102,7 @@ class _TimeChallengeScreenState extends State<TimeChallengeScreen> {
       appBar: AppBar(title: Text(l.t('time_challenge'))),
       body: Padding(
         padding: const EdgeInsets.all(20),
-        child: !_running
-            ? _buildIdle(l, progress)
-            : _buildGame(l),
+        child: !_running ? _buildIdle(l, progress) : _buildGame(l),
       ),
     );
   }
@@ -114,9 +112,11 @@ class _TimeChallengeScreenState extends State<TimeChallengeScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(_finished ? '⏰' : '⏱️',
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 72)),
+        Text(
+          _finished ? '⏰' : '⏱️',
+          textAlign: TextAlign.center,
+          style: const TextStyle(fontSize: 72),
+        ),
         const SizedBox(height: 16),
         Text(
           _finished ? l.t('time_up') : l.t('time_desc'),
@@ -129,9 +129,10 @@ class _TimeChallengeScreenState extends State<TimeChallengeScreen> {
             '${l.t('score')}: $_score  (+$_score XP ⚡)',
             textAlign: TextAlign.center,
             style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-                color: DuoColors.orange),
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+              color: DuoColors.orange,
+            ),
           ),
           const SizedBox(height: 4),
         ],
@@ -170,9 +171,10 @@ class _TimeChallengeScreenState extends State<TimeChallengeScreen> {
             Text(
               '${l.t('score')}: $_score',
               style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w800,
-                  color: DuoColors.green),
+                fontSize: 22,
+                fontWeight: FontWeight.w800,
+                color: DuoColors.green,
+              ),
             ),
           ],
         ),
@@ -205,10 +207,10 @@ class _TimeChallengeScreenState extends State<TimeChallengeScreen> {
                   state: _picked == null
                       ? ChoiceState.idle
                       : option == q.answer
-                          ? ChoiceState.correct
-                          : option == _picked
-                              ? ChoiceState.wrong
-                              : ChoiceState.disabled,
+                      ? ChoiceState.correct
+                      : option == _picked
+                      ? ChoiceState.wrong
+                      : ChoiceState.disabled,
                   onTap: () => _answer(option),
                 ),
                 const SizedBox(height: 10),

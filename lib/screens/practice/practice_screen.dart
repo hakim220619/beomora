@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../data/handwriting_bank.dart';
 import '../../data/listening_bank.dart';
+import '../../models/listening.dart';
 import '../../data/mcq_packs.dart';
 import '../../l10n/app_strings.dart';
 import '../../models/course.dart';
 import '../../providers/progress_provider.dart';
+import '../../providers/settings_provider.dart';
+import '../../services/handwriting_service.dart';
 import '../../theme.dart';
 import '../lesson/lesson_screen.dart';
 import 'flashcards_screen.dart';
+import 'handwriting_activation.dart';
+import 'handwriting_screen.dart';
 import 'letter_quiz_screen.dart';
 import 'listening_pack_screen.dart';
 import 'mcq_pack_screen.dart';
@@ -58,6 +64,20 @@ class PracticeScreen extends StatelessWidget {
             subtitle: l.t('letter_quiz_desc'),
             onTap: () => _push(context, LetterQuizScreen(course: course)),
           ),
+          // Tulis Huruf: kanvas tulisan tangan. Kartu selalu tampil;
+          // kalau fitur belum aktif / model belum ada, ketuk → alur
+          // aktivasi (cek RAM & ruang, unduh model) lalu masuk.
+          if (writingCategoriesFor(course.id).isNotEmpty)
+            _GameCard(
+              emoji: '✍️',
+              color: DuoColors.green,
+              title: l.t('handwriting_title'),
+              subtitle: l.t('handwriting_desc'),
+              trailing: progress.premiumActive
+                  ? null
+                  : '👑 ${l.t('practice_free_handwriting').replaceFirst('{n}', '$kFreeHandwritingQuestions')}',
+              onTap: () => _openHandwriting(context, course),
+            ),
           // Hanya kursus yang punya bank soal pilihan ganda (ja/en).
           if (mcqPacksFor(course.id).isNotEmpty)
             _GameCard(
@@ -74,8 +94,10 @@ class PracticeScreen extends StatelessWidget {
               color: DuoColors.blue,
               title: l.t('listening_title'),
               subtitle: l.t('listening_desc'),
-              onTap: () =>
-                  _push(context, ListeningPackScreen(course: course)),
+              trailing: progress.premiumActive
+                  ? null
+                  : '👑 ${l.t('practice_free_listening').replaceFirst('{n}', '$kFreeListeningPassages')}',
+              onTap: () => _push(context, ListeningPackScreen(course: course)),
             ),
           _GameCard(
             emoji: '⏱️',
@@ -99,9 +121,21 @@ class PracticeScreen extends StatelessWidget {
     );
   }
 
+  Future<void> _openHandwriting(BuildContext context, Course course) async {
+    final settings = context.read<SettingsProvider>();
+    final language = HandwritingService.languageFor(course.id);
+    if (language == null) return;
+    var ready =
+        settings.handwritingOn &&
+        await HandwritingService.instance.isModelDownloaded(language);
+    if (!context.mounted) return;
+    if (!ready) ready = await showHandwritingActivation(context, course);
+    if (!ready || !context.mounted) return;
+    _push(context, HandwritingScreen(course: course));
+  }
+
   void _push(BuildContext context, Widget screen) {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (_) => screen));
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) => screen));
   }
 }
 
@@ -141,8 +175,7 @@ class _GameCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: Center(
-                  child:
-                      Text(emoji, style: const TextStyle(fontSize: 28)),
+                  child: Text(emoji, style: const TextStyle(fontSize: 28)),
                 ),
               ),
               const SizedBox(width: 14),
@@ -150,14 +183,21 @@ class _GameCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(title,
-                        style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w800)),
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
                     const SizedBox(height: 2),
-                    Text(subtitle,
-                        style: TextStyle(
-                            fontSize: 13,
-                            color: Theme.of(context).hintColor)),
+                    Text(
+                      subtitle,
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Theme.of(context).hintColor,
+                      ),
+                    ),
                     if (trailing != null)
                       Padding(
                         padding: const EdgeInsets.only(top: 4),
@@ -173,8 +213,10 @@ class _GameCard extends StatelessWidget {
                   ],
                 ),
               ),
-              Icon(Icons.chevron_right_rounded,
-                  color: Theme.of(context).hintColor),
+              Icon(
+                Icons.chevron_right_rounded,
+                color: Theme.of(context).hintColor,
+              ),
             ],
           ),
         ),

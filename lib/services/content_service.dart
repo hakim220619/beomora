@@ -46,8 +46,7 @@ class ContentService {
       Course? course;
       if (cached != null) {
         try {
-          course =
-              Course.fromJson(jsonDecode(cached) as Map<String, dynamic>);
+          course = Course.fromJson(jsonDecode(cached) as Map<String, dynamic>);
         } catch (e) {
           debugPrint('BeomoraContent: cache $lang rusak, pakai asset ($e)');
         }
@@ -71,8 +70,10 @@ class ContentService {
       try {
         applySyncedMcqBank(lang, mcqListFromJson(cached));
       } catch (e) {
-        debugPrint('BeomoraContent: cache mcq $lang rusak, '
-            'pakai bawaan ($e)');
+        debugPrint(
+          'BeomoraContent: cache mcq $lang rusak, '
+          'pakai bawaan ($e)',
+        );
       }
     }
   }
@@ -80,8 +81,10 @@ class ContentService {
   /// Sinkronkan cache lokal dengan Firestore. Aman dipanggil tanpa
   /// di-await (fire-and-forget); semua galat ditelan karena materi
   /// bawaan selalu tersedia sebagai fallback.
-  static Future<void> sync(SharedPreferences prefs,
-      {bool force = false}) async {
+  static Future<void> sync(
+    SharedPreferences prefs, {
+    bool force = false,
+  }) async {
     if (Firebase.apps.isEmpty) return;
     final now = DateTime.now().millisecondsSinceEpoch;
     final lastCheck = prefs.getInt(_kLastCheck) ?? 0;
@@ -133,8 +136,9 @@ class ContentService {
       }
       await prefs.setInt(_kVersion, serverVersion);
       debugPrint(
-          'BeomoraContent: materi tersinkron ke versi $serverVersion '
-          '(dipakai mulai peluncuran berikutnya)');
+        'BeomoraContent: materi tersinkron ke versi $serverVersion '
+        '(dipakai mulai peluncuran berikutnya)',
+      );
     } catch (e) {
       debugPrint('BeomoraContent: sync dilewati ($e)');
     }

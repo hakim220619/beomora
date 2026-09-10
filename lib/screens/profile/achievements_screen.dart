@@ -22,8 +22,7 @@ class AchievementsScreen extends StatelessWidget {
         itemCount: kAchievements.length,
         itemBuilder: (_, i) {
           final ach = kAchievements[i];
-          final unlocked =
-              progress.unlockedAchievements.contains(ach.id);
+          final unlocked = progress.unlockedAchievements.contains(ach.id);
           return Container(
             margin: const EdgeInsets.only(bottom: 10),
             padding: const EdgeInsets.all(14),
@@ -31,15 +30,15 @@ class AchievementsScreen extends StatelessWidget {
               color: unlocked
                   ? DuoColors.yellow.withValues(alpha: 0.18)
                   : (Theme.of(context).brightness == Brightness.dark
-                      ? Colors.white.withValues(alpha: 0.07)
-                      : Colors.white.withValues(alpha: 0.65)),
+                        ? Colors.white.withValues(alpha: 0.07)
+                        : Colors.white.withValues(alpha: 0.65)),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
                 color: unlocked
                     ? DuoColors.yellow
                     : (Theme.of(context).brightness == Brightness.dark
-                        ? const Color(0x40FFFFFF)
-                        : Colors.white),
+                          ? const Color(0x40FFFFFF)
+                          : Colors.white),
                 width: unlocked ? 2 : 1.5,
               ),
             ),
@@ -47,8 +46,7 @@ class AchievementsScreen extends StatelessWidget {
               children: [
                 Opacity(
                   opacity: unlocked ? 1 : 0.35,
-                  child: Text(ach.emoji,
-                      style: const TextStyle(fontSize: 34)),
+                  child: Text(ach.emoji, style: const TextStyle(fontSize: 34)),
                 ),
                 const SizedBox(width: 14),
                 Expanded(
@@ -60,23 +58,24 @@ class AchievementsScreen extends StatelessWidget {
                         style: TextStyle(
                           fontWeight: FontWeight.w800,
                           fontSize: 15,
-                          color: unlocked
-                              ? null
-                              : Theme.of(context).hintColor,
+                          color: unlocked ? null : Theme.of(context).hintColor,
                         ),
                       ),
                       Text(
                         l.t('ach_${ach.id}_desc'),
                         style: TextStyle(
-                            fontSize: 13,
-                            color: Theme.of(context).hintColor),
+                          fontSize: 13,
+                          color: Theme.of(context).hintColor,
+                        ),
                       ),
                     ],
                   ),
                 ),
                 if (unlocked)
-                  const Icon(Icons.check_circle_rounded,
-                      color: DuoColors.yellow),
+                  const Icon(
+                    Icons.check_circle_rounded,
+                    color: DuoColors.yellow,
+                  ),
               ],
             ),
           );

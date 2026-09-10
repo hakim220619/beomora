@@ -31,8 +31,9 @@ class LessonCompleteScreen extends StatefulWidget {
 
 class _LessonCompleteScreenState extends State<LessonCompleteScreen>
     with SingleTickerProviderStateMixin {
-  late final ConfettiController _confetti =
-      ConfettiController(duration: const Duration(seconds: 2));
+  late final ConfettiController _confetti = ConfettiController(
+    duration: const Duration(seconds: 2),
+  );
   late final AnimationController _rays = AnimationController(
     vsync: this,
     duration: const Duration(seconds: 14),
@@ -41,8 +42,7 @@ class _LessonCompleteScreenState extends State<LessonCompleteScreen>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => _confetti.play());
+    WidgetsBinding.instance.addPostFrameCallback((_) => _confetti.play());
   }
 
   @override
@@ -57,11 +57,10 @@ class _LessonCompleteScreenState extends State<LessonCompleteScreen>
     final l = L.of(context);
     final accuracy = widget.totalExercises == 0
         ? 100
-        : (((widget.totalExercises - widget.mistakes) /
-                    widget.totalExercises) *
-                100)
-            .clamp(0, 100)
-            .round();
+        : (((widget.totalExercises - widget.mistakes) / widget.totalExercises) *
+                  100)
+              .clamp(0, 100)
+              .round();
 
     return StudyScaffold(
       body: Stack(
@@ -105,13 +104,13 @@ class _LessonCompleteScreenState extends State<LessonCompleteScreen>
                   Text(
                     l.t('lesson_complete'),
                     style: const TextStyle(
-                        fontSize: 26, fontWeight: FontWeight.w900),
+                      fontSize: 26,
+                      fontWeight: FontWeight.w900,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    widget.reward.perfect
-                        ? l.t('perfect')
-                        : l.t('great_job'),
+                    widget.reward.perfect ? l.t('perfect') : l.t('great_job'),
                     style: TextStyle(
                       fontSize: 16,
                       color: widget.reward.perfect
@@ -164,18 +163,15 @@ class _LessonCompleteScreenState extends State<LessonCompleteScreen>
                       decoration: BoxDecoration(
                         color: DuoColors.purple.withValues(alpha: 0.18),
                         borderRadius: BorderRadius.circular(14),
-                        border: Border.all(
-                            color: DuoColors.purple, width: 2),
+                        border: Border.all(color: DuoColors.purple, width: 2),
                       ),
                       child: Row(
                         children: [
-                          const Text('🏅',
-                              style: TextStyle(fontSize: 24)),
+                          const Text('🏅', style: TextStyle(fontSize: 24)),
                           const SizedBox(width: 10),
                           Expanded(
                             child: Column(
-                              crossAxisAlignment:
-                                  CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   l.t('ach_unlocked'),
@@ -188,7 +184,8 @@ class _LessonCompleteScreenState extends State<LessonCompleteScreen>
                                 Text(
                                   l.t('ach_$achId'),
                                   style: const TextStyle(
-                                      fontWeight: FontWeight.w900),
+                                    fontWeight: FontWeight.w900,
+                                  ),
                                 ),
                               ],
                             ),
@@ -251,7 +248,10 @@ class _RaysPainter extends CustomPainter {
       canvas.drawPath(path, paint);
     }
     canvas.drawCircle(
-        c, r * 0.42, Paint()..color = color.withValues(alpha: 0.18));
+      c,
+      r * 0.42,
+      Paint()..color = color.withValues(alpha: 0.18),
+    );
   }
 
   @override
@@ -292,14 +292,22 @@ class _RewardBox extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Text('$icon $value',
-              style: TextStyle(
-                  color: color,
-                  fontWeight: FontWeight.w900,
-                  fontSize: 16)),
-          Text(label,
-              style: TextStyle(
-                  color: color, fontSize: 11, fontWeight: FontWeight.w700)),
+          Text(
+            '$icon $value',
+            style: TextStyle(
+              color: color,
+              fontWeight: FontWeight.w900,
+              fontSize: 16,
+            ),
+          ),
+          Text(
+            label,
+            style: TextStyle(
+              color: color,
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
         ],
       ),
     );

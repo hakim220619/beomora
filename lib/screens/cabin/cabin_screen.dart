@@ -43,8 +43,9 @@ class CabinScreen extends StatelessWidget {
                   Text(
                     '${l.t('level')} ${progress.level}',
                     style: const TextStyle(
-                        fontWeight: FontWeight.w900,
-                        color: DuoColors.green),
+                      fontWeight: FontWeight.w900,
+                      color: DuoColors.green,
+                    ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -59,17 +60,19 @@ class CabinScreen extends StatelessWidget {
                   Text(
                     '${progress.xpIntoLevel}/100',
                     style: TextStyle(
-                        fontSize: 12,
-                        color: Theme.of(context).hintColor),
+                      fontSize: 12,
+                      color: Theme.of(context).hintColor,
+                    ),
                   ),
                 ],
               ),
             ),
           ),
           const SizedBox(height: 18),
-          Text(l.t('stats'),
-              style: const TextStyle(
-                  fontSize: 18, fontWeight: FontWeight.w900)),
+          Text(
+            l.t('stats'),
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
+          ),
           const SizedBox(height: 10),
           GridView.count(
             crossAxisCount: 2,
@@ -83,35 +86,42 @@ class CabinScreen extends StatelessWidget {
             childAspectRatio: 2.4,
             children: [
               _StatTile(
-                  icon: '⚡',
-                  label: l.t('total_xp'),
-                  value: '${progress.xp}'),
+                icon: '⚡',
+                label: l.t('total_xp'),
+                value: '${progress.xp}',
+              ),
               _StatTile(
-                  icon: '🔥',
-                  label: l.t('longest_streak'),
-                  value: '${progress.longestStreak}'),
+                icon: '🔥',
+                label: l.t('longest_streak'),
+                value: '${progress.longestStreak}',
+              ),
               _StatTile(
-                  icon: '🗣️',
-                  label: l.t('words_learned'),
-                  value: '${progress.wordsMasteredCount}'),
+                icon: '🗣️',
+                label: l.t('words_learned'),
+                value: '${progress.wordsMasteredCount}',
+              ),
               _StatTile(
-                  icon: '📗',
-                  label: l.t('lessons_done'),
-                  value: '${progress.totalLessonsDone}'),
+                icon: '📗',
+                label: l.t('lessons_done'),
+                value: '${progress.totalLessonsDone}',
+              ),
               _StatTile(
-                  icon: '🎯',
-                  label: l.t('accuracy_label'),
-                  value: '${(progress.accuracy * 100).round()}%'),
+                icon: '🎯',
+                label: l.t('accuracy_label'),
+                value: '${(progress.accuracy * 100).round()}%',
+              ),
               _StatTile(
-                  icon: '⏱️',
-                  label: l.t('time_challenge'),
-                  value: '${progress.bestTimeChallenge}'),
+                icon: '⏱️',
+                label: l.t('time_challenge'),
+                value: '${progress.bestTimeChallenge}',
+              ),
             ],
           ),
           const SizedBox(height: 14),
-          Text(l.t('cabin_menu'),
-              style: const TextStyle(
-                  fontSize: 18, fontWeight: FontWeight.w900)),
+          Text(
+            l.t('cabin_menu'),
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
+          ),
           const SizedBox(height: 10),
           // Pintu-pintu kabin
           _CabinDoor(
@@ -158,8 +168,7 @@ class CabinScreen extends StatelessWidget {
   }
 
   void _push(BuildContext context, Widget screen) {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (_) => screen));
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) => screen));
   }
 }
 
@@ -188,13 +197,16 @@ class _AccountCard extends StatelessWidget {
                               height: 56,
                               fit: BoxFit.cover,
                               errorBuilder: (_, _, _) => const Center(
-                                  child: Text('🐝',
-                                      style: TextStyle(fontSize: 30))),
+                                child: Text(
+                                  '🐝',
+                                  style: TextStyle(fontSize: 30),
+                                ),
+                              ),
                             ),
                           )
                         : const Center(
-                            child: Text('🐝',
-                                style: TextStyle(fontSize: 30))),
+                            child: Text('🐝', style: TextStyle(fontSize: 30)),
+                          ),
                   ),
                   const SizedBox(width: 14),
                   Expanded(
@@ -206,15 +218,18 @@ class _AccountCard extends StatelessWidget {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
-                              fontSize: 17, fontWeight: FontWeight.w900),
+                            fontSize: 17,
+                            fontWeight: FontWeight.w900,
+                          ),
                         ),
                         Text(
                           auth.email ?? '',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                              fontSize: 13,
-                              color: Theme.of(context).hintColor),
+                            fontSize: 13,
+                            color: Theme.of(context).hintColor,
+                          ),
                         ),
                         Text(
                           l.t('learner'),
@@ -229,8 +244,10 @@ class _AccountCard extends StatelessWidget {
                   ),
                   IconButton(
                     tooltip: l.t('sign_out'),
-                    icon: const Icon(Icons.logout_rounded,
-                        color: DuoColors.red),
+                    icon: const Icon(
+                      Icons.logout_rounded,
+                      color: DuoColors.red,
+                    ),
                     onPressed: () async {
                       final messenger = ScaffoldMessenger.of(context);
                       final confirmed = await showDuoConfirm(
@@ -246,8 +263,9 @@ class _AccountCard extends StatelessWidget {
                       await auth.signOut();
                       messenger
                         ..hideCurrentSnackBar()
-                        ..showSnackBar(SnackBar(
-                            content: Text(l.t('signed_out_msg'))));
+                        ..showSnackBar(
+                          SnackBar(content: Text(l.t('signed_out_msg'))),
+                        );
                     },
                   ),
                 ],
@@ -259,8 +277,8 @@ class _AccountCard extends StatelessWidget {
                     children: [
                       const _Porthole(
                         child: Center(
-                            child: Text('🐝',
-                                style: TextStyle(fontSize: 30))),
+                          child: Text('🐝', style: TextStyle(fontSize: 30)),
+                        ),
                       ),
                       const SizedBox(width: 14),
                       Expanded(
@@ -270,14 +288,16 @@ class _AccountCard extends StatelessWidget {
                             Text(
                               l.t('guest'),
                               style: const TextStyle(
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w900),
+                                fontSize: 17,
+                                fontWeight: FontWeight.w900,
+                              ),
                             ),
                             Text(
                               l.t('guest_hint'),
                               style: TextStyle(
-                                  fontSize: 12.5,
-                                  color: Theme.of(context).hintColor),
+                                fontSize: 12.5,
+                                color: Theme.of(context).hintColor,
+                              ),
                             ),
                           ],
                         ),
@@ -326,8 +346,11 @@ class _StatTile extends StatelessWidget {
   final String label;
   final String value;
 
-  const _StatTile(
-      {required this.icon, required this.label, required this.value});
+  const _StatTile({
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -353,16 +376,21 @@ class _StatTile extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(value,
-                    style: const TextStyle(
-                        fontSize: 17, fontWeight: FontWeight.w900)),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
                 Text(
                   label,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                      fontSize: 11,
-                      color: Theme.of(context).hintColor),
+                    fontSize: 11,
+                    color: Theme.of(context).hintColor,
+                  ),
                 ),
               ],
             ),
@@ -397,8 +425,7 @@ class _CabinDoor extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         onTap: onTap,
         child: Padding(
-          padding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 11),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 11),
           child: Row(
             children: [
               Container(
@@ -408,30 +435,39 @@ class _CabinDoor extends StatelessWidget {
                   color: color.withValues(alpha: 0.18),
                   borderRadius: BorderRadius.circular(14),
                   border: Border.all(
-                      color: color.withValues(alpha: 0.6), width: 1.5),
+                    color: color.withValues(alpha: 0.6),
+                    width: 1.5,
+                  ),
                 ),
                 alignment: Alignment.center,
-                child:
-                    Text(emoji, style: const TextStyle(fontSize: 24)),
+                child: Text(emoji, style: const TextStyle(fontSize: 24)),
               ),
               const SizedBox(width: 14),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(title,
-                        style: const TextStyle(
-                            fontSize: 15.5,
-                            fontWeight: FontWeight.w900)),
-                    Text(subtitle,
-                        style: TextStyle(
-                            fontSize: 12.5,
-                            color: Theme.of(context).hintColor)),
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 15.5,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                    Text(
+                      subtitle,
+                      style: TextStyle(
+                        fontSize: 12.5,
+                        color: Theme.of(context).hintColor,
+                      ),
+                    ),
                   ],
                 ),
               ),
-              Icon(Icons.chevron_right_rounded,
-                  color: Theme.of(context).hintColor),
+              Icon(
+                Icons.chevron_right_rounded,
+                color: Theme.of(context).hintColor,
+              ),
             ],
           ),
         ),

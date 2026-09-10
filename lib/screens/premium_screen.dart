@@ -23,10 +23,12 @@ class PremiumScreen extends StatelessWidget {
     if (errorKey != null) {
       messenger
         ..hideCurrentSnackBar()
-        ..showSnackBar(SnackBar(
-          duration: const Duration(seconds: 6),
-          content: Text(l.t(errorKey)),
-        ));
+        ..showSnackBar(
+          SnackBar(
+            duration: const Duration(seconds: 6),
+            content: Text(l.t(errorKey)),
+          ),
+        );
     }
   }
 
@@ -44,12 +46,9 @@ class PremiumScreen extends StatelessWidget {
           const Center(child: BeomoraLogo(size: 96)),
           const SizedBox(height: 10),
           Text(
-            auth.isPremium
-                ? l.t('premium_active')
-                : l.t('premium_sub'),
+            auth.isPremium ? l.t('premium_active') : l.t('premium_sub'),
             textAlign: TextAlign.center,
-            style: const TextStyle(
-                fontSize: 16, fontWeight: FontWeight.w800),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 18),
           Card(
@@ -84,8 +83,7 @@ class PremiumScreen extends StatelessWidget {
               label: l.t('premium_monthly'),
               price: purchase.priceOf(PurchaseService.premiumMonthlyId),
               color: DuoColors.blue,
-              onTap: () =>
-                  _buy(context, PurchaseService.premiumMonthlyId),
+              onTap: () => _buy(context, PurchaseService.premiumMonthlyId),
             ),
             const SizedBox(height: 10),
             _PlanButton(
@@ -93,17 +91,14 @@ class PremiumScreen extends StatelessWidget {
               badge: l.t('premium_best'),
               price: purchase.priceOf(PurchaseService.premiumYearlyId),
               color: DuoColors.green,
-              onTap: () =>
-                  _buy(context, PurchaseService.premiumYearlyId),
+              onTap: () => _buy(context, PurchaseService.premiumYearlyId),
             ),
             const SizedBox(height: 10),
             _PlanButton(
               label: l.t('premium_lifetime'),
-              price:
-                  purchase.priceOf(PurchaseService.premiumLifetimeId),
+              price: purchase.priceOf(PurchaseService.premiumLifetimeId),
               color: DuoColors.purple,
-              onTap: () =>
-                  _buy(context, PurchaseService.premiumLifetimeId),
+              onTap: () => _buy(context, PurchaseService.premiumLifetimeId),
             ),
             const SizedBox(height: 8),
             TextButton(
@@ -140,7 +135,9 @@ class _Benefit extends StatelessWidget {
             child: Text(
               text,
               style: const TextStyle(
-                  fontSize: 14.5, fontWeight: FontWeight.w700),
+                fontSize: 14.5,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
         ],
@@ -180,8 +177,7 @@ class _PlanButton extends StatelessWidget {
             top: -8,
             right: 12,
             child: Container(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 8, vertical: 2),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
               decoration: BoxDecoration(
                 color: DuoColors.yellow,
                 borderRadius: BorderRadius.circular(10),

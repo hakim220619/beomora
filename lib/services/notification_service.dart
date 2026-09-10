@@ -53,15 +53,22 @@ class NotificationService {
     try {
       await _init();
       if (Platform.isAndroid) {
-        final android = _plugin.resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>();
+        final android = _plugin
+            .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin
+            >();
         final granted = await android?.requestNotificationsPermission();
         return granted ?? true; // pra-Android 13: tidak perlu izin
       }
-      final ios = _plugin.resolvePlatformSpecificImplementation<
-          IOSFlutterLocalNotificationsPlugin>();
+      final ios = _plugin
+          .resolvePlatformSpecificImplementation<
+            IOSFlutterLocalNotificationsPlugin
+          >();
       final granted = await ios?.requestPermissions(
-          alert: true, badge: true, sound: true);
+        alert: true,
+        badge: true,
+        sound: true,
+      );
       return granted ?? false;
     } catch (e) {
       debugPrint('BeomoraNotif izin gagal: $e');
@@ -72,7 +79,9 @@ class NotificationService {
   /// Pasang/perbarui jadwal pengingat sesuai pengaturan & progres.
   /// Aman dipanggil sesering apa pun (selalu mengganti jadwal lama).
   static Future<void> sync(
-      SettingsProvider settings, ProgressProvider progress) async {
+    SettingsProvider settings,
+    ProgressProvider progress,
+  ) async {
     if (!supported) return;
     try {
       await _init();
@@ -84,8 +93,15 @@ class NotificationService {
       final t = settings.reminderTime;
       final now = tz.TZDateTime.now(tz.local);
       var when = tz.TZDateTime(
-          tz.local, now.year, now.month, now.day, t.hour, t.minute);
-      final today = '${now.year}-'
+        tz.local,
+        now.year,
+        now.month,
+        now.day,
+        t.hour,
+        t.minute,
+      );
+      final today =
+          '${now.year}-'
           '${now.month.toString().padLeft(2, '0')}-'
           '${now.day.toString().padLeft(2, '0')}';
       // Jam sudah lewat, atau hari ini sudah belajar → mulai besok.
@@ -94,8 +110,8 @@ class NotificationService {
       }
       final body = progress.streak > 0
           ? l
-              .t('reminder_body_streak')
-              .replaceFirst('{n}', '${progress.streak}')
+                .t('reminder_body_streak')
+                .replaceFirst('{n}', '${progress.streak}')
           : l.t('reminder_body');
       await _plugin.zonedSchedule(
         id: _reminderId,

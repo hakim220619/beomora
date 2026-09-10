@@ -72,8 +72,7 @@ class _PencilProgressBarState extends State<PencilProgressBar>
                       child: Transform.rotate(
                         // Goyangan kecil seperti sedang menulis.
                         angle: 0.5 + sin(_ctrl.value * 2 * pi * 3) * 0.06,
-                        child:
-                            const Text('✏️', style: TextStyle(fontSize: 17)),
+                        child: const Text('✏️', style: TextStyle(fontSize: 17)),
                       ),
                     ),
                 ],
@@ -113,8 +112,9 @@ class _StrokeBarPainter extends CustomPainter {
     final path = Path()..moveTo(0, 0);
     for (double y = 0; y <= size.height; y += 2) {
       path.lineTo(
-          fillW + sin(y / size.height * 2 * pi + phase * 2 * pi * 2) * 2.5,
-          y);
+        fillW + sin(y / size.height * 2 * pi + phase * 2 * pi * 2) * 2.5,
+        y,
+      );
     }
     path
       ..lineTo(0, size.height)
@@ -130,17 +130,18 @@ class _StrokeBarPainter extends CustomPainter {
             color,
             HSLColor.fromColor(color)
                 .withLightness(
-                    (HSLColor.fromColor(color).lightness - 0.12)
-                        .clamp(0.0, 1.0))
-                .toColor()
+                  (HSLColor.fromColor(color).lightness - 0.12).clamp(0.0, 1.0),
+                )
+                .toColor(),
           ],
         ).createShader(rect),
     );
     // Kilap tipis khas tinta stabilo.
     canvas.drawRRect(
       RRect.fromRectAndRadius(
-          Rect.fromLTWH(4, 2.5, (fillW - 10).clamp(0, size.width), 3),
-          const Radius.circular(2)),
+        Rect.fromLTWH(4, 2.5, (fillW - 10).clamp(0, size.width), 3),
+        const Radius.circular(2),
+      ),
       Paint()..color = Colors.white.withValues(alpha: 0.35),
     );
     canvas.restore();
@@ -148,7 +149,5 @@ class _StrokeBarPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _StrokeBarPainter old) =>
-      old.value != value ||
-      old.phase != phase ||
-      old.color != color;
+      old.value != value || old.phase != phase || old.color != color;
 }

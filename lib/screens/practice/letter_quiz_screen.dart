@@ -11,6 +11,7 @@ import '../../models/guide.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/progress_provider.dart';
 import '../../screens/premium_screen.dart';
+import '../../services/kana_speech.dart';
 import '../../services/tts_service.dart';
 import '../../theme.dart';
 import '../../widgets/choice_card.dart';
@@ -75,8 +76,7 @@ class _LetterQuizScreenState extends State<LetterQuizScreen> {
     // paket tetap tampil dengan kartu bergembok.
     final id = widget.initialCategoryId;
     if (id != null) {
-      final matches =
-          letterQuizFor(widget.course.id).where((c) => c.id == id);
+      final matches = letterQuizFor(widget.course.id).where((c) => c.id == id);
       if (matches.isNotEmpty) {
         final cat = matches.first;
         final isPremium = context.read<AuthProvider>().isPremium;
@@ -91,8 +91,7 @@ class _LetterQuizScreenState extends State<LetterQuizScreen> {
     super.dispose();
   }
 
-  void _start(LetterQuizCategory cat) =>
-      setState(() => _startInternal(cat));
+  void _start(LetterQuizCategory cat) => setState(() => _startInternal(cat));
 
   void _startInternal(LetterQuizCategory cat) {
     final items = [...cat.items]..shuffle(_rng);
@@ -128,7 +127,7 @@ class _LetterQuizScreenState extends State<LetterQuizScreen> {
       prompt: symbolToReading ? item.kana : item.romaji,
       answer: answer,
       options: options.toList()..shuffle(_rng),
-      speakText: item.kana,
+      speakText: spokenFormOf(item),
       symbolToReading: symbolToReading,
     );
   }
@@ -142,8 +141,7 @@ class _LetterQuizScreenState extends State<LetterQuizScreen> {
     } else {
       _missed.add(q);
     }
-    unawaited(
-        TtsService.instance.speak(q.speakText, _category!.ttsLocale));
+    unawaited(TtsService.instance.speak(q.speakText, _category!.ttsLocale));
     await Future<void>.delayed(const Duration(milliseconds: 900));
     if (!mounted) return;
     if (_index + 1 < _questions.length) {
@@ -175,32 +173,32 @@ class _LetterQuizScreenState extends State<LetterQuizScreen> {
       body: _category == null
           ? _buildPicker(l)
           : _finished
-              ? QuizResultView(
-                  correct: _correct,
-                  total: _questions.length,
-                  earnedXp: _earnedXp,
-                  review: _missed.isEmpty
-                      ? null
-                      : Wrap(
-                          alignment: WrapAlignment.center,
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: [
-                            for (final q in _missed)
-                              _MissedChip(
-                                symbol: q.speakText,
-                                reading: q.symbolToReading
-                                    ? q.answer
-                                    : q.prompt,
-                                onTap: () => TtsService.instance.speak(
-                                    q.speakText, _category!.ttsLocale),
-                              ),
-                          ],
-                        ),
-                  onAgain: () => _start(_category!),
-                  onDone: () => Navigator.of(context).pop(),
-                )
-              : _buildQuiz(l),
+          ? QuizResultView(
+              correct: _correct,
+              total: _questions.length,
+              earnedXp: _earnedXp,
+              review: _missed.isEmpty
+                  ? null
+                  : Wrap(
+                      alignment: WrapAlignment.center,
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        for (final q in _missed)
+                          _MissedChip(
+                            symbol: q.speakText,
+                            reading: q.symbolToReading ? q.answer : q.prompt,
+                            onTap: () => TtsService.instance.speak(
+                              q.speakText,
+                              _category!.ttsLocale,
+                            ),
+                          ),
+                      ],
+                    ),
+              onAgain: () => _start(_category!),
+              onDone: () => Navigator.of(context).pop(),
+            )
+          : _buildQuiz(l),
     );
   }
 
@@ -223,8 +221,9 @@ class _LetterQuizScreenState extends State<LetterQuizScreen> {
             onTap: () {
               if (cat.premium && !isPremium) {
                 // Paket premium → tawarkan upgrade.
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => const PremiumScreen()));
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const PremiumScreen()),
+                );
               } else {
                 _start(cat);
               }
@@ -250,8 +249,7 @@ class _LetterQuizScreenState extends State<LetterQuizScreen> {
           children: [
             Expanded(
               child: PencilProgressBar(
-                value: (_index + (_picked == null ? 0 : 1)) /
-                    _questions.length,
+                value: (_index + (_picked == null ? 0 : 1)) / _questions.length,
                 height: 14,
                 color: DuoColors.blue,
                 showPencil: true,
@@ -261,16 +259,19 @@ class _LetterQuizScreenState extends State<LetterQuizScreen> {
             Text(
               '${_index + 1}/${_questions.length}',
               style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  color: Theme.of(context).hintColor),
+                fontWeight: FontWeight.w800,
+                color: Theme.of(context).hintColor,
+              ),
             ),
           ],
         ),
         const SizedBox(height: 20),
         Text(
-          l.t(q.symbolToReading
-              ? _category!.symbolPromptKey
-              : _category!.readingPromptKey),
+          l.t(
+            q.symbolToReading
+                ? _category!.symbolPromptKey
+                : _category!.readingPromptKey,
+          ),
           textAlign: TextAlign.center,
           style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
         ),
@@ -339,8 +340,7 @@ class _CategoryCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(14),
                 ),
                 alignment: Alignment.center,
-                child: Text(cat.emoji,
-                    style: const TextStyle(fontSize: 26)),
+                child: Text(cat.emoji, style: const TextStyle(fontSize: 26)),
               ),
               const SizedBox(width: 14),
               Expanded(
@@ -350,7 +350,9 @@ class _CategoryCard extends StatelessWidget {
                     Text(
                       cat.title[l.code] ?? cat.title['id']!,
                       style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.w900),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w900,
+                      ),
                     ),
                     Text(
                       locked
@@ -358,8 +360,7 @@ class _CategoryCard extends StatelessWidget {
                           : '${cat.items.length} ${l.t('letters')}',
                       style: TextStyle(
                         fontSize: 12.5,
-                        fontWeight:
-                            locked ? FontWeight.w800 : FontWeight.w400,
+                        fontWeight: locked ? FontWeight.w800 : FontWeight.w400,
                         color: locked
                             ? DuoColors.purple
                             : Theme.of(context).hintColor,
@@ -369,12 +370,8 @@ class _CategoryCard extends StatelessWidget {
                 ),
               ),
               Icon(
-                locked
-                    ? Icons.lock_rounded
-                    : Icons.chevron_right_rounded,
-                color: locked
-                    ? DuoColors.purple
-                    : Theme.of(context).hintColor,
+                locked ? Icons.lock_rounded : Icons.chevron_right_rounded,
+                color: locked ? DuoColors.purple : Theme.of(context).hintColor,
               ),
             ],
           ),
@@ -383,7 +380,6 @@ class _CategoryCard extends StatelessWidget {
     );
   }
 }
-
 
 /// Huruf yang terlewat: lambang + bacaan, ketuk untuk mendengar.
 class _MissedChip extends StatelessWidget {
@@ -404,37 +400,42 @@ class _MissedChip extends StatelessWidget {
       borderRadius: BorderRadius.circular(12),
       onTap: onTap,
       child: Container(
-        padding:
-            const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
           color: isDark
               ? Colors.white.withValues(alpha: 0.08)
               : Colors.white.withValues(alpha: 0.72),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-              color: DuoColors.red.withValues(alpha: 0.5), width: 1.5),
+            color: DuoColors.red.withValues(alpha: 0.5),
+            width: 1.5,
+          ),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(symbol,
-                style: const TextStyle(
-                    fontSize: 20, fontWeight: FontWeight.w900)),
+            Text(
+              symbol,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
+            ),
             const SizedBox(width: 6),
             Text(
               reading,
               style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w700,
-                  color: Theme.of(context).hintColor),
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
+                color: Theme.of(context).hintColor,
+              ),
             ),
             const SizedBox(width: 4),
-            const Icon(Icons.volume_up_rounded,
-                size: 16, color: DuoColors.blue),
+            const Icon(
+              Icons.volume_up_rounded,
+              size: 16,
+              color: DuoColors.blue,
+            ),
           ],
         ),
       ),
     );
   }
 }
-

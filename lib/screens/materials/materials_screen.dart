@@ -39,8 +39,7 @@ class MaterialsScreen extends StatelessWidget {
     );
     final allTopics = kStudyGuides[course.id] ?? const [];
     // Topik kosakata tematik dikelompokkan di balik satu kartu.
-    final topics =
-        allTopics.where((t) => !t.id.contains('vocab')).toList();
+    final topics = allTopics.where((t) => !t.id.contains('vocab')).toList();
     final vocabTopics = [
       // Kosakata JLPT (N5/N4/N3) tampil di depan untuk kursus Jepang.
       if (course.id == 'ja') ..._jlptVocabTopics(),
@@ -55,8 +54,7 @@ class MaterialsScreen extends StatelessWidget {
           // Bendera kursus aktif — ketuk untuk ganti kursus.
           IconButton(
             onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                  builder: (_) => const CourseSelectScreen()),
+              MaterialPageRoute(builder: (_) => const CourseSelectScreen()),
             ),
             icon: Text(course.flag, style: const TextStyle(fontSize: 24)),
           ),
@@ -100,14 +98,11 @@ class MaterialsScreen extends StatelessWidget {
                 },
                 sections: const [],
               ),
-              color:
-                  _accentCycle[topics.length % _accentCycle.length],
+              color: _accentCycle[topics.length % _accentCycle.length],
               onTap: () => Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (_) => _VocabListScreen(
-                    course: course,
-                    topics: vocabTopics,
-                  ),
+                  builder: (_) =>
+                      _VocabListScreen(course: course, topics: vocabTopics),
                 ),
               ),
             ),
@@ -141,8 +136,9 @@ class _VocabListScreenState extends State<_VocabListScreen> {
   String _query = '';
   late final String _hintKey = vocabSearchHintKey(
     widget.course.id,
-    hasReading: widget.topics.any((t) =>
-        t.sections.any((s) => s.examples.any((e) => e.romaji != null))),
+    hasReading: widget.topics.any(
+      (t) => t.sections.any((s) => s.examples.any((e) => e.romaji != null)),
+    ),
   );
 
   @override
@@ -161,8 +157,8 @@ class _VocabListScreenState extends State<_VocabListScreen> {
     for (final topic in widget.topics) {
       for (final section in topic.sections) {
         for (final w in section.examples) {
-          final meaning =
-              (w.meaning[uiLang] ?? w.meaning.values.first).toLowerCase();
+          final meaning = (w.meaning[uiLang] ?? w.meaning.values.first)
+              .toLowerCase();
           if (w.target.toLowerCase().contains(needle) ||
               (w.romaji?.toLowerCase().contains(needle) ?? false) ||
               meaning.contains(needle)) {
@@ -217,17 +213,20 @@ class _VocabListScreenState extends State<_VocabListScreen> {
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(14),
                 borderSide: BorderSide(
-                    color: Theme.of(context).dividerColor, width: 1.5),
+                  color: Theme.of(context).dividerColor,
+                  width: 1.5,
+                ),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(14),
                 borderSide: BorderSide(
-                    color: Theme.of(context).dividerColor, width: 1.5),
+                  color: Theme.of(context).dividerColor,
+                  width: 1.5,
+                ),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(14),
-                borderSide:
-                    const BorderSide(color: DuoColors.blue, width: 2),
+                borderSide: const BorderSide(color: DuoColors.blue, width: 2),
               ),
             ),
           ),
@@ -259,9 +258,10 @@ class _VocabListScreenState extends State<_VocabListScreen> {
                     l.t('vocab_search_empty'),
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        color: Theme.of(context).hintColor),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      color: Theme.of(context).hintColor,
+                    ),
                   ),
                 ],
               ),
@@ -272,9 +272,10 @@ class _VocabListScreenState extends State<_VocabListScreen> {
               child: Text(
                 '${hits.length} ${l.t('vocab_search_count')}',
                 style: TextStyle(
-                    fontSize: 12.5,
-                    fontWeight: FontWeight.w700,
-                    color: Theme.of(context).hintColor),
+                  fontSize: 12.5,
+                  fontWeight: FontWeight.w700,
+                  color: Theme.of(context).hintColor,
+                ),
               ),
             ),
             for (final h in hits)
@@ -326,28 +327,34 @@ class _VocabHitRow extends StatelessWidget {
                 Text(
                   w.target,
                   style: const TextStyle(
-                      fontSize: 15, fontWeight: FontWeight.w800),
+                    fontSize: 15,
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
                 if (w.romaji != null)
                   Text(
                     w.romaji!,
                     style: TextStyle(
-                        fontSize: 12,
-                        fontStyle: FontStyle.italic,
-                        color: Theme.of(context).hintColor),
+                      fontSize: 12,
+                      fontStyle: FontStyle.italic,
+                      color: Theme.of(context).hintColor,
+                    ),
                   ),
                 Text(
                   w.meaning[uiLang] ?? w.meaning.values.first,
                   style: TextStyle(
-                      fontSize: 12.5, color: Theme.of(context).hintColor),
+                    fontSize: 12.5,
+                    color: Theme.of(context).hintColor,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   '${hit.topic.emoji} ${hit.topic.title[uiLang] ?? ''}',
                   style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
-                      color: DuoColors.blue.withValues(alpha: 0.9)),
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                    color: DuoColors.blue.withValues(alpha: 0.9),
+                  ),
                 ),
               ],
             ),
@@ -366,22 +373,23 @@ class _VocabHitRow extends StatelessWidget {
 /// Bangun topik materi kosakata JLPT (N5/N4/N3) dari [jlptN5] dst.
 /// Tiap level dipecah menjadi bagian ±16 kata agar mudah dibaca.
 List<GuideTopic> _jlptVocabTopics() {
-  GuideTopic build(String id, String emoji, String level,
-      List<JVocab> vocab) {
+  GuideTopic build(String id, String emoji, String level, List<JVocab> vocab) {
     const chunk = 16;
     final sections = <GuideSection>[];
     for (var i = 0; i < vocab.length; i += chunk) {
       final part = vocab.sublist(i, (i + chunk).clamp(0, vocab.length));
-      sections.add(GuideSection(
-        title: {
-          'id': 'Bagian ${sections.length + 1}',
-          'en': 'Part ${sections.length + 1}',
-        },
-        examples: [
-          for (final w in part)
-            GuideExample(w.kana, w.meaning, romaji: w.romaji),
-        ],
-      ));
+      sections.add(
+        GuideSection(
+          title: {
+            'id': 'Bagian ${sections.length + 1}',
+            'en': 'Part ${sections.length + 1}',
+          },
+          examples: [
+            for (final w in part)
+              GuideExample(w.kana, w.meaning, romaji: w.romaji),
+          ],
+        ),
+      );
     }
     return GuideTopic(
       id: id,
@@ -432,11 +440,12 @@ class _TopicCard extends StatelessWidget {
                   color: color.withValues(alpha: 0.16),
                   borderRadius: BorderRadius.circular(14),
                   border: Border.all(
-                      color: color.withValues(alpha: 0.6), width: 1.5),
+                    color: color.withValues(alpha: 0.6),
+                    width: 1.5,
+                  ),
                 ),
                 alignment: Alignment.center,
-                child: Text(topic.emoji,
-                    style: const TextStyle(fontSize: 26)),
+                child: Text(topic.emoji, style: const TextStyle(fontSize: 26)),
               ),
               const SizedBox(width: 14),
               Expanded(
@@ -446,20 +455,25 @@ class _TopicCard extends StatelessWidget {
                     Text(
                       topic.title[l.code] ?? '',
                       style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.w900),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w900,
+                      ),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       topic.subtitle[l.code] ?? '',
                       style: TextStyle(
-                          fontSize: 12.5,
-                          color: Theme.of(context).hintColor),
+                        fontSize: 12.5,
+                        color: Theme.of(context).hintColor,
+                      ),
                     ),
                   ],
                 ),
               ),
-              Icon(Icons.chevron_right_rounded,
-                  color: Theme.of(context).hintColor),
+              Icon(
+                Icons.chevron_right_rounded,
+                color: Theme.of(context).hintColor,
+              ),
             ],
           ),
         ),

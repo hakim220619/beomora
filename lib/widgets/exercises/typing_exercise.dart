@@ -51,12 +51,13 @@ class _TypingExerciseState extends State<TypingExercise> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (ex.word != null &&
-                context.watch<SettingsProvider>().showIcons)
+            if (ex.word != null && context.watch<SettingsProvider>().showIcons)
               Padding(
                 padding: const EdgeInsets.only(right: 8),
-                child:
-                    Text(ex.word!.emoji, style: const TextStyle(fontSize: 32)),
+                child: Text(
+                  ex.word!.emoji,
+                  style: const TextStyle(fontSize: 32),
+                ),
               ),
             Flexible(
               child: Column(
@@ -65,23 +66,29 @@ class _TypingExerciseState extends State<TypingExercise> {
                     ex.prompt,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
-                        fontSize: 26, fontWeight: FontWeight.w700),
+                      fontSize: 26,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                   if (ex.promptSub != null)
                     Text(
                       ex.promptSub!,
                       style: TextStyle(
-                          fontSize: 15, color: Theme.of(context).hintColor),
+                        fontSize: 15,
+                        color: Theme.of(context).hintColor,
+                      ),
                     ),
                 ],
               ),
             ),
             if (ex.ttsText != null)
               IconButton(
-                onPressed: () => TtsService.instance
-                    .speak(ex.ttsText!, widget.ttsLocale),
-                icon: const Icon(Icons.volume_up_rounded,
-                    color: DuoColors.blue),
+                onPressed: () =>
+                    TtsService.instance.speak(ex.ttsText!, widget.ttsLocale),
+                icon: const Icon(
+                  Icons.volume_up_rounded,
+                  color: DuoColors.blue,
+                ),
               ),
           ],
         ),
@@ -100,18 +107,21 @@ class _TypingExerciseState extends State<TypingExercise> {
             filled: true,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
-              borderSide:
-                  BorderSide(color: Theme.of(context).dividerColor, width: 2),
+              borderSide: BorderSide(
+                color: Theme.of(context).dividerColor,
+                width: 2,
+              ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
-              borderSide:
-                  BorderSide(color: Theme.of(context).dividerColor, width: 2),
+              borderSide: BorderSide(
+                color: Theme.of(context).dividerColor,
+                width: 2,
+              ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
-              borderSide:
-                  const BorderSide(color: DuoColors.blue, width: 2),
+              borderSide: const BorderSide(color: DuoColors.blue, width: 2),
             ),
           ),
         ),

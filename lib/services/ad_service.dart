@@ -20,10 +20,8 @@ class AdService {
   }
 
   // Unit produksi — AdMob → Beomora → Unit iklan.
-  static const _bannerProdAndroid =
-      'ca-app-pub-1133455930155291/2624675167';
-  static const _rewardedProdAndroid =
-      'ca-app-pub-1133455930155291/2676646053';
+  static const _bannerProdAndroid = 'ca-app-pub-1133455930155291/2624675167';
+  static const _rewardedProdAndroid = 'ca-app-pub-1133455930155291/2676646053';
 
   // Unit TEST resmi Google.
   static String get _rewardedTest => Platform.isAndroid
@@ -38,8 +36,7 @@ class AdService {
   static String get rewardedUnitId =>
       _useProd ? _rewardedProdAndroid : _rewardedTest;
 
-  static String get bannerUnitId =>
-      _useProd ? _bannerProdAndroid : _bannerTest;
+  static String get bannerUnitId => _useProd ? _bannerProdAndroid : _bannerTest;
 
   static bool _initialized = false;
 
@@ -56,8 +53,7 @@ class AdService {
   /// Muat lalu tayangkan iklan reward. [onReward] dipanggil saat
   /// pengguna menuntaskan iklan. Mengembalikan false kalau iklan
   /// tidak tersedia/siap.
-  static Future<bool> showRewarded(
-      {required VoidCallback onReward}) async {
+  static Future<bool> showRewarded({required VoidCallback onReward}) async {
     if (!supported) return false;
     await init();
     RewardedAd? loaded;

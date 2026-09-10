@@ -54,8 +54,9 @@ ThemeData buildTheme(Brightness brightness) {
       secondary: DuoColors.blue,
       error: DuoColors.red,
     ),
-    scaffoldBackgroundColor:
-        isDark ? StudyColors.boardBottom : StudyColors.paper,
+    scaffoldBackgroundColor: isDark
+        ? StudyColors.boardBottom
+        : StudyColors.paper,
     fontFamily: 'Roboto',
   );
   return base.copyWith(
@@ -87,15 +88,11 @@ ThemeData buildTheme(Brightness brightness) {
           ? Colors.white.withValues(alpha: 0.07)
           : Colors.white.withValues(alpha: 0.92),
     ),
-    dividerColor:
-        isDark ? const Color(0xFF2E5546) : const Color(0xFFDDD6C0),
+    dividerColor: isDark ? const Color(0xFF2E5546) : const Color(0xFFDDD6C0),
     snackBarTheme: SnackBarThemeData(
       behavior: SnackBarBehavior.floating,
-      backgroundColor:
-          isDark ? const Color(0xFF1C4434) : DuoColors.eel,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(14),
-      ),
+      backgroundColor: isDark ? const Color(0xFF1C4434) : DuoColors.eel,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
     ),
   );
 }

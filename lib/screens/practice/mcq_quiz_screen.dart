@@ -47,8 +47,9 @@ class _McqQuizScreenState extends State<McqQuizScreen> {
   final _rng = Random();
   late final List<McqQuestion> _bank =
       widget.pack?.questions ?? mcqBankFor(widget.course.id);
-  late final TextEditingController _countCtrl =
-      TextEditingController(text: '${min(_defaultCount, _bank.length)}');
+  late final TextEditingController _countCtrl = TextEditingController(
+    text: '${min(_defaultCount, _bank.length)}',
+  );
 
   /// Batas soal yang boleh dipilih pada sesi ini (dihitung ulang di
   /// [build] berdasarkan status premium).
@@ -111,8 +112,9 @@ class _McqQuizScreenState extends State<McqQuizScreen> {
     } else {
       _missed.add(r);
     }
-    unawaited(TtsService.instance
-        .speak(_speakable(r.answer), widget.course.ttsLocale));
+    unawaited(
+      TtsService.instance.speak(_speakable(r.answer), widget.course.ttsLocale),
+    );
     await Future<void>.delayed(const Duration(milliseconds: 900));
     if (!mounted) return;
     if (_index + 1 < _rounds.length) {
@@ -141,8 +143,7 @@ class _McqQuizScreenState extends State<McqQuizScreen> {
     final l = L.of(context);
     final premium = context.watch<ProgressProvider>().premiumActive;
     // Non-premium dibatasi kFreeMcqLimit soal per sesi.
-    _maxCount =
-        premium ? _bank.length : min(kFreeMcqLimit, _bank.length);
+    _maxCount = premium ? _bank.length : min(kFreeMcqLimit, _bank.length);
     return StudyScaffold(
       appBar: AppBar(
         title: Text(widget.pack?.title[l.code] ?? l.t('mcq_title')),
@@ -150,25 +151,27 @@ class _McqQuizScreenState extends State<McqQuizScreen> {
       body: _rounds.isEmpty
           ? _buildCountPicker(l, premium)
           : _finished
-              ? QuizResultView(
-                  correct: _correct,
-                  total: _rounds.length,
-                  earnedXp: _earnedXp,
-                  review: _missed.isEmpty ? null : _buildReview(l),
-                  onAgain: _start,
-                  onDone: () => Navigator.of(context).pop(),
-                )
-              : _buildQuiz(l),
+          ? QuizResultView(
+              correct: _correct,
+              total: _rounds.length,
+              earnedXp: _earnedXp,
+              review: _missed.isEmpty ? null : _buildReview(l),
+              onAgain: _start,
+              onDone: () => Navigator.of(context).pop(),
+            )
+          : _buildQuiz(l),
     );
   }
 
   /// Pembuka: berapa soal yang mau dilatih (isi angka / ketuk pilihan
   /// cepat), baru mulai.
   Widget _buildCountPicker(L l, bool premium) {
-    final quickCounts = <int>{5, 10, 25, _maxCount}
-        .where((n) => n >= 1 && n <= _maxCount)
-        .toList()
-      ..sort();
+    final quickCounts = <int>{
+      5,
+      10,
+      25,
+      _maxCount,
+    }.where((n) => n >= 1 && n <= _maxCount).toList()..sort();
     final locked = !premium && _bank.length > kFreeMcqLimit;
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
@@ -178,8 +181,10 @@ class _McqQuizScreenState extends State<McqQuizScreen> {
             padding: const EdgeInsets.all(20),
             child: Column(
               children: [
-                Text(widget.pack?.emoji ?? '📝',
-                    style: const TextStyle(fontSize: 44)),
+                Text(
+                  widget.pack?.emoji ?? '📝',
+                  style: const TextStyle(fontSize: 44),
+                ),
                 const SizedBox(height: 8),
                 Text(
                   '${_bank.length} ${l.t('mcq_available')}',
@@ -198,15 +203,15 @@ class _McqQuizScreenState extends State<McqQuizScreen> {
           const SizedBox(height: 12),
           InkWell(
             borderRadius: BorderRadius.circular(14),
-            onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                builder: (_) => const PremiumScreen())),
+            onTap: () => Navigator.of(
+              context,
+            ).push(MaterialPageRoute(builder: (_) => const PremiumScreen())),
             child: Container(
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
                 color: DuoColors.yellow.withValues(alpha: 0.16),
                 borderRadius: BorderRadius.circular(14),
-                border: Border.all(
-                    color: DuoColors.yellow, width: 1.5),
+                border: Border.all(color: DuoColors.yellow, width: 1.5),
               ),
               child: Row(
                 children: [
@@ -217,7 +222,9 @@ class _McqQuizScreenState extends State<McqQuizScreen> {
                       '${l.t('mcq_free_limit')} $kFreeMcqLimit. '
                       '${l.t('mcq_unlock_all')} (${_bank.length})',
                       style: const TextStyle(
-                          fontSize: 13, fontWeight: FontWeight.w800),
+                        fontSize: 13,
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
                   ),
                   const Icon(Icons.chevron_right_rounded),
@@ -291,8 +298,7 @@ class _McqQuizScreenState extends State<McqQuizScreen> {
           children: [
             Expanded(
               child: PencilProgressBar(
-                value:
-                    (_index + (_picked == null ? 0 : 1)) / _rounds.length,
+                value: (_index + (_picked == null ? 0 : 1)) / _rounds.length,
                 height: 14,
                 color: DuoColors.yellow,
                 showPencil: true,
@@ -302,8 +308,9 @@ class _McqQuizScreenState extends State<McqQuizScreen> {
             Text(
               '${_index + 1}/${_rounds.length}',
               style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  color: Theme.of(context).hintColor),
+                fontWeight: FontWeight.w800,
+                color: Theme.of(context).hintColor,
+              ),
             ),
           ],
         ),
@@ -311,13 +318,15 @@ class _McqQuizScreenState extends State<McqQuizScreen> {
         // Teks soal — mengikuti bahasa UI.
         Card(
           child: Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: 26, horizontal: 18),
+            padding: const EdgeInsets.symmetric(vertical: 26, horizontal: 18),
             child: Text(
               r.q.question[l.code] ?? r.q.question['id']!,
               textAlign: TextAlign.center,
               style: const TextStyle(
-                  fontSize: 19, fontWeight: FontWeight.w900, height: 1.4),
+                fontSize: 19,
+                fontWeight: FontWeight.w900,
+                height: 1.4,
+              ),
             ),
           ),
         ),
@@ -345,8 +354,10 @@ class _McqQuizScreenState extends State<McqQuizScreen> {
             child: _MissedRow(
               question: r.q.question[l.code] ?? r.q.question['id']!,
               answer: r.answer,
-              onTap: () => TtsService.instance
-                  .speak(_speakable(r.answer), widget.course.ttsLocale),
+              onTap: () => TtsService.instance.speak(
+                _speakable(r.answer),
+                widget.course.ttsLocale,
+              ),
             ),
           ),
       ],
@@ -381,7 +392,9 @@ class _MissedRow extends StatelessWidget {
               : Colors.white.withValues(alpha: 0.72),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-              color: DuoColors.red.withValues(alpha: 0.5), width: 1.5),
+            color: DuoColors.red.withValues(alpha: 0.5),
+            width: 1.5,
+          ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -389,9 +402,10 @@ class _MissedRow extends StatelessWidget {
             Text(
               question,
               style: TextStyle(
-                  fontSize: 12.5,
-                  fontWeight: FontWeight.w700,
-                  color: Theme.of(context).hintColor),
+                fontSize: 12.5,
+                fontWeight: FontWeight.w700,
+                color: Theme.of(context).hintColor,
+              ),
             ),
             const SizedBox(height: 4),
             Row(
@@ -406,8 +420,11 @@ class _MissedRow extends StatelessWidget {
                     ),
                   ),
                 ),
-                const Icon(Icons.volume_up_rounded,
-                    size: 16, color: DuoColors.blue),
+                const Icon(
+                  Icons.volume_up_rounded,
+                  size: 16,
+                  color: DuoColors.blue,
+                ),
               ],
             ),
           ],

@@ -33,8 +33,7 @@ class StatBar extends StatelessWidget implements PreferredSizeWidget {
             // Kompas kursus: ketuk untuk ganti bahasa.
             GestureDetector(
               onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                    builder: (_) => const CourseSelectScreen()),
+                MaterialPageRoute(builder: (_) => const CourseSelectScreen()),
               ),
               child: Container(
                 width: 44,
@@ -51,22 +50,24 @@ class StatBar extends StatelessWidget implements PreferredSizeWidget {
                   ],
                 ),
                 alignment: Alignment.center,
-                child: Text(course.flag,
-                    style: const TextStyle(fontSize: 22)),
+                child: Text(course.flag, style: const TextStyle(fontSize: 22)),
               ),
             ),
             _StatChip(
-                icon: '🔥',
-                value: '${progress.streak}',
-                color: DuoColors.orange),
+              icon: '🔥',
+              value: '${progress.streak}',
+              color: DuoColors.orange,
+            ),
             _StatChip(
-                icon: '🪙',
-                value: '${progress.gems}',
-                color: DuoColors.blue),
+              icon: '🪙',
+              value: '${progress.gems}',
+              color: DuoColors.blue,
+            ),
             _StatChip(
-                icon: '❤️',
-                value: '${progress.hearts}',
-                color: DuoColors.red),
+              icon: '❤️',
+              value: '${progress.hearts}',
+              color: DuoColors.red,
+            ),
           ],
         ),
       ),
@@ -78,8 +79,11 @@ class _StatChip extends StatelessWidget {
   final String icon;
   final String value;
   final Color color;
-  const _StatChip(
-      {required this.icon, required this.value, required this.color});
+  const _StatChip({
+    required this.icon,
+    required this.value,
+    required this.color,
+  });
 
   @override
   Widget build(BuildContext context) {

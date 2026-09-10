@@ -37,52 +37,52 @@ List<KanaItem> _kanaOf(String topicId) => _guideKana('ja', topicId);
 
 /// Grid huruf dari topik Materi Belajar kursus mana pun.
 List<KanaItem> _guideKana(String courseId, String topicId) => [
-      for (final topic in kStudyGuides[courseId] ?? <GuideTopic>[])
-        if (topic.id == topicId)
-          for (final section in topic.sections) ...section.kana,
-    ];
+  for (final topic in kStudyGuides[courseId] ?? <GuideTopic>[])
+    if (topic.id == topicId)
+      for (final section in topic.sections) ...section.kana,
+];
 
 List<KanaItem> _letters(String s) => _parsePairs(s);
 
-List<KanaItem> _parsePairs(String s) => s
-    .trim()
-    .split(RegExp(r'\s+'))
-    .map((e) {
-      final i = e.indexOf(':');
-      return KanaItem(e.substring(0, i), e.substring(i + 1));
-    })
-    .toList();
+List<KanaItem> _parsePairs(String s) => s.trim().split(RegExp(r'\s+')).map((e) {
+  final i = e.indexOf(':');
+  return KanaItem(e.substring(0, i), e.substring(i + 1));
+}).toList();
 
 final List<KanaItem> _englishAlphabet = _letters(
-    'A:ei B:bi C:si D:di E:i F:ef G:ji H:eich I:ai J:jei K:kei L:el '
-    'M:em N:en O:ou P:pi Q:kiu R:ar S:es T:ti U:yu V:vi W:dabelyu '
-    'X:eks Y:wai Z:zi');
+  'A:ei B:bi C:si D:di E:i F:ef G:ji H:eich I:ai J:jei K:kei L:el '
+  'M:em N:en O:ou P:pi Q:kiu R:ar S:es T:ti U:yu V:vi W:dabelyu '
+  'X:eks Y:wai Z:zi',
+);
 
 final List<KanaItem> _indonesianAlphabet = _letters(
-    'A:a B:be C:ce D:de E:e F:ef G:ge H:ha I:i J:je K:ka L:el M:em '
-    'N:en O:o P:pe Q:ki R:er S:es T:te U:u V:ve W:we X:eks Y:ye Z:zet');
+  'A:a B:be C:ce D:de E:e F:ef G:ge H:ha I:i J:je K:ka L:el M:em '
+  'N:en O:o P:pe Q:ki R:er S:es T:te U:u V:ve W:we X:eks Y:ye Z:zet',
+);
 
 /// Kanji dasar level N5 (bacaan umum) — paket premium.
 final List<KanaItem> _kanjiN5 = _parsePairs(
-    '一:ichi 二:ni 三:san 四:yon 五:go 六:roku 七:nana 八:hachi 九:kyuu '
-    '十:juu 百:hyaku 千:sen 万:man 円:en 日:hi 月:tsuki 火:hi 水:mizu '
-    '木:ki 金:kane 土:tsuchi 年:toshi 時:toki 分:fun 半:han 今:ima '
-    '週:shuu 人:hito 男:otoko 女:onna 子:ko 父:chichi 母:haha 友:tomo '
-    '学:gaku 校:kou 生:sei 山:yama 川:kawa 田:ta 空:sora 雨:ame '
-    '花:hana 本:hon 語:go 国:kuni 車:kuruma 駅:eki 大:dai 小:shou '
-    '中:naka 上:ue 下:shita 左:hidari 右:migi 手:te 目:me 口:kuchi '
-    '耳:mimi 白:shiro 赤:aka 青:ao');
+  '一:ichi 二:ni 三:san 四:yon 五:go 六:roku 七:nana 八:hachi 九:kyuu '
+  '十:juu 百:hyaku 千:sen 万:man 円:en 日:hi 月:tsuki 火:hi 水:mizu '
+  '木:ki 金:kane 土:tsuchi 年:toshi 時:toki 分:fun 半:han 今:ima '
+  '週:shuu 人:hito 男:otoko 女:onna 子:ko 父:chichi 母:haha 友:tomo '
+  '学:gaku 校:kou 生:sei 山:yama 川:kawa 田:ta 空:sora 雨:ame '
+  '花:hana 本:hon 語:go 国:kuni 車:kuruma 駅:eki 大:dai 小:shou '
+  '中:naka 上:ue 下:shita 左:hidari 右:migi 手:te 目:me 口:kuchi '
+  '耳:mimi 白:shiro 赤:aka 青:ao',
+);
 
 /// Kata kerja tak beraturan Inggris (dasar → lampau) — paket premium.
 final List<KanaItem> _irregularVerbs = _parsePairs(
-    'go:went eat:ate see:saw come:came take:took give:gave get:got '
-    'make:made know:knew think:thought find:found tell:told '
-    'become:became leave:left feel:felt bring:brought begin:began '
-    'keep:kept hold:held write:wrote stand:stood hear:heard let:let '
-    'mean:meant meet:met run:ran pay:paid sit:sat speak:spoke '
-    'grow:grew lose:lost fall:fell send:sent build:built '
-    'understand:understood draw:drew break:broke spend:spent cut:cut '
-    'rise:rose drive:drove buy:bought wear:wore choose:chose');
+  'go:went eat:ate see:saw come:came take:took give:gave get:got '
+  'make:made know:knew think:thought find:found tell:told '
+  'become:became leave:left feel:felt bring:brought begin:began '
+  'keep:kept hold:held write:wrote stand:stood hear:heard let:let '
+  'mean:meant meet:met run:ran pay:paid sit:sat speak:spoke '
+  'grow:grew lose:lost fall:fell send:sent build:built '
+  'understand:understood draw:drew break:broke spend:spent cut:cut '
+  'rise:rose drive:drove buy:bought wear:wore choose:chose',
+);
 
 /// Paket soal untuk satu kursus.
 List<LetterQuizCategory> letterQuizFor(String courseId) {
@@ -117,10 +117,7 @@ List<LetterQuizCategory> letterQuizFor(String courseId) {
         LetterQuizCategory(
           id: 'kanji_n5',
           emoji: '🈴',
-          title: const {
-            'id': 'Kanji Dasar (N5)',
-            'en': 'Basic Kanji (N5)',
-          },
+          title: const {'id': 'Kanji Dasar (N5)', 'en': 'Basic Kanji (N5)'},
           items: _kanjiN5,
           ttsLocale: 'ja-JP',
           premium: true,
@@ -131,10 +128,7 @@ List<LetterQuizCategory> letterQuizFor(String courseId) {
         LetterQuizCategory(
           id: 'alphabet_en',
           emoji: '🔤',
-          title: const {
-            'id': 'Alfabet Inggris',
-            'en': 'English Alphabet',
-          },
+          title: const {'id': 'Alfabet Inggris', 'en': 'English Alphabet'},
           items: _englishAlphabet,
           ttsLocale: 'en-US',
         ),
@@ -157,10 +151,7 @@ List<LetterQuizCategory> letterQuizFor(String courseId) {
         LetterQuizCategory(
           id: 'alphabet_id',
           emoji: '🔤',
-          title: const {
-            'id': 'Alfabet Indonesia',
-            'en': 'Indonesian Alphabet',
-          },
+          title: const {'id': 'Alfabet Indonesia', 'en': 'Indonesian Alphabet'},
           items: _indonesianAlphabet,
           ttsLocale: 'id-ID',
         ),
@@ -177,10 +168,7 @@ List<LetterQuizCategory> letterQuizFor(String courseId) {
         LetterQuizCategory(
           id: 'ko_numbers',
           emoji: '🔢',
-          title: const {
-            'id': 'Angka Korea',
-            'en': 'Korean Numbers',
-          },
+          title: const {'id': 'Angka Korea', 'en': 'Korean Numbers'},
           items: _guideKana('ko', 'ko_numbers'),
           ttsLocale: 'ko-KR',
         ),
@@ -190,20 +178,14 @@ List<LetterQuizCategory> letterQuizFor(String courseId) {
         LetterQuizCategory(
           id: 'alphabet_de',
           emoji: '🔤',
-          title: const {
-            'id': 'Alfabet Jerman',
-            'en': 'German Alphabet',
-          },
+          title: const {'id': 'Alfabet Jerman', 'en': 'German Alphabet'},
           items: _germanAlphabet,
           ttsLocale: 'de-DE',
         ),
         LetterQuizCategory(
           id: 'de_numbers',
           emoji: '🔢',
-          title: const {
-            'id': 'Angka Jerman',
-            'en': 'German Numbers',
-          },
+          title: const {'id': 'Angka Jerman', 'en': 'German Numbers'},
           items: _guideKana('de', 'de_numbers'),
           ttsLocale: 'de-DE',
         ),

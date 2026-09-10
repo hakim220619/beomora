@@ -119,9 +119,13 @@ void main() {
     );
     final xpBefore = progress.xp;
 
-    // Daftar bacaan tampil tanpa gembok.
+    // Pengguna gratis: 2 bacaan pertama terbuka, sisanya bergembok juga
+    // di paket dasar.
     expect(find.text('Pilih bacaan'), findsOneWidget);
-    expect(find.byIcon(Icons.lock_rounded), findsNothing);
+    expect(
+      find.byIcon(Icons.lock_rounded),
+      findsNWidgets(pack.passages.length - kFreeListeningPassages),
+    );
 
     // Buka bacaan pertama → pemutar + soal pertama.
     await tester.tap(find.text(pack.passages.first.title['id']!));

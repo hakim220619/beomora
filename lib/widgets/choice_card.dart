@@ -25,8 +25,7 @@ class ChoiceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final baseBorder =
-        isDark ? const Color(0x40FFFFFF) : Colors.white;
+    final baseBorder = isDark ? const Color(0x40FFFFFF) : Colors.white;
     final baseBg = isDark
         ? Colors.white.withValues(alpha: 0.08)
         : Colors.white.withValues(alpha: 0.72);
@@ -72,7 +71,9 @@ class ChoiceCard extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 120),
         padding: EdgeInsets.symmetric(
-            horizontal: 16, vertical: compact ? 10 : 16),
+          horizontal: 16,
+          vertical: compact ? 10 : 16,
+        ),
         decoration: BoxDecoration(
           color: bg,
           borderRadius: BorderRadius.circular(16),

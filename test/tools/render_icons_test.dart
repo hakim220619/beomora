@@ -20,7 +20,11 @@ Future<ui.Image> _render(int size, BeomoraLogoPainter painter) async {
   return recorder.endRecording().toImage(size, size);
 }
 
-Future<void> _writePng(String path, int size, BeomoraLogoPainter painter) async {
+Future<void> _writePng(
+  String path,
+  int size,
+  BeomoraLogoPainter painter,
+) async {
   final image = await _render(size, painter);
   final bytes = await image.toByteData(format: ui.ImageByteFormat.png);
   File(path)
@@ -29,7 +33,10 @@ Future<void> _writePng(String path, int size, BeomoraLogoPainter painter) async 
 }
 
 Future<void> _writeOpaquePng(
-    String path, int size, BeomoraLogoPainter painter) async {
+  String path,
+  int size,
+  BeomoraLogoPainter painter,
+) async {
   final image = await _render(size, painter);
   final rgba = await image.toByteData(format: ui.ImageByteFormat.rawRgba);
   File(path)
@@ -86,7 +93,9 @@ void main() {
   const rounded = BeomoraLogoPainter(background: BeomoraLogoBackground.rounded);
   const square = BeomoraLogoPainter(background: BeomoraLogoBackground.square);
   const maskable = BeomoraLogoPainter(
-      background: BeomoraLogoBackground.square, inset: 0.11);
+    background: BeomoraLogoBackground.square,
+    inset: 0.11,
+  );
 
   test(
     'render ikon aplikasi dari logo',

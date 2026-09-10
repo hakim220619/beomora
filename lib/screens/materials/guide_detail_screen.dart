@@ -7,6 +7,7 @@ import '../../l10n/app_strings.dart';
 import '../../models/course.dart';
 import '../../models/guide.dart';
 import '../../providers/auth_provider.dart';
+import '../../services/kana_speech.dart';
 import '../../services/tts_service.dart';
 import '../../theme.dart';
 import '../../widgets/study/study_background.dart';
@@ -54,12 +55,14 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
   final _searchCtrl = TextEditingController();
   String _query = '';
 
-  late final bool _searchable = widget.topic.sections
-      .any((s) => s.examples.isNotEmpty || s.kana.isNotEmpty);
+  late final bool _searchable = widget.topic.sections.any(
+    (s) => s.examples.isNotEmpty || s.kana.isNotEmpty,
+  );
   late final String _hintKey = vocabSearchHintKey(
     widget.course.id,
-    hasReading: widget.topic.sections
-        .any((s) => s.examples.any((e) => e.romaji != null)),
+    hasReading: widget.topic.sections.any(
+      (s) => s.examples.any((e) => e.romaji != null),
+    ),
   );
 
   @override
@@ -92,8 +95,9 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
       final kana = s.kana.where(_matchKana).toList();
       final ex = s.examples.where((e) => _matchExample(e, uiLang)).toList();
       if (kana.isEmpty && ex.isEmpty) continue;
-      out.add(GuideSection(
-          title: s.title, body: null, kana: kana, examples: ex));
+      out.add(
+        GuideSection(title: s.title, body: null, kana: kana, examples: ex),
+      );
     }
     return out;
   }
@@ -106,35 +110,34 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final l = L.of(context);
-    final hasKana =
-        widget.topic.sections.any((s) => s.kana.isNotEmpty);
+    final hasKana = widget.topic.sections.any((s) => s.kana.isNotEmpty);
     // Paket bank soal yang persis untuk topik ini (mis. 'hiragana').
-    final quizMatches = letterQuizFor(widget.course.id)
-        .where((c) => c.id == widget.topic.id)
-        .toList();
+    final quizMatches = letterQuizFor(
+      widget.course.id,
+    ).where((c) => c.id == widget.topic.id).toList();
     final quizCat = quizMatches.isEmpty ? null : quizMatches.first;
     final isPremium = context.watch<AuthProvider>().isPremium;
     final locked = quizCat != null && quizCat.premium && !isPremium;
     final visible = _visibleSections(l.code);
 
     return StudyScaffold(
-      appBar: AppBar(
-        title: Text(widget.topic.title[l.code] ?? ''),
-      ),
+      appBar: AppBar(title: Text(widget.topic.title[l.code] ?? '')),
       floatingActionButton: quizCat == null
           ? null
           : FloatingActionButton.extended(
               backgroundColor: locked ? DuoColors.purple : DuoColors.green,
               foregroundColor: Colors.white,
-              icon: Icon(locked
-                  ? Icons.lock_rounded
-                  : Icons.fitness_center_rounded),
+              icon: Icon(
+                locked ? Icons.lock_rounded : Icons.fitness_center_rounded,
+              ),
               label: Text(
                 locked
                     ? l.t('premium_locked')
                     : '${l.t('practice_btn')} ${quizCat.title[l.code] ?? ''}',
                 style: const TextStyle(
-                    fontWeight: FontWeight.w900, letterSpacing: 0.4),
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 0.4,
+                ),
               ),
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute(
@@ -148,8 +151,7 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
               ),
             ),
       body: ListView(
-        padding:
-            EdgeInsets.fromLTRB(16, 4, 16, quizCat == null ? 32 : 96),
+        padding: EdgeInsets.fromLTRB(16, 4, 16, quizCat == null ? 32 : 96),
         children: [
           if (_searchable) ...[
             TextField(
@@ -174,17 +176,20 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(14),
                   borderSide: BorderSide(
-                      color: Theme.of(context).dividerColor, width: 1.5),
+                    color: Theme.of(context).dividerColor,
+                    width: 1.5,
+                  ),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(14),
                   borderSide: BorderSide(
-                      color: Theme.of(context).dividerColor, width: 1.5),
+                    color: Theme.of(context).dividerColor,
+                    width: 1.5,
+                  ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(14),
-                  borderSide:
-                      const BorderSide(color: DuoColors.blue, width: 2),
+                  borderSide: const BorderSide(color: DuoColors.blue, width: 2),
                 ),
               ),
             ),
@@ -197,7 +202,9 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
                 '🔊 ${l.t('tap_kana_hint')}',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontSize: 13, color: Theme.of(context).hintColor),
+                  fontSize: 13,
+                  color: Theme.of(context).hintColor,
+                ),
               ),
             ),
           if (_searching && visible.isEmpty)
@@ -211,9 +218,10 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
                     l.t('vocab_search_empty'),
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        color: Theme.of(context).hintColor),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      color: Theme.of(context).hintColor,
+                    ),
                   ),
                 ],
               ),
@@ -235,8 +243,7 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
           children: [
             Text(
               section.title[l.code] ?? '',
-              style: const TextStyle(
-                  fontSize: 16, fontWeight: FontWeight.w900),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w900),
             ),
             if (section.body != null) ...[
               const SizedBox(height: 6),
@@ -254,22 +261,19 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
               GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                gridDelegate:
-                    const SliverGridDelegateWithFixedCrossAxisCount(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 5,
                   mainAxisSpacing: 8,
                   crossAxisSpacing: 8,
                   childAspectRatio: 0.9,
                 ),
                 itemCount: section.kana.length,
-                itemBuilder: (_, i) =>
-                    _KanaCell(
+                itemBuilder: (_, i) => _KanaCell(
                   item: section.kana[i],
                   active: _activeKana == section.kana[i].kana,
                   onTap: () {
-                    _speak(section.kana[i].kana);
-                    setState(
-                        () => _activeKana = section.kana[i].kana);
+                    _speak(spokenFormOf(section.kana[i]));
+                    setState(() => _activeKana = section.kana[i].kana);
                   },
                 ),
               ),
@@ -311,16 +315,12 @@ class _KanaCell extends StatelessWidget {
         decoration: BoxDecoration(
           color: active
               ? DuoColors.green.withValues(alpha: 0.20)
-              : (isDark
-                  ? Colors.white.withValues(alpha: 0.06)
-                  : Colors.white),
+              : (isDark ? Colors.white.withValues(alpha: 0.06) : Colors.white),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: active
                 ? DuoColors.green
-                : (isDark
-                    ? const Color(0x33FFFFFF)
-                    : const Color(0xFFE7E0C9)),
+                : (isDark ? const Color(0x33FFFFFF) : const Color(0xFFE7E0C9)),
             width: active ? 2 : 1.5,
           ),
         ),
@@ -340,9 +340,7 @@ class _KanaCell extends StatelessWidget {
               style: TextStyle(
                 fontSize: 10.5,
                 fontWeight: FontWeight.w600,
-                color: active
-                    ? DuoColors.green
-                    : Theme.of(context).hintColor,
+                color: active ? DuoColors.green : Theme.of(context).hintColor,
               ),
             ),
           ],
@@ -370,14 +368,10 @@ class _ExampleRow extends StatelessWidget {
       margin: const EdgeInsets.only(top: 8),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
-        color: isDark
-            ? Colors.white.withValues(alpha: 0.05)
-            : DuoColors.snow,
+        color: isDark ? Colors.white.withValues(alpha: 0.05) : DuoColors.snow,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: isDark
-              ? const Color(0x26FFFFFF)
-              : const Color(0xFFEDE6CF),
+          color: isDark ? const Color(0x26FFFFFF) : const Color(0xFFEDE6CF),
           width: 1.5,
         ),
       ),
@@ -390,30 +384,36 @@ class _ExampleRow extends StatelessWidget {
                 Text(
                   example.target,
                   style: const TextStyle(
-                      fontSize: 15, fontWeight: FontWeight.w800),
+                    fontSize: 15,
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
                 if (example.romaji != null)
                   Text(
                     example.romaji!,
                     style: TextStyle(
-                        fontSize: 12,
-                        fontStyle: FontStyle.italic,
-                        color: Theme.of(context).hintColor),
+                      fontSize: 12,
+                      fontStyle: FontStyle.italic,
+                      color: Theme.of(context).hintColor,
+                    ),
                   ),
                 Text(
-                  example.meaning[uiLang] ??
-                      example.meaning.values.first,
+                  example.meaning[uiLang] ?? example.meaning.values.first,
                   style: TextStyle(
-                      fontSize: 12.5,
-                      color: Theme.of(context).hintColor),
+                    fontSize: 12.5,
+                    color: Theme.of(context).hintColor,
+                  ),
                 ),
               ],
             ),
           ),
           IconButton(
             onPressed: onSpeak,
-            icon: const Icon(Icons.volume_up_rounded,
-                color: DuoColors.blue, size: 22),
+            icon: const Icon(
+              Icons.volume_up_rounded,
+              color: DuoColors.blue,
+              size: 22,
+            ),
           ),
         ],
       ),

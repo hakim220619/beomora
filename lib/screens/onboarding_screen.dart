@@ -160,8 +160,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         Text(
           l.t('onb_streak_goal_sub'),
           textAlign: TextAlign.center,
-          style: TextStyle(
-              fontSize: 14, color: Theme.of(context).hintColor),
+          style: TextStyle(fontSize: 14, color: Theme.of(context).hintColor),
         ),
         const SizedBox(height: 24),
         for (final days in _streakGoals) ...[

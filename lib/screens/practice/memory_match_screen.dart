@@ -65,10 +65,7 @@ class _MemoryMatchScreenState extends State<MemoryMatchScreen> {
   }
 
   void _tap(int index) {
-    if (_busy ||
-        _done ||
-        _matched.contains(index) ||
-        index == _first) {
+    if (_busy || _done || _matched.contains(index) || index == _first) {
       return;
     }
     HapticFeedback.selectionClick();
@@ -118,7 +115,10 @@ class _MemoryMatchScreenState extends State<MemoryMatchScreen> {
           '${l.t('moves')}: $_moves\n${l.t('best')}: ${progress.bestMemoryMoves}\n+5 XP ⚡',
       actions: [
         DuoDialogAction(
-            label: l.t('play_again'), value: 'again', primary: true),
+          label: l.t('play_again'),
+          value: 'again',
+          primary: true,
+        ),
         DuoDialogAction(label: l.t('ok'), value: 'close'),
       ],
     );
@@ -145,7 +145,9 @@ class _MemoryMatchScreenState extends State<MemoryMatchScreen> {
               child: Text(
                 '${l.t('moves')}: $_moves',
                 style: const TextStyle(
-                    fontWeight: FontWeight.w800, color: DuoColors.purple),
+                  fontWeight: FontWeight.w800,
+                  color: DuoColors.purple,
+                ),
               ),
             ),
           ),
@@ -157,8 +159,7 @@ class _MemoryMatchScreenState extends State<MemoryMatchScreen> {
           children: [
             Expanded(
               child: GridView.builder(
-                gridDelegate:
-                    const SliverGridDelegateWithFixedCrossAxisCount(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
                   mainAxisSpacing: 10,
                   crossAxisSpacing: 10,
@@ -166,9 +167,8 @@ class _MemoryMatchScreenState extends State<MemoryMatchScreen> {
                 ),
                 itemCount: _cards.length,
                 itemBuilder: (_, i) {
-                  final revealed = _matched.contains(i) ||
-                      _first == i ||
-                      _second == i;
+                  final revealed =
+                      _matched.contains(i) || _first == i || _second == i;
                   final matched = _matched.contains(i);
                   return GestureDetector(
                     onTap: () => _tap(i),
@@ -178,28 +178,24 @@ class _MemoryMatchScreenState extends State<MemoryMatchScreen> {
                         color: matched
                             ? DuoColors.green.withValues(alpha: 0.15)
                             : revealed
-                                ? (isDark
-                                    ? const Color(0xFF1B2A32)
-                                    : Colors.white)
-                                : DuoColors.purple,
+                            ? (isDark ? const Color(0xFF1B2A32) : Colors.white)
+                            : DuoColors.purple,
                         borderRadius: BorderRadius.circular(14),
                         border: Border.all(
                           color: matched
                               ? DuoColors.green
                               : revealed
-                                  ? DuoColors.blue
-                                  : DuoColors.purple,
+                              ? DuoColors.blue
+                              : DuoColors.purple,
                           width: 2,
                         ),
                         boxShadow: [
                           BoxShadow(
                             color: matched
-                                ? DuoColors.greenDark
-                                    .withValues(alpha: 0.4)
+                                ? DuoColors.greenDark.withValues(alpha: 0.4)
                                 : revealed
-                                    ? DuoColors.blueDark
-                                        .withValues(alpha: 0.3)
-                                    : const Color(0xFF9E5BC8),
+                                ? DuoColors.blueDark.withValues(alpha: 0.3)
+                                : const Color(0xFF9E5BC8),
                             offset: const Offset(0, 3),
                           ),
                         ],
@@ -213,13 +209,10 @@ class _MemoryMatchScreenState extends State<MemoryMatchScreen> {
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w700,
-                                color: isDark
-                                    ? Colors.white
-                                    : DuoColors.eel,
+                                color: isDark ? Colors.white : DuoColors.eel,
                               ),
                             )
-                          : const Text('❓',
-                              style: TextStyle(fontSize: 26)),
+                          : const Text('❓', style: TextStyle(fontSize: 26)),
                     ),
                   );
                 },

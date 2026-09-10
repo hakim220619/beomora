@@ -43,8 +43,12 @@ class TtsService {
   /// Mengembalikan `false` kalau engine melapor ucapan TIDAK selesai
   /// (dihentikan lewat [stop], atau dibuang karena engine masih sibuk);
   /// `true` kalau selesai atau kalau TTS tidak tersedia sama sekali.
-  Future<bool> speakAndWait(String text, String locale,
-      {double rate = 0.45, TtsProgress? onProgress}) async {
+  Future<bool> speakAndWait(
+    String text,
+    String locale, {
+    double rate = 0.45,
+    TtsProgress? onProgress,
+  }) async {
     _onProgress = onProgress;
     try {
       if (_currentLocale != locale) {

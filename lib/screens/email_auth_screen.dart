@@ -38,10 +38,9 @@ class _EmailAuthScreenState extends State<EmailAuthScreen> {
   void _toast(String msg) {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(
-        duration: const Duration(seconds: 5),
-        content: Text(msg),
-      ));
+      ..showSnackBar(
+        SnackBar(duration: const Duration(seconds: 5), content: Text(msg)),
+      );
   }
 
   Future<void> _submit() async {
@@ -72,9 +71,11 @@ class _EmailAuthScreenState extends State<EmailAuthScreen> {
     if (!mounted) return;
     if (errorKey != null) {
       final detail = auth.lastErrorDetail;
-      _toast(errorKey == 'login_failed' && detail != null
-          ? '${l.t(errorKey)}\n($detail)'
-          : l.t(errorKey));
+      _toast(
+        errorKey == 'login_failed' && detail != null
+            ? '${l.t(errorKey)}\n($detail)'
+            : l.t(errorKey),
+      );
       return;
     }
 
@@ -84,9 +85,7 @@ class _EmailAuthScreenState extends State<EmailAuthScreen> {
       if (!mounted) return;
       if (errorKey != null) {
         final detail = auth.lastErrorDetail;
-        _toast(detail == null
-            ? l.t(errorKey)
-            : '${l.t(errorKey)}\n($detail)');
+        _toast(detail == null ? l.t(errorKey) : '${l.t(errorKey)}\n($detail)');
         return;
       }
     } else if (auth.needsRegistration) {
@@ -129,8 +128,7 @@ class _EmailAuthScreenState extends State<EmailAuthScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-            l.t(_signup ? 'email_signup_title' : 'email_login_title')),
+        title: Text(l.t(_signup ? 'email_signup_title' : 'email_login_title')),
       ),
       body: SafeArea(
         child: ListView(
@@ -152,8 +150,7 @@ class _EmailAuthScreenState extends State<EmailAuthScreen> {
                         textInputAction: TextInputAction.next,
                         decoration: InputDecoration(
                           labelText: l.t('register_name_label'),
-                          prefixIcon:
-                              const Icon(Icons.person_outline),
+                          prefixIcon: const Icon(Icons.person_outline),
                           counterText: '',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(14),
@@ -186,11 +183,12 @@ class _EmailAuthScreenState extends State<EmailAuthScreen> {
                         labelText: l.t('password_label'),
                         prefixIcon: const Icon(Icons.lock_outline),
                         suffixIcon: IconButton(
-                          icon: Icon(_obscure
-                              ? Icons.visibility_off_outlined
-                              : Icons.visibility_outlined),
-                          onPressed: () =>
-                              setState(() => _obscure = !_obscure),
+                          icon: Icon(
+                            _obscure
+                                ? Icons.visibility_off_outlined
+                                : Icons.visibility_outlined,
+                          ),
+                          onPressed: () => setState(() => _obscure = !_obscure),
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(14),
@@ -211,8 +209,7 @@ class _EmailAuthScreenState extends State<EmailAuthScreen> {
                             borderRadius: BorderRadius.circular(14),
                           ),
                         ),
-                        onSubmitted: (_) =>
-                            auth.busy ? null : _submit(),
+                        onSubmitted: (_) => auth.busy ? null : _submit(),
                       ),
                     ],
                     if (!_signup)
@@ -229,8 +226,7 @@ class _EmailAuthScreenState extends State<EmailAuthScreen> {
             ),
             const SizedBox(height: 24),
             DuoButton(
-              label:
-                  l.t(_signup ? 'email_signup_btn' : 'email_login_btn'),
+              label: l.t(_signup ? 'email_signup_btn' : 'email_login_btn'),
               onPressed: auth.busy ? null : _submit,
             ),
             const SizedBox(height: 12),
@@ -238,8 +234,7 @@ class _EmailAuthScreenState extends State<EmailAuthScreen> {
               onPressed: auth.busy
                   ? null
                   : () => setState(() => _signup = !_signup),
-              child:
-                  Text(l.t(_signup ? 'have_account' : 'no_account_yet')),
+              child: Text(l.t(_signup ? 'have_account' : 'no_account_yet')),
             ),
             if (auth.busy) ...[
               const SizedBox(height: 8),

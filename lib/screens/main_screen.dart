@@ -51,20 +51,26 @@ class _MainScreenState extends State<MainScreen> {
   /// Play In-App Update (flexible): unduh versi baru di latar
   /// belakang, lalu tawarkan mulai ulang lewat snackbar.
   void _checkAppUpdate() {
-    unawaited(UpdateService.checkForUpdate(onDownloaded: () {
-      if (!mounted) return;
-      final l = L.read(context);
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(SnackBar(
-          duration: const Duration(seconds: 12),
-          content: Text(l.t('update_ready')),
-          action: SnackBarAction(
-            label: l.t('update_restart'),
-            onPressed: UpdateService.completeUpdate,
-          ),
-        ));
-    }));
+    unawaited(
+      UpdateService.checkForUpdate(
+        onDownloaded: () {
+          if (!mounted) return;
+          final l = L.read(context);
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
+                duration: const Duration(seconds: 12),
+                content: Text(l.t('update_ready')),
+                action: SnackBarAction(
+                  label: l.t('update_restart'),
+                  onPressed: UpdateService.completeUpdate,
+                ),
+              ),
+            );
+        },
+      ),
+    );
   }
 
   /// Pemberitahuan saat menu utama terbuka, masing-masing satu
@@ -78,16 +84,21 @@ class _MainScreenState extends State<MainScreen> {
     // Pengingat harian: minta izin notifikasi (Android 13+/iOS) lalu
     // pastikan jadwalnya terpasang. Aman dipanggil tiap kali dibuka.
     if (settings.reminderOn) {
-      unawaited(NotificationService.requestPermission()
-          .then((_) => NotificationService.sync(settings, progress)));
+      unawaited(
+        NotificationService.requestPermission().then(
+          (_) => NotificationService.sync(settings, progress),
+        ),
+      );
     }
 
     if (progress.pendingMissNotice) {
       progress.markMissNoticeShown();
-      await _pushNotice(StreakNoticeScreen.missed(
-        goalDays: progress.streakGoalDays,
-        daysDone: progress.goalDaysDone,
-      ));
+      await _pushNotice(
+        StreakNoticeScreen.missed(
+          goalDays: progress.streakGoalDays,
+          daysDone: progress.goalDaysDone,
+        ),
+      );
       if (!mounted) return;
     }
 
@@ -95,16 +106,13 @@ class _MainScreenState extends State<MainScreen> {
       final goal = progress.streakGoalDays;
       final got = progress.celebrateStreakGoal();
       if (got == 0) return;
-      await _pushNotice(
-          StreakNoticeScreen.goalDone(goalDays: goal, gems: got));
+      await _pushNotice(StreakNoticeScreen.goalDone(goalDays: goal, gems: got));
     }
   }
 
-  Future<void> _pushNotice(Widget screen) =>
-      Navigator.of(context).push<void>(MaterialPageRoute(
-        fullscreenDialog: true,
-        builder: (_) => screen,
-      ));
+  Future<void> _pushNotice(Widget screen) => Navigator.of(context).push<void>(
+    MaterialPageRoute(fullscreenDialog: true, builder: (_) => screen),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -205,16 +213,17 @@ class _DockNav extends StatelessWidget {
                               : Colors.transparent,
                           borderRadius: BorderRadius.circular(14),
                           border: i == index
-                              ? Border.all(
-                                  color: items[i].$3, width: 1.5)
+                              ? Border.all(color: items[i].$3, width: 1.5)
                               : null,
                         ),
                         alignment: Alignment.center,
                         child: AnimatedScale(
                           duration: const Duration(milliseconds: 220),
                           scale: i == index ? 1.15 : 1.0,
-                          child: Text(items[i].$1,
-                              style: const TextStyle(fontSize: 20)),
+                          child: Text(
+                            items[i].$1,
+                            style: const TextStyle(fontSize: 20),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 3),
@@ -229,9 +238,7 @@ class _DockNav extends StatelessWidget {
                               : FontWeight.w600,
                           color: i == index
                               ? items[i].$3
-                              : (isDark
-                                  ? Colors.white60
-                                  : DuoColors.gray),
+                              : (isDark ? Colors.white60 : DuoColors.gray),
                         ),
                       ),
                     ],

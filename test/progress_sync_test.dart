@@ -9,8 +9,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:beomora/providers/progress_provider.dart';
 
-Future<ProgressProvider> freshProvider(
-    [Map<String, Object> initial = const {}]) async {
+Future<ProgressProvider> freshProvider([
+  Map<String, Object> initial = const {},
+]) async {
   SharedPreferences.setMockInitialValues(initial);
   return ProgressProvider(await SharedPreferences.getInstance());
 }
@@ -18,8 +19,7 @@ Future<ProgressProvider> freshProvider(
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('lokal segar → progres server dipakai (restore di HP baru)',
-      () async {
+  test('lokal segar → progres server dipakai (restore di HP baru)', () async {
     final local = await freshProvider();
     // Onboarding sempat memilih kursus — lokal tetap dianggap segar.
     local.setActiveCourse('ja');
@@ -33,8 +33,7 @@ void main() {
     expect(local.savedAt, cloud.savedAt); // stempel server dipertahankan
   });
 
-  test('lokal sudah berisi & lebih baru → lokal menang (perlu push)',
-      () async {
+  test('lokal sudah berisi & lebih baru → lokal menang (perlu push)', () async {
     final cloud = await freshProvider();
     cloud.addXp(50);
     final raw = cloud.exportCloudJson();
@@ -56,44 +55,48 @@ void main() {
     cloudMap['xp'] = 999;
     cloudMap['savedAt'] = (cloudMap['savedAt'] as int) + 10000;
 
-    expect(local.reconcileCloudJson(jsonEncode(cloudMap)),
-        CloudMerge.applied);
+    expect(local.reconcileCloudJson(jsonEncode(cloudMap)), CloudMerge.applied);
     expect(local.xp, 999);
   });
 
   test('stempel waktu sama → identical, tanpa perubahan', () async {
     final local = await freshProvider();
     local.addXp(10);
-    expect(local.reconcileCloudJson(local.exportCloudJson()),
-        CloudMerge.identical);
+    expect(
+      local.reconcileCloudJson(local.exportCloudJson()),
+      CloudMerge.identical,
+    );
     expect(local.xp, 10);
   });
 
   test('JSON server korup → lokal menang', () async {
     final local = await freshProvider();
     local.addXp(10);
-    expect(local.reconcileCloudJson('bukan { json'),
-        CloudMerge.localWins);
+    expect(local.reconcileCloudJson('bukan { json'), CloudMerge.localWins);
     expect(local.xp, 10);
   });
 
-  test('kalender: XP tercatat per hari & entri kedaluwarsa terpangkas',
-      () async {
-    final local = await freshProvider();
+  test(
+    'kalender: XP tercatat per hari & entri kedaluwarsa terpangkas',
+    () async {
+      final local = await freshProvider();
 
-    // Selundupkan entri lama lewat data "server".
-    final cloudMap =
-        jsonDecode(local.exportCloudJson()) as Map<String, dynamic>;
-    cloudMap['dailyXp'] = {'2020-01-01': 10};
-    cloudMap['savedAt'] = (cloudMap['savedAt'] as int) + 10000;
-    expect(local.reconcileCloudJson(jsonEncode(cloudMap)),
-        CloudMerge.applied);
-    expect(local.xpOn(DateTime(2020, 1, 1)), 10);
+      // Selundupkan entri lama lewat data "server".
+      final cloudMap =
+          jsonDecode(local.exportCloudJson()) as Map<String, dynamic>;
+      cloudMap['dailyXp'] = {'2020-01-01': 10};
+      cloudMap['savedAt'] = (cloudMap['savedAt'] as int) + 10000;
+      expect(
+        local.reconcileCloudJson(jsonEncode(cloudMap)),
+        CloudMerge.applied,
+      );
+      expect(local.xpOn(DateTime(2020, 1, 1)), 10);
 
-    // XP baru tercatat di hari ini, entri 2020 terpangkas (>92 hari).
-    local.addXp(15);
-    local.addXp(5);
-    expect(local.xpOn(DateTime.now()), 20);
-    expect(local.xpOn(DateTime(2020, 1, 1)), 0);
-  });
+      // XP baru tercatat di hari ini, entri 2020 terpangkas (>92 hari).
+      local.addXp(15);
+      local.addXp(5);
+      expect(local.xpOn(DateTime.now()), 20);
+      expect(local.xpOn(DateTime(2020, 1, 1)), 0);
+    },
+  );
 }

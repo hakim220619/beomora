@@ -25,12 +25,16 @@ class GoogleSignInButton extends StatelessWidget {
       final detail = auth.lastErrorDetail;
       messenger
         ..hideCurrentSnackBar()
-        ..showSnackBar(SnackBar(
-          duration: const Duration(seconds: 6),
-          content: Text(detail == null || errorKey == 'provider_disabled'
-              ? l.t(errorKey)
-              : '${l.t(errorKey)}\n($detail)'),
-        ));
+        ..showSnackBar(
+          SnackBar(
+            duration: const Duration(seconds: 6),
+            content: Text(
+              detail == null || errorKey == 'provider_disabled'
+                  ? l.t(errorKey)
+                  : '${l.t(errorKey)}\n($detail)',
+            ),
+          ),
+        );
       return;
     }
     // Login Google sukses tapi profil belum ada di Firestore →
@@ -43,8 +47,7 @@ class GoogleSignInButton extends StatelessWidget {
         await auth.cancelRegistration();
         messenger
           ..hideCurrentSnackBar()
-          ..showSnackBar(
-              SnackBar(content: Text(l.t('register_canceled'))));
+          ..showSnackBar(SnackBar(content: Text(l.t('register_canceled'))));
       }
     }
   }
@@ -64,9 +67,7 @@ class GoogleSignInButton extends StatelessWidget {
           color: Theme.of(context).hintColor,
         ),
       ),
-      actions: [
-        DuoDialogAction(label: l.t('ok'), primary: true),
-      ],
+      actions: [DuoDialogAction(label: l.t('ok'), primary: true)],
     );
   }
 
@@ -79,9 +80,8 @@ class GoogleSignInButton extends StatelessWidget {
       label: l.t('sign_in_google'),
       busy: auth.busy,
       dark: isDark,
-      onPressed: () => auth.configured
-          ? _signIn(context)
-          : _showSetupDialog(context),
+      onPressed: () =>
+          auth.configured ? _signIn(context) : _showSetupDialog(context),
     );
   }
 }
@@ -138,8 +138,7 @@ class _GoogleButtonVisual extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   shape: BoxShape.circle,
-                  border: Border.all(
-                      color: const Color(0xFFDADCE0), width: 1),
+                  border: Border.all(color: const Color(0xFFDADCE0), width: 1),
                 ),
                 alignment: Alignment.center,
                 child: const Text(

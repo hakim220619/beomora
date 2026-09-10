@@ -18,8 +18,7 @@ void main() {
         for (final q in mcqBankFor(courseId)) {
           final label = '[$courseId] "${q.question['id']}"';
           expect(q.options.length, 4, reason: label);
-          expect(q.options.toSet().length, 4,
-              reason: '$label: pilihan dobel');
+          expect(q.options.toSet().length, 4, reason: '$label: pilihan dobel');
           expect(q.answer, inInclusiveRange(0, 3), reason: label);
           expect(q.question['id'], isNotEmpty, reason: label);
           expect(q.question['en'], isNotEmpty, reason: label);
@@ -34,8 +33,11 @@ void main() {
       for (final courseId in ['ja', 'en']) {
         final seen = <String>{};
         for (final q in mcqBankFor(courseId)) {
-          expect(seen.add(q.question['id']!), isTrue,
-              reason: '[$courseId] soal dobel: ${q.question['id']}');
+          expect(
+            seen.add(q.question['id']!),
+            isTrue,
+            reason: '[$courseId] soal dobel: ${q.question['id']}',
+          );
         }
       }
     });
@@ -61,23 +63,30 @@ void main() {
       expect(() => mcqListFromJson('[]'), throwsFormatException);
       // Cuma 3 pilihan.
       expect(
-          () => mcqListFromJson(
-              '[{"question":{"id":"x"},"options":["a","b","c"],"answer":0}]'),
-          throwsFormatException);
+        () => mcqListFromJson(
+          '[{"question":{"id":"x"},"options":["a","b","c"],"answer":0}]',
+        ),
+        throwsFormatException,
+      );
       // Indeks jawaban di luar jangkauan.
       expect(
-          () => mcqListFromJson('[{"question":{"id":"x"},'
-              '"options":["a","b","c","d"],"answer":4}]'),
-          throwsFormatException);
+        () => mcqListFromJson(
+          '[{"question":{"id":"x"},'
+          '"options":["a","b","c","d"],"answer":4}]',
+        ),
+        throwsFormatException,
+      );
       // Pilihan dobel.
       expect(
-          () => mcqListFromJson('[{"question":{"id":"x"},'
-              '"options":["a","a","c","d"],"answer":0}]'),
-          throwsFormatException);
+        () => mcqListFromJson(
+          '[{"question":{"id":"x"},'
+          '"options":["a","a","c","d"],"answer":0}]',
+        ),
+        throwsFormatException,
+      );
     });
 
-    test('bank hasil sinkron menggantikan bawaan; clear mengembalikan',
-        () {
+    test('bank hasil sinkron menggantikan bawaan; clear mengembalikan', () {
       final custom = [
         const McqQuestion(
           question: {'id': 'Soal server?', 'en': 'Server question?'},

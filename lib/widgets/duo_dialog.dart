@@ -37,12 +37,10 @@ Future<T?> showDuoDialog<T>(
     barrierDismissible: dismissible,
     barrierColor: Colors.black.withValues(alpha: 0.55),
     builder: (dialogContext) {
-      final isDark =
-          Theme.of(dialogContext).brightness == Brightness.dark;
+      final isDark = Theme.of(dialogContext).brightness == Brightness.dark;
       final hint = Theme.of(dialogContext).hintColor;
       return Dialog(
-        backgroundColor:
-            isDark ? StudyColors.boardTop : StudyColors.paper,
+        backgroundColor: isDark ? StudyColors.boardTop : StudyColors.paper,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(28),
           side: BorderSide(
@@ -68,12 +66,12 @@ Future<T?> showDuoDialog<T>(
                       shape: BoxShape.circle,
                       color: color.withValues(alpha: 0.16),
                       border: Border.all(
-                          color: color.withValues(alpha: 0.55),
-                          width: 2.5),
+                        color: color.withValues(alpha: 0.55),
+                        width: 2.5,
+                      ),
                     ),
                     alignment: Alignment.center,
-                    child:
-                        Text(emoji, style: const TextStyle(fontSize: 34)),
+                    child: Text(emoji, style: const TextStyle(fontSize: 34)),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -81,13 +79,16 @@ Future<T?> showDuoDialog<T>(
                   title,
                   textAlign: TextAlign.center,
                   style: const TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.w900),
+                    fontSize: 20,
+                    fontWeight: FontWeight.w900,
+                  ),
                 ),
                 if (message != null || content != null) ...[
                   const SizedBox(height: 10),
                   Flexible(
                     child: SingleChildScrollView(
-                      child: content ??
+                      child:
+                          content ??
                           Text(
                             message!,
                             textAlign: TextAlign.center,
@@ -153,7 +154,11 @@ Future<bool> showDuoConfirm(
     color: color,
     actions: [
       DuoDialogAction(
-          label: confirmLabel, value: true, primary: true, color: color),
+        label: confirmLabel,
+        value: true,
+        primary: true,
+        color: color,
+      ),
       DuoDialogAction(label: cancelLabel, value: false),
     ],
   );

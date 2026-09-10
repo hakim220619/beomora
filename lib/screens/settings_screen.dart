@@ -9,6 +9,7 @@ import '../services/content_service.dart';
 import '../services/notification_service.dart';
 import '../theme.dart';
 import '../widgets/study/study_background.dart';
+import 'handwriting_settings_section.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -25,13 +26,14 @@ class SettingsScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         children: [
           // Bahasa UI
-          Text(l.t('ui_language'),
-              style: const TextStyle(fontWeight: FontWeight.w800)),
+          Text(
+            l.t('ui_language'),
+            style: const TextStyle(fontWeight: FontWeight.w800),
+          ),
           const SizedBox(height: 8),
           SegmentedButton<String>(
             segments: const [
-              ButtonSegment(
-                  value: 'id', label: Text('🇮🇩 Indonesia')),
+              ButtonSegment(value: 'id', label: Text('🇮🇩 Indonesia')),
               ButtonSegment(value: 'en', label: Text('🇬🇧 English')),
             ],
             selected: {settings.uiLang},
@@ -39,22 +41,26 @@ class SettingsScreen extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           // Tema: hanya siang (terang) atau malam (gelap).
-          Text(l.t('theme'),
-              style: const TextStyle(fontWeight: FontWeight.w800)),
+          Text(
+            l.t('theme'),
+            style: const TextStyle(fontWeight: FontWeight.w800),
+          ),
           const SizedBox(height: 8),
           SegmentedButton<ThemeMode>(
             segments: [
               ButtonSegment(
-                  value: ThemeMode.light,
-                  label: Text('☀️ ${l.t('theme_light')}')),
+                value: ThemeMode.light,
+                label: Text('☀️ ${l.t('theme_light')}'),
+              ),
               ButtonSegment(
-                  value: ThemeMode.dark,
-                  label: Text('🌙 ${l.t('theme_dark')}')),
+                value: ThemeMode.dark,
+                label: Text('🌙 ${l.t('theme_dark')}'),
+              ),
             ],
             selected: {
               settings.themeMode == ThemeMode.dark
                   ? ThemeMode.dark
-                  : ThemeMode.light
+                  : ThemeMode.light,
             },
             onSelectionChanged: (s) => settings.setThemeMode(s.first),
           ),
@@ -62,8 +68,10 @@ class SettingsScreen extends StatelessWidget {
           // Suara
           SwitchListTile(
             contentPadding: EdgeInsets.zero,
-            title: Text(l.t('sound_effects'),
-                style: const TextStyle(fontWeight: FontWeight.w800)),
+            title: Text(
+              l.t('sound_effects'),
+              style: const TextStyle(fontWeight: FontWeight.w800),
+            ),
             value: settings.soundOn,
             activeThumbColor: DuoColors.green,
             onChanged: settings.setSoundOn,
@@ -71,18 +79,24 @@ class SettingsScreen extends StatelessWidget {
           // Ikon emoji di layar Belajar & Latihan
           SwitchListTile(
             contentPadding: EdgeInsets.zero,
-            title: Text(l.t('show_icons'),
-                style: const TextStyle(fontWeight: FontWeight.w800)),
+            title: Text(
+              l.t('show_icons'),
+              style: const TextStyle(fontWeight: FontWeight.w800),
+            ),
             subtitle: Text(l.t('show_icons_sub')),
             value: settings.showIcons,
             activeThumbColor: DuoColors.green,
             onChanged: settings.setShowIcons,
           ),
+          // Tulis Huruf (tulisan tangan): saklar + model per bahasa.
+          const HandwritingSettingsSection(),
           // Pengingat belajar harian
           SwitchListTile(
             contentPadding: EdgeInsets.zero,
-            title: Text(l.t('reminder_setting'),
-                style: const TextStyle(fontWeight: FontWeight.w800)),
+            title: Text(
+              l.t('reminder_setting'),
+              style: const TextStyle(fontWeight: FontWeight.w800),
+            ),
             subtitle: Text(l.t('reminder_sub')),
             value: settings.reminderOn,
             activeThumbColor: DuoColors.green,
@@ -99,12 +113,13 @@ class SettingsScreen extends StatelessWidget {
           ListTile(
             contentPadding: EdgeInsets.zero,
             enabled: settings.reminderOn,
-            title: Text(l.t('reminder_time'),
-                style: const TextStyle(fontWeight: FontWeight.w800)),
+            title: Text(
+              l.t('reminder_time'),
+              style: const TextStyle(fontWeight: FontWeight.w800),
+            ),
             trailing: Text(
               settings.reminderTime.format(context),
-              style: const TextStyle(
-                  fontSize: 16, fontWeight: FontWeight.w800),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
             ),
             onTap: () async {
               final picked = await showTimePicker(
@@ -116,8 +131,10 @@ class SettingsScreen extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           // Target harian
-          Text(l.t('daily_goal_setting'),
-              style: const TextStyle(fontWeight: FontWeight.w800)),
+          Text(
+            l.t('daily_goal_setting'),
+            style: const TextStyle(fontWeight: FontWeight.w800),
+          ),
           const SizedBox(height: 8),
           SegmentedButton<int>(
             segments: const [
@@ -190,12 +207,16 @@ class _AdminUploadTileState extends State<_AdminUploadTile> {
     setState(() => _busy = false);
     messenger
       ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(
-        duration: const Duration(seconds: 6),
-        content: Text(error == null
-            ? l.t('content_upload_success')
-            : '${l.t('content_upload_failed')}\n($error)'),
-      ));
+      ..showSnackBar(
+        SnackBar(
+          duration: const Duration(seconds: 6),
+          content: Text(
+            error == null
+                ? l.t('content_upload_success')
+                : '${l.t('content_upload_failed')}\n($error)',
+          ),
+        ),
+      );
   }
 
   @override
@@ -203,20 +224,22 @@ class _AdminUploadTileState extends State<_AdminUploadTile> {
     final l = L.of(context);
     return Card(
       child: ListTile(
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         leading: _busy
             ? const SizedBox(
                 width: 24,
                 height: 24,
                 child: CircularProgressIndicator(strokeWidth: 2.5),
               )
-            : const Icon(Icons.cloud_upload_rounded,
-                color: DuoColors.blue),
-        title: Text(l.t('content_upload'),
-            style: const TextStyle(fontWeight: FontWeight.w800)),
-        subtitle: Text(l.t('content_upload_sub'),
-            style: const TextStyle(fontSize: 12.5)),
+            : const Icon(Icons.cloud_upload_rounded, color: DuoColors.blue),
+        title: Text(
+          l.t('content_upload'),
+          style: const TextStyle(fontWeight: FontWeight.w800),
+        ),
+        subtitle: Text(
+          l.t('content_upload_sub'),
+          style: const TextStyle(fontSize: 12.5),
+        ),
         onTap: _busy ? null : _upload,
       ),
     );
@@ -231,8 +254,7 @@ class _AdminPremiumAllTile extends StatefulWidget {
   const _AdminPremiumAllTile();
 
   @override
-  State<_AdminPremiumAllTile> createState() =>
-      _AdminPremiumAllTileState();
+  State<_AdminPremiumAllTile> createState() => _AdminPremiumAllTileState();
 }
 
 class _AdminPremiumAllTileState extends State<_AdminPremiumAllTile> {
@@ -248,14 +270,16 @@ class _AdminPremiumAllTileState extends State<_AdminPremiumAllTile> {
     setState(() => _busy = false);
     messenger
       ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(
-        duration: const Duration(seconds: 6),
-        content: Text(error == null
-            ? l.t(on
-                ? 'admin_premium_all_on'
-                : 'admin_premium_all_off')
-            : '${l.t('admin_premium_all_failed')}\n($error)'),
-      ));
+      ..showSnackBar(
+        SnackBar(
+          duration: const Duration(seconds: 6),
+          content: Text(
+            error == null
+                ? l.t(on ? 'admin_premium_all_on' : 'admin_premium_all_off')
+                : '${l.t('admin_premium_all_failed')}\n($error)',
+          ),
+        ),
+      );
   }
 
   @override
@@ -264,20 +288,25 @@ class _AdminPremiumAllTileState extends State<_AdminPremiumAllTile> {
     final on = context.watch<AuthProvider>().globalPremium;
     return Card(
       child: SwitchListTile(
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         secondary: _busy
             ? const SizedBox(
                 width: 24,
                 height: 24,
                 child: CircularProgressIndicator(strokeWidth: 2.5),
               )
-            : const Icon(Icons.workspace_premium_rounded,
-                color: DuoColors.purple),
-        title: Text(l.t('admin_premium_all'),
-            style: const TextStyle(fontWeight: FontWeight.w800)),
-        subtitle: Text(l.t('admin_premium_all_sub'),
-            style: const TextStyle(fontSize: 12.5)),
+            : const Icon(
+                Icons.workspace_premium_rounded,
+                color: DuoColors.purple,
+              ),
+        title: Text(
+          l.t('admin_premium_all'),
+          style: const TextStyle(fontWeight: FontWeight.w800),
+        ),
+        subtitle: Text(
+          l.t('admin_premium_all_sub'),
+          style: const TextStyle(fontSize: 12.5),
+        ),
         value: on,
         activeThumbColor: DuoColors.green,
         onChanged: _busy ? null : _toggle,
@@ -292,8 +321,7 @@ class _AdminHeartRegenTile extends StatefulWidget {
   const _AdminHeartRegenTile();
 
   @override
-  State<_AdminHeartRegenTile> createState() =>
-      _AdminHeartRegenTileState();
+  State<_AdminHeartRegenTile> createState() => _AdminHeartRegenTileState();
 }
 
 class _AdminHeartRegenTileState extends State<_AdminHeartRegenTile> {
@@ -306,7 +334,8 @@ class _AdminHeartRegenTileState extends State<_AdminHeartRegenTile> {
     final messenger = ScaffoldMessenger.of(context);
 
     final controller = TextEditingController(
-        text: '${progress.heartRegenMinutes}');
+      text: '${progress.heartRegenMinutes}',
+    );
     final minutes = await showDialog<int>(
       context: context,
       builder: (dialogContext) => AlertDialog(
@@ -317,9 +346,7 @@ class _AdminHeartRegenTileState extends State<_AdminHeartRegenTile> {
           autofocus: true,
           decoration: InputDecoration(
             labelText: l.t('admin_heart_regen_label'),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
-            ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
           ),
         ),
         actions: [
@@ -328,8 +355,9 @@ class _AdminHeartRegenTileState extends State<_AdminHeartRegenTile> {
             child: Text(l.t('cancel')),
           ),
           FilledButton(
-            onPressed: () => Navigator.of(dialogContext)
-                .pop(int.tryParse(controller.text.trim())),
+            onPressed: () => Navigator.of(
+              dialogContext,
+            ).pop(int.tryParse(controller.text.trim())),
             child: Text(l.t('save')),
           ),
         ],
@@ -340,7 +368,8 @@ class _AdminHeartRegenTileState extends State<_AdminHeartRegenTile> {
       messenger
         ..hideCurrentSnackBar()
         ..showSnackBar(
-            SnackBar(content: Text(l.t('admin_heart_regen_invalid'))));
+          SnackBar(content: Text(l.t('admin_heart_regen_invalid'))),
+        );
       return;
     }
 
@@ -350,14 +379,16 @@ class _AdminHeartRegenTileState extends State<_AdminHeartRegenTile> {
     setState(() => _busy = false);
     messenger
       ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(
-        duration: const Duration(seconds: 6),
-        content: Text(error == null
-            ? l
-                .t('admin_heart_regen_saved')
-                .replaceFirst('{n}', '$minutes')
-            : '${l.t('admin_heart_regen_failed')}\n($error)'),
-      ));
+      ..showSnackBar(
+        SnackBar(
+          duration: const Duration(seconds: 6),
+          content: Text(
+            error == null
+                ? l.t('admin_heart_regen_saved').replaceFirst('{n}', '$minutes')
+                : '${l.t('admin_heart_regen_failed')}\n($error)',
+          ),
+        ),
+      );
   }
 
   @override
@@ -366,8 +397,7 @@ class _AdminHeartRegenTileState extends State<_AdminHeartRegenTile> {
     final progress = context.watch<ProgressProvider>();
     return Card(
       child: ListTile(
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         leading: _busy
             ? const SizedBox(
                 width: 24,
@@ -375,8 +405,10 @@ class _AdminHeartRegenTileState extends State<_AdminHeartRegenTile> {
                 child: CircularProgressIndicator(strokeWidth: 2.5),
               )
             : const Icon(Icons.favorite_rounded, color: DuoColors.red),
-        title: Text(l.t('admin_heart_regen'),
-            style: const TextStyle(fontWeight: FontWeight.w800)),
+        title: Text(
+          l.t('admin_heart_regen'),
+          style: const TextStyle(fontWeight: FontWeight.w800),
+        ),
         subtitle: Text(
           l
               .t('admin_heart_regen_sub')
@@ -410,12 +442,16 @@ class _AdminGrantTile extends StatelessWidget {
     final error = await auth.grantPremiumByEmail(email, duration);
     messenger
       ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(
-        duration: const Duration(seconds: 6),
-        content: Text(error == null
-            ? '${l.t(duration == null ? 'admin_grant_revoked' : 'admin_grant_success')} $email'
-            : l.t(error)),
-      ));
+      ..showSnackBar(
+        SnackBar(
+          duration: const Duration(seconds: 6),
+          content: Text(
+            error == null
+                ? '${l.t(duration == null ? 'admin_grant_revoked' : 'admin_grant_success')} $email'
+                : l.t(error),
+          ),
+        ),
+      );
   }
 
   @override
@@ -423,14 +459,19 @@ class _AdminGrantTile extends StatelessWidget {
     final l = L.of(context);
     return Card(
       child: ListTile(
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-        leading: const Icon(Icons.card_giftcard_rounded,
-            color: DuoColors.orange),
-        title: Text(l.t('admin_grant'),
-            style: const TextStyle(fontWeight: FontWeight.w800)),
-        subtitle: Text(l.t('admin_grant_sub'),
-            style: const TextStyle(fontSize: 12.5)),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        leading: const Icon(
+          Icons.card_giftcard_rounded,
+          color: DuoColors.orange,
+        ),
+        title: Text(
+          l.t('admin_grant'),
+          style: const TextStyle(fontWeight: FontWeight.w800),
+        ),
+        subtitle: Text(
+          l.t('admin_grant_sub'),
+          style: const TextStyle(fontSize: 12.5),
+        ),
         onTap: () => _open(context),
       ),
     );
@@ -459,10 +500,11 @@ class _GrantDialogState extends State<_GrantDialog> {
   Widget build(BuildContext context) {
     final l = L.of(context);
     return AlertDialog(
-      shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      title: Text(l.t('admin_grant'),
-          style: const TextStyle(fontWeight: FontWeight.w900)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      title: Text(
+        l.t('admin_grant'),
+        style: const TextStyle(fontWeight: FontWeight.w900),
+      ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -471,14 +513,14 @@ class _GrantDialogState extends State<_GrantDialog> {
             controller: _emailCtrl,
             keyboardType: TextInputType.emailAddress,
             autofocus: true,
-            decoration:
-                InputDecoration(hintText: l.t('admin_grant_email')),
+            decoration: InputDecoration(hintText: l.t('admin_grant_email')),
             onChanged: (_) => setState(() {}),
           ),
           const SizedBox(height: 14),
-          Text(l.t('admin_grant_duration'),
-              style: const TextStyle(
-                  fontSize: 13, fontWeight: FontWeight.w800)),
+          Text(
+            l.t('admin_grant_duration'),
+            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800),
+          ),
           const SizedBox(height: 6),
           Wrap(
             spacing: 6,
@@ -508,9 +550,9 @@ class _GrantDialogState extends State<_GrantDialog> {
           onPressed: _emailCtrl.text.trim().isEmpty
               ? null
               : () => Navigator.of(context).pop((
-                    _emailCtrl.text.trim(),
-                    _days == 0 ? null : Duration(days: _days),
-                  )),
+                  _emailCtrl.text.trim(),
+                  _days == 0 ? null : Duration(days: _days),
+                )),
           child: Text(l.t('admin_grant_apply')),
         ),
       ],

@@ -17,13 +17,13 @@ class UpdateService {
 
   static bool get supported => !kIsWeb && Platform.isAndroid;
 
-  static Future<void> checkForUpdate(
-      {required VoidCallback onDownloaded}) async {
+  static Future<void> checkForUpdate({
+    required VoidCallback onDownloaded,
+  }) async {
     if (!supported) return;
     try {
       final info = await InAppUpdate.checkForUpdate();
-      if (info.updateAvailability !=
-          UpdateAvailability.updateAvailable) {
+      if (info.updateAvailability != UpdateAvailability.updateAvailable) {
         return;
       }
       if (info.flexibleUpdateAllowed) {

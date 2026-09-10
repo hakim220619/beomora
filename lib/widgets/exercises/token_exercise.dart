@@ -31,8 +31,7 @@ class _TokenExerciseState extends State<TokenExercise> {
   bool get _isScramble => widget.exercise.type == ExerciseType.scramble;
 
   String get _joined {
-    final parts =
-        _picked.map((i) => widget.exercise.options[i]).toList();
+    final parts = _picked.map((i) => widget.exercise.options[i]).toList();
     return parts.join(_isScramble ? '' : ' ');
   }
 
@@ -55,19 +54,22 @@ class _TokenExerciseState extends State<TokenExercise> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (ex.word != null &&
-                context.watch<SettingsProvider>().showIcons)
+            if (ex.word != null && context.watch<SettingsProvider>().showIcons)
               Padding(
                 padding: const EdgeInsets.only(right: 8),
-                child:
-                    Text(ex.word!.emoji, style: const TextStyle(fontSize: 28)),
+                child: Text(
+                  ex.word!.emoji,
+                  style: const TextStyle(fontSize: 28),
+                ),
               ),
             Flexible(
               child: Text(
                 ex.prompt,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
-                    fontSize: 22, fontWeight: FontWeight.w700),
+                  fontSize: 22,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
           ],
@@ -80,8 +82,10 @@ class _TokenExerciseState extends State<TokenExercise> {
           decoration: BoxDecoration(
             border: Border(
               top: BorderSide(color: Theme.of(context).dividerColor, width: 2),
-              bottom:
-                  BorderSide(color: Theme.of(context).dividerColor, width: 2),
+              bottom: BorderSide(
+                color: Theme.of(context).dividerColor,
+                width: 2,
+              ),
             ),
           ),
           child: Wrap(
@@ -110,11 +114,7 @@ class _TokenExerciseState extends State<TokenExercise> {
           children: [
             for (var i = 0; i < ex.options.length; i++)
               _picked.contains(i)
-                  ? _TokenChip(
-                      label: ex.options[i],
-                      ghost: true,
-                      onTap: null,
-                    )
+                  ? _TokenChip(label: ex.options[i], ghost: true, onTap: null)
                   : _TokenChip(
                       label: ex.options[i],
                       onTap: widget.locked
@@ -143,8 +143,7 @@ class _TokenChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final border =
-        isDark ? const Color(0xFF37464F) : const Color(0xFFE5E5E5);
+    final border = isDark ? const Color(0xFF37464F) : const Color(0xFFE5E5E5);
     return GestureDetector(
       onTap: onTap,
       child: Container(

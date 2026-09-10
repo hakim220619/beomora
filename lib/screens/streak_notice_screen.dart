@@ -35,15 +35,15 @@ class StreakNoticeScreen extends StatefulWidget {
     super.key,
     required this.goalDays,
     required this.daysDone,
-  })  : kind = StreakNoticeKind.missed,
-        gems = 0;
+  }) : kind = StreakNoticeKind.missed,
+       gems = 0;
 
   const StreakNoticeScreen.goalDone({
     super.key,
     required this.goalDays,
     required this.gems,
-  })  : kind = StreakNoticeKind.goalDone,
-        daysDone = goalDays;
+  }) : kind = StreakNoticeKind.goalDone,
+       daysDone = goalDays;
 
   @override
   State<StreakNoticeScreen> createState() => _StreakNoticeScreenState();
@@ -51,8 +51,9 @@ class StreakNoticeScreen extends StatefulWidget {
 
 class _StreakNoticeScreenState extends State<StreakNoticeScreen>
     with SingleTickerProviderStateMixin {
-  late final ConfettiController _confetti =
-      ConfettiController(duration: const Duration(seconds: 2));
+  late final ConfettiController _confetti = ConfettiController(
+    duration: const Duration(seconds: 2),
+  );
   late final AnimationController _halo = AnimationController(
     vsync: this,
     duration: const Duration(seconds: 6),
@@ -65,8 +66,7 @@ class _StreakNoticeScreenState extends State<StreakNoticeScreen>
   void initState() {
     super.initState();
     if (_celebrate) {
-      WidgetsBinding.instance
-          .addPostFrameCallback((_) => _confetti.play());
+      WidgetsBinding.instance.addPostFrameCallback((_) => _confetti.play());
     }
   }
 
@@ -148,7 +148,9 @@ class _StreakNoticeScreenState extends State<StreakNoticeScreen>
                     title,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
-                        fontSize: 26, fontWeight: FontWeight.w900),
+                      fontSize: 26,
+                      fontWeight: FontWeight.w900,
+                    ),
                   ),
                   const SizedBox(height: 10),
                   Text(
@@ -182,16 +184,10 @@ class _StreakNoticeScreenState extends State<StreakNoticeScreen>
                       ],
                     )
                   else
-                    _GoalProgressCard(
-                      done: done,
-                      goal: goal,
-                      color: _color,
-                    ),
+                    _GoalProgressCard(done: done, goal: goal, color: _color),
                   const Spacer(),
                   DuoButton(
-                    label: l.t(_celebrate
-                        ? 'continue_btn'
-                        : 'miss_notice_cta'),
+                    label: l.t(_celebrate ? 'continue_btn' : 'miss_notice_cta'),
                     color: _celebrate ? DuoColors.green : DuoColors.blue,
                     onPressed: () => Navigator.of(context).pop(),
                   ),
@@ -351,14 +347,22 @@ class _StatBox extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Text('$icon $value',
-              style: TextStyle(
-                  color: color,
-                  fontWeight: FontWeight.w900,
-                  fontSize: 18)),
-          Text(label,
-              style: TextStyle(
-                  color: color, fontSize: 11, fontWeight: FontWeight.w700)),
+          Text(
+            '$icon $value',
+            style: TextStyle(
+              color: color,
+              fontWeight: FontWeight.w900,
+              fontSize: 18,
+            ),
+          ),
+          Text(
+            label,
+            style: TextStyle(
+              color: color,
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
         ],
       ),
     );
@@ -382,7 +386,10 @@ class _HaloPainter extends CustomPainter {
 
     // Inti lembut.
     canvas.drawCircle(
-        c, rMax * 0.42, Paint()..color = color.withValues(alpha: 0.18));
+      c,
+      rMax * 0.42,
+      Paint()..color = color.withValues(alpha: 0.18),
+    );
 
     // Cincin mengembang.
     final ring = Paint()
@@ -402,8 +409,10 @@ class _HaloPainter extends CustomPainter {
     for (var i = 0; i < count; i++) {
       final a = t * 2 * pi + i * 2 * pi / count;
       final wobble = 0.72 + 0.08 * sin(t * 6 * pi + i);
-      final p = Offset(c.dx + cos(a) * rMax * wobble,
-          c.dy + sin(a) * rMax * wobble);
+      final p = Offset(
+        c.dx + cos(a) * rMax * wobble,
+        c.dy + sin(a) * rMax * wobble,
+      );
       final s = 2.0 + 1.6 * (0.5 + 0.5 * sin(t * 8 * pi + i * 1.3));
       spark.color = color.withValues(alpha: 0.55 + 0.35 * (s - 2) / 1.6);
       _star(canvas, p, s + 1.5, spark);

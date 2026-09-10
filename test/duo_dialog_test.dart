@@ -10,31 +10,34 @@ void main() {
 
   Future<void> pumpAndOpen(WidgetTester tester) async {
     result = null;
-    await tester.pumpWidget(MaterialApp(
-      home: Scaffold(
-        body: Builder(
-          builder: (context) => TextButton(
-            onPressed: () async {
-              result = await showDuoConfirm(
-                context,
-                emoji: '👋',
-                title: 'Keluar akun?',
-                message: 'Progresmu tetap tersimpan.',
-                confirmLabel: 'KELUAR',
-                cancelLabel: 'Batal',
-              );
-            },
-            child: const Text('buka'),
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Builder(
+            builder: (context) => TextButton(
+              onPressed: () async {
+                result = await showDuoConfirm(
+                  context,
+                  emoji: '👋',
+                  title: 'Keluar akun?',
+                  message: 'Progresmu tetap tersimpan.',
+                  confirmLabel: 'KELUAR',
+                  cancelLabel: 'Batal',
+                );
+              },
+              child: const Text('buka'),
+            ),
           ),
         ),
       ),
-    ));
+    );
     await tester.tap(find.text('buka'));
     await tester.pumpAndSettle();
   }
 
-  testWidgets('isi dialog tampil dan tombol utama mengembalikan true',
-      (tester) async {
+  testWidgets('isi dialog tampil dan tombol utama mengembalikan true', (
+    tester,
+  ) async {
     await pumpAndOpen(tester);
     expect(find.text('👋'), findsOneWidget);
     expect(find.text('Keluar akun?'), findsOneWidget);

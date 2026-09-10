@@ -77,8 +77,11 @@ class _ChoiceExerciseState extends State<ChoiceExercise> {
                     BoxShadow(color: DuoColors.blueDark, offset: Offset(0, 4)),
                   ],
                 ),
-                child: const Icon(Icons.volume_up_rounded,
-                    color: Colors.white, size: 48),
+                child: const Icon(
+                  Icons.volume_up_rounded,
+                  color: Colors.white,
+                  size: 48,
+                ),
               ),
             ),
           )
@@ -90,8 +93,10 @@ class _ChoiceExerciseState extends State<ChoiceExercise> {
                   context.watch<SettingsProvider>().showIcons)
                 Padding(
                   padding: const EdgeInsets.only(right: 8),
-                  child: Text(ex.word!.emoji,
-                      style: const TextStyle(fontSize: 32)),
+                  child: Text(
+                    ex.word!.emoji,
+                    style: const TextStyle(fontSize: 32),
+                  ),
                 ),
               Flexible(
                 child: Column(
@@ -100,14 +105,17 @@ class _ChoiceExerciseState extends State<ChoiceExercise> {
                       ex.prompt,
                       textAlign: TextAlign.center,
                       style: const TextStyle(
-                          fontSize: 26, fontWeight: FontWeight.w700),
+                        fontSize: 26,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                     if (ex.promptSub != null)
                       Text(
                         ex.promptSub!,
                         style: TextStyle(
-                            fontSize: 15,
-                            color: Theme.of(context).hintColor),
+                          fontSize: 15,
+                          color: Theme.of(context).hintColor,
+                        ),
                       ),
                   ],
                 ),
@@ -115,8 +123,10 @@ class _ChoiceExerciseState extends State<ChoiceExercise> {
               if (ex.ttsText != null)
                 IconButton(
                   onPressed: _speak,
-                  icon: const Icon(Icons.volume_up_rounded,
-                      color: DuoColors.blue),
+                  icon: const Icon(
+                    Icons.volume_up_rounded,
+                    color: DuoColors.blue,
+                  ),
                 ),
             ],
           ),
@@ -126,13 +136,13 @@ class _ChoiceExerciseState extends State<ChoiceExercise> {
             label: option,
             state: widget.locked
                 ? (option == ex.answer
-                    ? ChoiceState.correct
-                    : (option == _selected
-                        ? ChoiceState.wrong
-                        : ChoiceState.disabled))
+                      ? ChoiceState.correct
+                      : (option == _selected
+                            ? ChoiceState.wrong
+                            : ChoiceState.disabled))
                 : (option == _selected
-                    ? ChoiceState.selected
-                    : ChoiceState.idle),
+                      ? ChoiceState.selected
+                      : ChoiceState.idle),
             onTap: widget.locked
                 ? null
                 : () {

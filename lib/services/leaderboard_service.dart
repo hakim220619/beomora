@@ -24,20 +24,20 @@ class LeaderEntry {
   });
 
   Map<String, dynamic> toJson() => {
-        'uid': uid,
-        'name': name,
-        'photoUrl': photoUrl,
-        'weeklyXp': weeklyXp,
-        'premium': premium,
-      };
+    'uid': uid,
+    'name': name,
+    'photoUrl': photoUrl,
+    'weeklyXp': weeklyXp,
+    'premium': premium,
+  };
 
   factory LeaderEntry.fromJson(Map<String, dynamic> m) => LeaderEntry(
-        uid: m['uid'] as String,
-        name: m['name'] as String? ?? 'Pelajar',
-        photoUrl: m['photoUrl'] as String?,
-        weeklyXp: (m['weeklyXp'] as num?)?.toInt() ?? 0,
-        premium: m['premium'] == true,
-      );
+    uid: m['uid'] as String,
+    name: m['name'] as String? ?? 'Pelajar',
+    photoUrl: m['photoUrl'] as String?,
+    weeklyXp: (m['weeklyXp'] as num?)?.toInt() ?? 0,
+    premium: m['premium'] == true,
+  );
 }
 
 /// Papan Juara dari pengguna sungguhan di Firestore — hemat kuota:
@@ -96,19 +96,23 @@ class LeaderboardService {
     }
   }
 
-  static List<LeaderEntry>? _readCache(SharedPreferences prefs, String week,
-      {bool ignoreTtl = false}) {
+  static List<LeaderEntry>? _readCache(
+    SharedPreferences prefs,
+    String week, {
+    bool ignoreTtl = false,
+  }) {
     final raw = prefs.getString(_kCache);
     if (raw == null) return null;
     try {
       final c = jsonDecode(raw) as Map<String, dynamic>;
       if (c['week'] != week) return null;
-      final age = DateTime.now().millisecondsSinceEpoch -
+      final age =
+          DateTime.now().millisecondsSinceEpoch -
           ((c['at'] as num?)?.toInt() ?? 0);
       if (!ignoreTtl && age > _ttl.inMilliseconds) return null;
       return [
         for (final e in c['entries'] as List)
-          LeaderEntry.fromJson(e as Map<String, dynamic>)
+          LeaderEntry.fromJson(e as Map<String, dynamic>),
       ];
     } catch (_) {
       return null;

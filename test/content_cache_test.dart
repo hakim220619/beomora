@@ -6,24 +6,24 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:beomora/services/content_service.dart';
 
 void main() {
-  testWidgets('tanpa cache → materi dimuat dari asset bawaan',
-      (tester) async {
+  testWidgets('tanpa cache → materi dimuat dari asset bawaan', (tester) async {
     SharedPreferences.setMockInitialValues({});
     final prefs = (await tester.runAsync(SharedPreferences.getInstance))!;
-    final courses = (await tester
-        .runAsync(() => ContentService.loadCourses(prefs: prefs)))!;
+    final courses = (await tester.runAsync(
+      () => ContentService.loadCourses(prefs: prefs),
+    ))!;
     expect(courses.length, 5);
   });
 
-  testWidgets('cache rusak → jatuh kembali ke asset bawaan',
-      (tester) async {
+  testWidgets('cache rusak → jatuh kembali ke asset bawaan', (tester) async {
     SharedPreferences.setMockInitialValues({
       'content_json_en': 'bukan { json yang valid',
       'content_json_ja': '{"tanpa": "struktur kursus"}',
     });
     final prefs = (await tester.runAsync(SharedPreferences.getInstance))!;
-    final courses = (await tester
-        .runAsync(() => ContentService.loadCourses(prefs: prefs)))!;
+    final courses = (await tester.runAsync(
+      () => ContentService.loadCourses(prefs: prefs),
+    ))!;
     expect(courses.length, 5);
     expect(courses.every((c) => c.units.isNotEmpty), isTrue);
   });

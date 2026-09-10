@@ -46,8 +46,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final messenger = ScaffoldMessenger.of(context);
     final navigator = Navigator.of(context);
 
-    final errorKey = await auth.register(_nameController.text,
-        phone: _phoneController.text);
+    final errorKey = await auth.register(
+      _nameController.text,
+      phone: _phoneController.text,
+    );
     if (!mounted) return;
     if (errorKey == null) {
       // Gerbang di main.dart sudah menukar home menjadi MainScreen;
@@ -60,15 +62,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
       final detail = auth.lastErrorDetail;
       messenger
         ..hideCurrentSnackBar()
-        ..showSnackBar(SnackBar(
-          duration: const Duration(seconds: 6),
-          content: Text(errorKey == 'register_name_empty' ||
-                  errorKey == 'register_phone_empty' ||
-                  errorKey == 'phone_invalid' ||
-                  detail == null
-              ? l.t(errorKey)
-              : '${l.t(errorKey)}\n($detail)'),
-        ));
+        ..showSnackBar(
+          SnackBar(
+            duration: const Duration(seconds: 6),
+            content: Text(
+              errorKey == 'register_name_empty' ||
+                      errorKey == 'register_phone_empty' ||
+                      errorKey == 'phone_invalid' ||
+                      detail == null
+                  ? l.t(errorKey)
+                  : '${l.t(errorKey)}\n($detail)',
+            ),
+          ),
+        );
     }
   }
 
@@ -89,8 +95,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             Text(
               l.t('register_sub'),
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                  fontSize: 16, fontWeight: FontWeight.w700),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 24),
             Card(
@@ -103,13 +108,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       children: [
                         CircleAvatar(
                           radius: 24,
-                          backgroundColor:
-                              DuoColors.blue.withValues(alpha: 0.18),
+                          backgroundColor: DuoColors.blue.withValues(
+                            alpha: 0.18,
+                          ),
                           foregroundImage: user?.photoURL != null
                               ? NetworkImage(user!.photoURL!)
                               : null,
-                          child: const Text('🦉',
-                              style: TextStyle(fontSize: 22)),
+                          child: const Text(
+                            '🦉',
+                            style: TextStyle(fontSize: 22),
+                          ),
                         ),
                         const SizedBox(width: 12),
                         Expanded(
@@ -118,8 +126,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
-                                fontSize: 14,
-                                color: Theme.of(context).hintColor),
+                              fontSize: 14,
+                              color: Theme.of(context).hintColor,
+                            ),
                           ),
                         ),
                       ],
@@ -148,8 +157,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           borderRadius: BorderRadius.circular(14),
                         ),
                       ),
-                      onSubmitted: (_) =>
-                          auth.busy ? null : _submit(),
+                      onSubmitted: (_) => auth.busy ? null : _submit(),
                     ),
                   ],
                 ),

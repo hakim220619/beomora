@@ -9,8 +9,7 @@ class L {
   final String code;
   const L(this.code);
 
-  String t(String key) =>
-      _strings[code]?[key] ?? _strings['id']![key] ?? key;
+  String t(String key) => _strings[code]?[key] ?? _strings['id']![key] ?? key;
 
   /// Ambil L sesuai bahasa UI aktif (rebuild saat bahasa diganti).
   /// Hanya boleh dipanggil dari dalam build().
@@ -43,8 +42,7 @@ class L {
       'vocab_search_count': 'kata ditemukan',
       // Onboarding
       'onb_welcome_title': 'Selamat datang di Beomora!',
-      'onb_welcome_sub':
-          'Naik kelas demi kelas, kuasai bahasa baru! 🎓',
+      'onb_welcome_sub': 'Naik kelas demi kelas, kuasai bahasa baru! 🎓',
       'onb_ui_lang': 'Pilih bahasa aplikasi',
       'onb_pick_course': 'Mau belajar bahasa apa?',
       'onb_streak_goal': 'Pilih tantangan streak-mu 🔥',
@@ -118,9 +116,63 @@ class L {
       'memory_game': 'Memory Match',
       'memory_desc': 'Temukan pasangan kata & artinya',
       'letter_quiz': 'Tebak Huruf',
-      'letter_quiz_desc':
-          'Bank soal huruf: tebak bunyi & lambangnya',
+      'letter_quiz_desc': 'Bank soal huruf: tebak bunyi & lambangnya',
       'quiz_pick': 'Pilih paket soal',
+      // Tulis Huruf (tulisan tangan)
+      'handwriting_title': 'Tulis Huruf',
+      'handwriting_desc':
+          'Tulis kana, hangul, atau alfabet dengan jari; dinilai otomatis',
+      'handwriting_setting': 'Tulis Huruf (tulisan tangan)',
+      'handwriting_setting_sub':
+          'Soal menulis huruf dengan pengenalan tulisan tangan di perangkat. '
+          'Model per bahasa diunduh sekali (20–30 MB).',
+      'handwriting_wifi_only': 'Unduh model hanya lewat Wi-Fi',
+      'handwriting_models': 'Model tulisan tangan tersimpan',
+      'handwriting_model_ready': 'terunduh',
+      'handwriting_model_missing': 'belum diunduh',
+      'handwriting_model_size': 'sekitar {n} MB',
+      'handwriting_download': 'Unduh',
+      'handwriting_delete': 'Hapus',
+      'handwriting_deleted': 'Model dihapus',
+      'handwriting_activate_title': 'Aktifkan Tulis Huruf?',
+      'handwriting_activate_body':
+          'Model tulisan tangan untuk {lang} perlu diunduh (sekitar {n} MB). '
+          'Pengenalan berjalan offline di perangkat, tanpa mengirim tulisan '
+          'Anda ke mana pun.',
+      'handwriting_recommended': 'Disarankan',
+      'handwriting_your_device': 'Perangkat Anda',
+      'handwriting_ram': 'RAM',
+      'handwriting_storage': 'Ruang kosong',
+      'handwriting_ok': 'cukup',
+      'handwriting_low_ram': 'mungkin lambat saat memuat',
+      'handwriting_low_storage': 'kosongkan sekitar {n} MB lagi',
+      'handwriting_unknown': 'tidak diketahui',
+      'handwriting_download_activate': 'Unduh & aktifkan',
+      'handwriting_downloading': 'Mengunduh model…',
+      'handwriting_download_failed':
+          'Unduhan gagal. Periksa koneksi (atau matikan "hanya Wi-Fi") lalu '
+          'coba lagi.',
+      'handwriting_ready': 'Tulis Huruf aktif ✍️',
+      'handwriting_prompt': 'Tulis lambang untuk bunyi ini',
+      'handwriting_prompt_word': 'Tulis kata untuk arti ini',
+      'handwriting_check': 'Periksa',
+      'handwriting_clear': 'Bersihkan',
+      'handwriting_undo': 'Hapus goresan',
+      'handwriting_next': 'Lanjut',
+      'handwriting_recognized': 'Terbaca',
+      'handwriting_answer': 'Jawaban',
+      'handwriting_empty': 'Tulis dulu di kotak',
+      'handwriting_canvas_hint': 'Tulis di sini',
+      'handwriting_scope_title': 'Pilih cakupan huruf',
+      'handwriting_scope_sub':
+          'Bisa satu kelompok saja, gabungan, atau semua sekaligus',
+      'handwriting_scope_all': 'Semua',
+      'handwriting_letters': 'huruf',
+      'handwriting_start': 'Mulai menulis',
+      'handwriting_free_note': 'Versi gratis: {n} huruf per sesi',
+      'handwriting_unlock': 'Buka {n} huruf per sesi dengan Premium',
+      'practice_free_handwriting': 'Gratis: {n} huruf per sesi',
+      'practice_free_listening': 'Gratis: {n} bacaan pertama tiap paket',
       'quiz_prompt_reading': 'Bagaimana bunyinya?',
       'quiz_prompt_symbol': 'Yang mana hurufnya?',
       'quiz_result_title': 'Latihan selesai!',
@@ -149,7 +201,8 @@ class L {
       'mcq_count_error': 'Masukkan angka',
       'mcq_all': 'Semua',
       'listening_title': 'Latihan Dengar',
-      'listening_desc': 'Dengar paragraf lalu jawab soalnya, gaya TOEFL/IELTS/JLPT',
+      'listening_desc':
+          'Dengar paragraf lalu jawab soalnya, gaya TOEFL/IELTS/JLPT',
       'listening_pick_pack': 'Pilih paket dengar',
       'listening_pick_passage': 'Pilih bacaan',
       'listening_passages': 'bacaan',
@@ -169,13 +222,13 @@ class L {
       'listening_no_plays': 'Batas putar habis',
       'listening_slow': 'Lambat',
       'listening_normal': 'Normal',
-      'listening_hint': 'Dengarkan baik-baik. Transkrip dibuka setelah semua soal dijawab.',
+      'listening_hint':
+          'Dengarkan baik-baik. Transkrip dibuka setelah semua soal dijawab.',
       'listening_transcript': 'Transkrip',
       'listening_translation': 'Terjemahan',
       // Premium & monetisasi
       'premium_title': 'Beomora Premium',
-      'premium_sub':
-          'Belajar tanpa batas & dukung Beomora terus berkembang 💚',
+      'premium_sub': 'Belajar tanpa batas & dukung Beomora terus berkembang 💚',
       'premium_banner_sub': 'Hati ∞ · XP 2× · bebas iklan',
       'premium_b_hearts': 'Hati tak terbatas — belajar tanpa takut salah',
       'premium_b_streak': 'Pelindung streak otomatis setiap hari',
@@ -222,8 +275,7 @@ class L {
       'leaderboard_title': 'Papan Juara',
       'weekly_xp': 'XP minggu ini',
       'you': '(Kamu)',
-      'leaderboard_info':
-          'Kumpulkan XP dan raih puncak papan juara kelas! 🏆',
+      'leaderboard_info': 'Kumpulkan XP dan raih puncak papan juara kelas! 🏆',
       'leaderboard_alone':
           'Belum ada pelajar lain minggu ini — ajak temanmu belajar! 🎒',
       // Kalender Belajar
@@ -292,8 +344,7 @@ class L {
       'logout_confirm': 'KELUAR',
       'login_failed':
           'Login Google gagal. Periksa koneksi atau konfigurasi Firebase.',
-      'login_unsupported':
-          'Login belum tersedia di platform ini.',
+      'login_unsupported': 'Login belum tersedia di platform ini.',
       'login_not_configured':
           'Firebase belum dikonfigurasi. Ketuk tombolnya untuk melihat panduan.',
       'login_setup_title': 'Login Google perlu disiapkan ⚙️',
@@ -350,7 +401,7 @@ class L {
       'admin_heart_regen_invalid': 'Isi angka antara 1 sampai 1440.',
       'admin_premium_all_sub':
           'Selama menyala, semua akun diperlakukan premium — berlaku '
-              'saat aplikasi pengguna dibuka ulang',
+          'saat aplikasi pengguna dibuka ulang',
       'admin_premium_all_on': 'Premium untuk semua: AKTIF 👑',
       'admin_premium_all_off': 'Premium untuk semua: nonaktif',
       'admin_premium_all_failed': 'Gagal menyimpan pengaturan.',
@@ -365,7 +416,7 @@ class L {
       'admin_grant_revoked': 'Hadiah premium dicabut dari',
       'admin_grant_notfound':
           'Pengguna dengan email itu tidak ditemukan — dia harus '
-              'pernah login ke Beomora dulu.',
+          'pernah login ke Beomora dulu.',
       'days_unit': 'hari',
       // Settings
       'settings_title': 'Pengaturan',
@@ -443,14 +494,14 @@ class L {
       'tap_kana_hint': 'Tap a character to hear how it sounds',
       'vocab_search_hint_romaji': 'Search word, romaji, or meaning…',
       'vocab_search_hint_reading': 'Search word, pronunciation, or meaning…',
-      'vocab_search_hint_romanization': 'Search word, romanization, or meaning…',
+      'vocab_search_hint_romanization':
+          'Search word, romanization, or meaning…',
       'vocab_search_hint_plain': 'Search word or meaning…',
       'vocab_search_empty': 'No matching vocabulary',
       'vocab_search_count': 'words found',
       // Onboarding
       'onb_welcome_title': 'Welcome to Beomora!',
-      'onb_welcome_sub':
-          'Level up class by class and master new languages! 🎓',
+      'onb_welcome_sub': 'Level up class by class and master new languages! 🎓',
       'onb_ui_lang': 'Choose app language',
       'onb_pick_course': 'What do you want to learn?',
       'onb_streak_goal': 'Pick your streak challenge 🔥',
@@ -524,9 +575,63 @@ class L {
       'memory_game': 'Memory Match',
       'memory_desc': 'Find matching word & meaning pairs',
       'letter_quiz': 'Letter Quiz',
-      'letter_quiz_desc':
-          'Letter bank: guess the sounds & symbols',
+      'letter_quiz_desc': 'Letter bank: guess the sounds & symbols',
       'quiz_pick': 'Pick a question set',
+      // Write Letters (handwriting)
+      'handwriting_title': 'Write Letters',
+      'handwriting_desc':
+          'Write kana, hangul, or letters by hand; graded automatically',
+      'handwriting_setting': 'Write Letters (handwriting)',
+      'handwriting_setting_sub':
+          'Letter-writing exercises with on-device handwriting recognition. '
+          'One model per language is downloaded once (20–30 MB).',
+      'handwriting_wifi_only': 'Download models over Wi-Fi only',
+      'handwriting_models': 'Stored handwriting models',
+      'handwriting_model_ready': 'downloaded',
+      'handwriting_model_missing': 'not downloaded',
+      'handwriting_model_size': 'about {n} MB',
+      'handwriting_download': 'Download',
+      'handwriting_delete': 'Delete',
+      'handwriting_deleted': 'Model deleted',
+      'handwriting_activate_title': 'Enable Write Letters?',
+      'handwriting_activate_body':
+          'The handwriting model for {lang} needs to be downloaded (about '
+          '{n} MB). Recognition runs offline on your device; your writing is '
+          'never sent anywhere.',
+      'handwriting_recommended': 'Recommended',
+      'handwriting_your_device': 'Your device',
+      'handwriting_ram': 'RAM',
+      'handwriting_storage': 'Free space',
+      'handwriting_ok': 'enough',
+      'handwriting_low_ram': 'may be slow to load',
+      'handwriting_low_storage': 'free up about {n} MB more',
+      'handwriting_unknown': 'unknown',
+      'handwriting_download_activate': 'Download & enable',
+      'handwriting_downloading': 'Downloading model…',
+      'handwriting_download_failed':
+          'Download failed. Check your connection (or turn off "Wi-Fi only") '
+          'and try again.',
+      'handwriting_ready': 'Write Letters is on ✍️',
+      'handwriting_prompt': 'Write the symbol for this sound',
+      'handwriting_prompt_word': 'Write the word for this meaning',
+      'handwriting_check': 'Check',
+      'handwriting_clear': 'Clear',
+      'handwriting_undo': 'Undo stroke',
+      'handwriting_next': 'Next',
+      'handwriting_recognized': 'Recognized',
+      'handwriting_answer': 'Answer',
+      'handwriting_empty': 'Write in the box first',
+      'handwriting_canvas_hint': 'Write here',
+      'handwriting_scope_title': 'Choose which letters',
+      'handwriting_scope_sub':
+          'One group only, a combination, or everything at once',
+      'handwriting_scope_all': 'All',
+      'handwriting_letters': 'letters',
+      'handwriting_start': 'Start writing',
+      'handwriting_free_note': 'Free version: {n} letters per session',
+      'handwriting_unlock': 'Unlock {n} letters per session with Premium',
+      'practice_free_handwriting': 'Free: {n} letters per session',
+      'practice_free_listening': 'Free: first {n} passages per pack',
       'quiz_prompt_reading': 'How does it sound?',
       'quiz_prompt_symbol': 'Which letter is it?',
       'quiz_result_title': 'Practice complete!',
@@ -555,7 +660,8 @@ class L {
       'mcq_count_error': 'Enter a number',
       'mcq_all': 'All',
       'listening_title': 'Listening Practice',
-      'listening_desc': 'Hear a passage, then answer questions, TOEFL/IELTS/JLPT style',
+      'listening_desc':
+          'Hear a passage, then answer questions, TOEFL/IELTS/JLPT style',
       'listening_pick_pack': 'Choose a listening pack',
       'listening_pick_passage': 'Choose a passage',
       'listening_passages': 'passages',
@@ -575,21 +681,20 @@ class L {
       'listening_no_plays': 'No plays left',
       'listening_slow': 'Slow',
       'listening_normal': 'Normal',
-      'listening_hint': 'Listen carefully. The transcript unlocks after you answer all questions.',
+      'listening_hint':
+          'Listen carefully. The transcript unlocks after you answer all questions.',
       'listening_transcript': 'Transcript',
       'listening_translation': 'Translation',
       // Premium & monetization
       'premium_title': 'Beomora Premium',
-      'premium_sub':
-          'Learn without limits & help Beomora keep growing 💚',
+      'premium_sub': 'Learn without limits & help Beomora keep growing 💚',
       'premium_banner_sub': '∞ hearts · 2× XP · ad-free',
       'premium_b_hearts': 'Unlimited hearts — learn without fear',
       'premium_b_streak': 'Automatic streak protection every day',
       'premium_b_xp': 'Permanent double XP (2×)',
       'premium_b_noads': 'Ad-free forever',
       'premium_b_badge': '👑 badge on the Class Champions board',
-      'premium_b_packs':
-          'Exclusive question packs: N5 Kanji & Irregular Verbs',
+      'premium_b_packs': 'Exclusive question packs: N5 Kanji & Irregular Verbs',
       'premium_monthly': 'Monthly',
       'premium_yearly': 'Yearly',
       'premium_lifetime': 'Lifetime',
@@ -677,8 +782,7 @@ class L {
       'reset_sent': 'Password reset email sent. Check your inbox.',
       'email_fill_all': 'Fill in email and password first.',
       'email_login_invalid': 'Wrong email or password.',
-      'email_in_use':
-          'This email is already registered. Try signing in.',
+      'email_in_use': 'This email is already registered. Try signing in.',
       'email_invalid': 'Invalid email format.',
       'email_not_found': 'This email is not registered yet.',
       'password_weak': 'Password must be at least 6 characters.',
@@ -697,8 +801,7 @@ class L {
       'logout_confirm': 'SIGN OUT',
       'login_failed':
           'Google sign-in failed. Check your connection or Firebase setup.',
-      'login_unsupported':
-          'Sign-in is not available on this platform yet.',
+      'login_unsupported': 'Sign-in is not available on this platform yet.',
       'login_not_configured':
           'Firebase is not configured yet. Tap the button for setup steps.',
       'login_setup_title': 'Google sign-in needs setup ⚙️',
@@ -736,31 +839,27 @@ class L {
       'content_upload': 'Update server content',
       'content_upload_sub':
           "Upload this app's bundled content to Firestore — every device syncs automatically",
-      'content_upload_success':
-          'Content uploaded & verified on the server! 🎉',
+      'content_upload_success': 'Content uploaded & verified on the server! 🎉',
       'content_upload_failed': 'Failed to upload content.',
       'admin_premium_all': 'Premium for all users',
       'save': 'SAVE',
-      'update_ready':
-          'A new version has been downloaded. Restart to apply?',
+      'update_ready': 'A new version has been downloaded. Restart to apply?',
       'update_restart': 'RESTART',
       'admin_heart_regen': 'Heart regeneration',
       'admin_heart_regen_label': 'Minutes per heart (1-1440)',
       'admin_heart_regen_sub':
           'Applies to all users. Currently: {n} minutes per heart',
-      'admin_heart_regen_saved':
-          'Heart regen set to {n} minutes per heart.',
+      'admin_heart_regen_saved': 'Heart regen set to {n} minutes per heart.',
       'admin_heart_regen_failed': 'Failed to save heart regen.',
       'admin_heart_regen_invalid': 'Enter a number between 1 and 1440.',
       'admin_premium_all_sub':
           'While on, every account is treated as premium — applies '
-              'when users reopen the app',
+          'when users reopen the app',
       'admin_premium_all_on': 'Premium for all: ON 👑',
       'admin_premium_all_off': 'Premium for all: off',
       'admin_premium_all_failed': 'Failed to save the setting.',
       'admin_grant': 'Gift premium',
-      'admin_grant_sub':
-          'Grant/revoke premium for a specific user by email',
+      'admin_grant_sub': 'Grant/revoke premium for a specific user by email',
       'admin_grant_email': 'User email',
       'admin_grant_duration': 'Duration',
       'admin_grant_revoke': 'Revoke',
@@ -769,7 +868,7 @@ class L {
       'admin_grant_revoked': 'Premium gift revoked from',
       'admin_grant_notfound':
           'No user found with that email — they must have signed in '
-              'to Beomora before.',
+          'to Beomora before.',
       'days_unit': 'days',
       // Settings
       'settings_title': 'Settings',

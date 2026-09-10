@@ -40,14 +40,16 @@ List<McqQuestion> vocabToMcq(List<JVocab> vocab) {
       j++;
     }
     if (options.length < 4) continue; // pengaman (level terlalu kecil)
-    out.add(McqQuestion(
-      question: {
-        'id': "Kata mana yang berarti '${w.meaning['id']}'?",
-        'en': "Which word means '${w.meaning['en']}'?",
-      },
-      options: options,
-      answer: 0,
-    ));
+    out.add(
+      McqQuestion(
+        question: {
+          'id': "Kata mana yang berarti '${w.meaning['id']}'?",
+          'en': "Which word means '${w.meaning['en']}'?",
+        },
+        options: options,
+        answer: 0,
+      ),
+    );
   }
   return out;
 }

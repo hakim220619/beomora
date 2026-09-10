@@ -15,8 +15,7 @@ import '../../widgets/stat_bar.dart';
 import '../lesson/lesson_screen.dart';
 import '../premium_screen.dart';
 
-Color hexColor(String hex) =>
-    Color(int.parse(hex.replaceFirst('#', '0xFF')));
+Color hexColor(String hex) => Color(int.parse(hex.replaceFirst('#', '0xFF')));
 
 const _kNodeItemHeight = 140.0;
 // Pola posisi horizontal buku (fraksi lebar) — jalur belajar zig-zag.
@@ -45,8 +44,7 @@ class _SkillTreeScreenState extends State<SkillTreeScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => _scrollToCurrent());
+    WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToCurrent());
     widget.focusSignal?.addListener(_onFocusSignal);
   }
 
@@ -69,8 +67,9 @@ class _SkillTreeScreenState extends State<SkillTreeScreen> {
   /// Tab Belajar diketuk: tunggu frame agar layar sudah tampil, lalu
   /// gulir ke pelajaran terakhir (selalu, termasuk kembali ke atas).
   void _onFocusSignal() {
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => _scrollToCurrent(force: true));
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => _scrollToCurrent(force: true),
+    );
   }
 
   /// Gulir ke pelajaran yang sedang dikerjakan. Saat pertama tampil
@@ -85,7 +84,8 @@ class _SkillTreeScreenState extends State<SkillTreeScreen> {
     );
     final allLessons = course.allLessons;
     var current = allLessons.indexWhere(
-        (les) => !progress.isLessonCompleted(course.id, les.id));
+      (les) => !progress.isLessonCompleted(course.id, les.id),
+    );
     if (current == -1) current = allLessons.length - 1;
     if (current <= 0 && !force) return;
 
@@ -98,8 +98,7 @@ class _SkillTreeScreenState extends State<SkillTreeScreen> {
         found = true;
         break;
       }
-      offset +=
-          _kUnitHeaderHeight + unit.lessons.length * _kNodeItemHeight;
+      offset += _kUnitHeaderHeight + unit.lessons.length * _kNodeItemHeight;
     }
     if (!found) return;
     // Sisakan ruang atas supaya node aktif tampil di tengah layar.
@@ -123,8 +122,9 @@ class _SkillTreeScreenState extends State<SkillTreeScreen> {
     );
 
     final allLessons = course.allLessons;
-    var currentIndex = allLessons
-        .indexWhere((les) => !progress.isLessonCompleted(course.id, les.id));
+    var currentIndex = allLessons.indexWhere(
+      (les) => !progress.isLessonCompleted(course.id, les.id),
+    );
     if (currentIndex == -1) currentIndex = allLessons.length;
 
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -135,19 +135,20 @@ class _SkillTreeScreenState extends State<SkillTreeScreen> {
     final goalReached = progress.dailyGoalReached;
     final bonusInProgress =
         progress.bonusGoalActive && !progress.canClaimBonusReward;
-    final barTarget =
-        progress.bonusGoalActive ? progress.bonusGoal : progress.dailyGoal;
+    final barTarget = progress.bonusGoalActive
+        ? progress.bonusGoal
+        : progress.dailyGoal;
     final barColor = !goalReached
         ? DuoColors.green
         : bonusInProgress
-            ? DuoColors.blue
-            : DuoColors.yellow;
+        ? DuoColors.blue
+        : DuoColors.yellow;
     // Setelah target tercapai, "77/10" diganti tanda selesai.
     final xpLabel = !goalReached
         ? '$xpNow/${progress.dailyGoal} XP'
         : bonusInProgress
-            ? '$xpNow/${progress.bonusGoal} XP'
-            : '✓ $xpNow XP';
+        ? '$xpNow/${progress.bonusGoal} XP'
+        : '✓ $xpNow XP';
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -205,8 +206,10 @@ class _SkillTreeScreenState extends State<SkillTreeScreen> {
                     text: l
                         .t('bonus_goal_hint')
                         .replaceFirst('{xp}', '${progress.bonusGoal}')
-                        .replaceFirst('{gems}',
-                            '${ProgressProvider.bonusRewardGems}'),
+                        .replaceFirst(
+                          '{gems}',
+                          '${ProgressProvider.bonusRewardGems}',
+                        ),
                   )
                 else if (progress.bonusRewardClaimed)
                   _GoalBanner(text: l.t('daily_all_done')),
@@ -225,12 +228,12 @@ class _SkillTreeScreenState extends State<SkillTreeScreen> {
     );
   }
 
-  Future<void> _claimReward(BuildContext context,
-      {required bool bonus}) async {
+  Future<void> _claimReward(BuildContext context, {required bool bonus}) async {
     final progress = context.read<ProgressProvider>();
     final l = L.read(context);
-    final got =
-        bonus ? progress.claimBonusReward() : progress.claimGoalReward();
+    final got = bonus
+        ? progress.claimBonusReward()
+        : progress.claimGoalReward();
     if (got == 0) return;
     if (!context.mounted) return;
     await showDuoDialog<void>(
@@ -287,7 +290,9 @@ class _GoalBanner extends StatelessWidget {
                 const SizedBox(height: 8),
                 Container(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 18, vertical: 7),
+                    horizontal: 18,
+                    vertical: 7,
+                  ),
                   decoration: BoxDecoration(
                     color: DuoColors.yellow,
                     borderRadius: BorderRadius.circular(999),
@@ -341,8 +346,7 @@ class _UnitSection extends StatelessWidget {
           child: Transform.rotate(
             angle: -0.012,
             child: Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
                   begin: Alignment.topCenter,
@@ -350,8 +354,7 @@ class _UnitSection extends StatelessWidget {
                   colors: [StudyColors.wood, StudyColors.woodDark],
                 ),
                 borderRadius: BorderRadius.circular(14),
-                border: Border.all(
-                    color: const Color(0xFF4E2F1A), width: 2),
+                border: Border.all(color: const Color(0xFF4E2F1A), width: 2),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.3),
@@ -378,11 +381,7 @@ class _UnitSection extends StatelessWidget {
                   // Paku papan
                   Column(
                     mainAxisSize: MainAxisSize.min,
-                    children: [
-                      _nail(),
-                      const SizedBox(height: 14),
-                      _nail(),
-                    ],
+                    children: [_nail(), const SizedBox(height: 14), _nail()],
                   ),
                 ],
               ),
@@ -408,8 +407,7 @@ class _UnitSection extends StatelessWidget {
                     child: CustomPaint(
                       painter: _RoutePainter(
                         centers: centers,
-                        color: Theme.of(context).brightness ==
-                                Brightness.dark
+                        color: Theme.of(context).brightness == Brightness.dark
                             ? StudyColors.chalk.withValues(alpha: 0.5)
                             : StudyColors.pencil.withValues(alpha: 0.6),
                       ),
@@ -441,13 +439,13 @@ class _UnitSection extends StatelessWidget {
       _kFractions[globalIndex % _kFractions.length];
 
   Widget _nail() => Container(
-        width: 7,
-        height: 7,
-        decoration: const BoxDecoration(
-          color: Color(0xFF3B2313),
-          shape: BoxShape.circle,
-        ),
-      );
+    width: 7,
+    height: 7,
+    decoration: const BoxDecoration(
+      color: Color(0xFF3B2313),
+      shape: BoxShape.circle,
+    ),
+  );
 }
 
 /// Garis jalur belajar putus-putus, seperti goresan pensil di kertas
@@ -613,8 +611,9 @@ class _IslandNode extends StatelessWidget {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: DuoColors.green
-                                .withValues(alpha: 0.6 - bob * 0.35),
+                            color: DuoColors.green.withValues(
+                              alpha: 0.6 - bob * 0.35,
+                            ),
                             width: 3,
                           ),
                         ),
@@ -627,15 +626,25 @@ class _IslandNode extends StatelessWidget {
                   Positioned(
                     bottom: 10,
                     right: 16,
-                    child: _badge(const Icon(Icons.check_rounded,
-                        size: 14, color: Colors.white)),
+                    child: _badge(
+                      const Icon(
+                        Icons.check_rounded,
+                        size: 14,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                 if (_locked)
                   Positioned(
                     bottom: 10,
                     right: 16,
-                    child: _badge(const Icon(Icons.lock_rounded,
-                        size: 12, color: Colors.white70)),
+                    child: _badge(
+                      const Icon(
+                        Icons.lock_rounded,
+                        size: 12,
+                        color: Colors.white70,
+                      ),
+                    ),
                   ),
                 // Pensil menandai pelajaran yang sedang dikerjakan
                 if (_isCurrent)
@@ -647,8 +656,10 @@ class _IslandNode extends StatelessWidget {
                         offset: Offset(0, bob * 5),
                         child: Transform.rotate(
                           angle: (bob - 0.5) * 0.16,
-                          child: const Text('✏️',
-                              style: TextStyle(fontSize: 26)),
+                          child: const Text(
+                            '✏️',
+                            style: TextStyle(fontSize: 26),
+                          ),
                         ),
                       ),
                     ),
@@ -657,8 +668,7 @@ class _IslandNode extends StatelessWidget {
             ),
           ),
           Container(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
             decoration: BoxDecoration(
               color: isDark
                   ? Colors.black.withValues(alpha: 0.35)
@@ -685,16 +695,16 @@ class _IslandNode extends StatelessWidget {
   }
 
   Widget _badge(Widget child) => Container(
-        width: 20,
-        height: 20,
-        decoration: BoxDecoration(
-          color: _completed ? DuoColors.greenDark : Colors.black45,
-          shape: BoxShape.circle,
-          border: Border.all(color: Colors.white70, width: 1.5),
-        ),
-        alignment: Alignment.center,
-        child: child,
-      );
+    width: 20,
+    height: 20,
+    decoration: BoxDecoration(
+      color: _completed ? DuoColors.greenDark : Colors.black45,
+      shape: BoxShape.circle,
+      border: Border.all(color: Colors.white70, width: 1.5),
+    ),
+    alignment: Alignment.center,
+    child: child,
+  );
 
   void _showLessonSheet(BuildContext context) {
     final l = L.read(context);
@@ -706,8 +716,12 @@ class _IslandNode extends StatelessWidget {
       builder: (sheetContext) => Container(
         // SafeArea di dalam (bukan padding statis) supaya tombol MULAI
         // tidak tertutup bar navigasi 3 tombol Android.
-        padding: EdgeInsets.fromLTRB(24, 12, 24,
-            16 + MediaQuery.viewPaddingOf(sheetContext).bottom),
+        padding: EdgeInsets.fromLTRB(
+          24,
+          12,
+          24,
+          16 + MediaQuery.viewPaddingOf(sheetContext).bottom,
+        ),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -716,8 +730,7 @@ class _IslandNode extends StatelessWidget {
                 ? const [Color(0xFF1C4434), Color(0xFF0F2A20)]
                 : const [Colors.white, Color(0xFFF7F1DE)],
           ),
-          borderRadius:
-              const BorderRadius.vertical(top: Radius.circular(28)),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
           border: Border.all(
             color: isDark ? const Color(0x40FFFFFF) : Colors.white,
             width: 1.5,
@@ -738,14 +751,12 @@ class _IslandNode extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 14),
-            const Center(
-                child: Text('📖', style: TextStyle(fontSize: 44))),
+            const Center(child: Text('📖', style: TextStyle(fontSize: 44))),
             const SizedBox(height: 8),
             Text(
               lesson.title[l.code] ?? '',
               textAlign: TextAlign.center,
-              style:
-                  const TextStyle(fontSize: 21, fontWeight: FontWeight.w900),
+              style: const TextStyle(fontSize: 21, fontWeight: FontWeight.w900),
             ),
             const SizedBox(height: 6),
             Text(
@@ -755,8 +766,7 @@ class _IslandNode extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             DuoButton(
-              label:
-                  _completed ? l.t('review_lesson') : l.t('start_lesson'),
+              label: _completed ? l.t('review_lesson') : l.t('start_lesson'),
               color: _completed ? DuoColors.yellow : color,
               textColor: _completed ? const Color(0xFF6B4E00) : Colors.white,
               onPressed: () {
@@ -793,30 +803,38 @@ class _IslandNode extends StatelessWidget {
       actions: [
         if (AdService.supported)
           DuoDialogAction(
-              label: l.t('watch_ad_heart'), value: 'ad', primary: true),
+            label: l.t('watch_ad_heart'),
+            value: 'ad',
+            primary: true,
+          ),
         DuoDialogAction(
-            label: l.t('premium_cta'),
-            value: 'premium',
-            color: DuoColors.purple),
+          label: l.t('premium_cta'),
+          value: 'premium',
+          color: DuoColors.purple,
+        ),
         DuoDialogAction(
-            label: l.t('ok'),
-            value: 'ok',
-            primary: !AdService.supported),
+          label: l.t('ok'),
+          value: 'ok',
+          primary: !AdService.supported,
+        ),
       ],
     );
     switch (choice) {
       case 'ad':
         final shown = await AdService.showRewarded(
-            onReward: () => progress.restoreHeart());
+          onReward: () => progress.restoreHeart(),
+        );
         messenger
           ..hideCurrentSnackBar()
-          ..showSnackBar(SnackBar(
-            content:
-                Text(l.t(shown ? 'ad_reward_heart' : 'ad_not_ready')),
-          ));
+          ..showSnackBar(
+            SnackBar(
+              content: Text(l.t(shown ? 'ad_reward_heart' : 'ad_not_ready')),
+            ),
+          );
       case 'premium':
-        await navigator.push(MaterialPageRoute(
-            builder: (_) => const PremiumScreen()));
+        await navigator.push(
+          MaterialPageRoute(builder: (_) => const PremiumScreen()),
+        );
     }
   }
 }
@@ -845,8 +863,7 @@ class _BobbingState extends State<_Bobbing>
 
   @override
   Widget build(BuildContext context) => AnimatedBuilder(
-        animation: _ctrl,
-        builder: (_, _) => widget.builder(
-            Curves.easeInOut.transform(_ctrl.value)),
-      );
+    animation: _ctrl,
+    builder: (_, _) => widget.builder(Curves.easeInOut.transform(_ctrl.value)),
+  );
 }

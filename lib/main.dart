@@ -60,7 +60,8 @@ Future<void> main() async {
   // (selesai belajar hari ini → pengingat mundur ke besok).
   unawaited(NotificationService.sync(settings, progress));
   settings.addListener(
-      () => unawaited(NotificationService.sync(settings, progress)));
+    () => unawaited(NotificationService.sync(settings, progress)),
+  );
   var lastActive = progress.lastActiveDay;
   progress.addListener(() {
     if (progress.lastActiveDay == lastActive) return;
@@ -106,8 +107,8 @@ class BeomoraApp extends StatelessWidget {
       home: !settings.onboarded
           ? const OnboardingScreen()
           : auth.signedIn
-              ? const MainScreen()
-              : const LoginScreen(),
+          ? const MainScreen()
+          : const LoginScreen(),
     );
   }
 }

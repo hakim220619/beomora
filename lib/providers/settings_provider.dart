@@ -10,6 +10,8 @@ class SettingsProvider extends ChangeNotifier {
   static const _kReminderHour = 'reminder_hour';
   static const _kReminderMinute = 'reminder_minute';
   static const _kShowIcons = 'show_icons';
+  static const _kHandwriting = 'handwriting_on';
+  static const _kHandwritingWifi = 'handwriting_wifi_only';
 
   final SharedPreferences _prefs;
 
@@ -21,23 +23,26 @@ class SettingsProvider extends ChangeNotifier {
   int _reminderHour;
   int _reminderMinute;
   bool _showIcons;
+  bool _handwritingOn;
+  bool _handwritingWifiOnly;
 
   SettingsProvider(this._prefs)
-      : _uiLang = _prefs.getString(_kUiLang) ?? 'id',
-        _themeMode = _readTheme(_prefs),
-        _soundOn = _prefs.getBool(_kSound) ?? true,
-        _onboarded = _prefs.getBool(_kOnboarded) ?? false,
-        _reminderOn = _prefs.getBool(_kReminderOn) ?? true,
-        _reminderHour = _prefs.getInt(_kReminderHour) ?? 19,
-        _reminderMinute = _prefs.getInt(_kReminderMinute) ?? 0,
-        _showIcons = _prefs.getBool(_kShowIcons) ?? false;
+    : _uiLang = _prefs.getString(_kUiLang) ?? 'id',
+      _themeMode = _readTheme(_prefs),
+      _soundOn = _prefs.getBool(_kSound) ?? true,
+      _onboarded = _prefs.getBool(_kOnboarded) ?? false,
+      _reminderOn = _prefs.getBool(_kReminderOn) ?? true,
+      _reminderHour = _prefs.getInt(_kReminderHour) ?? 19,
+      _reminderMinute = _prefs.getInt(_kReminderMinute) ?? 0,
+      _showIcons = _prefs.getBool(_kShowIcons) ?? false,
+      _handwritingOn = _prefs.getBool(_kHandwriting) ?? false,
+      _handwritingWifiOnly = _prefs.getBool(_kHandwritingWifi) ?? true;
 
   /// Tema hanya dua pilihan: terang (siang) atau gelap (malam).
   /// Nilai lama "system" dipetakan ke terang.
   static ThemeMode _readTheme(SharedPreferences prefs) {
     final index = prefs.getInt(_kTheme);
-    final mode =
-        index == null ? ThemeMode.light : ThemeMode.values[index];
+    final mode = index == null ? ThemeMode.light : ThemeMode.values[index];
     return mode == ThemeMode.dark ? ThemeMode.dark : ThemeMode.light;
   }
 
@@ -51,6 +56,25 @@ class SettingsProvider extends ChangeNotifier {
 
   /// Emoji hiasan di layar Belajar & Latihan (default: sembunyi).
   bool get showIcons => _showIcons;
+
+  /// Fitur Tulis Huruf (pengenalan tulisan tangan). Disimpan per perangkat,
+  /// tidak disinkron, karena modelnya ada di perangkat ini saja.
+  bool get handwritingOn => _handwritingOn;
+
+  /// Unduh model tulisan tangan hanya lewat Wi-Fi (default: ya).
+  bool get handwritingWifiOnly => _handwritingWifiOnly;
+
+  void setHandwritingOn(bool on) {
+    _handwritingOn = on;
+    _prefs.setBool(_kHandwriting, on);
+    notifyListeners();
+  }
+
+  void setHandwritingWifiOnly(bool on) {
+    _handwritingWifiOnly = on;
+    _prefs.setBool(_kHandwritingWifi, on);
+    notifyListeners();
+  }
 
   void setUiLang(String lang) {
     _uiLang = lang;

@@ -48,8 +48,7 @@ class McqPackScreen extends StatelessWidget {
               premium: premium,
               onTap: () => Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (_) =>
-                      McqQuizScreen(course: course, pack: packs[i]),
+                  builder: (_) => McqQuizScreen(course: course, pack: packs[i]),
                 ),
               ),
             ),
@@ -93,11 +92,12 @@ class _PackCard extends StatelessWidget {
                   color: color.withValues(alpha: 0.16),
                   borderRadius: BorderRadius.circular(14),
                   border: Border.all(
-                      color: color.withValues(alpha: 0.6), width: 1.5),
+                    color: color.withValues(alpha: 0.6),
+                    width: 1.5,
+                  ),
                 ),
                 alignment: Alignment.center,
-                child:
-                    Text(pack.emoji, style: const TextStyle(fontSize: 26)),
+                child: Text(pack.emoji, style: const TextStyle(fontSize: 26)),
               ),
               const SizedBox(width: 14),
               Expanded(
@@ -109,12 +109,16 @@ class _PackCard extends StatelessWidget {
                         Text(
                           pack.title[l.code] ?? '',
                           style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w900),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w900,
+                          ),
                         ),
                         const SizedBox(width: 8),
                         Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 2),
+                            horizontal: 8,
+                            vertical: 2,
+                          ),
                           decoration: BoxDecoration(
                             color: color.withValues(alpha: 0.16),
                             borderRadius: BorderRadius.circular(10),
@@ -130,8 +134,7 @@ class _PackCard extends StatelessWidget {
                         ),
                         if (capped) ...[
                           const SizedBox(width: 4),
-                          const Text('👑',
-                              style: TextStyle(fontSize: 13)),
+                          const Text('👑', style: TextStyle(fontSize: 13)),
                         ],
                       ],
                     ),
@@ -139,14 +142,17 @@ class _PackCard extends StatelessWidget {
                     Text(
                       pack.subtitle[l.code] ?? '',
                       style: TextStyle(
-                          fontSize: 12.5,
-                          color: Theme.of(context).hintColor),
+                        fontSize: 12.5,
+                        color: Theme.of(context).hintColor,
+                      ),
                     ),
                   ],
                 ),
               ),
-              Icon(Icons.chevron_right_rounded,
-                  color: Theme.of(context).hintColor),
+              Icon(
+                Icons.chevron_right_rounded,
+                color: Theme.of(context).hintColor,
+              ),
             ],
           ),
         ),

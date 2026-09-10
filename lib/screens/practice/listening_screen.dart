@@ -395,7 +395,9 @@ class _ListeningScreenState extends State<ListeningScreen> {
 
   Widget _buildPassageList(L l, bool premium) {
     final pack = widget.pack;
-    final locked = pack.premium && !premium;
+    // Pengguna gratis: hanya [kFreeListeningPassages] bacaan pertama,
+    // di paket apa pun; Premium membuka semua.
+    final locked = !premium;
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
       children: [

@@ -30,14 +30,18 @@ class LoginScreen extends StatelessWidget {
                 l.t('login_title'),
                 textAlign: TextAlign.center,
                 style: const TextStyle(
-                    fontSize: 24, fontWeight: FontWeight.w800),
+                  fontSize: 24,
+                  fontWeight: FontWeight.w800,
+                ),
               ),
               const SizedBox(height: 8),
               Text(
                 l.t('login_gate_sub'),
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontSize: 16, color: Theme.of(context).hintColor),
+                  fontSize: 16,
+                  color: Theme.of(context).hintColor,
+                ),
               ),
               const Spacer(),
               const GoogleSignInButton(),
@@ -50,8 +54,9 @@ class LoginScreen extends StatelessWidget {
                     child: Text(
                       l.t('or'),
                       style: TextStyle(
-                          color: Theme.of(context).hintColor,
-                          fontWeight: FontWeight.w600),
+                        color: Theme.of(context).hintColor,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                   const Expanded(child: Divider()),
@@ -81,18 +86,16 @@ class _EmailSignInButton extends StatelessWidget {
       borderRadius: BorderRadius.circular(16),
       onTap: auth.busy
           ? null
-          : () => Navigator.of(context).push(
-                MaterialPageRoute(
-                    builder: (_) => const EmailAuthScreen()),
-              ),
+          : () => Navigator.of(
+              context,
+            ).push(MaterialPageRoute(builder: (_) => const EmailAuthScreen())),
       child: Container(
         height: 50,
         decoration: BoxDecoration(
           color: isDark ? const Color(0xFF1F3B57) : Colors.white,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color:
-                isDark ? const Color(0x59FFFFFF) : const Color(0xFFDADCE0),
+            color: isDark ? const Color(0x59FFFFFF) : const Color(0xFFDADCE0),
             width: 1.5,
           ),
           boxShadow: [
