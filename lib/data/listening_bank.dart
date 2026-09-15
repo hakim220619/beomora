@@ -1,6 +1,9 @@
 import '../models/listening.dart';
 import 'listening_bank_de.dart';
 import 'listening_bank_id.dart';
+import 'listening_bank_ja_n1.dart';
+import 'listening_bank_ja_n2.dart';
+import 'listening_bank_ja_n3.dart';
 import 'listening_bank_ko.dart';
 import 'mcq_bank.dart';
 
@@ -105,6 +108,42 @@ List<ListeningPack> listeningPacksFor(String courseId) {
           premium: true,
           maxPlays: 2,
           passages: _jaN4,
+        ),
+        ListeningPack(
+          id: 'ja_listen_n3',
+          emoji: '🗻',
+          title: const {'id': 'Choukai N3', 'en': 'Choukai N3'},
+          subtitle: const {
+            'id': 'kantor, rumah sakit & pengumuman umum',
+            'en': 'office, hospital & public announcements',
+          },
+          premium: true,
+          maxPlays: 2,
+          passages: jaListeningN3,
+        ),
+        ListeningPack(
+          id: 'ja_listen_n2',
+          emoji: '⛩️',
+          title: const {'id': 'Choukai N2', 'en': 'Choukai N2'},
+          subtitle: const {
+            'id': 'kuliah, rapat & berita',
+            'en': 'lectures, meetings & news',
+          },
+          premium: true,
+          maxPlays: 2,
+          passages: jaListeningN2,
+        ),
+        ListeningPack(
+          id: 'ja_listen_n1',
+          emoji: '🏯',
+          title: const {'id': 'Choukai N1', 'en': 'Choukai N1'},
+          subtitle: const {
+            'id': 'wawancara, seminar & pengumuman perusahaan',
+            'en': 'interviews, seminars & corporate notices',
+          },
+          premium: true,
+          maxPlays: 1,
+          passages: jaListeningN1,
         ),
       ];
     case 'ko':

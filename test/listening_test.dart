@@ -8,7 +8,7 @@ const kListeningCourses = ['en', 'ja', 'ko', 'de', 'id'];
 
 void main() {
   group('Latihan Dengar (ListeningPack)', () {
-    test('Inggris: Dasar + TOEFL/IELTS/PTE; Jepang: N5/N4; Korea/Jerman/'
+    test('Inggris: Dasar + TOEFL/IELTS/PTE; Jepang: N5–N1; Korea/Jerman/'
         'Indonesia: Dasar + ujian; kursus lain kosong', () {
       expect(listeningPacksFor('en').map((p) => p.id), [
         'en_listen_basic',
@@ -19,6 +19,9 @@ void main() {
       expect(listeningPacksFor('ja').map((p) => p.id), [
         'ja_listen_n5',
         'ja_listen_n4',
+        'ja_listen_n3',
+        'ja_listen_n2',
+        'ja_listen_n1',
       ]);
       expect(listeningPacksFor('ko').map((p) => p.id), [
         'ko_listen_basic',

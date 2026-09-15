@@ -279,29 +279,34 @@ class _CountChip extends StatelessWidget {
           borderRadius: BorderRadius.circular(14),
           border: Border.all(color: color.withValues(alpha: 0.5), width: 1.5),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(emoji, style: const TextStyle(fontSize: 18)),
-            const SizedBox(width: 8),
-            Text(
-              '$value',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w900,
-                color: color,
+        // Mengecil proporsional di layar sempit / teks diperbesar, alih-alih
+        // meluap ke kanan (terjadi di lebar 320 dp).
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(emoji, style: const TextStyle(fontSize: 18)),
+              const SizedBox(width: 8),
+              Text(
+                '$value',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w900,
+                  color: color,
+                ),
               ),
-            ),
-            const SizedBox(width: 6),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 12.5,
-                fontWeight: FontWeight.w800,
-                color: Theme.of(context).hintColor,
+              const SizedBox(width: 6),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 12.5,
+                  fontWeight: FontWeight.w800,
+                  color: Theme.of(context).hintColor,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

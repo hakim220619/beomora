@@ -1,5 +1,6 @@
 import 'exam_bank.dart';
 import 'jlpt_vocab.dart';
+import 'jlpt_vocab_adv.dart';
 import 'mcq_bank.dart';
 
 /// Satu paket soal pilihan ganda bertema (mis. JLPT N5, TOEFL). Judul
@@ -98,6 +99,26 @@ List<McqPack> mcqPacksFor(String courseId) {
             'en': 'N3-level vocabulary',
           },
           questions: vocabToMcq(jlptN3),
+        ),
+        McqPack(
+          id: 'ja_n2',
+          emoji: '⛩️',
+          title: const {'id': 'JLPT N2', 'en': 'JLPT N2'},
+          subtitle: const {
+            'id': 'kosakata tingkat N2',
+            'en': 'N2-level vocabulary',
+          },
+          questions: vocabToMcq(jlptN2),
+        ),
+        McqPack(
+          id: 'ja_n1',
+          emoji: '🏯',
+          title: const {'id': 'JLPT N1', 'en': 'JLPT N1'},
+          subtitle: const {
+            'id': 'kosakata tingkat N1',
+            'en': 'N1-level vocabulary',
+          },
+          questions: vocabToMcq(jlptN1),
         ),
       ];
     case 'en':

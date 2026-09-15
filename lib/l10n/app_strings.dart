@@ -200,6 +200,67 @@ class L {
       'mcq_count_hint': 'Jumlah soal',
       'mcq_count_error': 'Masukkan angka',
       'mcq_all': 'Semua',
+      // Ujian
+      'exam_title': 'Ujian',
+      'exam_desc': 'simulasi TOEFL, IELTS, PTE & JLPT N5–N1 lengkap',
+      'exam_pick': 'Pilih ujian yang mau disimulasikan',
+      'exam_questions': 'soal',
+      'exam_minutes': 'menit',
+      'exam_section_vocab': 'Kosakata',
+      'exam_section_grammar': 'Tata Bahasa',
+      'exam_section_reading': 'Membaca',
+      'exam_section_listening': 'Mendengar',
+      'exam_section_writing': 'Menulis',
+      'exam_structure': 'Struktur ujian',
+      'exam_rules_title': 'Aturan ujian',
+      'exam_rule_timer':
+          'Tiap bagian punya batas waktu. Habis waktu, bagian ditutup '
+          'otomatis.',
+      'exam_rule_feedback': 'Benar/salah baru terlihat di akhir ujian.',
+      'exam_rule_audio':
+          'Audio bagian Mendengar hanya bisa diputar {n}x per bacaan.',
+      'exam_writing_note':
+          'Menulis berupa isian singkat yang diketik (esai tidak dinilai '
+          'otomatis).',
+      'exam_jlpt_writing_note':
+          'Menulis bukan bagian JLPT resmi; skornya ditampilkan terpisah '
+          'dan tidak ikut skor 180.',
+      'exam_speaking_note': 'Bagian Speaking tidak disimulasikan.',
+      'exam_start_full': 'MULAI UJIAN PENUH',
+      'exam_start_mini': 'UJIAN MINI ({n} SOAL)',
+      'exam_premium_hint':
+          'Ujian penuh untuk Premium. Gratis: ujian mini {n} soal campur '
+          'dari semua bagian.',
+      'exam_best': 'Terbaik',
+      'exam_mini_badge': 'Ujian mini',
+      'exam_section_of': 'Bagian {i} dari {n}',
+      'exam_begin_section': 'MULAI BAGIAN',
+      'exam_next': 'BERIKUTNYA',
+      'exam_prev': 'Sebelumnya',
+      'exam_finish_section': 'SELESAI BAGIAN',
+      'exam_finish_confirm':
+          '{n} soal belum dijawab. Tetap selesaikan bagian ini?',
+      'exam_time_up': 'Waktu habis! Bagian ini ditutup.',
+      'exam_play_audio': 'Putar audio',
+      'exam_playing': 'Memutar…',
+      'exam_plays_left': 'sisa {n}x',
+      'exam_no_plays': 'Jatah putar habis',
+      'exam_type_answer': 'Ketik jawabanmu…',
+      'exam_quit_title': 'Keluar dari ujian?',
+      'exam_quit_msg': 'Progres ujian ini akan hilang.',
+      'exam_result_title': 'Hasil Ujian',
+      'exam_estimated': 'Perkiraan skor',
+      'exam_passed': 'LULUS',
+      'exam_failed': 'BELUM LULUS',
+      'exam_correct_of': 'benar dari',
+      'exam_your_answer': 'Jawabanmu',
+      'exam_unanswered': 'tidak dijawab',
+      'exam_review_title': 'Ulasan soal yang salah',
+      'exam_again': 'ULANGI',
+      'exam_transcript': 'Transkrip',
+      'exam_passage': 'Bacaan',
+      'exam_estimate_disclaimer':
+          'Perkiraan kasar dari persentase benar, bukan skor resmi.',
       'listening_title': 'Latihan Dengar',
       'listening_desc':
           'Dengar paragraf lalu jawab soalnya, gaya TOEFL/IELTS/JLPT',
@@ -659,6 +720,65 @@ class L {
       'mcq_count_hint': 'Number of questions',
       'mcq_count_error': 'Enter a number',
       'mcq_all': 'All',
+      // Ujian
+      'exam_title': 'Exam',
+      'exam_desc': 'full TOEFL, IELTS, PTE & JLPT N5–N1 simulations',
+      'exam_pick': 'Choose the exam to simulate',
+      'exam_questions': 'questions',
+      'exam_minutes': 'min',
+      'exam_section_vocab': 'Vocabulary',
+      'exam_section_grammar': 'Grammar',
+      'exam_section_reading': 'Reading',
+      'exam_section_listening': 'Listening',
+      'exam_section_writing': 'Writing',
+      'exam_structure': 'Exam structure',
+      'exam_rules_title': 'Exam rules',
+      'exam_rule_timer':
+          'Each section is timed. When time is up the section closes '
+          'automatically.',
+      'exam_rule_feedback': 'Right/wrong is only shown at the end.',
+      'exam_rule_audio': 'Listening audio can be played only {n}x per passage.',
+      'exam_writing_note':
+          'Writing uses short typed answers (essays are not auto-graded).',
+      'exam_jlpt_writing_note':
+          'Writing is not an official JLPT section; its score is shown '
+          'separately and excluded from the 180-point total.',
+      'exam_speaking_note': 'The Speaking section is not simulated.',
+      'exam_start_full': 'START FULL EXAM',
+      'exam_start_mini': 'MINI EXAM ({n} QUESTIONS)',
+      'exam_premium_hint':
+          'The full exam is Premium. Free: a {n}-question mini exam '
+          'mixed from all sections.',
+      'exam_best': 'Best',
+      'exam_mini_badge': 'Mini exam',
+      'exam_section_of': 'Section {i} of {n}',
+      'exam_begin_section': 'BEGIN SECTION',
+      'exam_next': 'NEXT',
+      'exam_prev': 'Previous',
+      'exam_finish_section': 'FINISH SECTION',
+      'exam_finish_confirm': '{n} unanswered. Finish this section anyway?',
+      'exam_time_up': "Time's up! This section is closed.",
+      'exam_play_audio': 'Play audio',
+      'exam_playing': 'Playing…',
+      'exam_plays_left': '{n} left',
+      'exam_no_plays': 'No plays left',
+      'exam_type_answer': 'Type your answer…',
+      'exam_quit_title': 'Leave the exam?',
+      'exam_quit_msg': 'Your progress in this exam will be lost.',
+      'exam_result_title': 'Exam Result',
+      'exam_estimated': 'Estimated score',
+      'exam_passed': 'PASS',
+      'exam_failed': 'NOT YET',
+      'exam_correct_of': 'correct out of',
+      'exam_your_answer': 'Your answer',
+      'exam_unanswered': 'unanswered',
+      'exam_review_title': 'Review of missed questions',
+      'exam_again': 'TRY AGAIN',
+      'exam_transcript': 'Transcript',
+      'exam_passage': 'Passage',
+      'exam_estimate_disclaimer':
+          'A rough estimate from the percentage correct, not an official '
+          'score.',
       'listening_title': 'Listening Practice',
       'listening_desc':
           'Hear a passage, then answer questions, TOEFL/IELTS/JLPT style',

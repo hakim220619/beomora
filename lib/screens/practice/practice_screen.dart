@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../data/exam_blueprints.dart';
 import '../../data/handwriting_bank.dart';
 import '../../data/listening_bank.dart';
 import '../../models/listening.dart';
@@ -12,6 +13,7 @@ import '../../providers/settings_provider.dart';
 import '../../services/handwriting_service.dart';
 import '../../theme.dart';
 import '../lesson/lesson_screen.dart';
+import 'exam_list_screen.dart';
 import 'flashcards_screen.dart';
 import 'handwriting_activation.dart';
 import 'handwriting_screen.dart';
@@ -98,6 +100,18 @@ class PracticeScreen extends StatelessWidget {
                   ? null
                   : '👑 ${l.t('practice_free_listening').replaceFirst('{n}', '$kFreeListeningPassages')}',
               onTap: () => _push(context, ListeningPackScreen(course: course)),
+            ),
+          // Mode Ujian: simulasi TOEFL/IELTS/PTE (en) & JLPT N5–N1 (ja).
+          if (examsFor(course.id).isNotEmpty)
+            _GameCard(
+              emoji: '🎯',
+              color: DuoColors.purple,
+              title: l.t('exam_title'),
+              subtitle: l.t('exam_desc'),
+              trailing: progress.premiumActive
+                  ? null
+                  : '👑 ${l.t('exam_mini_badge')} $kFreeExamQuestions',
+              onTap: () => _push(context, ExamListScreen(course: course)),
             ),
           _GameCard(
             emoji: '⏱️',

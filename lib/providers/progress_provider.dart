@@ -97,6 +97,10 @@ class ProgressProvider extends ChangeNotifier {
   Map<String, int> dailyXp = {};
   static const dailyLogDays = 92;
 
+  /// Hasil terbaik mode Ujian per cetak biru: id ujian → {'pct', 'label',
+  /// 'date'} (persen benar, label skor perkiraan, tanggal yyyy-MM-dd).
+  Map<String, Map<String, dynamic>> examBest = {};
+
   /// Status premium (di-update AuthProvider via ProgressSyncService).
   /// Dibaca dari cache prefs saat startup supaya pelindung streak
   /// premium bekerja sebelum profil server termuat.
@@ -385,6 +389,30 @@ class ProgressProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Ujian selesai: +5 XP (latihan) + 1 XP per jawaban benar, simpan
+  /// hasil terbaik bila persennya lebih tinggi. Mengembalikan XP final.
+  int reportExam({
+    required String examId,
+    required int correct,
+    required int total,
+    required String scoreLabel,
+  }) {
+    final base = completePractice();
+    final bonus = correct > 0 ? addXp(correct) : 0;
+    final pct = total == 0 ? 0 : (correct * 100 / total).round();
+    final prev = (examBest[examId]?['pct'] as num?)?.toInt() ?? -1;
+    if (pct > prev) {
+      examBest[examId] = {
+        'pct': pct,
+        'label': scoreLabel,
+        'date': DateTime.now().toIso8601String().substring(0, 10),
+      };
+    }
+    _save();
+    notifyListeners();
+    return base + bonus;
+  }
+
   void reportMemoryGame(int moves) {
     if (bestMemoryMoves == 0 || moves < bestMemoryMoves) {
       bestMemoryMoves = moves;
@@ -425,6 +453,7 @@ class ProgressProvider extends ChangeNotifier {
     unlockedAchievements = {};
     coursesTried = {};
     dailyXp = {};
+    examBest = {};
     _save();
     notifyListeners();
   }
@@ -614,6 +643,13 @@ class ProgressProvider extends ChangeNotifier {
     dailyXp = (m['dailyXp'] as Map<String, dynamic>? ?? {}).map(
       (k, v) => MapEntry(k, (v as num).toInt()),
     );
+    // Kunci absen (versi lama) → pertahankan nilai lokal.
+    final eb = m['examBest'] as Map<String, dynamic>?;
+    if (eb != null) {
+      examBest = eb.map(
+        (k, v) => MapEntry(k, Map<String, dynamic>.from(v as Map)),
+      );
+    }
     savedAt = (m['savedAt'] as num?)?.toInt() ?? 0;
   }
 
@@ -650,6 +686,7 @@ class ProgressProvider extends ChangeNotifier {
     'unlockedAchievements': unlockedAchievements.toList(),
     'coursesTried': coursesTried.toList(),
     'dailyXp': dailyXp,
+    'examBest': examBest,
     'savedAt': savedAt,
   };
 
