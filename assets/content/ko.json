@@ -1141,6 +1141,3428 @@
           ]
         }
       ]
+    },
+    {
+      "id": "ko_u5",
+      "title": {
+        "id": "Angka Lanjutan",
+        "en": "More Numbers"
+      },
+      "color": "#FF4B4B",
+      "icon": "🔢",
+      "lessons": [
+        {
+          "id": "ko_u5_l1",
+          "title": {
+            "id": "Angka 6-9 & Ratusan",
+            "en": "Numbers 6-9 & Hundreds"
+          },
+          "words": [
+            {
+              "target": "여섯",
+              "meaning": {
+                "id": "enam",
+                "en": "the number 6"
+              },
+              "emoji": "6️⃣",
+              "romaji": "yeoseot"
+            },
+            {
+              "target": "일곱",
+              "meaning": {
+                "id": "tujuh",
+                "en": "the number 7"
+              },
+              "emoji": "7️⃣",
+              "romaji": "ilgop"
+            },
+            {
+              "target": "여덟",
+              "meaning": {
+                "id": "delapan",
+                "en": "the number 8"
+              },
+              "emoji": "8️⃣",
+              "romaji": "yeodeol"
+            },
+            {
+              "target": "아홉",
+              "meaning": {
+                "id": "sembilan",
+                "en": "the number 9"
+              },
+              "emoji": "9️⃣",
+              "romaji": "ahop"
+            },
+            {
+              "target": "백",
+              "meaning": {
+                "id": "seratus",
+                "en": "the number 100"
+              },
+              "emoji": "💯",
+              "romaji": "baek"
+            },
+            {
+              "target": "영",
+              "meaning": {
+                "id": "nol",
+                "en": "the number 0"
+              },
+              "emoji": "0️⃣",
+              "romaji": "yeong"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "저는 사과가 여섯 개 있어요",
+              "tokens": [
+                "저는",
+                "사과가",
+                "여섯",
+                "개",
+                "있어요"
+              ],
+              "meaning": {
+                "id": "Saya punya enam apel",
+                "en": "say how many apples you own"
+              },
+              "romaji": "jeoneun sagwaga yeoseot gae isseoyo"
+            },
+            {
+              "target": "아홉 더하기 하나는 열이에요",
+              "tokens": [
+                "아홉",
+                "더하기",
+                "하나는",
+                "열이에요"
+              ],
+              "meaning": {
+                "id": "Sembilan tambah satu sama dengan sepuluh",
+                "en": "a simple sum"
+              },
+              "romaji": "ahop deohagi hananeun yeorieyo"
+            }
+          ]
+        },
+        {
+          "id": "ko_u5_l2",
+          "title": {
+            "id": "Puluhan & Ribuan",
+            "en": "Tens & Thousands"
+          },
+          "words": [
+            {
+              "target": "이십",
+              "meaning": {
+                "id": "dua puluh",
+                "en": "the number 20"
+              },
+              "emoji": "🔟",
+              "romaji": "isip"
+            },
+            {
+              "target": "삼십",
+              "meaning": {
+                "id": "tiga puluh",
+                "en": "the number 30"
+              },
+              "emoji": "🧮",
+              "romaji": "samsip"
+            },
+            {
+              "target": "오십",
+              "meaning": {
+                "id": "lima puluh",
+                "en": "the number 50"
+              },
+              "emoji": "🎯",
+              "romaji": "osip"
+            },
+            {
+              "target": "천",
+              "meaning": {
+                "id": "seribu",
+                "en": "the number 1000"
+              },
+              "emoji": "💵",
+              "romaji": "cheon"
+            },
+            {
+              "target": "백만",
+              "meaning": {
+                "id": "sejuta",
+                "en": "the number 1,000,000"
+              },
+              "emoji": "💰",
+              "romaji": "baengman"
+            },
+            {
+              "target": "숫자",
+              "meaning": {
+                "id": "angka",
+                "en": "a figure like 1, 2, 3"
+              },
+              "emoji": "🔢",
+              "romaji": "sutja"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "여기에 스무 명이 살아요",
+              "tokens": [
+                "여기에",
+                "스무",
+                "명이",
+                "살아요"
+              ],
+              "meaning": {
+                "id": "Dua puluh orang tinggal di sini",
+                "en": "tell how many live in a place"
+              },
+              "romaji": "yeogie seumu myeongi sarayo"
+            },
+            {
+              "target": "숫자는 오십이에요",
+              "tokens": [
+                "숫자는",
+                "오십이에요"
+              ],
+              "meaning": {
+                "id": "Angkanya lima puluh",
+                "en": "state a figure"
+              },
+              "romaji": "sutjaneun osibieyo"
+            }
+          ]
+        },
+        {
+          "id": "ko_u5_l3",
+          "title": {
+            "id": "Umur & Urutan",
+            "en": "Age & Order"
+          },
+          "words": [
+            {
+              "target": "나이",
+              "meaning": {
+                "id": "umur",
+                "en": "how old someone is"
+              },
+              "emoji": "🎂",
+              "romaji": "nai"
+            },
+            {
+              "target": "년",
+              "meaning": {
+                "id": "tahun",
+                "en": "twelve months"
+              },
+              "emoji": "📆",
+              "romaji": "nyeon"
+            },
+            {
+              "target": "첫 번째",
+              "meaning": {
+                "id": "pertama",
+                "en": "number one in order"
+              },
+              "emoji": "🥇",
+              "romaji": "cheot beonjjae"
+            },
+            {
+              "target": "두 번째",
+              "meaning": {
+                "id": "kedua",
+                "en": "number two in order"
+              },
+              "emoji": "🥈",
+              "romaji": "du beonjjae"
+            },
+            {
+              "target": "마지막",
+              "meaning": {
+                "id": "terakhir",
+                "en": "at the end of the order"
+              },
+              "emoji": "🏁",
+              "romaji": "majimak"
+            },
+            {
+              "target": "늙다",
+              "meaning": {
+                "id": "tua",
+                "en": "having lived many years"
+              },
+              "emoji": "👴",
+              "romaji": "neukda"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "저는 스무 살이에요",
+              "tokens": [
+                "저는",
+                "스무",
+                "살이에요"
+              ],
+              "meaning": {
+                "id": "Umur saya dua puluh tahun",
+                "en": "tell your age"
+              },
+              "romaji": "jeoneun seumu sarieyo"
+            },
+            {
+              "target": "그녀는 첫 번째 학생이에요",
+              "tokens": [
+                "그녀는",
+                "첫",
+                "번째",
+                "학생이에요"
+              ],
+              "meaning": {
+                "id": "Dia murid pertama",
+                "en": "say who comes first"
+              },
+              "romaji": "geunyeoneun cheot beonjjae haksaengieyo"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ko_u6",
+      "title": {
+        "id": "Warna",
+        "en": "Colors"
+      },
+      "color": "#2B70C9",
+      "icon": "🎨",
+      "lessons": [
+        {
+          "id": "ko_u6_l1",
+          "title": {
+            "id": "Warna Dasar",
+            "en": "Basic Colors"
+          },
+          "words": [
+            {
+              "target": "빨간색",
+              "meaning": {
+                "id": "merah",
+                "en": "the color of blood"
+              },
+              "emoji": "🔴",
+              "romaji": "ppalgansaek"
+            },
+            {
+              "target": "파란색",
+              "meaning": {
+                "id": "biru",
+                "en": "the color of the sky"
+              },
+              "emoji": "🔵",
+              "romaji": "paransaek"
+            },
+            {
+              "target": "노란색",
+              "meaning": {
+                "id": "kuning",
+                "en": "the color of the sun"
+              },
+              "emoji": "🟡",
+              "romaji": "noransaek"
+            },
+            {
+              "target": "초록색",
+              "meaning": {
+                "id": "hijau",
+                "en": "the color of leaves"
+              },
+              "emoji": "🟢",
+              "romaji": "choroksaek"
+            },
+            {
+              "target": "검은색",
+              "meaning": {
+                "id": "hitam",
+                "en": "the darkest color"
+              },
+              "emoji": "⚫",
+              "romaji": "geomeunsaek"
+            },
+            {
+              "target": "흰색",
+              "meaning": {
+                "id": "putih",
+                "en": "the color of snow"
+              },
+              "emoji": "⚪",
+              "romaji": "huinsaek"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "하늘은 파란색이에요",
+              "tokens": [
+                "하늘은",
+                "파란색이에요"
+              ],
+              "meaning": {
+                "id": "Langit itu biru",
+                "en": "describe the color of the sky"
+              },
+              "romaji": "haneureun paransaegieyo"
+            },
+            {
+              "target": "제 차는 빨간색과 흰색이에요",
+              "tokens": [
+                "제",
+                "차는",
+                "빨간색과",
+                "흰색이에요"
+              ],
+              "meaning": {
+                "id": "Mobil saya merah dan putih",
+                "en": "describe two colors of a car"
+              },
+              "romaji": "je chaneun ppalgansaekgwa huinsaegieyo"
+            }
+          ]
+        },
+        {
+          "id": "ko_u6_l2",
+          "title": {
+            "id": "Warna Lain",
+            "en": "More Colors"
+          },
+          "words": [
+            {
+              "target": "주황색",
+              "meaning": {
+                "id": "oranye",
+                "en": "the color of the fruit orange"
+              },
+              "emoji": "🟠",
+              "romaji": "juhwangsaek"
+            },
+            {
+              "target": "보라색",
+              "meaning": {
+                "id": "ungu",
+                "en": "a mix of red and blue"
+              },
+              "emoji": "🟣",
+              "romaji": "borasaek"
+            },
+            {
+              "target": "분홍색",
+              "meaning": {
+                "id": "merah muda",
+                "en": "a light red color"
+              },
+              "emoji": "🌸",
+              "romaji": "bunhongsaek"
+            },
+            {
+              "target": "갈색",
+              "meaning": {
+                "id": "cokelat",
+                "en": "the color of wood"
+              },
+              "emoji": "🟤",
+              "romaji": "galsaek"
+            },
+            {
+              "target": "회색",
+              "meaning": {
+                "id": "abu-abu",
+                "en": "a mix of black and white"
+              },
+              "emoji": "🩶",
+              "romaji": "hoesaek"
+            },
+            {
+              "target": "색깔",
+              "meaning": {
+                "id": "warna",
+                "en": "red, blue, green, etc."
+              },
+              "emoji": "🎨",
+              "romaji": "saekkkal"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "고양이는 갈색이에요",
+              "tokens": [
+                "고양이는",
+                "갈색이에요"
+              ],
+              "meaning": {
+                "id": "Kucing itu cokelat",
+                "en": "describe the color of a cat"
+              },
+              "romaji": "goyangineun galsaegieyo"
+            },
+            {
+              "target": "어떤 색깔을 좋아해요",
+              "tokens": [
+                "어떤",
+                "색깔을",
+                "좋아해요"
+              ],
+              "meaning": {
+                "id": "Warna apa yang kamu suka",
+                "en": "ask about a favorite color"
+              },
+              "romaji": "eotteon saekkkareul joahaeyo"
+            }
+          ]
+        },
+        {
+          "id": "ko_u6_l3",
+          "title": {
+            "id": "Terang & Suka",
+            "en": "Bright & Favorite"
+          },
+          "words": [
+            {
+              "target": "밝다",
+              "meaning": {
+                "id": "terang",
+                "en": "full of light"
+              },
+              "emoji": "💡",
+              "romaji": "bakda"
+            },
+            {
+              "target": "어둡다",
+              "meaning": {
+                "id": "gelap",
+                "en": "with little light"
+              },
+              "emoji": "🌑",
+              "romaji": "eodupda"
+            },
+            {
+              "target": "가장 좋아하는",
+              "meaning": {
+                "id": "favorit",
+                "en": "liked the most"
+              },
+              "emoji": "⭐",
+              "romaji": "gajang joahaneun"
+            },
+            {
+              "target": "좋아하다",
+              "meaning": {
+                "id": "suka",
+                "en": "to enjoy something"
+              },
+              "emoji": "👍",
+              "romaji": "joahada"
+            },
+            {
+              "target": "아름답다",
+              "meaning": {
+                "id": "indah",
+                "en": "very pleasing to see"
+              },
+              "emoji": "🌺",
+              "romaji": "areumdapda"
+            },
+            {
+              "target": "못생기다",
+              "meaning": {
+                "id": "jelek",
+                "en": "not nice to look at"
+              },
+              "emoji": "🙈",
+              "romaji": "motsaenggida"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "초록색은 제가 가장 좋아하는 색깔이에요",
+              "tokens": [
+                "초록색은",
+                "제가",
+                "가장",
+                "좋아하는",
+                "색깔이에요"
+              ],
+              "meaning": {
+                "id": "Hijau warna favorit saya",
+                "en": "name the color you like most"
+              },
+              "romaji": "choroksaegeun jega gajang joahaneun saekkkarieyo"
+            },
+            {
+              "target": "방이 어두워요",
+              "tokens": [
+                "방이",
+                "어두워요"
+              ],
+              "meaning": {
+                "id": "Kamarnya gelap",
+                "en": "say a room has little light"
+              },
+              "romaji": "bangi eoduwoyo"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ko_u7",
+      "title": {
+        "id": "Hewan",
+        "en": "Animals"
+      },
+      "color": "#FFC800",
+      "icon": "🐾",
+      "lessons": [
+        {
+          "id": "ko_u7_l1",
+          "title": {
+            "id": "Hewan Peliharaan",
+            "en": "Pets"
+          },
+          "words": [
+            {
+              "target": "고양이",
+              "meaning": {
+                "id": "kucing",
+                "en": "a small pet that says meow"
+              },
+              "emoji": "🐱",
+              "romaji": "goyangi"
+            },
+            {
+              "target": "개",
+              "meaning": {
+                "id": "anjing",
+                "en": "a pet that barks"
+              },
+              "emoji": "🐶",
+              "romaji": "gae"
+            },
+            {
+              "target": "새",
+              "meaning": {
+                "id": "burung",
+                "en": "an animal with wings"
+              },
+              "emoji": "🐦",
+              "romaji": "sae"
+            },
+            {
+              "target": "토끼",
+              "meaning": {
+                "id": "kelinci",
+                "en": "a long-eared animal"
+              },
+              "emoji": "🐰",
+              "romaji": "tokki"
+            },
+            {
+              "target": "햄스터",
+              "meaning": {
+                "id": "hamster",
+                "en": "a small furry pet"
+              },
+              "emoji": "🐹",
+              "romaji": "haemseuteo"
+            },
+            {
+              "target": "반려동물",
+              "meaning": {
+                "id": "hewan peliharaan",
+                "en": "an animal kept at home"
+              },
+              "emoji": "🏠",
+              "romaji": "ballyeodongmul"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "저는 작은 개가 있어요",
+              "tokens": [
+                "저는",
+                "작은",
+                "개가",
+                "있어요"
+              ],
+              "meaning": {
+                "id": "Saya punya anjing kecil",
+                "en": "talk about your pet"
+              },
+              "romaji": "jeoneun jageun gaega isseoyo"
+            },
+            {
+              "target": "고양이가 의자 위에서 자요",
+              "tokens": [
+                "고양이가",
+                "의자",
+                "위에서",
+                "자요"
+              ],
+              "meaning": {
+                "id": "Kucing itu tidur di kursi",
+                "en": "say where the cat sleeps"
+              },
+              "romaji": "goyangiga uija wieseo jayo"
+            }
+          ]
+        },
+        {
+          "id": "ko_u7_l2",
+          "title": {
+            "id": "Hewan Besar",
+            "en": "Big Animals"
+          },
+          "words": [
+            {
+              "target": "코끼리",
+              "meaning": {
+                "id": "gajah",
+                "en": "a huge animal with a trunk"
+              },
+              "emoji": "🐘",
+              "romaji": "kokkiri"
+            },
+            {
+              "target": "사자",
+              "meaning": {
+                "id": "singa",
+                "en": "the king of the jungle"
+              },
+              "emoji": "🦁",
+              "romaji": "saja"
+            },
+            {
+              "target": "호랑이",
+              "meaning": {
+                "id": "harimau",
+                "en": "a big striped cat"
+              },
+              "emoji": "🐯",
+              "romaji": "horangi"
+            },
+            {
+              "target": "말",
+              "meaning": {
+                "id": "kuda",
+                "en": "an animal people ride"
+              },
+              "emoji": "🐴",
+              "romaji": "mal"
+            },
+            {
+              "target": "소",
+              "meaning": {
+                "id": "sapi",
+                "en": "a farm animal that gives milk"
+              },
+              "emoji": "🐮",
+              "romaji": "so"
+            },
+            {
+              "target": "원숭이",
+              "meaning": {
+                "id": "monyet",
+                "en": "an animal that climbs trees"
+              },
+              "emoji": "🐵",
+              "romaji": "wonsungi"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "코끼리는 아주 커요",
+              "tokens": [
+                "코끼리는",
+                "아주",
+                "커요"
+              ],
+              "meaning": {
+                "id": "Gajah itu sangat besar",
+                "en": "describe an elephant"
+              },
+              "romaji": "kokkirineun aju keoyo"
+            },
+            {
+              "target": "사자는 고기를 먹어요",
+              "tokens": [
+                "사자는",
+                "고기를",
+                "먹어요"
+              ],
+              "meaning": {
+                "id": "Singa makan daging",
+                "en": "say what lions eat"
+              },
+              "romaji": "sajaneun gogireul meogeoyo"
+            }
+          ]
+        },
+        {
+          "id": "ko_u7_l3",
+          "title": {
+            "id": "Hewan Air & Serangga",
+            "en": "Water Animals & Insects"
+          },
+          "words": [
+            {
+              "target": "개구리",
+              "meaning": {
+                "id": "katak",
+                "en": "a green jumping animal"
+              },
+              "emoji": "🐸",
+              "romaji": "gaeguri"
+            },
+            {
+              "target": "거북이",
+              "meaning": {
+                "id": "kura-kura",
+                "en": "a slow animal with a shell"
+              },
+              "emoji": "🐢",
+              "romaji": "geobugi"
+            },
+            {
+              "target": "상어",
+              "meaning": {
+                "id": "hiu",
+                "en": "a big fish with sharp teeth"
+              },
+              "emoji": "🦈",
+              "romaji": "sangeo"
+            },
+            {
+              "target": "나비",
+              "meaning": {
+                "id": "kupu-kupu",
+                "en": "an insect with colorful wings"
+              },
+              "emoji": "🦋",
+              "romaji": "nabi"
+            },
+            {
+              "target": "개미",
+              "meaning": {
+                "id": "semut",
+                "en": "a tiny insect that works hard"
+              },
+              "emoji": "🐜",
+              "romaji": "gaemi"
+            },
+            {
+              "target": "모기",
+              "meaning": {
+                "id": "nyamuk",
+                "en": "a small insect that bites"
+              },
+              "emoji": "🦟",
+              "romaji": "mogi"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "나비가 아름다워요",
+              "tokens": [
+                "나비가",
+                "아름다워요"
+              ],
+              "meaning": {
+                "id": "Kupu-kupu itu indah",
+                "en": "admire a butterfly"
+              },
+              "romaji": "nabiga areumdawoyo"
+            },
+            {
+              "target": "여기에 개미가 많이 있어요",
+              "tokens": [
+                "여기에",
+                "개미가",
+                "많이",
+                "있어요"
+              ],
+              "meaning": {
+                "id": "Ada banyak semut di sini",
+                "en": "say there are lots of ants"
+              },
+              "romaji": "yeogie gaemiga mani isseoyo"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ko_u8",
+      "title": {
+        "id": "Hari & Pekan",
+        "en": "Days & Weeks"
+      },
+      "color": "#A560E8",
+      "icon": "📅",
+      "lessons": [
+        {
+          "id": "ko_u8_l1",
+          "title": {
+            "id": "Hari Senin-Jumat",
+            "en": "Monday to Friday"
+          },
+          "words": [
+            {
+              "target": "월요일",
+              "meaning": {
+                "id": "Senin",
+                "en": "the first weekday"
+              },
+              "emoji": "1️⃣",
+              "romaji": "woryoil"
+            },
+            {
+              "target": "화요일",
+              "meaning": {
+                "id": "Selasa",
+                "en": "the second weekday"
+              },
+              "emoji": "2️⃣",
+              "romaji": "hwayoil"
+            },
+            {
+              "target": "수요일",
+              "meaning": {
+                "id": "Rabu",
+                "en": "the middle of the week"
+              },
+              "emoji": "3️⃣",
+              "romaji": "suyoil"
+            },
+            {
+              "target": "목요일",
+              "meaning": {
+                "id": "Kamis",
+                "en": "the day before Friday"
+              },
+              "emoji": "4️⃣",
+              "romaji": "mogyoil"
+            },
+            {
+              "target": "금요일",
+              "meaning": {
+                "id": "Jumat",
+                "en": "the last weekday"
+              },
+              "emoji": "5️⃣",
+              "romaji": "geumyoil"
+            },
+            {
+              "target": "하루",
+              "meaning": {
+                "id": "hari",
+                "en": "24 hours"
+              },
+              "emoji": "☀️",
+              "romaji": "haru"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "오늘은 월요일이에요",
+              "tokens": [
+                "오늘은",
+                "월요일이에요"
+              ],
+              "meaning": {
+                "id": "Hari ini Senin",
+                "en": "say what day it is"
+              },
+              "romaji": "oneureun woryoirieyo"
+            },
+            {
+              "target": "저는 월요일부터 금요일까지 일해요",
+              "tokens": [
+                "저는",
+                "월요일부터",
+                "금요일까지",
+                "일해요"
+              ],
+              "meaning": {
+                "id": "Saya bekerja dari Senin sampai Jumat",
+                "en": "tell your working days"
+              },
+              "romaji": "jeoneun woryoilbuteo geumyoilkkaji ilhaeyo"
+            }
+          ]
+        },
+        {
+          "id": "ko_u8_l2",
+          "title": {
+            "id": "Akhir Pekan",
+            "en": "Weekend"
+          },
+          "words": [
+            {
+              "target": "토요일",
+              "meaning": {
+                "id": "Sabtu",
+                "en": "the first weekend day"
+              },
+              "emoji": "🎉",
+              "romaji": "toyoil"
+            },
+            {
+              "target": "일요일",
+              "meaning": {
+                "id": "Minggu",
+                "en": "the last day of the week"
+              },
+              "emoji": "⛪",
+              "romaji": "iryoil"
+            },
+            {
+              "target": "주말",
+              "meaning": {
+                "id": "akhir pekan",
+                "en": "Saturday and Sunday"
+              },
+              "emoji": "🏖️",
+              "romaji": "jumal"
+            },
+            {
+              "target": "주",
+              "meaning": {
+                "id": "pekan",
+                "en": "seven days"
+              },
+              "emoji": "🗓️",
+              "romaji": "ju"
+            },
+            {
+              "target": "달",
+              "meaning": {
+                "id": "bulan",
+                "en": "about thirty days"
+              },
+              "emoji": "🌙",
+              "romaji": "dal"
+            },
+            {
+              "target": "휴일",
+              "meaning": {
+                "id": "hari libur",
+                "en": "a day off from work"
+              },
+              "emoji": "🎈",
+              "romaji": "hyuil"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "일요일에 우리는 쉬어요",
+              "tokens": [
+                "일요일에",
+                "우리는",
+                "쉬어요"
+              ],
+              "meaning": {
+                "id": "Hari Minggu kita istirahat",
+                "en": "say what you do on Sunday"
+              },
+              "romaji": "iryoire urineun swieoyo"
+            },
+            {
+              "target": "주말은 즐거워요",
+              "tokens": [
+                "주말은",
+                "즐거워요"
+              ],
+              "meaning": {
+                "id": "Akhir pekan itu menyenangkan",
+                "en": "say weekends are enjoyable"
+              },
+              "romaji": "jumareun jeulgeowoyo"
+            }
+          ]
+        },
+        {
+          "id": "ko_u8_l3",
+          "title": {
+            "id": "Rutinitas",
+            "en": "Routine"
+          },
+          "words": [
+            {
+              "target": "항상",
+              "meaning": {
+                "id": "selalu",
+                "en": "every single time"
+              },
+              "emoji": "♾️",
+              "romaji": "hangsang"
+            },
+            {
+              "target": "보통",
+              "meaning": {
+                "id": "biasanya",
+                "en": "most of the time"
+              },
+              "emoji": "🔁",
+              "romaji": "botong"
+            },
+            {
+              "target": "가끔",
+              "meaning": {
+                "id": "kadang-kadang",
+                "en": "now and then"
+              },
+              "emoji": "🎲",
+              "romaji": "gakkeum"
+            },
+            {
+              "target": "절대",
+              "meaning": {
+                "id": "tidak pernah",
+                "en": "not at any time"
+              },
+              "emoji": "🚫",
+              "romaji": "jeoldae"
+            },
+            {
+              "target": "매일",
+              "meaning": {
+                "id": "setiap hari",
+                "en": "on all days"
+              },
+              "emoji": "📆",
+              "romaji": "maeil"
+            },
+            {
+              "target": "자주",
+              "meaning": {
+                "id": "sering",
+                "en": "many times"
+              },
+              "emoji": "🔄",
+              "romaji": "jaju"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "저는 보통 커피를 마셔요",
+              "tokens": [
+                "저는",
+                "보통",
+                "커피를",
+                "마셔요"
+              ],
+              "meaning": {
+                "id": "Saya biasanya minum kopi",
+                "en": "describe a habit"
+              },
+              "romaji": "jeoneun botong keopireul masyeoyo"
+            },
+            {
+              "target": "그녀는 고기를 절대 안 먹어요",
+              "tokens": [
+                "그녀는",
+                "고기를",
+                "절대",
+                "안",
+                "먹어요"
+              ],
+              "meaning": {
+                "id": "Dia tidak pernah makan daging",
+                "en": "say someone avoids meat"
+              },
+              "romaji": "geunyeoneun gogireul jeoldae an meogeoyo"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ko_u9",
+      "title": {
+        "id": "Cuaca & Musim",
+        "en": "Weather & Seasons"
+      },
+      "color": "#58CC02",
+      "icon": "⛅",
+      "lessons": [
+        {
+          "id": "ko_u9_l1",
+          "title": {
+            "id": "Cuaca",
+            "en": "Weather"
+          },
+          "words": [
+            {
+              "target": "날씨",
+              "meaning": {
+                "id": "cuaca",
+                "en": "sun, rain, wind, etc."
+              },
+              "emoji": "🌤️",
+              "romaji": "nalssi"
+            },
+            {
+              "target": "맑다",
+              "meaning": {
+                "id": "cerah",
+                "en": "with lots of sun"
+              },
+              "emoji": "☀️",
+              "romaji": "makda"
+            },
+            {
+              "target": "흐리다",
+              "meaning": {
+                "id": "berawan",
+                "en": "with many clouds"
+              },
+              "emoji": "☁️",
+              "romaji": "heurida"
+            },
+            {
+              "target": "바람이 불다",
+              "meaning": {
+                "id": "berangin",
+                "en": "with strong wind"
+              },
+              "emoji": "🌬️",
+              "romaji": "barami bulda"
+            },
+            {
+              "target": "비",
+              "meaning": {
+                "id": "hujan",
+                "en": "water falling from clouds"
+              },
+              "emoji": "🌧️",
+              "romaji": "bi"
+            },
+            {
+              "target": "눈송이",
+              "meaning": {
+                "id": "salju",
+                "en": "white frozen flakes"
+              },
+              "emoji": "❄️",
+              "romaji": "nunsongi"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "오늘은 날씨가 맑아요",
+              "tokens": [
+                "오늘은",
+                "날씨가",
+                "맑아요"
+              ],
+              "meaning": {
+                "id": "Cuacanya cerah hari ini",
+                "en": "describe today's weather"
+              },
+              "romaji": "oneureun nalssiga malgayo"
+            },
+            {
+              "target": "지금 비가 와요",
+              "tokens": [
+                "지금",
+                "비가",
+                "와요"
+              ],
+              "meaning": {
+                "id": "Sekarang sedang hujan",
+                "en": "say rain is falling"
+              },
+              "romaji": "jigeum biga wayo"
+            }
+          ]
+        },
+        {
+          "id": "ko_u9_l2",
+          "title": {
+            "id": "Musim",
+            "en": "Seasons"
+          },
+          "words": [
+            {
+              "target": "계절",
+              "meaning": {
+                "id": "musim",
+                "en": "a part of the year"
+              },
+              "emoji": "🍂",
+              "romaji": "gyejeol"
+            },
+            {
+              "target": "봄",
+              "meaning": {
+                "id": "musim semi",
+                "en": "the season of flowers"
+              },
+              "emoji": "🌸",
+              "romaji": "bom"
+            },
+            {
+              "target": "여름",
+              "meaning": {
+                "id": "musim panas",
+                "en": "the hot season"
+              },
+              "emoji": "🏝️",
+              "romaji": "yeoreum"
+            },
+            {
+              "target": "가을",
+              "meaning": {
+                "id": "musim gugur",
+                "en": "the season of falling leaves"
+              },
+              "emoji": "🍁",
+              "romaji": "gaeul"
+            },
+            {
+              "target": "겨울",
+              "meaning": {
+                "id": "musim dingin",
+                "en": "the cold season"
+              },
+              "emoji": "⛄",
+              "romaji": "gyeoul"
+            },
+            {
+              "target": "건기",
+              "meaning": {
+                "id": "musim kemarau",
+                "en": "the season with little rain"
+              },
+              "emoji": "🌵",
+              "romaji": "geongi"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "저는 봄을 좋아해요",
+              "tokens": [
+                "저는",
+                "봄을",
+                "좋아해요"
+              ],
+              "meaning": {
+                "id": "Saya suka musim semi",
+                "en": "name your favorite season"
+              },
+              "romaji": "jeoneun bomeul joahaeyo"
+            },
+            {
+              "target": "겨울에는 눈이 와요",
+              "tokens": [
+                "겨울에는",
+                "눈이",
+                "와요"
+              ],
+              "meaning": {
+                "id": "Salju turun di musim dingin",
+                "en": "say when it snows"
+              },
+              "romaji": "gyeoureneun nuni wayo"
+            }
+          ]
+        },
+        {
+          "id": "ko_u9_l3",
+          "title": {
+            "id": "Suhu",
+            "en": "Temperature"
+          },
+          "words": [
+            {
+              "target": "덥다",
+              "meaning": {
+                "id": "panas",
+                "en": "very warm"
+              },
+              "emoji": "🔥",
+              "romaji": "deopda"
+            },
+            {
+              "target": "춥다",
+              "meaning": {
+                "id": "dingin",
+                "en": "low temperature"
+              },
+              "emoji": "🧊",
+              "romaji": "chupda"
+            },
+            {
+              "target": "따뜻하다",
+              "meaning": {
+                "id": "hangat",
+                "en": "nicely a bit hot"
+              },
+              "emoji": "☕",
+              "romaji": "ttatteuthada"
+            },
+            {
+              "target": "시원하다",
+              "meaning": {
+                "id": "sejuk",
+                "en": "nicely a bit cold"
+              },
+              "emoji": "🍃",
+              "romaji": "siwonhada"
+            },
+            {
+              "target": "온도",
+              "meaning": {
+                "id": "suhu",
+                "en": "how hot or cold it is"
+              },
+              "emoji": "🌡️",
+              "romaji": "ondo"
+            },
+            {
+              "target": "우산",
+              "meaning": {
+                "id": "payung",
+                "en": "protects you from rain"
+              },
+              "emoji": "☂️",
+              "romaji": "usan"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "밖은 추워요",
+              "tokens": [
+                "밖은",
+                "추워요"
+              ],
+              "meaning": {
+                "id": "Di luar dingin",
+                "en": "describe the outdoor temperature"
+              },
+              "romaji": "bakkeun chuwoyo"
+            },
+            {
+              "target": "우산을 가져가세요",
+              "tokens": [
+                "우산을",
+                "가져가세요"
+              ],
+              "meaning": {
+                "id": "Bawa payung",
+                "en": "remind someone about rain"
+              },
+              "romaji": "usaneul gajyeogaseyo"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ko_u10",
+      "title": {
+        "id": "Tubuh & Kesehatan",
+        "en": "Body & Health"
+      },
+      "color": "#1CB0F6",
+      "icon": "💪",
+      "lessons": [
+        {
+          "id": "ko_u10_l1",
+          "title": {
+            "id": "Wajah & Kepala",
+            "en": "Face & Head"
+          },
+          "words": [
+            {
+              "target": "머리",
+              "meaning": {
+                "id": "kepala",
+                "en": "the top part of the body"
+              },
+              "emoji": "🗣️",
+              "romaji": "meori"
+            },
+            {
+              "target": "눈",
+              "meaning": {
+                "id": "mata",
+                "en": "you see with it"
+              },
+              "emoji": "👁️",
+              "romaji": "nun"
+            },
+            {
+              "target": "귀",
+              "meaning": {
+                "id": "telinga",
+                "en": "you hear with it"
+              },
+              "emoji": "👂",
+              "romaji": "gwi"
+            },
+            {
+              "target": "코",
+              "meaning": {
+                "id": "hidung",
+                "en": "you smell with it"
+              },
+              "emoji": "👃",
+              "romaji": "ko"
+            },
+            {
+              "target": "입",
+              "meaning": {
+                "id": "mulut",
+                "en": "you eat and talk with it"
+              },
+              "emoji": "👄",
+              "romaji": "ip"
+            },
+            {
+              "target": "머리카락",
+              "meaning": {
+                "id": "rambut",
+                "en": "it grows on your head"
+              },
+              "emoji": "💇",
+              "romaji": "meorikarak"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "제 눈은 갈색이에요",
+              "tokens": [
+                "제",
+                "눈은",
+                "갈색이에요"
+              ],
+              "meaning": {
+                "id": "Mata saya cokelat",
+                "en": "describe your eye color"
+              },
+              "romaji": "je nuneun galsaegieyo"
+            },
+            {
+              "target": "그녀의 머리카락은 길어요",
+              "tokens": [
+                "그녀의",
+                "머리카락은",
+                "길어요"
+              ],
+              "meaning": {
+                "id": "Rambutnya panjang",
+                "en": "describe someone's hair"
+              },
+              "romaji": "geunyeoui meorikarageun gireoyo"
+            }
+          ]
+        },
+        {
+          "id": "ko_u10_l2",
+          "title": {
+            "id": "Anggota Tubuh",
+            "en": "Body Parts"
+          },
+          "words": [
+            {
+              "target": "손",
+              "meaning": {
+                "id": "tangan",
+                "en": "you hold things with it"
+              },
+              "emoji": "✋",
+              "romaji": "son"
+            },
+            {
+              "target": "손가락",
+              "meaning": {
+                "id": "jari",
+                "en": "one of five on a hand"
+              },
+              "emoji": "☝️",
+              "romaji": "songarak"
+            },
+            {
+              "target": "발",
+              "meaning": {
+                "id": "kaki",
+                "en": "you stand on it"
+              },
+              "emoji": "🦶",
+              "romaji": "bal"
+            },
+            {
+              "target": "팔",
+              "meaning": {
+                "id": "lengan",
+                "en": "from shoulder to hand"
+              },
+              "emoji": "💪",
+              "romaji": "pal"
+            },
+            {
+              "target": "배",
+              "meaning": {
+                "id": "perut",
+                "en": "where food goes"
+              },
+              "emoji": "🫃",
+              "romaji": "bae"
+            },
+            {
+              "target": "등",
+              "meaning": {
+                "id": "punggung",
+                "en": "the rear of the body"
+              },
+              "emoji": "🧍",
+              "romaji": "deung"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "손을 씻으세요",
+              "tokens": [
+                "손을",
+                "씻으세요"
+              ],
+              "meaning": {
+                "id": "Cuci tanganmu",
+                "en": "tell someone to clean their hands"
+              },
+              "romaji": "soneul ssiseuseyo"
+            },
+            {
+              "target": "등이 아파요",
+              "tokens": [
+                "등이",
+                "아파요"
+              ],
+              "meaning": {
+                "id": "Punggung saya sakit",
+                "en": "complain about pain"
+              },
+              "romaji": "deungi apayo"
+            }
+          ]
+        },
+        {
+          "id": "ko_u10_l3",
+          "title": {
+            "id": "Kesehatan",
+            "en": "Health"
+          },
+          "words": [
+            {
+              "target": "아프다",
+              "meaning": {
+                "id": "sakit",
+                "en": "not healthy"
+              },
+              "emoji": "🤒",
+              "romaji": "apeuda"
+            },
+            {
+              "target": "건강하다",
+              "meaning": {
+                "id": "sehat",
+                "en": "in good condition"
+              },
+              "emoji": "💚",
+              "romaji": "geonganghada"
+            },
+            {
+              "target": "의사",
+              "meaning": {
+                "id": "dokter",
+                "en": "a person who treats the sick"
+              },
+              "emoji": "👨‍⚕️",
+              "romaji": "uisa"
+            },
+            {
+              "target": "약",
+              "meaning": {
+                "id": "obat",
+                "en": "you take it to get better"
+              },
+              "emoji": "💊",
+              "romaji": "yak"
+            },
+            {
+              "target": "병원",
+              "meaning": {
+                "id": "rumah sakit",
+                "en": "a place for sick people"
+              },
+              "emoji": "🏥",
+              "romaji": "byeongwon"
+            },
+            {
+              "target": "통증",
+              "meaning": {
+                "id": "nyeri",
+                "en": "a hurting feeling"
+              },
+              "emoji": "😣",
+              "romaji": "tongjeung"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "저는 오늘 아파요",
+              "tokens": [
+                "저는",
+                "오늘",
+                "아파요"
+              ],
+              "meaning": {
+                "id": "Saya sakit hari ini",
+                "en": "say you are unwell"
+              },
+              "romaji": "jeoneun oneul apayo"
+            },
+            {
+              "target": "의사가 약을 줘요",
+              "tokens": [
+                "의사가",
+                "약을",
+                "줘요"
+              ],
+              "meaning": {
+                "id": "Dokter memberi obat",
+                "en": "describe what a doctor does"
+              },
+              "romaji": "uisaga yageul jwoyo"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ko_u11",
+      "title": {
+        "id": "Pakaian",
+        "en": "Clothing"
+      },
+      "color": "#CE82FF",
+      "icon": "👕",
+      "lessons": [
+        {
+          "id": "ko_u11_l1",
+          "title": {
+            "id": "Pakaian Sehari-hari",
+            "en": "Everyday Clothes"
+          },
+          "words": [
+            {
+              "target": "셔츠",
+              "meaning": {
+                "id": "kemeja",
+                "en": "worn on the upper body"
+              },
+              "emoji": "👔",
+              "romaji": "syeocheu"
+            },
+            {
+              "target": "바지",
+              "meaning": {
+                "id": "celana",
+                "en": "worn on the legs"
+              },
+              "emoji": "👖",
+              "romaji": "baji"
+            },
+            {
+              "target": "드레스",
+              "meaning": {
+                "id": "gaun",
+                "en": "a one-piece garment"
+              },
+              "emoji": "👗",
+              "romaji": "deureseu"
+            },
+            {
+              "target": "치마",
+              "meaning": {
+                "id": "rok",
+                "en": "hangs from the waist"
+              },
+              "emoji": "🩳",
+              "romaji": "chima"
+            },
+            {
+              "target": "재킷",
+              "meaning": {
+                "id": "jaket",
+                "en": "keeps you warm outside"
+              },
+              "emoji": "🧥",
+              "romaji": "jaekit"
+            },
+            {
+              "target": "옷",
+              "meaning": {
+                "id": "pakaian",
+                "en": "things you wear"
+              },
+              "emoji": "👚",
+              "romaji": "ot"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "저는 파란 셔츠를 입어요",
+              "tokens": [
+                "저는",
+                "파란",
+                "셔츠를",
+                "입어요"
+              ],
+              "meaning": {
+                "id": "Saya memakai kemeja biru",
+                "en": "describe what you wear"
+              },
+              "romaji": "jeoneun paran syeocheureul ibeoyo"
+            },
+            {
+              "target": "그 드레스는 아름다워요",
+              "tokens": [
+                "그",
+                "드레스는",
+                "아름다워요"
+              ],
+              "meaning": {
+                "id": "Gaun itu indah",
+                "en": "compliment a dress"
+              },
+              "romaji": "geu deureseuneun areumdawoyo"
+            }
+          ]
+        },
+        {
+          "id": "ko_u11_l2",
+          "title": {
+            "id": "Aksesori",
+            "en": "Accessories"
+          },
+          "words": [
+            {
+              "target": "모자",
+              "meaning": {
+                "id": "topi",
+                "en": "worn on the head"
+              },
+              "emoji": "🧢",
+              "romaji": "moja"
+            },
+            {
+              "target": "신발",
+              "meaning": {
+                "id": "sepatu",
+                "en": "worn on the feet"
+              },
+              "emoji": "👟",
+              "romaji": "sinbal"
+            },
+            {
+              "target": "양말",
+              "meaning": {
+                "id": "kaus kaki",
+                "en": "worn inside shoes"
+              },
+              "emoji": "🧦",
+              "romaji": "yangmal"
+            },
+            {
+              "target": "가방",
+              "meaning": {
+                "id": "tas",
+                "en": "carries your things"
+              },
+              "emoji": "👜",
+              "romaji": "gabang"
+            },
+            {
+              "target": "손목시계",
+              "meaning": {
+                "id": "jam tangan",
+                "en": "tells time on your wrist"
+              },
+              "emoji": "⌚",
+              "romaji": "sonmoksigye"
+            },
+            {
+              "target": "안경",
+              "meaning": {
+                "id": "kacamata",
+                "en": "help you see clearly"
+              },
+              "emoji": "👓",
+              "romaji": "angyeong"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "제 신발은 어디에 있어요",
+              "tokens": [
+                "제",
+                "신발은",
+                "어디에",
+                "있어요"
+              ],
+              "meaning": {
+                "id": "Di mana sepatu saya",
+                "en": "ask where your shoes are"
+              },
+              "romaji": "je sinbareun eodie isseoyo"
+            },
+            {
+              "target": "그녀는 안경을 써요",
+              "tokens": [
+                "그녀는",
+                "안경을",
+                "써요"
+              ],
+              "meaning": {
+                "id": "Dia memakai kacamata",
+                "en": "say someone uses glasses"
+              },
+              "romaji": "geunyeoneun angyeongeul sseoyo"
+            }
+          ]
+        },
+        {
+          "id": "ko_u11_l3",
+          "title": {
+            "id": "Memakai Pakaian",
+            "en": "Wearing Clothes"
+          },
+          "words": [
+            {
+              "target": "입다",
+              "meaning": {
+                "id": "memakai",
+                "en": "to have clothes on"
+              },
+              "emoji": "🙆",
+              "romaji": "ipda"
+            },
+            {
+              "target": "벗다",
+              "meaning": {
+                "id": "melepas",
+                "en": "to remove clothes"
+              },
+              "emoji": "🙅",
+              "romaji": "beotda"
+            },
+            {
+              "target": "사이즈",
+              "meaning": {
+                "id": "ukuran",
+                "en": "small, medium, or large"
+              },
+              "emoji": "📏",
+              "romaji": "saijeu"
+            },
+            {
+              "target": "새롭다",
+              "meaning": {
+                "id": "baru",
+                "en": "not old"
+              },
+              "emoji": "✨",
+              "romaji": "saeropda"
+            },
+            {
+              "target": "깨끗하다",
+              "meaning": {
+                "id": "bersih",
+                "en": "not dirty"
+              },
+              "emoji": "🧼",
+              "romaji": "kkaekkeuthada"
+            },
+            {
+              "target": "더럽다",
+              "meaning": {
+                "id": "kotor",
+                "en": "not clean"
+              },
+              "emoji": "🧹",
+              "romaji": "deoreopda"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "이 셔츠는 새 거예요",
+              "tokens": [
+                "이",
+                "셔츠는",
+                "새",
+                "거예요"
+              ],
+              "meaning": {
+                "id": "Kemeja ini baru",
+                "en": "say a shirt was just bought"
+              },
+              "romaji": "i syeocheuneun sae geoyeyo"
+            },
+            {
+              "target": "제 양말이 더러워요",
+              "tokens": [
+                "제",
+                "양말이",
+                "더러워요"
+              ],
+              "meaning": {
+                "id": "Kaus kaki saya kotor",
+                "en": "say socks need washing"
+              },
+              "romaji": "je yangmari deoreowoyo"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ko_u12",
+      "title": {
+        "id": "Sekolah",
+        "en": "School"
+      },
+      "color": "#FF9600",
+      "icon": "🏫",
+      "lessons": [
+        {
+          "id": "ko_u12_l1",
+          "title": {
+            "id": "Alat Tulis",
+            "en": "Stationery"
+          },
+          "words": [
+            {
+              "target": "책",
+              "meaning": {
+                "id": "buku",
+                "en": "pages you read"
+              },
+              "emoji": "📕",
+              "romaji": "chaek"
+            },
+            {
+              "target": "펜",
+              "meaning": {
+                "id": "pena",
+                "en": "writes with ink"
+              },
+              "emoji": "🖊️",
+              "romaji": "pen"
+            },
+            {
+              "target": "연필",
+              "meaning": {
+                "id": "pensil",
+                "en": "writes and can be erased"
+              },
+              "emoji": "✏️",
+              "romaji": "yeonpil"
+            },
+            {
+              "target": "종이",
+              "meaning": {
+                "id": "kertas",
+                "en": "you write on it"
+              },
+              "emoji": "📄",
+              "romaji": "jongi"
+            },
+            {
+              "target": "지우개",
+              "meaning": {
+                "id": "penghapus",
+                "en": "removes pencil marks"
+              },
+              "emoji": "🩹",
+              "romaji": "jiugae"
+            },
+            {
+              "target": "공책",
+              "meaning": {
+                "id": "buku catatan",
+                "en": "a book for notes"
+              },
+              "emoji": "📓",
+              "romaji": "gongchaek"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "저는 연필이 필요해요",
+              "tokens": [
+                "저는",
+                "연필이",
+                "필요해요"
+              ],
+              "meaning": {
+                "id": "Saya perlu pensil",
+                "en": "ask for something to write with"
+              },
+              "romaji": "jeoneun yeonpiri piryohaeyo"
+            },
+            {
+              "target": "제 책은 탁자 위에 있어요",
+              "tokens": [
+                "제",
+                "책은",
+                "탁자",
+                "위에",
+                "있어요"
+              ],
+              "meaning": {
+                "id": "Buku saya di atas meja",
+                "en": "say where the book is"
+              },
+              "romaji": "je chaegeun takja wie isseoyo"
+            }
+          ]
+        },
+        {
+          "id": "ko_u12_l2",
+          "title": {
+            "id": "Di Kelas",
+            "en": "In the Classroom"
+          },
+          "words": [
+            {
+              "target": "학교",
+              "meaning": {
+                "id": "sekolah",
+                "en": "a place to learn"
+              },
+              "emoji": "🏫",
+              "romaji": "hakgyo"
+            },
+            {
+              "target": "수업",
+              "meaning": {
+                "id": "kelas",
+                "en": "a group lesson"
+              },
+              "emoji": "🧑‍🏫",
+              "romaji": "sueop"
+            },
+            {
+              "target": "교실",
+              "meaning": {
+                "id": "ruang kelas",
+                "en": "the room for lessons"
+              },
+              "emoji": "🪑",
+              "romaji": "gyosil"
+            },
+            {
+              "target": "숙제",
+              "meaning": {
+                "id": "pekerjaan rumah",
+                "en": "schoolwork done at home"
+              },
+              "emoji": "📝",
+              "romaji": "sukje"
+            },
+            {
+              "target": "시험",
+              "meaning": {
+                "id": "ujian",
+                "en": "checks what you learned"
+              },
+              "emoji": "📋",
+              "romaji": "siheom"
+            },
+            {
+              "target": "질문",
+              "meaning": {
+                "id": "pertanyaan",
+                "en": "something you ask"
+              },
+              "emoji": "❓",
+              "romaji": "jilmun"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "저는 오늘 숙제가 있어요",
+              "tokens": [
+                "저는",
+                "오늘",
+                "숙제가",
+                "있어요"
+              ],
+              "meaning": {
+                "id": "Saya ada pekerjaan rumah hari ini",
+                "en": "talk about your homework"
+              },
+              "romaji": "jeoneun oneul sukjega isseoyo"
+            },
+            {
+              "target": "시험은 내일이에요",
+              "tokens": [
+                "시험은",
+                "내일이에요"
+              ],
+              "meaning": {
+                "id": "Ujiannya besok",
+                "en": "say when the test is"
+              },
+              "romaji": "siheomeun naeirieyo"
+            }
+          ]
+        },
+        {
+          "id": "ko_u12_l3",
+          "title": {
+            "id": "Belajar",
+            "en": "Studying"
+          },
+          "words": [
+            {
+              "target": "배우다",
+              "meaning": {
+                "id": "mempelajari",
+                "en": "to gain knowledge"
+              },
+              "emoji": "🧠",
+              "romaji": "baeuda"
+            },
+            {
+              "target": "이해하다",
+              "meaning": {
+                "id": "mengerti",
+                "en": "to know the meaning"
+              },
+              "emoji": "💡",
+              "romaji": "ihaehada"
+            },
+            {
+              "target": "기억하다",
+              "meaning": {
+                "id": "mengingat",
+                "en": "to keep in mind"
+              },
+              "emoji": "🔖",
+              "romaji": "gieokhada"
+            },
+            {
+              "target": "잊다",
+              "meaning": {
+                "id": "melupakan",
+                "en": "to lose from memory"
+              },
+              "emoji": "🌫️",
+              "romaji": "itda"
+            },
+            {
+              "target": "대답하다",
+              "meaning": {
+                "id": "menjawab",
+                "en": "to reply to a question"
+              },
+              "emoji": "💬",
+              "romaji": "daedaphada"
+            },
+            {
+              "target": "묻다",
+              "meaning": {
+                "id": "bertanya",
+                "en": "to request information"
+              },
+              "emoji": "🙋",
+              "romaji": "mutda"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "저는 질문을 이해해요",
+              "tokens": [
+                "저는",
+                "질문을",
+                "이해해요"
+              ],
+              "meaning": {
+                "id": "Saya mengerti pertanyaannya",
+                "en": "say the question is clear"
+              },
+              "romaji": "jeoneun jilmuneul ihaehaeyo"
+            },
+            {
+              "target": "영어로 대답해 주세요",
+              "tokens": [
+                "영어로",
+                "대답해",
+                "주세요"
+              ],
+              "meaning": {
+                "id": "Tolong jawab dalam bahasa Inggris",
+                "en": "ask for an English reply"
+              },
+              "romaji": "yeongeoro daedaphae juseyo"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ko_u13",
+      "title": {
+        "id": "Pekerjaan",
+        "en": "Work & Jobs"
+      },
+      "color": "#FF4B4B",
+      "icon": "💼",
+      "lessons": [
+        {
+          "id": "ko_u13_l1",
+          "title": {
+            "id": "Profesi 1",
+            "en": "Jobs 1"
+          },
+          "words": [
+            {
+              "target": "직업",
+              "meaning": {
+                "id": "pekerjaan",
+                "en": "the work you do for money"
+              },
+              "emoji": "💼",
+              "romaji": "jigeop"
+            },
+            {
+              "target": "간호사",
+              "meaning": {
+                "id": "perawat",
+                "en": "cares for patients"
+              },
+              "emoji": "👩‍⚕️",
+              "romaji": "ganhosa"
+            },
+            {
+              "target": "경찰관",
+              "meaning": {
+                "id": "polisi",
+                "en": "keeps people safe"
+              },
+              "emoji": "👮",
+              "romaji": "gyeongchalgwan"
+            },
+            {
+              "target": "농부",
+              "meaning": {
+                "id": "petani",
+                "en": "grows crops"
+              },
+              "emoji": "👩‍🌾",
+              "romaji": "nongbu"
+            },
+            {
+              "target": "요리사",
+              "meaning": {
+                "id": "juru masak",
+                "en": "prepares food"
+              },
+              "emoji": "👨‍🍳",
+              "romaji": "yorisa"
+            },
+            {
+              "target": "운전사",
+              "meaning": {
+                "id": "sopir",
+                "en": "drives a vehicle"
+              },
+              "emoji": "🚖",
+              "romaji": "unjeonsa"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "제 아버지는 농부예요",
+              "tokens": [
+                "제",
+                "아버지는",
+                "농부예요"
+              ],
+              "meaning": {
+                "id": "Ayah saya seorang petani",
+                "en": "tell a parent's job"
+              },
+              "romaji": "je abeojineun nongbuyeyo"
+            },
+            {
+              "target": "간호사는 친절해요",
+              "tokens": [
+                "간호사는",
+                "친절해요"
+              ],
+              "meaning": {
+                "id": "Perawat itu baik hati",
+                "en": "describe a nurse"
+              },
+              "romaji": "ganhosaneun chinjeolhaeyo"
+            }
+          ]
+        },
+        {
+          "id": "ko_u13_l2",
+          "title": {
+            "id": "Profesi 2",
+            "en": "Jobs 2"
+          },
+          "words": [
+            {
+              "target": "엔지니어",
+              "meaning": {
+                "id": "insinyur",
+                "en": "designs and builds things"
+              },
+              "emoji": "👷",
+              "romaji": "enjinieo"
+            },
+            {
+              "target": "변호사",
+              "meaning": {
+                "id": "pengacara",
+                "en": "works with the law"
+              },
+              "emoji": "⚖️",
+              "romaji": "byeonhosa"
+            },
+            {
+              "target": "가수",
+              "meaning": {
+                "id": "penyanyi",
+                "en": "performs songs"
+              },
+              "emoji": "🎤",
+              "romaji": "gasu"
+            },
+            {
+              "target": "예술가",
+              "meaning": {
+                "id": "seniman",
+                "en": "makes art"
+              },
+              "emoji": "🎨",
+              "romaji": "yesulga"
+            },
+            {
+              "target": "사업가",
+              "meaning": {
+                "id": "pengusaha",
+                "en": "runs a business"
+              },
+              "emoji": "👔",
+              "romaji": "saeopga"
+            },
+            {
+              "target": "조종사",
+              "meaning": {
+                "id": "pilot",
+                "en": "flies a plane"
+              },
+              "emoji": "👨‍✈️",
+              "romaji": "jojongsa"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "그녀는 조종사가 되고 싶어해요",
+              "tokens": [
+                "그녀는",
+                "조종사가",
+                "되고",
+                "싶어해요"
+              ],
+              "meaning": {
+                "id": "Dia ingin menjadi pilot",
+                "en": "talk about a dream job"
+              },
+              "romaji": "geunyeoneun jojongsaga doego sipeohaeyo"
+            },
+            {
+              "target": "그 가수는 유명해요",
+              "tokens": [
+                "그",
+                "가수는",
+                "유명해요"
+              ],
+              "meaning": {
+                "id": "Penyanyi itu terkenal",
+                "en": "describe a well-known singer"
+              },
+              "romaji": "geu gasuneun yumyeonghaeyo"
+            }
+          ]
+        },
+        {
+          "id": "ko_u13_l3",
+          "title": {
+            "id": "Di Kantor",
+            "en": "At the Office"
+          },
+          "words": [
+            {
+              "target": "사무실",
+              "meaning": {
+                "id": "kantor",
+                "en": "where office work happens"
+              },
+              "emoji": "🏢",
+              "romaji": "samusil"
+            },
+            {
+              "target": "회의",
+              "meaning": {
+                "id": "rapat",
+                "en": "people talking about work"
+              },
+              "emoji": "🤝",
+              "romaji": "hoeui"
+            },
+            {
+              "target": "컴퓨터",
+              "meaning": {
+                "id": "komputer",
+                "en": "a machine for work and internet"
+              },
+              "emoji": "💻",
+              "romaji": "keompyuteo"
+            },
+            {
+              "target": "상사",
+              "meaning": {
+                "id": "bos",
+                "en": "the person in charge"
+              },
+              "emoji": "🧑‍💼",
+              "romaji": "sangsa"
+            },
+            {
+              "target": "월급",
+              "meaning": {
+                "id": "gaji",
+                "en": "money paid for work"
+              },
+              "emoji": "💵",
+              "romaji": "wolgeup"
+            },
+            {
+              "target": "바쁘다",
+              "meaning": {
+                "id": "sibuk",
+                "en": "having a lot to do"
+              },
+              "emoji": "⏳",
+              "romaji": "bappeuda"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "회의는 아홉 시에 있어요",
+              "tokens": [
+                "회의는",
+                "아홉",
+                "시에",
+                "있어요"
+              ],
+              "meaning": {
+                "id": "Rapatnya jam sembilan",
+                "en": "say when the meeting starts"
+              },
+              "romaji": "hoeuineun ahop sie isseoyo"
+            },
+            {
+              "target": "저는 사무실에서 바빠요",
+              "tokens": [
+                "저는",
+                "사무실에서",
+                "바빠요"
+              ],
+              "meaning": {
+                "id": "Saya sibuk di kantor",
+                "en": "say you have lots of work"
+              },
+              "romaji": "jeoneun samusireseo bappayo"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ko_u14",
+      "title": {
+        "id": "Transportasi",
+        "en": "Transportation"
+      },
+      "color": "#2B70C9",
+      "icon": "🚗",
+      "lessons": [
+        {
+          "id": "ko_u14_l1",
+          "title": {
+            "id": "Kendaraan",
+            "en": "Vehicles"
+          },
+          "words": [
+            {
+              "target": "자동차",
+              "meaning": {
+                "id": "mobil",
+                "en": "a vehicle with four wheels"
+              },
+              "emoji": "🚗",
+              "romaji": "jadongcha"
+            },
+            {
+              "target": "버스",
+              "meaning": {
+                "id": "bus",
+                "en": "a big vehicle for many people"
+              },
+              "emoji": "🚌",
+              "romaji": "beoseu"
+            },
+            {
+              "target": "기차",
+              "meaning": {
+                "id": "kereta",
+                "en": "runs on rails"
+              },
+              "emoji": "🚆",
+              "romaji": "gicha"
+            },
+            {
+              "target": "자전거",
+              "meaning": {
+                "id": "sepeda",
+                "en": "two wheels, you pedal it"
+              },
+              "emoji": "🚲",
+              "romaji": "jajeongeo"
+            },
+            {
+              "target": "오토바이",
+              "meaning": {
+                "id": "sepeda motor",
+                "en": "two wheels with an engine"
+              },
+              "emoji": "🏍️",
+              "romaji": "otobai"
+            },
+            {
+              "target": "비행기",
+              "meaning": {
+                "id": "pesawat",
+                "en": "flies in the sky"
+              },
+              "emoji": "✈️",
+              "romaji": "bihaenggi"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "저는 버스로 출근해요",
+              "tokens": [
+                "저는",
+                "버스로",
+                "출근해요"
+              ],
+              "meaning": {
+                "id": "Saya pergi bekerja naik bus",
+                "en": "tell how you commute"
+              },
+              "romaji": "jeoneun beoseuro chulgeunhaeyo"
+            },
+            {
+              "target": "기차는 빨라요",
+              "tokens": [
+                "기차는",
+                "빨라요"
+              ],
+              "meaning": {
+                "id": "Kereta itu cepat",
+                "en": "describe a train"
+              },
+              "romaji": "gichaneun ppallayo"
+            }
+          ]
+        },
+        {
+          "id": "ko_u14_l2",
+          "title": {
+            "id": "Stasiun & Tiket",
+            "en": "Station & Tickets"
+          },
+          "words": [
+            {
+              "target": "역",
+              "meaning": {
+                "id": "stasiun",
+                "en": "where trains stop"
+              },
+              "emoji": "🚉",
+              "romaji": "yeok"
+            },
+            {
+              "target": "표",
+              "meaning": {
+                "id": "tiket",
+                "en": "you need it to ride"
+              },
+              "emoji": "🎫",
+              "romaji": "pyo"
+            },
+            {
+              "target": "공항",
+              "meaning": {
+                "id": "bandara",
+                "en": "where planes take off"
+              },
+              "emoji": "🛫",
+              "romaji": "gonghang"
+            },
+            {
+              "target": "승강장",
+              "meaning": {
+                "id": "peron",
+                "en": "where you wait for the train"
+              },
+              "emoji": "🛤️",
+              "romaji": "seunggangjang"
+            },
+            {
+              "target": "시간표",
+              "meaning": {
+                "id": "jadwal",
+                "en": "the timetable"
+              },
+              "emoji": "🕐",
+              "romaji": "siganpyo"
+            },
+            {
+              "target": "늦다",
+              "meaning": {
+                "id": "terlambat",
+                "en": "after the expected time"
+              },
+              "emoji": "⏰",
+              "romaji": "neutda"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "역은 어디에 있어요",
+              "tokens": [
+                "역은",
+                "어디에",
+                "있어요"
+              ],
+              "meaning": {
+                "id": "Di mana stasiunnya",
+                "en": "ask for the station"
+              },
+              "romaji": "yeogeun eodie isseoyo"
+            },
+            {
+              "target": "버스가 늦어요",
+              "tokens": [
+                "버스가",
+                "늦어요"
+              ],
+              "meaning": {
+                "id": "Bus itu terlambat",
+                "en": "say the bus is not on time"
+              },
+              "romaji": "beoseuga neujeoyo"
+            }
+          ]
+        },
+        {
+          "id": "ko_u14_l3",
+          "title": {
+            "id": "Naik & Turun",
+            "en": "Getting On & Off"
+          },
+          "words": [
+            {
+              "target": "올라타다",
+              "meaning": {
+                "id": "naik",
+                "en": "to board a vehicle"
+              },
+              "emoji": "🚏",
+              "romaji": "ollatada"
+            },
+            {
+              "target": "내리다",
+              "meaning": {
+                "id": "turun",
+                "en": "to leave a vehicle"
+              },
+              "emoji": "🚶",
+              "romaji": "naerida"
+            },
+            {
+              "target": "운전하다",
+              "meaning": {
+                "id": "mengemudi",
+                "en": "to control a car"
+              },
+              "emoji": "🚙",
+              "romaji": "unjeonhada"
+            },
+            {
+              "target": "타다",
+              "meaning": {
+                "id": "mengendarai",
+                "en": "to travel on a bike or horse"
+              },
+              "emoji": "🚴",
+              "romaji": "tada"
+            },
+            {
+              "target": "멈추다",
+              "meaning": {
+                "id": "berhenti",
+                "en": "to no longer move"
+              },
+              "emoji": "🛑",
+              "romaji": "meomchuda"
+            },
+            {
+              "target": "돌다",
+              "meaning": {
+                "id": "belok",
+                "en": "to change direction"
+              },
+              "emoji": "↪️",
+              "romaji": "dolda"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "다음 정류장에서 내리세요",
+              "tokens": [
+                "다음",
+                "정류장에서",
+                "내리세요"
+              ],
+              "meaning": {
+                "id": "Turun di halte berikutnya",
+                "en": "give directions on a bus"
+              },
+              "romaji": "daeum jeongnyujangeseo naeriseyo"
+            },
+            {
+              "target": "여기서 왼쪽으로 도세요",
+              "tokens": [
+                "여기서",
+                "왼쪽으로",
+                "도세요"
+              ],
+              "meaning": {
+                "id": "Belok kiri di sini",
+                "en": "give a driving direction"
+              },
+              "romaji": "yeogiseo oenjjogeuro doseyo"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ko_u15",
+      "title": {
+        "id": "Kota & Tempat",
+        "en": "City & Places"
+      },
+      "color": "#FFC800",
+      "icon": "🏙️",
+      "lessons": [
+        {
+          "id": "ko_u15_l1",
+          "title": {
+            "id": "Fasilitas Umum",
+            "en": "Public Places"
+          },
+          "words": [
+            {
+              "target": "도시",
+              "meaning": {
+                "id": "kota",
+                "en": "a big town"
+              },
+              "emoji": "🏙️",
+              "romaji": "dosi"
+            },
+            {
+              "target": "은행",
+              "meaning": {
+                "id": "bank",
+                "en": "where money is kept"
+              },
+              "emoji": "🏦",
+              "romaji": "eunhaeng"
+            },
+            {
+              "target": "우체국",
+              "meaning": {
+                "id": "kantor pos",
+                "en": "where you send letters"
+              },
+              "emoji": "📮",
+              "romaji": "ucheguk"
+            },
+            {
+              "target": "시장",
+              "meaning": {
+                "id": "pasar",
+                "en": "where people buy food"
+              },
+              "emoji": "🧺",
+              "romaji": "sijang"
+            },
+            {
+              "target": "도서관",
+              "meaning": {
+                "id": "perpustakaan",
+                "en": "a place full of books"
+              },
+              "emoji": "📚",
+              "romaji": "doseogwan"
+            },
+            {
+              "target": "공원",
+              "meaning": {
+                "id": "taman",
+                "en": "a green public space"
+              },
+              "emoji": "🌳",
+              "romaji": "gongwon"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "우리 은행은 시장 근처에 있어요",
+              "tokens": [
+                "우리",
+                "은행은",
+                "시장",
+                "근처에",
+                "있어요"
+              ],
+              "meaning": {
+                "id": "Bank kami dekat pasar",
+                "en": "say where the bank is"
+              },
+              "romaji": "uri eunhaengeun sijang geuncheoe isseoyo"
+            },
+            {
+              "target": "저는 도서관에서 책을 읽어요",
+              "tokens": [
+                "저는",
+                "도서관에서",
+                "책을",
+                "읽어요"
+              ],
+              "meaning": {
+                "id": "Saya membaca di perpustakaan",
+                "en": "say where you read"
+              },
+              "romaji": "jeoneun doseogwaneseo chaegeul ilgeoyo"
+            }
+          ]
+        },
+        {
+          "id": "ko_u15_l2",
+          "title": {
+            "id": "Tempat Hiburan",
+            "en": "Fun Places"
+          },
+          "words": [
+            {
+              "target": "영화관",
+              "meaning": {
+                "id": "bioskop",
+                "en": "where you watch movies"
+              },
+              "emoji": "🎬",
+              "romaji": "yeonghwagwan"
+            },
+            {
+              "target": "식당",
+              "meaning": {
+                "id": "restoran",
+                "en": "where you eat out"
+              },
+              "emoji": "🍽️",
+              "romaji": "sikdang"
+            },
+            {
+              "target": "카페",
+              "meaning": {
+                "id": "kafe",
+                "en": "where you drink coffee"
+              },
+              "emoji": "☕",
+              "romaji": "kape"
+            },
+            {
+              "target": "박물관",
+              "meaning": {
+                "id": "museum",
+                "en": "shows art and history"
+              },
+              "emoji": "🏛️",
+              "romaji": "bangmulgwan"
+            },
+            {
+              "target": "해변",
+              "meaning": {
+                "id": "pantai",
+                "en": "sand by the sea"
+              },
+              "emoji": "🏖️",
+              "romaji": "haebyeon"
+            },
+            {
+              "target": "쇼핑몰",
+              "meaning": {
+                "id": "mal",
+                "en": "a big shopping building"
+              },
+              "emoji": "🏬",
+              "romaji": "syopingmol"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "우리는 영화관에서 영화를 봐요",
+              "tokens": [
+                "우리는",
+                "영화관에서",
+                "영화를",
+                "봐요"
+              ],
+              "meaning": {
+                "id": "Kita nonton film di bioskop",
+                "en": "talk about going to the movies"
+              },
+              "romaji": "urineun yeonghwagwaneseo yeonghwareul bwayo"
+            },
+            {
+              "target": "우리 해변에 가요",
+              "tokens": [
+                "우리",
+                "해변에",
+                "가요"
+              ],
+              "meaning": {
+                "id": "Ayo pergi ke pantai",
+                "en": "invite someone to the beach"
+              },
+              "romaji": "uri haebyeone gayo"
+            }
+          ]
+        },
+        {
+          "id": "ko_u15_l3",
+          "title": {
+            "id": "Arah",
+            "en": "Directions"
+          },
+          "words": [
+            {
+              "target": "왼쪽",
+              "meaning": {
+                "id": "kiri",
+                "en": "the opposite of right"
+              },
+              "emoji": "⬅️",
+              "romaji": "oenjjok"
+            },
+            {
+              "target": "오른쪽",
+              "meaning": {
+                "id": "kanan",
+                "en": "the opposite of left"
+              },
+              "emoji": "➡️",
+              "romaji": "oreunjjok"
+            },
+            {
+              "target": "직진",
+              "meaning": {
+                "id": "lurus",
+                "en": "without turning"
+              },
+              "emoji": "⬆️",
+              "romaji": "jikjin"
+            },
+            {
+              "target": "가깝다",
+              "meaning": {
+                "id": "dekat",
+                "en": "a short distance away"
+              },
+              "emoji": "📍",
+              "romaji": "gakkapda"
+            },
+            {
+              "target": "멀다",
+              "meaning": {
+                "id": "jauh",
+                "en": "a long distance away"
+              },
+              "emoji": "🗺️",
+              "romaji": "meolda"
+            },
+            {
+              "target": "여기",
+              "meaning": {
+                "id": "di sini",
+                "en": "in this place"
+              },
+              "emoji": "🧭",
+              "romaji": "yeogi"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "직진해서 오른쪽으로 도세요",
+              "tokens": [
+                "직진해서",
+                "오른쪽으로",
+                "도세요"
+              ],
+              "meaning": {
+                "id": "Jalan lurus lalu belok kanan",
+                "en": "give directions"
+              },
+              "romaji": "jikjinhaeseo oreunjjogeuro doseyo"
+            },
+            {
+              "target": "학교는 여기서 멀어요",
+              "tokens": [
+                "학교는",
+                "여기서",
+                "멀어요"
+              ],
+              "meaning": {
+                "id": "Sekolahnya jauh dari sini",
+                "en": "say a place is not close"
+              },
+              "romaji": "hakgyoneun yeogiseo meoreoyo"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ko_u16",
+      "title": {
+        "id": "Belanja & Uang",
+        "en": "Shopping & Money"
+      },
+      "color": "#A560E8",
+      "icon": "🛍️",
+      "lessons": [
+        {
+          "id": "ko_u16_l1",
+          "title": {
+            "id": "Membeli",
+            "en": "Buying"
+          },
+          "words": [
+            {
+              "target": "사다",
+              "meaning": {
+                "id": "membeli",
+                "en": "to get something with money"
+              },
+              "emoji": "🛒",
+              "romaji": "sada"
+            },
+            {
+              "target": "팔다",
+              "meaning": {
+                "id": "menjual",
+                "en": "to give something for money"
+              },
+              "emoji": "🏷️",
+              "romaji": "palda"
+            },
+            {
+              "target": "가게",
+              "meaning": {
+                "id": "toko",
+                "en": "a place that sells things"
+              },
+              "emoji": "🏪",
+              "romaji": "gage"
+            },
+            {
+              "target": "돈",
+              "meaning": {
+                "id": "uang",
+                "en": "coins and bills"
+              },
+              "emoji": "💰",
+              "romaji": "don"
+            },
+            {
+              "target": "가격",
+              "meaning": {
+                "id": "harga",
+                "en": "how much something costs"
+              },
+              "emoji": "💲",
+              "romaji": "gagyeok"
+            },
+            {
+              "target": "지불하다",
+              "meaning": {
+                "id": "membayar",
+                "en": "to give money for something"
+              },
+              "emoji": "💳",
+              "romaji": "jibulhada"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "저는 빵을 사고 싶어요",
+              "tokens": [
+                "저는",
+                "빵을",
+                "사고",
+                "싶어요"
+              ],
+              "meaning": {
+                "id": "Saya mau membeli roti",
+                "en": "say what you want to buy"
+              },
+              "romaji": "jeoneun ppangeul sago sipeoyo"
+            },
+            {
+              "target": "가격이 얼마예요",
+              "tokens": [
+                "가격이",
+                "얼마예요"
+              ],
+              "meaning": {
+                "id": "Berapa harganya",
+                "en": "ask the cost"
+              },
+              "romaji": "gagyeogi eolmayeyo"
+            }
+          ]
+        },
+        {
+          "id": "ko_u16_l2",
+          "title": {
+            "id": "Mahal & Murah",
+            "en": "Expensive & Cheap"
+          },
+          "words": [
+            {
+              "target": "비싸다",
+              "meaning": {
+                "id": "mahal",
+                "en": "costing a lot"
+              },
+              "emoji": "💎",
+              "romaji": "bissada"
+            },
+            {
+              "target": "싸다",
+              "meaning": {
+                "id": "murah",
+                "en": "costing little"
+              },
+              "emoji": "🪙",
+              "romaji": "ssada"
+            },
+            {
+              "target": "할인",
+              "meaning": {
+                "id": "diskon",
+                "en": "a lower price"
+              },
+              "emoji": "🔖",
+              "romaji": "harin"
+            },
+            {
+              "target": "무료",
+              "meaning": {
+                "id": "gratis",
+                "en": "costing nothing"
+              },
+              "emoji": "🎁",
+              "romaji": "muryo"
+            },
+            {
+              "target": "더",
+              "meaning": {
+                "id": "lebih banyak",
+                "en": "a bigger amount"
+              },
+              "emoji": "➕",
+              "romaji": "deo"
+            },
+            {
+              "target": "덜",
+              "meaning": {
+                "id": "lebih sedikit",
+                "en": "a smaller amount"
+              },
+              "emoji": "➖",
+              "romaji": "deol"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "이 가방은 너무 비싸요",
+              "tokens": [
+                "이",
+                "가방은",
+                "너무",
+                "비싸요"
+              ],
+              "meaning": {
+                "id": "Tas ini terlalu mahal",
+                "en": "complain about a price"
+              },
+              "romaji": "i gabangeun neomu bissayo"
+            },
+            {
+              "target": "오늘은 신발이 싸요",
+              "tokens": [
+                "오늘은",
+                "신발이",
+                "싸요"
+              ],
+              "meaning": {
+                "id": "Sepatunya murah hari ini",
+                "en": "mention a good price"
+              },
+              "romaji": "oneureun sinbari ssayo"
+            }
+          ]
+        },
+        {
+          "id": "ko_u16_l3",
+          "title": {
+            "id": "Di Kasir",
+            "en": "At the Cashier"
+          },
+          "words": [
+            {
+              "target": "계산원",
+              "meaning": {
+                "id": "kasir",
+                "en": "the person who takes payment"
+              },
+              "emoji": "🧑‍💻",
+              "romaji": "gyesanwon"
+            },
+            {
+              "target": "영수증",
+              "meaning": {
+                "id": "struk",
+                "en": "proof of payment"
+              },
+              "emoji": "🧾",
+              "romaji": "yeongsujeung"
+            },
+            {
+              "target": "카드",
+              "meaning": {
+                "id": "kartu",
+                "en": "plastic used to pay"
+              },
+              "emoji": "💳",
+              "romaji": "kadeu"
+            },
+            {
+              "target": "현금",
+              "meaning": {
+                "id": "uang tunai",
+                "en": "paper money and coins"
+              },
+              "emoji": "💵",
+              "romaji": "hyeongeum"
+            },
+            {
+              "target": "잔돈",
+              "meaning": {
+                "id": "kembalian",
+                "en": "money you get back"
+              },
+              "emoji": "🪙",
+              "romaji": "jandon"
+            },
+            {
+              "target": "지갑",
+              "meaning": {
+                "id": "dompet",
+                "en": "holds your money and cards"
+              },
+              "emoji": "👛",
+              "romaji": "jigap"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "카드로 지불할 수 있어요",
+              "tokens": [
+                "카드로",
+                "지불할",
+                "수",
+                "있어요"
+              ],
+              "meaning": {
+                "id": "Bisa bayar dengan kartu",
+                "en": "ask about card payment"
+              },
+              "romaji": "kadeuro jibulhal su isseoyo"
+            },
+            {
+              "target": "잔돈 여기 있어요",
+              "tokens": [
+                "잔돈",
+                "여기",
+                "있어요"
+              ],
+              "meaning": {
+                "id": "Ini kembalian Anda",
+                "en": "hand back money"
+              },
+              "romaji": "jandon yeogi isseoyo"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

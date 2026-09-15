@@ -36,6 +36,16 @@ Semua perubahan penting dicatat di sini. Versi mengikuti `pubspec.yaml`
 - Catatan: Speaking tidak disimulasikan dan esai TOEFL/IELTS/PTE diganti
   isian singkat yang diketik supaya bisa dinilai offline.
 
+### Baru (Jalur Belajar)
+- **12 unit baru** untuk kursus Inggris, Jerman, Korea, dan Indonesia
+  (unit 5–16, tema sejajar dengan kursus Jepang): Angka Lanjutan, Warna,
+  Hewan, Hari & Pekan, Cuaca & Musim, Tubuh & Kesehatan, Pakaian, Sekolah,
+  Pekerjaan, Transportasi, Kota & Tempat, serta Belanja & Uang — 36
+  pelajaran, 216 kata, dan 72 kalimat baru per kursus (tiap kursus kini 16
+  unit / 48 pelajaran / 288 kata). Materi dibangun dari satu data induk
+  (`tool/course_units_master.py` + terjemahan `course_units_de.py` /
+  `course_units_ko.py`) lewat `tool/gen_course_units.py`.
+
 ## 1.7.0 (build 18) — 9 September 2026
 
 ### Baru (Tulis Huruf)

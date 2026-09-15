@@ -1163,6 +1163,3521 @@
           ]
         }
       ]
+    },
+    {
+      "id": "en_u5",
+      "title": {
+        "id": "Angka Lanjutan",
+        "en": "More Numbers"
+      },
+      "color": "#FF4B4B",
+      "icon": "🔢",
+      "lessons": [
+        {
+          "id": "en_u5_l1",
+          "title": {
+            "id": "Angka 6-9 & Ratusan",
+            "en": "Numbers 6-9 & Hundreds"
+          },
+          "words": [
+            {
+              "target": "six",
+              "meaning": {
+                "id": "enam",
+                "en": "the number 6"
+              },
+              "emoji": "6️⃣",
+              "romaji": "siks"
+            },
+            {
+              "target": "seven",
+              "meaning": {
+                "id": "tujuh",
+                "en": "the number 7"
+              },
+              "emoji": "7️⃣",
+              "romaji": "se-ven"
+            },
+            {
+              "target": "eight",
+              "meaning": {
+                "id": "delapan",
+                "en": "the number 8"
+              },
+              "emoji": "8️⃣",
+              "romaji": "eit"
+            },
+            {
+              "target": "nine",
+              "meaning": {
+                "id": "sembilan",
+                "en": "the number 9"
+              },
+              "emoji": "9️⃣",
+              "romaji": "nain"
+            },
+            {
+              "target": "hundred",
+              "meaning": {
+                "id": "seratus",
+                "en": "the number 100"
+              },
+              "emoji": "💯",
+              "romaji": "han-dred"
+            },
+            {
+              "target": "zero",
+              "meaning": {
+                "id": "nol",
+                "en": "the number 0"
+              },
+              "emoji": "0️⃣",
+              "romaji": "zi-rou"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "I have six apples",
+              "tokens": [
+                "I",
+                "have",
+                "six",
+                "apples"
+              ],
+              "meaning": {
+                "id": "Saya punya enam apel",
+                "en": "say how many apples you own"
+              },
+              "romaji": "ai hev siks e-pels"
+            },
+            {
+              "target": "Nine plus one is ten",
+              "tokens": [
+                "Nine",
+                "plus",
+                "one",
+                "is",
+                "ten"
+              ],
+              "meaning": {
+                "id": "Sembilan tambah satu sama dengan sepuluh",
+                "en": "a simple sum"
+              },
+              "romaji": "nain plas wan is ten"
+            }
+          ]
+        },
+        {
+          "id": "en_u5_l2",
+          "title": {
+            "id": "Puluhan & Ribuan",
+            "en": "Tens & Thousands"
+          },
+          "words": [
+            {
+              "target": "twenty",
+              "meaning": {
+                "id": "dua puluh",
+                "en": "the number 20"
+              },
+              "emoji": "🔟",
+              "romaji": "twen-ti"
+            },
+            {
+              "target": "thirty",
+              "meaning": {
+                "id": "tiga puluh",
+                "en": "the number 30"
+              },
+              "emoji": "🧮",
+              "romaji": "ter-ti"
+            },
+            {
+              "target": "fifty",
+              "meaning": {
+                "id": "lima puluh",
+                "en": "the number 50"
+              },
+              "emoji": "🎯",
+              "romaji": "fif-ti"
+            },
+            {
+              "target": "thousand",
+              "meaning": {
+                "id": "seribu",
+                "en": "the number 1000"
+              },
+              "emoji": "💵",
+              "romaji": "tau-zend"
+            },
+            {
+              "target": "million",
+              "meaning": {
+                "id": "sejuta",
+                "en": "the number 1,000,000"
+              },
+              "emoji": "💰",
+              "romaji": "mil-yen"
+            },
+            {
+              "target": "number",
+              "meaning": {
+                "id": "angka",
+                "en": "a figure like 1, 2, 3"
+              },
+              "emoji": "🔢",
+              "romaji": "nam-ber"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "Twenty people live here",
+              "tokens": [
+                "Twenty",
+                "people",
+                "live",
+                "here"
+              ],
+              "meaning": {
+                "id": "Dua puluh orang tinggal di sini",
+                "en": "tell how many live in a place"
+              },
+              "romaji": "twen-ti pi-pel liv hir"
+            },
+            {
+              "target": "The number is fifty",
+              "tokens": [
+                "The",
+                "number",
+                "is",
+                "fifty"
+              ],
+              "meaning": {
+                "id": "Angkanya lima puluh",
+                "en": "state a figure"
+              },
+              "romaji": "de nam-ber is fif-ti"
+            }
+          ]
+        },
+        {
+          "id": "en_u5_l3",
+          "title": {
+            "id": "Umur & Urutan",
+            "en": "Age & Order"
+          },
+          "words": [
+            {
+              "target": "age",
+              "meaning": {
+                "id": "umur",
+                "en": "how old someone is"
+              },
+              "emoji": "🎂",
+              "romaji": "eij"
+            },
+            {
+              "target": "year",
+              "meaning": {
+                "id": "tahun",
+                "en": "twelve months"
+              },
+              "emoji": "📆",
+              "romaji": "yir"
+            },
+            {
+              "target": "first",
+              "meaning": {
+                "id": "pertama",
+                "en": "number one in order"
+              },
+              "emoji": "🥇",
+              "romaji": "ferst"
+            },
+            {
+              "target": "second",
+              "meaning": {
+                "id": "kedua",
+                "en": "number two in order"
+              },
+              "emoji": "🥈",
+              "romaji": "se-kend"
+            },
+            {
+              "target": "last",
+              "meaning": {
+                "id": "terakhir",
+                "en": "at the end of the order"
+              },
+              "emoji": "🏁",
+              "romaji": "last"
+            },
+            {
+              "target": "old",
+              "meaning": {
+                "id": "tua",
+                "en": "having lived many years"
+              },
+              "emoji": "👴",
+              "romaji": "old"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "I am twenty years old",
+              "tokens": [
+                "I",
+                "am",
+                "twenty",
+                "years",
+                "old"
+              ],
+              "meaning": {
+                "id": "Umur saya dua puluh tahun",
+                "en": "tell your age"
+              },
+              "romaji": "ai em twen-ti yirs old"
+            },
+            {
+              "target": "She is the first student",
+              "tokens": [
+                "She",
+                "is",
+                "the",
+                "first",
+                "student"
+              ],
+              "meaning": {
+                "id": "Dia murid pertama",
+                "en": "say who comes first"
+              },
+              "romaji": "syi is de ferst styu-dent"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en_u6",
+      "title": {
+        "id": "Warna",
+        "en": "Colors"
+      },
+      "color": "#2B70C9",
+      "icon": "🎨",
+      "lessons": [
+        {
+          "id": "en_u6_l1",
+          "title": {
+            "id": "Warna Dasar",
+            "en": "Basic Colors"
+          },
+          "words": [
+            {
+              "target": "red",
+              "meaning": {
+                "id": "merah",
+                "en": "the color of blood"
+              },
+              "emoji": "🔴",
+              "romaji": "red"
+            },
+            {
+              "target": "blue",
+              "meaning": {
+                "id": "biru",
+                "en": "the color of the sky"
+              },
+              "emoji": "🔵",
+              "romaji": "blu"
+            },
+            {
+              "target": "yellow",
+              "meaning": {
+                "id": "kuning",
+                "en": "the color of the sun"
+              },
+              "emoji": "🟡",
+              "romaji": "ye-lou"
+            },
+            {
+              "target": "green",
+              "meaning": {
+                "id": "hijau",
+                "en": "the color of leaves"
+              },
+              "emoji": "🟢",
+              "romaji": "grin"
+            },
+            {
+              "target": "black",
+              "meaning": {
+                "id": "hitam",
+                "en": "the darkest color"
+              },
+              "emoji": "⚫",
+              "romaji": "blek"
+            },
+            {
+              "target": "white",
+              "meaning": {
+                "id": "putih",
+                "en": "the color of snow"
+              },
+              "emoji": "⚪",
+              "romaji": "wait"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "The sky is blue",
+              "tokens": [
+                "The",
+                "sky",
+                "is",
+                "blue"
+              ],
+              "meaning": {
+                "id": "Langit itu biru",
+                "en": "describe the color of the sky"
+              },
+              "romaji": "de skai is blu"
+            },
+            {
+              "target": "My car is red and white",
+              "tokens": [
+                "My",
+                "car",
+                "is",
+                "red",
+                "and",
+                "white"
+              ],
+              "meaning": {
+                "id": "Mobil saya merah dan putih",
+                "en": "describe two colors of a car"
+              },
+              "romaji": "mai kar is red end wait"
+            }
+          ]
+        },
+        {
+          "id": "en_u6_l2",
+          "title": {
+            "id": "Warna Lain",
+            "en": "More Colors"
+          },
+          "words": [
+            {
+              "target": "orange",
+              "meaning": {
+                "id": "oranye",
+                "en": "the color of the fruit orange"
+              },
+              "emoji": "🟠",
+              "romaji": "o-renj"
+            },
+            {
+              "target": "purple",
+              "meaning": {
+                "id": "ungu",
+                "en": "a mix of red and blue"
+              },
+              "emoji": "🟣",
+              "romaji": "per-pel"
+            },
+            {
+              "target": "pink",
+              "meaning": {
+                "id": "merah muda",
+                "en": "a light red color"
+              },
+              "emoji": "🌸",
+              "romaji": "pingk"
+            },
+            {
+              "target": "brown",
+              "meaning": {
+                "id": "cokelat",
+                "en": "the color of wood"
+              },
+              "emoji": "🟤",
+              "romaji": "braun"
+            },
+            {
+              "target": "gray",
+              "meaning": {
+                "id": "abu-abu",
+                "en": "a mix of black and white"
+              },
+              "emoji": "🩶",
+              "romaji": "grei"
+            },
+            {
+              "target": "color",
+              "meaning": {
+                "id": "warna",
+                "en": "red, blue, green, etc."
+              },
+              "emoji": "🎨",
+              "romaji": "ka-ler"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "The cat is brown",
+              "tokens": [
+                "The",
+                "cat",
+                "is",
+                "brown"
+              ],
+              "meaning": {
+                "id": "Kucing itu cokelat",
+                "en": "describe the color of a cat"
+              },
+              "romaji": "de ket is braun"
+            },
+            {
+              "target": "What color do you like",
+              "tokens": [
+                "What",
+                "color",
+                "do",
+                "you",
+                "like"
+              ],
+              "meaning": {
+                "id": "Warna apa yang kamu suka",
+                "en": "ask about a favorite color"
+              },
+              "romaji": "wat ka-ler du yu laik"
+            }
+          ]
+        },
+        {
+          "id": "en_u6_l3",
+          "title": {
+            "id": "Terang & Suka",
+            "en": "Bright & Favorite"
+          },
+          "words": [
+            {
+              "target": "bright",
+              "meaning": {
+                "id": "terang",
+                "en": "full of light"
+              },
+              "emoji": "💡",
+              "romaji": "brait"
+            },
+            {
+              "target": "dark",
+              "meaning": {
+                "id": "gelap",
+                "en": "with little light"
+              },
+              "emoji": "🌑",
+              "romaji": "dark"
+            },
+            {
+              "target": "favorite",
+              "meaning": {
+                "id": "favorit",
+                "en": "liked the most"
+              },
+              "emoji": "⭐",
+              "romaji": "fei-vo-rit"
+            },
+            {
+              "target": "like",
+              "meaning": {
+                "id": "suka",
+                "en": "to enjoy something"
+              },
+              "emoji": "👍",
+              "romaji": "laik"
+            },
+            {
+              "target": "beautiful",
+              "meaning": {
+                "id": "indah",
+                "en": "very pleasing to see"
+              },
+              "emoji": "🌺",
+              "romaji": "byu-ti-ful"
+            },
+            {
+              "target": "ugly",
+              "meaning": {
+                "id": "jelek",
+                "en": "not nice to look at"
+              },
+              "emoji": "🙈",
+              "romaji": "ag-li"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "Green is my favorite color",
+              "tokens": [
+                "Green",
+                "is",
+                "my",
+                "favorite",
+                "color"
+              ],
+              "meaning": {
+                "id": "Hijau warna favorit saya",
+                "en": "name the color you like most"
+              },
+              "romaji": "grin is mai fei-vo-rit ka-ler"
+            },
+            {
+              "target": "The room is dark",
+              "tokens": [
+                "The",
+                "room",
+                "is",
+                "dark"
+              ],
+              "meaning": {
+                "id": "Kamarnya gelap",
+                "en": "say a room has little light"
+              },
+              "romaji": "de rum is dark"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en_u7",
+      "title": {
+        "id": "Hewan",
+        "en": "Animals"
+      },
+      "color": "#FFC800",
+      "icon": "🐾",
+      "lessons": [
+        {
+          "id": "en_u7_l1",
+          "title": {
+            "id": "Hewan Peliharaan",
+            "en": "Pets"
+          },
+          "words": [
+            {
+              "target": "cat",
+              "meaning": {
+                "id": "kucing",
+                "en": "a small pet that says meow"
+              },
+              "emoji": "🐱",
+              "romaji": "ket"
+            },
+            {
+              "target": "dog",
+              "meaning": {
+                "id": "anjing",
+                "en": "a pet that barks"
+              },
+              "emoji": "🐶",
+              "romaji": "dog"
+            },
+            {
+              "target": "bird",
+              "meaning": {
+                "id": "burung",
+                "en": "an animal with wings"
+              },
+              "emoji": "🐦",
+              "romaji": "berd"
+            },
+            {
+              "target": "rabbit",
+              "meaning": {
+                "id": "kelinci",
+                "en": "a long-eared animal"
+              },
+              "emoji": "🐰",
+              "romaji": "re-bit"
+            },
+            {
+              "target": "hamster",
+              "meaning": {
+                "id": "hamster",
+                "en": "a small furry pet"
+              },
+              "emoji": "🐹",
+              "romaji": "hem-ster"
+            },
+            {
+              "target": "pet",
+              "meaning": {
+                "id": "hewan peliharaan",
+                "en": "an animal kept at home"
+              },
+              "emoji": "🏠",
+              "romaji": "pet"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "I have a small dog",
+              "tokens": [
+                "I",
+                "have",
+                "a",
+                "small",
+                "dog"
+              ],
+              "meaning": {
+                "id": "Saya punya anjing kecil",
+                "en": "talk about your pet"
+              },
+              "romaji": "ai hev e smol dog"
+            },
+            {
+              "target": "The cat sleeps on a chair",
+              "tokens": [
+                "The",
+                "cat",
+                "sleeps",
+                "on",
+                "a",
+                "chair"
+              ],
+              "meaning": {
+                "id": "Kucing itu tidur di kursi",
+                "en": "say where the cat sleeps"
+              },
+              "romaji": "de ket slips on e cer"
+            }
+          ]
+        },
+        {
+          "id": "en_u7_l2",
+          "title": {
+            "id": "Hewan Besar",
+            "en": "Big Animals"
+          },
+          "words": [
+            {
+              "target": "elephant",
+              "meaning": {
+                "id": "gajah",
+                "en": "a huge animal with a trunk"
+              },
+              "emoji": "🐘",
+              "romaji": "e-le-fant"
+            },
+            {
+              "target": "lion",
+              "meaning": {
+                "id": "singa",
+                "en": "the king of the jungle"
+              },
+              "emoji": "🦁",
+              "romaji": "lai-en"
+            },
+            {
+              "target": "tiger",
+              "meaning": {
+                "id": "harimau",
+                "en": "a big striped cat"
+              },
+              "emoji": "🐯",
+              "romaji": "tai-ger"
+            },
+            {
+              "target": "horse",
+              "meaning": {
+                "id": "kuda",
+                "en": "an animal people ride"
+              },
+              "emoji": "🐴",
+              "romaji": "hors"
+            },
+            {
+              "target": "cow",
+              "meaning": {
+                "id": "sapi",
+                "en": "a farm animal that gives milk"
+              },
+              "emoji": "🐮",
+              "romaji": "kau"
+            },
+            {
+              "target": "monkey",
+              "meaning": {
+                "id": "monyet",
+                "en": "an animal that climbs trees"
+              },
+              "emoji": "🐵",
+              "romaji": "mang-ki"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "The elephant is very big",
+              "tokens": [
+                "The",
+                "elephant",
+                "is",
+                "very",
+                "big"
+              ],
+              "meaning": {
+                "id": "Gajah itu sangat besar",
+                "en": "describe an elephant"
+              },
+              "romaji": "de e-le-fant is ve-ri big"
+            },
+            {
+              "target": "Lions eat meat",
+              "tokens": [
+                "Lions",
+                "eat",
+                "meat"
+              ],
+              "meaning": {
+                "id": "Singa makan daging",
+                "en": "say what lions eat"
+              },
+              "romaji": "lai-ens it mit"
+            }
+          ]
+        },
+        {
+          "id": "en_u7_l3",
+          "title": {
+            "id": "Hewan Air & Serangga",
+            "en": "Water Animals & Insects"
+          },
+          "words": [
+            {
+              "target": "frog",
+              "meaning": {
+                "id": "katak",
+                "en": "a green jumping animal"
+              },
+              "emoji": "🐸",
+              "romaji": "frog"
+            },
+            {
+              "target": "turtle",
+              "meaning": {
+                "id": "kura-kura",
+                "en": "a slow animal with a shell"
+              },
+              "emoji": "🐢",
+              "romaji": "ter-tel"
+            },
+            {
+              "target": "shark",
+              "meaning": {
+                "id": "hiu",
+                "en": "a big fish with sharp teeth"
+              },
+              "emoji": "🦈",
+              "romaji": "syark"
+            },
+            {
+              "target": "butterfly",
+              "meaning": {
+                "id": "kupu-kupu",
+                "en": "an insect with colorful wings"
+              },
+              "emoji": "🦋",
+              "romaji": "ba-ter-flai"
+            },
+            {
+              "target": "ant",
+              "meaning": {
+                "id": "semut",
+                "en": "a tiny insect that works hard"
+              },
+              "emoji": "🐜",
+              "romaji": "ent"
+            },
+            {
+              "target": "mosquito",
+              "meaning": {
+                "id": "nyamuk",
+                "en": "a small insect that bites"
+              },
+              "emoji": "🦟",
+              "romaji": "mos-ki-tou"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "The butterfly is beautiful",
+              "tokens": [
+                "The",
+                "butterfly",
+                "is",
+                "beautiful"
+              ],
+              "meaning": {
+                "id": "Kupu-kupu itu indah",
+                "en": "admire a butterfly"
+              },
+              "romaji": "de ba-ter-flai is byu-ti-ful"
+            },
+            {
+              "target": "There are many ants here",
+              "tokens": [
+                "There",
+                "are",
+                "many",
+                "ants",
+                "here"
+              ],
+              "meaning": {
+                "id": "Ada banyak semut di sini",
+                "en": "say there are lots of ants"
+              },
+              "romaji": "der ar me-ni ents hir"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en_u8",
+      "title": {
+        "id": "Hari & Pekan",
+        "en": "Days & Weeks"
+      },
+      "color": "#A560E8",
+      "icon": "📅",
+      "lessons": [
+        {
+          "id": "en_u8_l1",
+          "title": {
+            "id": "Hari Senin-Jumat",
+            "en": "Monday to Friday"
+          },
+          "words": [
+            {
+              "target": "Monday",
+              "meaning": {
+                "id": "Senin",
+                "en": "the first weekday"
+              },
+              "emoji": "1️⃣",
+              "romaji": "man-dei"
+            },
+            {
+              "target": "Tuesday",
+              "meaning": {
+                "id": "Selasa",
+                "en": "the second weekday"
+              },
+              "emoji": "2️⃣",
+              "romaji": "tyus-dei"
+            },
+            {
+              "target": "Wednesday",
+              "meaning": {
+                "id": "Rabu",
+                "en": "the middle of the week"
+              },
+              "emoji": "3️⃣",
+              "romaji": "wens-dei"
+            },
+            {
+              "target": "Thursday",
+              "meaning": {
+                "id": "Kamis",
+                "en": "the day before Friday"
+              },
+              "emoji": "4️⃣",
+              "romaji": "ters-dei"
+            },
+            {
+              "target": "Friday",
+              "meaning": {
+                "id": "Jumat",
+                "en": "the last weekday"
+              },
+              "emoji": "5️⃣",
+              "romaji": "frai-dei"
+            },
+            {
+              "target": "day",
+              "meaning": {
+                "id": "hari",
+                "en": "24 hours"
+              },
+              "emoji": "☀️",
+              "romaji": "dei"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "Today is Monday",
+              "tokens": [
+                "Today",
+                "is",
+                "Monday"
+              ],
+              "meaning": {
+                "id": "Hari ini Senin",
+                "en": "say what day it is"
+              },
+              "romaji": "tu-dei is man-dei"
+            },
+            {
+              "target": "I work from Monday to Friday",
+              "tokens": [
+                "I",
+                "work",
+                "from",
+                "Monday",
+                "to",
+                "Friday"
+              ],
+              "meaning": {
+                "id": "Saya bekerja dari Senin sampai Jumat",
+                "en": "tell your working days"
+              },
+              "romaji": "ai werk from man-dei tu frai-dei"
+            }
+          ]
+        },
+        {
+          "id": "en_u8_l2",
+          "title": {
+            "id": "Akhir Pekan",
+            "en": "Weekend"
+          },
+          "words": [
+            {
+              "target": "Saturday",
+              "meaning": {
+                "id": "Sabtu",
+                "en": "the first weekend day"
+              },
+              "emoji": "🎉",
+              "romaji": "se-ter-dei"
+            },
+            {
+              "target": "Sunday",
+              "meaning": {
+                "id": "Minggu",
+                "en": "the last day of the week"
+              },
+              "emoji": "⛪",
+              "romaji": "san-dei"
+            },
+            {
+              "target": "weekend",
+              "meaning": {
+                "id": "akhir pekan",
+                "en": "Saturday and Sunday"
+              },
+              "emoji": "🏖️",
+              "romaji": "wik-end"
+            },
+            {
+              "target": "week",
+              "meaning": {
+                "id": "pekan",
+                "en": "seven days"
+              },
+              "emoji": "🗓️",
+              "romaji": "wik"
+            },
+            {
+              "target": "month",
+              "meaning": {
+                "id": "bulan",
+                "en": "about thirty days"
+              },
+              "emoji": "🌙",
+              "romaji": "mants"
+            },
+            {
+              "target": "holiday",
+              "meaning": {
+                "id": "hari libur",
+                "en": "a day off from work"
+              },
+              "emoji": "🎈",
+              "romaji": "ho-li-dei"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "On Sunday we rest",
+              "tokens": [
+                "On",
+                "Sunday",
+                "we",
+                "rest"
+              ],
+              "meaning": {
+                "id": "Hari Minggu kita istirahat",
+                "en": "say what you do on Sunday"
+              },
+              "romaji": "on san-dei wi rest"
+            },
+            {
+              "target": "The weekend is fun",
+              "tokens": [
+                "The",
+                "weekend",
+                "is",
+                "fun"
+              ],
+              "meaning": {
+                "id": "Akhir pekan itu menyenangkan",
+                "en": "say weekends are enjoyable"
+              },
+              "romaji": "de wik-end is fan"
+            }
+          ]
+        },
+        {
+          "id": "en_u8_l3",
+          "title": {
+            "id": "Rutinitas",
+            "en": "Routine"
+          },
+          "words": [
+            {
+              "target": "always",
+              "meaning": {
+                "id": "selalu",
+                "en": "every single time"
+              },
+              "emoji": "♾️",
+              "romaji": "ol-weis"
+            },
+            {
+              "target": "usually",
+              "meaning": {
+                "id": "biasanya",
+                "en": "most of the time"
+              },
+              "emoji": "🔁",
+              "romaji": "yu-zyu-e-li"
+            },
+            {
+              "target": "sometimes",
+              "meaning": {
+                "id": "kadang-kadang",
+                "en": "now and then"
+              },
+              "emoji": "🎲",
+              "romaji": "sam-taims"
+            },
+            {
+              "target": "never",
+              "meaning": {
+                "id": "tidak pernah",
+                "en": "not at any time"
+              },
+              "emoji": "🚫",
+              "romaji": "ne-ver"
+            },
+            {
+              "target": "every day",
+              "meaning": {
+                "id": "setiap hari",
+                "en": "on all days"
+              },
+              "emoji": "📆",
+              "romaji": "ev-ri dei"
+            },
+            {
+              "target": "often",
+              "meaning": {
+                "id": "sering",
+                "en": "many times"
+              },
+              "emoji": "🔄",
+              "romaji": "o-fen"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "I usually drink coffee",
+              "tokens": [
+                "I",
+                "usually",
+                "drink",
+                "coffee"
+              ],
+              "meaning": {
+                "id": "Saya biasanya minum kopi",
+                "en": "describe a habit"
+              },
+              "romaji": "ai yu-zyu-e-li dringk ko-fi"
+            },
+            {
+              "target": "She never eats meat",
+              "tokens": [
+                "She",
+                "never",
+                "eats",
+                "meat"
+              ],
+              "meaning": {
+                "id": "Dia tidak pernah makan daging",
+                "en": "say someone avoids meat"
+              },
+              "romaji": "syi ne-ver its mit"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en_u9",
+      "title": {
+        "id": "Cuaca & Musim",
+        "en": "Weather & Seasons"
+      },
+      "color": "#58CC02",
+      "icon": "⛅",
+      "lessons": [
+        {
+          "id": "en_u9_l1",
+          "title": {
+            "id": "Cuaca",
+            "en": "Weather"
+          },
+          "words": [
+            {
+              "target": "weather",
+              "meaning": {
+                "id": "cuaca",
+                "en": "sun, rain, wind, etc."
+              },
+              "emoji": "🌤️",
+              "romaji": "we-der"
+            },
+            {
+              "target": "sunny",
+              "meaning": {
+                "id": "cerah",
+                "en": "with lots of sun"
+              },
+              "emoji": "☀️",
+              "romaji": "sa-ni"
+            },
+            {
+              "target": "cloudy",
+              "meaning": {
+                "id": "berawan",
+                "en": "with many clouds"
+              },
+              "emoji": "☁️",
+              "romaji": "klau-di"
+            },
+            {
+              "target": "windy",
+              "meaning": {
+                "id": "berangin",
+                "en": "with strong wind"
+              },
+              "emoji": "🌬️",
+              "romaji": "win-di"
+            },
+            {
+              "target": "rain",
+              "meaning": {
+                "id": "hujan",
+                "en": "water falling from clouds"
+              },
+              "emoji": "🌧️",
+              "romaji": "rein"
+            },
+            {
+              "target": "snow",
+              "meaning": {
+                "id": "salju",
+                "en": "white frozen flakes"
+              },
+              "emoji": "❄️",
+              "romaji": "snou"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "The weather is sunny today",
+              "tokens": [
+                "The",
+                "weather",
+                "is",
+                "sunny",
+                "today"
+              ],
+              "meaning": {
+                "id": "Cuacanya cerah hari ini",
+                "en": "describe today's weather"
+              },
+              "romaji": "de we-der is sa-ni tu-dei"
+            },
+            {
+              "target": "It is raining now",
+              "tokens": [
+                "It",
+                "is",
+                "raining",
+                "now"
+              ],
+              "meaning": {
+                "id": "Sekarang sedang hujan",
+                "en": "say rain is falling"
+              },
+              "romaji": "it is rei-ning nau"
+            }
+          ]
+        },
+        {
+          "id": "en_u9_l2",
+          "title": {
+            "id": "Musim",
+            "en": "Seasons"
+          },
+          "words": [
+            {
+              "target": "season",
+              "meaning": {
+                "id": "musim",
+                "en": "a part of the year"
+              },
+              "emoji": "🍂",
+              "romaji": "si-zen"
+            },
+            {
+              "target": "spring",
+              "meaning": {
+                "id": "musim semi",
+                "en": "the season of flowers"
+              },
+              "emoji": "🌸",
+              "romaji": "spring"
+            },
+            {
+              "target": "summer",
+              "meaning": {
+                "id": "musim panas",
+                "en": "the hot season"
+              },
+              "emoji": "🏝️",
+              "romaji": "sa-mer"
+            },
+            {
+              "target": "autumn",
+              "meaning": {
+                "id": "musim gugur",
+                "en": "the season of falling leaves"
+              },
+              "emoji": "🍁",
+              "romaji": "o-tem"
+            },
+            {
+              "target": "winter",
+              "meaning": {
+                "id": "musim dingin",
+                "en": "the cold season"
+              },
+              "emoji": "⛄",
+              "romaji": "win-ter"
+            },
+            {
+              "target": "dry season",
+              "meaning": {
+                "id": "musim kemarau",
+                "en": "the season with little rain"
+              },
+              "emoji": "🌵",
+              "romaji": "drai si-zen"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "I like spring",
+              "tokens": [
+                "I",
+                "like",
+                "spring"
+              ],
+              "meaning": {
+                "id": "Saya suka musim semi",
+                "en": "name your favorite season"
+              },
+              "romaji": "ai laik spring"
+            },
+            {
+              "target": "It snows in winter",
+              "tokens": [
+                "It",
+                "snows",
+                "in",
+                "winter"
+              ],
+              "meaning": {
+                "id": "Salju turun di musim dingin",
+                "en": "say when it snows"
+              },
+              "romaji": "it snous in win-ter"
+            }
+          ]
+        },
+        {
+          "id": "en_u9_l3",
+          "title": {
+            "id": "Suhu",
+            "en": "Temperature"
+          },
+          "words": [
+            {
+              "target": "hot",
+              "meaning": {
+                "id": "panas",
+                "en": "very warm"
+              },
+              "emoji": "🔥",
+              "romaji": "hot"
+            },
+            {
+              "target": "cold",
+              "meaning": {
+                "id": "dingin",
+                "en": "low temperature"
+              },
+              "emoji": "🧊",
+              "romaji": "kold"
+            },
+            {
+              "target": "warm",
+              "meaning": {
+                "id": "hangat",
+                "en": "nicely a bit hot"
+              },
+              "emoji": "☕",
+              "romaji": "worm"
+            },
+            {
+              "target": "cool",
+              "meaning": {
+                "id": "sejuk",
+                "en": "nicely a bit cold"
+              },
+              "emoji": "🍃",
+              "romaji": "kul"
+            },
+            {
+              "target": "temperature",
+              "meaning": {
+                "id": "suhu",
+                "en": "how hot or cold it is"
+              },
+              "emoji": "🌡️",
+              "romaji": "tem-pre-cer"
+            },
+            {
+              "target": "umbrella",
+              "meaning": {
+                "id": "payung",
+                "en": "protects you from rain"
+              },
+              "emoji": "☂️",
+              "romaji": "am-bre-la"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "It is cold outside",
+              "tokens": [
+                "It",
+                "is",
+                "cold",
+                "outside"
+              ],
+              "meaning": {
+                "id": "Di luar dingin",
+                "en": "describe the outdoor temperature"
+              },
+              "romaji": "it is kold aut-said"
+            },
+            {
+              "target": "Bring an umbrella",
+              "tokens": [
+                "Bring",
+                "an",
+                "umbrella"
+              ],
+              "meaning": {
+                "id": "Bawa payung",
+                "en": "remind someone about rain"
+              },
+              "romaji": "bring en am-bre-la"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en_u10",
+      "title": {
+        "id": "Tubuh & Kesehatan",
+        "en": "Body & Health"
+      },
+      "color": "#1CB0F6",
+      "icon": "💪",
+      "lessons": [
+        {
+          "id": "en_u10_l1",
+          "title": {
+            "id": "Wajah & Kepala",
+            "en": "Face & Head"
+          },
+          "words": [
+            {
+              "target": "head",
+              "meaning": {
+                "id": "kepala",
+                "en": "the top part of the body"
+              },
+              "emoji": "🗣️",
+              "romaji": "hed"
+            },
+            {
+              "target": "eye",
+              "meaning": {
+                "id": "mata",
+                "en": "you see with it"
+              },
+              "emoji": "👁️",
+              "romaji": "ai"
+            },
+            {
+              "target": "ear",
+              "meaning": {
+                "id": "telinga",
+                "en": "you hear with it"
+              },
+              "emoji": "👂",
+              "romaji": "ir"
+            },
+            {
+              "target": "nose",
+              "meaning": {
+                "id": "hidung",
+                "en": "you smell with it"
+              },
+              "emoji": "👃",
+              "romaji": "nous"
+            },
+            {
+              "target": "mouth",
+              "meaning": {
+                "id": "mulut",
+                "en": "you eat and talk with it"
+              },
+              "emoji": "👄",
+              "romaji": "maut"
+            },
+            {
+              "target": "hair",
+              "meaning": {
+                "id": "rambut",
+                "en": "it grows on your head"
+              },
+              "emoji": "💇",
+              "romaji": "her"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "My eyes are brown",
+              "tokens": [
+                "My",
+                "eyes",
+                "are",
+                "brown"
+              ],
+              "meaning": {
+                "id": "Mata saya cokelat",
+                "en": "describe your eye color"
+              },
+              "romaji": "mai ais ar braun"
+            },
+            {
+              "target": "Her hair is long",
+              "tokens": [
+                "Her",
+                "hair",
+                "is",
+                "long"
+              ],
+              "meaning": {
+                "id": "Rambutnya panjang",
+                "en": "describe someone's hair"
+              },
+              "romaji": "her her is long"
+            }
+          ]
+        },
+        {
+          "id": "en_u10_l2",
+          "title": {
+            "id": "Anggota Tubuh",
+            "en": "Body Parts"
+          },
+          "words": [
+            {
+              "target": "hand",
+              "meaning": {
+                "id": "tangan",
+                "en": "you hold things with it"
+              },
+              "emoji": "✋",
+              "romaji": "hend"
+            },
+            {
+              "target": "finger",
+              "meaning": {
+                "id": "jari",
+                "en": "one of five on a hand"
+              },
+              "emoji": "☝️",
+              "romaji": "fing-ger"
+            },
+            {
+              "target": "foot",
+              "meaning": {
+                "id": "kaki",
+                "en": "you stand on it"
+              },
+              "emoji": "🦶",
+              "romaji": "fut"
+            },
+            {
+              "target": "arm",
+              "meaning": {
+                "id": "lengan",
+                "en": "from shoulder to hand"
+              },
+              "emoji": "💪",
+              "romaji": "arm"
+            },
+            {
+              "target": "stomach",
+              "meaning": {
+                "id": "perut",
+                "en": "where food goes"
+              },
+              "emoji": "🫃",
+              "romaji": "sta-mek"
+            },
+            {
+              "target": "back",
+              "meaning": {
+                "id": "punggung",
+                "en": "the rear of the body"
+              },
+              "emoji": "🧍",
+              "romaji": "bek"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "Wash your hands",
+              "tokens": [
+                "Wash",
+                "your",
+                "hands"
+              ],
+              "meaning": {
+                "id": "Cuci tanganmu",
+                "en": "tell someone to clean their hands"
+              },
+              "romaji": "wosy yor hends"
+            },
+            {
+              "target": "My back hurts",
+              "tokens": [
+                "My",
+                "back",
+                "hurts"
+              ],
+              "meaning": {
+                "id": "Punggung saya sakit",
+                "en": "complain about pain"
+              },
+              "romaji": "mai bek herts"
+            }
+          ]
+        },
+        {
+          "id": "en_u10_l3",
+          "title": {
+            "id": "Kesehatan",
+            "en": "Health"
+          },
+          "words": [
+            {
+              "target": "sick",
+              "meaning": {
+                "id": "sakit",
+                "en": "not healthy"
+              },
+              "emoji": "🤒",
+              "romaji": "sik"
+            },
+            {
+              "target": "healthy",
+              "meaning": {
+                "id": "sehat",
+                "en": "in good condition"
+              },
+              "emoji": "💚",
+              "romaji": "hel-ti"
+            },
+            {
+              "target": "doctor",
+              "meaning": {
+                "id": "dokter",
+                "en": "a person who treats the sick"
+              },
+              "emoji": "👨‍⚕️",
+              "romaji": "dok-ter"
+            },
+            {
+              "target": "medicine",
+              "meaning": {
+                "id": "obat",
+                "en": "you take it to get better"
+              },
+              "emoji": "💊",
+              "romaji": "me-di-sin"
+            },
+            {
+              "target": "hospital",
+              "meaning": {
+                "id": "rumah sakit",
+                "en": "a place for sick people"
+              },
+              "emoji": "🏥",
+              "romaji": "hos-pi-tel"
+            },
+            {
+              "target": "pain",
+              "meaning": {
+                "id": "nyeri",
+                "en": "a hurting feeling"
+              },
+              "emoji": "😣",
+              "romaji": "pein"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "I am sick today",
+              "tokens": [
+                "I",
+                "am",
+                "sick",
+                "today"
+              ],
+              "meaning": {
+                "id": "Saya sakit hari ini",
+                "en": "say you are unwell"
+              },
+              "romaji": "ai em sik tu-dei"
+            },
+            {
+              "target": "The doctor gives medicine",
+              "tokens": [
+                "The",
+                "doctor",
+                "gives",
+                "medicine"
+              ],
+              "meaning": {
+                "id": "Dokter memberi obat",
+                "en": "describe what a doctor does"
+              },
+              "romaji": "de dok-ter givs me-di-sin"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en_u11",
+      "title": {
+        "id": "Pakaian",
+        "en": "Clothing"
+      },
+      "color": "#CE82FF",
+      "icon": "👕",
+      "lessons": [
+        {
+          "id": "en_u11_l1",
+          "title": {
+            "id": "Pakaian Sehari-hari",
+            "en": "Everyday Clothes"
+          },
+          "words": [
+            {
+              "target": "shirt",
+              "meaning": {
+                "id": "kemeja",
+                "en": "worn on the upper body"
+              },
+              "emoji": "👔",
+              "romaji": "syert"
+            },
+            {
+              "target": "pants",
+              "meaning": {
+                "id": "celana",
+                "en": "worn on the legs"
+              },
+              "emoji": "👖",
+              "romaji": "pents"
+            },
+            {
+              "target": "dress",
+              "meaning": {
+                "id": "gaun",
+                "en": "a one-piece garment"
+              },
+              "emoji": "👗",
+              "romaji": "dres"
+            },
+            {
+              "target": "skirt",
+              "meaning": {
+                "id": "rok",
+                "en": "hangs from the waist"
+              },
+              "emoji": "🩳",
+              "romaji": "skert"
+            },
+            {
+              "target": "jacket",
+              "meaning": {
+                "id": "jaket",
+                "en": "keeps you warm outside"
+              },
+              "emoji": "🧥",
+              "romaji": "je-ket"
+            },
+            {
+              "target": "clothes",
+              "meaning": {
+                "id": "pakaian",
+                "en": "things you wear"
+              },
+              "emoji": "👚",
+              "romaji": "klods"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "I wear a blue shirt",
+              "tokens": [
+                "I",
+                "wear",
+                "a",
+                "blue",
+                "shirt"
+              ],
+              "meaning": {
+                "id": "Saya memakai kemeja biru",
+                "en": "describe what you wear"
+              },
+              "romaji": "ai wer e blu syert"
+            },
+            {
+              "target": "The dress is beautiful",
+              "tokens": [
+                "The",
+                "dress",
+                "is",
+                "beautiful"
+              ],
+              "meaning": {
+                "id": "Gaun itu indah",
+                "en": "compliment a dress"
+              },
+              "romaji": "de dres is byu-ti-ful"
+            }
+          ]
+        },
+        {
+          "id": "en_u11_l2",
+          "title": {
+            "id": "Aksesori",
+            "en": "Accessories"
+          },
+          "words": [
+            {
+              "target": "hat",
+              "meaning": {
+                "id": "topi",
+                "en": "worn on the head"
+              },
+              "emoji": "🧢",
+              "romaji": "het"
+            },
+            {
+              "target": "shoes",
+              "meaning": {
+                "id": "sepatu",
+                "en": "worn on the feet"
+              },
+              "emoji": "👟",
+              "romaji": "syus"
+            },
+            {
+              "target": "socks",
+              "meaning": {
+                "id": "kaus kaki",
+                "en": "worn inside shoes"
+              },
+              "emoji": "🧦",
+              "romaji": "soks"
+            },
+            {
+              "target": "bag",
+              "meaning": {
+                "id": "tas",
+                "en": "carries your things"
+              },
+              "emoji": "👜",
+              "romaji": "beg"
+            },
+            {
+              "target": "watch",
+              "meaning": {
+                "id": "jam tangan",
+                "en": "tells time on your wrist"
+              },
+              "emoji": "⌚",
+              "romaji": "wocc"
+            },
+            {
+              "target": "glasses",
+              "meaning": {
+                "id": "kacamata",
+                "en": "help you see clearly"
+              },
+              "emoji": "👓",
+              "romaji": "gla-ses"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "Where are my shoes",
+              "tokens": [
+                "Where",
+                "are",
+                "my",
+                "shoes"
+              ],
+              "meaning": {
+                "id": "Di mana sepatu saya",
+                "en": "ask where your shoes are"
+              },
+              "romaji": "wer ar mai syus"
+            },
+            {
+              "target": "She wears glasses",
+              "tokens": [
+                "She",
+                "wears",
+                "glasses"
+              ],
+              "meaning": {
+                "id": "Dia memakai kacamata",
+                "en": "say someone uses glasses"
+              },
+              "romaji": "syi wers gla-ses"
+            }
+          ]
+        },
+        {
+          "id": "en_u11_l3",
+          "title": {
+            "id": "Memakai Pakaian",
+            "en": "Wearing Clothes"
+          },
+          "words": [
+            {
+              "target": "wear",
+              "meaning": {
+                "id": "memakai",
+                "en": "to have clothes on"
+              },
+              "emoji": "🙆",
+              "romaji": "wer"
+            },
+            {
+              "target": "take off",
+              "meaning": {
+                "id": "melepas",
+                "en": "to remove clothes"
+              },
+              "emoji": "🙅",
+              "romaji": "teik of"
+            },
+            {
+              "target": "size",
+              "meaning": {
+                "id": "ukuran",
+                "en": "small, medium, or large"
+              },
+              "emoji": "📏",
+              "romaji": "saiz"
+            },
+            {
+              "target": "new",
+              "meaning": {
+                "id": "baru",
+                "en": "not old"
+              },
+              "emoji": "✨",
+              "romaji": "nyu"
+            },
+            {
+              "target": "clean",
+              "meaning": {
+                "id": "bersih",
+                "en": "not dirty"
+              },
+              "emoji": "🧼",
+              "romaji": "klin"
+            },
+            {
+              "target": "dirty",
+              "meaning": {
+                "id": "kotor",
+                "en": "not clean"
+              },
+              "emoji": "🧹",
+              "romaji": "der-ti"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "This shirt is new",
+              "tokens": [
+                "This",
+                "shirt",
+                "is",
+                "new"
+              ],
+              "meaning": {
+                "id": "Kemeja ini baru",
+                "en": "say a shirt was just bought"
+              },
+              "romaji": "dis syert is nyu"
+            },
+            {
+              "target": "My socks are dirty",
+              "tokens": [
+                "My",
+                "socks",
+                "are",
+                "dirty"
+              ],
+              "meaning": {
+                "id": "Kaus kaki saya kotor",
+                "en": "say socks need washing"
+              },
+              "romaji": "mai soks ar der-ti"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en_u12",
+      "title": {
+        "id": "Sekolah",
+        "en": "School"
+      },
+      "color": "#FF9600",
+      "icon": "🏫",
+      "lessons": [
+        {
+          "id": "en_u12_l1",
+          "title": {
+            "id": "Alat Tulis",
+            "en": "Stationery"
+          },
+          "words": [
+            {
+              "target": "book",
+              "meaning": {
+                "id": "buku",
+                "en": "pages you read"
+              },
+              "emoji": "📕",
+              "romaji": "buk"
+            },
+            {
+              "target": "pen",
+              "meaning": {
+                "id": "pena",
+                "en": "writes with ink"
+              },
+              "emoji": "🖊️",
+              "romaji": "pen"
+            },
+            {
+              "target": "pencil",
+              "meaning": {
+                "id": "pensil",
+                "en": "writes and can be erased"
+              },
+              "emoji": "✏️",
+              "romaji": "pen-sil"
+            },
+            {
+              "target": "paper",
+              "meaning": {
+                "id": "kertas",
+                "en": "you write on it"
+              },
+              "emoji": "📄",
+              "romaji": "pei-per"
+            },
+            {
+              "target": "eraser",
+              "meaning": {
+                "id": "penghapus",
+                "en": "removes pencil marks"
+              },
+              "emoji": "🩹",
+              "romaji": "i-rei-ser"
+            },
+            {
+              "target": "notebook",
+              "meaning": {
+                "id": "buku catatan",
+                "en": "a book for notes"
+              },
+              "emoji": "📓",
+              "romaji": "not-buk"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "I need a pencil",
+              "tokens": [
+                "I",
+                "need",
+                "a",
+                "pencil"
+              ],
+              "meaning": {
+                "id": "Saya perlu pensil",
+                "en": "ask for something to write with"
+              },
+              "romaji": "ai nid e pen-sil"
+            },
+            {
+              "target": "My book is on the table",
+              "tokens": [
+                "My",
+                "book",
+                "is",
+                "on",
+                "the",
+                "table"
+              ],
+              "meaning": {
+                "id": "Buku saya di atas meja",
+                "en": "say where the book is"
+              },
+              "romaji": "mai buk is on de tei-bel"
+            }
+          ]
+        },
+        {
+          "id": "en_u12_l2",
+          "title": {
+            "id": "Di Kelas",
+            "en": "In the Classroom"
+          },
+          "words": [
+            {
+              "target": "school",
+              "meaning": {
+                "id": "sekolah",
+                "en": "a place to learn"
+              },
+              "emoji": "🏫",
+              "romaji": "skul"
+            },
+            {
+              "target": "class",
+              "meaning": {
+                "id": "kelas",
+                "en": "a group lesson"
+              },
+              "emoji": "🧑‍🏫",
+              "romaji": "klas"
+            },
+            {
+              "target": "classroom",
+              "meaning": {
+                "id": "ruang kelas",
+                "en": "the room for lessons"
+              },
+              "emoji": "🪑",
+              "romaji": "klas-rum"
+            },
+            {
+              "target": "homework",
+              "meaning": {
+                "id": "pekerjaan rumah",
+                "en": "schoolwork done at home"
+              },
+              "emoji": "📝",
+              "romaji": "hom-werk"
+            },
+            {
+              "target": "test",
+              "meaning": {
+                "id": "ujian",
+                "en": "checks what you learned"
+              },
+              "emoji": "📋",
+              "romaji": "test"
+            },
+            {
+              "target": "question",
+              "meaning": {
+                "id": "pertanyaan",
+                "en": "something you ask"
+              },
+              "emoji": "❓",
+              "romaji": "kwes-cen"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "I have homework today",
+              "tokens": [
+                "I",
+                "have",
+                "homework",
+                "today"
+              ],
+              "meaning": {
+                "id": "Saya ada pekerjaan rumah hari ini",
+                "en": "talk about your homework"
+              },
+              "romaji": "ai hev hom-werk tu-dei"
+            },
+            {
+              "target": "The test is tomorrow",
+              "tokens": [
+                "The",
+                "test",
+                "is",
+                "tomorrow"
+              ],
+              "meaning": {
+                "id": "Ujiannya besok",
+                "en": "say when the test is"
+              },
+              "romaji": "de test is tu-mo-rou"
+            }
+          ]
+        },
+        {
+          "id": "en_u12_l3",
+          "title": {
+            "id": "Belajar",
+            "en": "Studying"
+          },
+          "words": [
+            {
+              "target": "learn",
+              "meaning": {
+                "id": "mempelajari",
+                "en": "to gain knowledge"
+              },
+              "emoji": "🧠",
+              "romaji": "lern"
+            },
+            {
+              "target": "understand",
+              "meaning": {
+                "id": "mengerti",
+                "en": "to know the meaning"
+              },
+              "emoji": "💡",
+              "romaji": "an-der-stend"
+            },
+            {
+              "target": "remember",
+              "meaning": {
+                "id": "mengingat",
+                "en": "to keep in mind"
+              },
+              "emoji": "🔖",
+              "romaji": "ri-mem-ber"
+            },
+            {
+              "target": "forget",
+              "meaning": {
+                "id": "melupakan",
+                "en": "to lose from memory"
+              },
+              "emoji": "🌫️",
+              "romaji": "for-get"
+            },
+            {
+              "target": "answer",
+              "meaning": {
+                "id": "menjawab",
+                "en": "to reply to a question"
+              },
+              "emoji": "💬",
+              "romaji": "en-ser"
+            },
+            {
+              "target": "ask",
+              "meaning": {
+                "id": "bertanya",
+                "en": "to request information"
+              },
+              "emoji": "🙋",
+              "romaji": "ask"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "I understand the question",
+              "tokens": [
+                "I",
+                "understand",
+                "the",
+                "question"
+              ],
+              "meaning": {
+                "id": "Saya mengerti pertanyaannya",
+                "en": "say the question is clear"
+              },
+              "romaji": "ai an-der-stend de kwes-cen"
+            },
+            {
+              "target": "Please answer in English",
+              "tokens": [
+                "Please",
+                "answer",
+                "in",
+                "English"
+              ],
+              "meaning": {
+                "id": "Tolong jawab dalam bahasa Inggris",
+                "en": "ask for an English reply"
+              },
+              "romaji": "plis en-ser in ing-lisy"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en_u13",
+      "title": {
+        "id": "Pekerjaan",
+        "en": "Work & Jobs"
+      },
+      "color": "#FF4B4B",
+      "icon": "💼",
+      "lessons": [
+        {
+          "id": "en_u13_l1",
+          "title": {
+            "id": "Profesi 1",
+            "en": "Jobs 1"
+          },
+          "words": [
+            {
+              "target": "job",
+              "meaning": {
+                "id": "pekerjaan",
+                "en": "the work you do for money"
+              },
+              "emoji": "💼",
+              "romaji": "job"
+            },
+            {
+              "target": "nurse",
+              "meaning": {
+                "id": "perawat",
+                "en": "cares for patients"
+              },
+              "emoji": "👩‍⚕️",
+              "romaji": "ners"
+            },
+            {
+              "target": "police officer",
+              "meaning": {
+                "id": "polisi",
+                "en": "keeps people safe"
+              },
+              "emoji": "👮",
+              "romaji": "po-lis o-fi-ser"
+            },
+            {
+              "target": "farmer",
+              "meaning": {
+                "id": "petani",
+                "en": "grows crops"
+              },
+              "emoji": "👩‍🌾",
+              "romaji": "far-mer"
+            },
+            {
+              "target": "cook",
+              "meaning": {
+                "id": "juru masak",
+                "en": "prepares food"
+              },
+              "emoji": "👨‍🍳",
+              "romaji": "kuk"
+            },
+            {
+              "target": "driver",
+              "meaning": {
+                "id": "sopir",
+                "en": "drives a vehicle"
+              },
+              "emoji": "🚖",
+              "romaji": "drai-ver"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "My father is a farmer",
+              "tokens": [
+                "My",
+                "father",
+                "is",
+                "a",
+                "farmer"
+              ],
+              "meaning": {
+                "id": "Ayah saya seorang petani",
+                "en": "tell a parent's job"
+              },
+              "romaji": "mai fa-der is e far-mer"
+            },
+            {
+              "target": "The nurse is kind",
+              "tokens": [
+                "The",
+                "nurse",
+                "is",
+                "kind"
+              ],
+              "meaning": {
+                "id": "Perawat itu baik hati",
+                "en": "describe a nurse"
+              },
+              "romaji": "de ners is kaind"
+            }
+          ]
+        },
+        {
+          "id": "en_u13_l2",
+          "title": {
+            "id": "Profesi 2",
+            "en": "Jobs 2"
+          },
+          "words": [
+            {
+              "target": "engineer",
+              "meaning": {
+                "id": "insinyur",
+                "en": "designs and builds things"
+              },
+              "emoji": "👷",
+              "romaji": "en-ji-nir"
+            },
+            {
+              "target": "lawyer",
+              "meaning": {
+                "id": "pengacara",
+                "en": "works with the law"
+              },
+              "emoji": "⚖️",
+              "romaji": "lo-yer"
+            },
+            {
+              "target": "singer",
+              "meaning": {
+                "id": "penyanyi",
+                "en": "performs songs"
+              },
+              "emoji": "🎤",
+              "romaji": "sing-er"
+            },
+            {
+              "target": "artist",
+              "meaning": {
+                "id": "seniman",
+                "en": "makes art"
+              },
+              "emoji": "🎨",
+              "romaji": "ar-tist"
+            },
+            {
+              "target": "businessman",
+              "meaning": {
+                "id": "pengusaha",
+                "en": "runs a business"
+              },
+              "emoji": "👔",
+              "romaji": "bis-nes-men"
+            },
+            {
+              "target": "pilot",
+              "meaning": {
+                "id": "pilot",
+                "en": "flies a plane"
+              },
+              "emoji": "👨‍✈️",
+              "romaji": "pai-let"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "She wants to be a pilot",
+              "tokens": [
+                "She",
+                "wants",
+                "to",
+                "be",
+                "a",
+                "pilot"
+              ],
+              "meaning": {
+                "id": "Dia ingin menjadi pilot",
+                "en": "talk about a dream job"
+              },
+              "romaji": "syi wonts tu bi e pai-let"
+            },
+            {
+              "target": "The singer is famous",
+              "tokens": [
+                "The",
+                "singer",
+                "is",
+                "famous"
+              ],
+              "meaning": {
+                "id": "Penyanyi itu terkenal",
+                "en": "describe a well-known singer"
+              },
+              "romaji": "de sing-er is fei-mes"
+            }
+          ]
+        },
+        {
+          "id": "en_u13_l3",
+          "title": {
+            "id": "Di Kantor",
+            "en": "At the Office"
+          },
+          "words": [
+            {
+              "target": "office",
+              "meaning": {
+                "id": "kantor",
+                "en": "where office work happens"
+              },
+              "emoji": "🏢",
+              "romaji": "o-fis"
+            },
+            {
+              "target": "meeting",
+              "meaning": {
+                "id": "rapat",
+                "en": "people talking about work"
+              },
+              "emoji": "🤝",
+              "romaji": "mi-ting"
+            },
+            {
+              "target": "computer",
+              "meaning": {
+                "id": "komputer",
+                "en": "a machine for work and internet"
+              },
+              "emoji": "💻",
+              "romaji": "kom-pyu-ter"
+            },
+            {
+              "target": "boss",
+              "meaning": {
+                "id": "bos",
+                "en": "the person in charge"
+              },
+              "emoji": "🧑‍💼",
+              "romaji": "bos"
+            },
+            {
+              "target": "salary",
+              "meaning": {
+                "id": "gaji",
+                "en": "money paid for work"
+              },
+              "emoji": "💵",
+              "romaji": "se-le-ri"
+            },
+            {
+              "target": "busy",
+              "meaning": {
+                "id": "sibuk",
+                "en": "having a lot to do"
+              },
+              "emoji": "⏳",
+              "romaji": "bi-zi"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "The meeting is at nine",
+              "tokens": [
+                "The",
+                "meeting",
+                "is",
+                "at",
+                "nine"
+              ],
+              "meaning": {
+                "id": "Rapatnya jam sembilan",
+                "en": "say when the meeting starts"
+              },
+              "romaji": "de mi-ting is et nain"
+            },
+            {
+              "target": "I am busy at the office",
+              "tokens": [
+                "I",
+                "am",
+                "busy",
+                "at",
+                "the",
+                "office"
+              ],
+              "meaning": {
+                "id": "Saya sibuk di kantor",
+                "en": "say you have lots of work"
+              },
+              "romaji": "ai em bi-zi et de o-fis"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en_u14",
+      "title": {
+        "id": "Transportasi",
+        "en": "Transportation"
+      },
+      "color": "#2B70C9",
+      "icon": "🚗",
+      "lessons": [
+        {
+          "id": "en_u14_l1",
+          "title": {
+            "id": "Kendaraan",
+            "en": "Vehicles"
+          },
+          "words": [
+            {
+              "target": "car",
+              "meaning": {
+                "id": "mobil",
+                "en": "a vehicle with four wheels"
+              },
+              "emoji": "🚗",
+              "romaji": "kar"
+            },
+            {
+              "target": "bus",
+              "meaning": {
+                "id": "bus",
+                "en": "a big vehicle for many people"
+              },
+              "emoji": "🚌",
+              "romaji": "bas"
+            },
+            {
+              "target": "train",
+              "meaning": {
+                "id": "kereta",
+                "en": "runs on rails"
+              },
+              "emoji": "🚆",
+              "romaji": "trein"
+            },
+            {
+              "target": "bicycle",
+              "meaning": {
+                "id": "sepeda",
+                "en": "two wheels, you pedal it"
+              },
+              "emoji": "🚲",
+              "romaji": "bai-si-kel"
+            },
+            {
+              "target": "motorcycle",
+              "meaning": {
+                "id": "sepeda motor",
+                "en": "two wheels with an engine"
+              },
+              "emoji": "🏍️",
+              "romaji": "mo-tor-sai-kel"
+            },
+            {
+              "target": "airplane",
+              "meaning": {
+                "id": "pesawat",
+                "en": "flies in the sky"
+              },
+              "emoji": "✈️",
+              "romaji": "er-plein"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "I go to work by bus",
+              "tokens": [
+                "I",
+                "go",
+                "to",
+                "work",
+                "by",
+                "bus"
+              ],
+              "meaning": {
+                "id": "Saya pergi bekerja naik bus",
+                "en": "tell how you commute"
+              },
+              "romaji": "ai gou tu werk bai bas"
+            },
+            {
+              "target": "The train is fast",
+              "tokens": [
+                "The",
+                "train",
+                "is",
+                "fast"
+              ],
+              "meaning": {
+                "id": "Kereta itu cepat",
+                "en": "describe a train"
+              },
+              "romaji": "de trein is fast"
+            }
+          ]
+        },
+        {
+          "id": "en_u14_l2",
+          "title": {
+            "id": "Stasiun & Tiket",
+            "en": "Station & Tickets"
+          },
+          "words": [
+            {
+              "target": "station",
+              "meaning": {
+                "id": "stasiun",
+                "en": "where trains stop"
+              },
+              "emoji": "🚉",
+              "romaji": "stei-syen"
+            },
+            {
+              "target": "ticket",
+              "meaning": {
+                "id": "tiket",
+                "en": "you need it to ride"
+              },
+              "emoji": "🎫",
+              "romaji": "ti-ket"
+            },
+            {
+              "target": "airport",
+              "meaning": {
+                "id": "bandara",
+                "en": "where planes take off"
+              },
+              "emoji": "🛫",
+              "romaji": "er-port"
+            },
+            {
+              "target": "platform",
+              "meaning": {
+                "id": "peron",
+                "en": "where you wait for the train"
+              },
+              "emoji": "🛤️",
+              "romaji": "plet-form"
+            },
+            {
+              "target": "schedule",
+              "meaning": {
+                "id": "jadwal",
+                "en": "the timetable"
+              },
+              "emoji": "🕐",
+              "romaji": "ske-jul"
+            },
+            {
+              "target": "late",
+              "meaning": {
+                "id": "terlambat",
+                "en": "after the expected time"
+              },
+              "emoji": "⏰",
+              "romaji": "leit"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "Where is the station",
+              "tokens": [
+                "Where",
+                "is",
+                "the",
+                "station"
+              ],
+              "meaning": {
+                "id": "Di mana stasiunnya",
+                "en": "ask for the station"
+              },
+              "romaji": "wer is de stei-syen"
+            },
+            {
+              "target": "The bus is late",
+              "tokens": [
+                "The",
+                "bus",
+                "is",
+                "late"
+              ],
+              "meaning": {
+                "id": "Bus itu terlambat",
+                "en": "say the bus is not on time"
+              },
+              "romaji": "de bas is leit"
+            }
+          ]
+        },
+        {
+          "id": "en_u14_l3",
+          "title": {
+            "id": "Naik & Turun",
+            "en": "Getting On & Off"
+          },
+          "words": [
+            {
+              "target": "get on",
+              "meaning": {
+                "id": "naik",
+                "en": "to board a vehicle"
+              },
+              "emoji": "🚏",
+              "romaji": "get on"
+            },
+            {
+              "target": "get off",
+              "meaning": {
+                "id": "turun",
+                "en": "to leave a vehicle"
+              },
+              "emoji": "🚶",
+              "romaji": "get of"
+            },
+            {
+              "target": "drive",
+              "meaning": {
+                "id": "mengemudi",
+                "en": "to control a car"
+              },
+              "emoji": "🚙",
+              "romaji": "draiv"
+            },
+            {
+              "target": "ride",
+              "meaning": {
+                "id": "mengendarai",
+                "en": "to travel on a bike or horse"
+              },
+              "emoji": "🚴",
+              "romaji": "raid"
+            },
+            {
+              "target": "stop",
+              "meaning": {
+                "id": "berhenti",
+                "en": "to no longer move"
+              },
+              "emoji": "🛑",
+              "romaji": "stop"
+            },
+            {
+              "target": "turn",
+              "meaning": {
+                "id": "belok",
+                "en": "to change direction"
+              },
+              "emoji": "↪️",
+              "romaji": "tern"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "Get off at the next stop",
+              "tokens": [
+                "Get",
+                "off",
+                "at",
+                "the",
+                "next",
+                "stop"
+              ],
+              "meaning": {
+                "id": "Turun di halte berikutnya",
+                "en": "give directions on a bus"
+              },
+              "romaji": "get of et de nekst stop"
+            },
+            {
+              "target": "Turn left here",
+              "tokens": [
+                "Turn",
+                "left",
+                "here"
+              ],
+              "meaning": {
+                "id": "Belok kiri di sini",
+                "en": "give a driving direction"
+              },
+              "romaji": "tern left hir"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en_u15",
+      "title": {
+        "id": "Kota & Tempat",
+        "en": "City & Places"
+      },
+      "color": "#FFC800",
+      "icon": "🏙️",
+      "lessons": [
+        {
+          "id": "en_u15_l1",
+          "title": {
+            "id": "Fasilitas Umum",
+            "en": "Public Places"
+          },
+          "words": [
+            {
+              "target": "city",
+              "meaning": {
+                "id": "kota",
+                "en": "a big town"
+              },
+              "emoji": "🏙️",
+              "romaji": "si-ti"
+            },
+            {
+              "target": "bank",
+              "meaning": {
+                "id": "bank",
+                "en": "where money is kept"
+              },
+              "emoji": "🏦",
+              "romaji": "bengk"
+            },
+            {
+              "target": "post office",
+              "meaning": {
+                "id": "kantor pos",
+                "en": "where you send letters"
+              },
+              "emoji": "📮",
+              "romaji": "post o-fis"
+            },
+            {
+              "target": "market",
+              "meaning": {
+                "id": "pasar",
+                "en": "where people buy food"
+              },
+              "emoji": "🧺",
+              "romaji": "mar-ket"
+            },
+            {
+              "target": "library",
+              "meaning": {
+                "id": "perpustakaan",
+                "en": "a place full of books"
+              },
+              "emoji": "📚",
+              "romaji": "lai-bre-ri"
+            },
+            {
+              "target": "park",
+              "meaning": {
+                "id": "taman",
+                "en": "a green public space"
+              },
+              "emoji": "🌳",
+              "romaji": "park"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "Our bank is near the market",
+              "tokens": [
+                "Our",
+                "bank",
+                "is",
+                "near",
+                "the",
+                "market"
+              ],
+              "meaning": {
+                "id": "Bank kami dekat pasar",
+                "en": "say where the bank is"
+              },
+              "romaji": "aur bengk is nir de mar-ket"
+            },
+            {
+              "target": "I read at the library",
+              "tokens": [
+                "I",
+                "read",
+                "at",
+                "the",
+                "library"
+              ],
+              "meaning": {
+                "id": "Saya membaca di perpustakaan",
+                "en": "say where you read"
+              },
+              "romaji": "ai rid et de lai-bre-ri"
+            }
+          ]
+        },
+        {
+          "id": "en_u15_l2",
+          "title": {
+            "id": "Tempat Hiburan",
+            "en": "Fun Places"
+          },
+          "words": [
+            {
+              "target": "cinema",
+              "meaning": {
+                "id": "bioskop",
+                "en": "where you watch movies"
+              },
+              "emoji": "🎬",
+              "romaji": "si-ne-ma"
+            },
+            {
+              "target": "restaurant",
+              "meaning": {
+                "id": "restoran",
+                "en": "where you eat out"
+              },
+              "emoji": "🍽️",
+              "romaji": "res-to-ran"
+            },
+            {
+              "target": "cafe",
+              "meaning": {
+                "id": "kafe",
+                "en": "where you drink coffee"
+              },
+              "emoji": "☕",
+              "romaji": "ka-fei"
+            },
+            {
+              "target": "museum",
+              "meaning": {
+                "id": "museum",
+                "en": "shows art and history"
+              },
+              "emoji": "🏛️",
+              "romaji": "myu-zi-em"
+            },
+            {
+              "target": "beach",
+              "meaning": {
+                "id": "pantai",
+                "en": "sand by the sea"
+              },
+              "emoji": "🏖️",
+              "romaji": "bic"
+            },
+            {
+              "target": "mall",
+              "meaning": {
+                "id": "mal",
+                "en": "a big shopping building"
+              },
+              "emoji": "🏬",
+              "romaji": "mol"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "We watch a movie at the cinema",
+              "tokens": [
+                "We",
+                "watch",
+                "a",
+                "movie",
+                "at",
+                "the",
+                "cinema"
+              ],
+              "meaning": {
+                "id": "Kita nonton film di bioskop",
+                "en": "talk about going to the movies"
+              },
+              "romaji": "wi wocc e mu-vi et de si-ne-ma"
+            },
+            {
+              "target": "Let's go to the beach",
+              "tokens": [
+                "Let's",
+                "go",
+                "to",
+                "the",
+                "beach"
+              ],
+              "meaning": {
+                "id": "Ayo pergi ke pantai",
+                "en": "invite someone to the beach"
+              },
+              "romaji": "lets gou tu de bic"
+            }
+          ]
+        },
+        {
+          "id": "en_u15_l3",
+          "title": {
+            "id": "Arah",
+            "en": "Directions"
+          },
+          "words": [
+            {
+              "target": "left",
+              "meaning": {
+                "id": "kiri",
+                "en": "the opposite of right"
+              },
+              "emoji": "⬅️",
+              "romaji": "left"
+            },
+            {
+              "target": "right",
+              "meaning": {
+                "id": "kanan",
+                "en": "the opposite of left"
+              },
+              "emoji": "➡️",
+              "romaji": "rait"
+            },
+            {
+              "target": "straight",
+              "meaning": {
+                "id": "lurus",
+                "en": "without turning"
+              },
+              "emoji": "⬆️",
+              "romaji": "streit"
+            },
+            {
+              "target": "near",
+              "meaning": {
+                "id": "dekat",
+                "en": "a short distance away"
+              },
+              "emoji": "📍",
+              "romaji": "nir"
+            },
+            {
+              "target": "far",
+              "meaning": {
+                "id": "jauh",
+                "en": "a long distance away"
+              },
+              "emoji": "🗺️",
+              "romaji": "far"
+            },
+            {
+              "target": "here",
+              "meaning": {
+                "id": "di sini",
+                "en": "in this place"
+              },
+              "emoji": "🧭",
+              "romaji": "hir"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "Go straight and turn right",
+              "tokens": [
+                "Go",
+                "straight",
+                "and",
+                "turn",
+                "right"
+              ],
+              "meaning": {
+                "id": "Jalan lurus lalu belok kanan",
+                "en": "give directions"
+              },
+              "romaji": "gou streit end tern rait"
+            },
+            {
+              "target": "The school is far from here",
+              "tokens": [
+                "The",
+                "school",
+                "is",
+                "far",
+                "from",
+                "here"
+              ],
+              "meaning": {
+                "id": "Sekolahnya jauh dari sini",
+                "en": "say a place is not close"
+              },
+              "romaji": "de skul is far from hir"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en_u16",
+      "title": {
+        "id": "Belanja & Uang",
+        "en": "Shopping & Money"
+      },
+      "color": "#A560E8",
+      "icon": "🛍️",
+      "lessons": [
+        {
+          "id": "en_u16_l1",
+          "title": {
+            "id": "Membeli",
+            "en": "Buying"
+          },
+          "words": [
+            {
+              "target": "buy",
+              "meaning": {
+                "id": "membeli",
+                "en": "to get something with money"
+              },
+              "emoji": "🛒",
+              "romaji": "bai"
+            },
+            {
+              "target": "sell",
+              "meaning": {
+                "id": "menjual",
+                "en": "to give something for money"
+              },
+              "emoji": "🏷️",
+              "romaji": "sel"
+            },
+            {
+              "target": "shop",
+              "meaning": {
+                "id": "toko",
+                "en": "a place that sells things"
+              },
+              "emoji": "🏪",
+              "romaji": "syop"
+            },
+            {
+              "target": "money",
+              "meaning": {
+                "id": "uang",
+                "en": "coins and bills"
+              },
+              "emoji": "💰",
+              "romaji": "ma-ni"
+            },
+            {
+              "target": "price",
+              "meaning": {
+                "id": "harga",
+                "en": "how much something costs"
+              },
+              "emoji": "💲",
+              "romaji": "prais"
+            },
+            {
+              "target": "pay",
+              "meaning": {
+                "id": "membayar",
+                "en": "to give money for something"
+              },
+              "emoji": "💳",
+              "romaji": "pei"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "I want to buy bread",
+              "tokens": [
+                "I",
+                "want",
+                "to",
+                "buy",
+                "bread"
+              ],
+              "meaning": {
+                "id": "Saya mau membeli roti",
+                "en": "say what you want to buy"
+              },
+              "romaji": "ai wont tu bai bred"
+            },
+            {
+              "target": "How much is the price",
+              "tokens": [
+                "How",
+                "much",
+                "is",
+                "the",
+                "price"
+              ],
+              "meaning": {
+                "id": "Berapa harganya",
+                "en": "ask the cost"
+              },
+              "romaji": "hau mac is de prais"
+            }
+          ]
+        },
+        {
+          "id": "en_u16_l2",
+          "title": {
+            "id": "Mahal & Murah",
+            "en": "Expensive & Cheap"
+          },
+          "words": [
+            {
+              "target": "expensive",
+              "meaning": {
+                "id": "mahal",
+                "en": "costing a lot"
+              },
+              "emoji": "💎",
+              "romaji": "eks-pen-siv"
+            },
+            {
+              "target": "cheap",
+              "meaning": {
+                "id": "murah",
+                "en": "costing little"
+              },
+              "emoji": "🪙",
+              "romaji": "cip"
+            },
+            {
+              "target": "discount",
+              "meaning": {
+                "id": "diskon",
+                "en": "a lower price"
+              },
+              "emoji": "🔖",
+              "romaji": "dis-kaunt"
+            },
+            {
+              "target": "free",
+              "meaning": {
+                "id": "gratis",
+                "en": "costing nothing"
+              },
+              "emoji": "🎁",
+              "romaji": "fri"
+            },
+            {
+              "target": "more",
+              "meaning": {
+                "id": "lebih banyak",
+                "en": "a bigger amount"
+              },
+              "emoji": "➕",
+              "romaji": "mor"
+            },
+            {
+              "target": "less",
+              "meaning": {
+                "id": "lebih sedikit",
+                "en": "a smaller amount"
+              },
+              "emoji": "➖",
+              "romaji": "les"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "This bag is too expensive",
+              "tokens": [
+                "This",
+                "bag",
+                "is",
+                "too",
+                "expensive"
+              ],
+              "meaning": {
+                "id": "Tas ini terlalu mahal",
+                "en": "complain about a price"
+              },
+              "romaji": "dis beg is tu eks-pen-siv"
+            },
+            {
+              "target": "The shoes are cheap today",
+              "tokens": [
+                "The",
+                "shoes",
+                "are",
+                "cheap",
+                "today"
+              ],
+              "meaning": {
+                "id": "Sepatunya murah hari ini",
+                "en": "mention a good price"
+              },
+              "romaji": "de syus ar cip tu-dei"
+            }
+          ]
+        },
+        {
+          "id": "en_u16_l3",
+          "title": {
+            "id": "Di Kasir",
+            "en": "At the Cashier"
+          },
+          "words": [
+            {
+              "target": "cashier",
+              "meaning": {
+                "id": "kasir",
+                "en": "the person who takes payment"
+              },
+              "emoji": "🧑‍💻",
+              "romaji": "ke-syir"
+            },
+            {
+              "target": "receipt",
+              "meaning": {
+                "id": "struk",
+                "en": "proof of payment"
+              },
+              "emoji": "🧾",
+              "romaji": "ri-sit"
+            },
+            {
+              "target": "card",
+              "meaning": {
+                "id": "kartu",
+                "en": "plastic used to pay"
+              },
+              "emoji": "💳",
+              "romaji": "kard"
+            },
+            {
+              "target": "cash",
+              "meaning": {
+                "id": "uang tunai",
+                "en": "paper money and coins"
+              },
+              "emoji": "💵",
+              "romaji": "kesy"
+            },
+            {
+              "target": "change",
+              "meaning": {
+                "id": "kembalian",
+                "en": "money you get back"
+              },
+              "emoji": "🪙",
+              "romaji": "ceinj"
+            },
+            {
+              "target": "wallet",
+              "meaning": {
+                "id": "dompet",
+                "en": "holds your money and cards"
+              },
+              "emoji": "👛",
+              "romaji": "wo-let"
+            }
+          ],
+          "sentences": [
+            {
+              "target": "Can I pay by card",
+              "tokens": [
+                "Can",
+                "I",
+                "pay",
+                "by",
+                "card"
+              ],
+              "meaning": {
+                "id": "Bisa bayar dengan kartu",
+                "en": "ask about card payment"
+              },
+              "romaji": "ken ai pei bai kard"
+            },
+            {
+              "target": "Here is your change",
+              "tokens": [
+                "Here",
+                "is",
+                "your",
+                "change"
+              ],
+              "meaning": {
+                "id": "Ini kembalian Anda",
+                "en": "hand back money"
+              },
+              "romaji": "hir is yor ceinj"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

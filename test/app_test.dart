@@ -26,10 +26,10 @@ void main() {
     test('memuat 3 kursus (en, ja, id) dengan struktur lengkap', () {
       expect(courses.map((c) => c.id), containsAll(['en', 'ja', 'id']));
       for (final course in courses) {
-        // Bahasa Jepang punya 32 bab; kursus lain minimal 4.
+        // Bahasa Jepang punya 32 bab; kursus lain minimal 16.
         expect(
           course.units.length,
-          greaterThanOrEqualTo(course.id == 'ja' ? 32 : 4),
+          greaterThanOrEqualTo(course.id == 'ja' ? 32 : 16),
           reason: 'kursus ${course.id}',
         );
         for (final unit in course.units) {

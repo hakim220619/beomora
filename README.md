@@ -37,8 +37,8 @@ flutter test         # jalankan test
 ## Fitur
 
 ### Pembelajaran
-- **Learning path bertingkat** — 4 unit × 3 pelajaran per kursus, node terkunci
-  sampai pelajaran sebelumnya selesai
+- **Learning path bertingkat** — 16 unit × 3 pelajaran per kursus (Jepang 32
+  unit), node terkunci sampai pelajaran sebelumnya selesai
 - **7 tipe soal**: pilihan ganda (2 arah), listening (text-to-speech), ketik
   terjemahan (toleran typo), susun huruf (scramble), susun kalimat, mencocokkan pasangan
 - **Soal salah diulang** otomatis di akhir sesi
