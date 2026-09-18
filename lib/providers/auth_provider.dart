@@ -303,9 +303,41 @@ class AuthProvider extends ChangeNotifier {
   /// Nama depan untuk sapaan & leaderboard.
   String? get firstName => name?.split(' ').first;
 
-  /// Admin konten: boleh mengunggah materi ke server (lihat
-  /// firestore.rules).
-  bool get isAdmin => signedIn && AuthConfig.adminEmails.contains(email);
+  // ---------- Admin ----------
+
+  /// Admin = email akun punya dokumen `admins/{email}` di Firestore.
+  /// Daftarnya dikelola dari Firebase Console (tidak ada di aplikasi),
+  /// dan firestore.rules memakai koleksi yang sama untuk izin tulis
+  /// konten/premium. Dicek ulang tiap profil termuat; kalau server tak
+  /// terjangkau dianggap bukan admin (fitur admin butuh jaringan).
+  bool _isAdmin = false;
+  bool get isAdmin => signedIn && _isAdmin;
+
+  Future<void> _fetchAdminStatus(String? email) async {
+    if (email == null || email.isEmpty) {
+      applyAdmin(false);
+      return;
+    }
+    try {
+      final doc = await FirebaseFirestore.instance
+          .collection('admins')
+          .doc(email)
+          .get(const GetOptions(source: Source.server))
+          .timeout(const Duration(seconds: 10));
+      applyAdmin(doc.exists);
+    } catch (e) {
+      // permission-denied / offline → bukan admin.
+      debugPrint('BeomoraAuth cek admin gagal: $e');
+      applyAdmin(false);
+    }
+  }
+
+  @visibleForTesting
+  void applyAdmin(bool on) {
+    if (on == _isAdmin) return;
+    _isAdmin = on;
+    notifyListeners();
+  }
 
   /// Info akun Google untuk pra-isi formulir pendaftaran.
   User? get pendingUser =>
@@ -667,12 +699,15 @@ class AuthProvider extends ChangeNotifier {
       _prefs.remove(_kPhoto);
     }
     notifyListeners();
+    // Status admin dari server — latar belakang, UI ikut saat tiba.
+    unawaited(_fetchAdminStatus(user.email));
   }
 
   void _clear() {
     name = null;
     email = null;
     photoUrl = null;
+    _isAdmin = false;
     cloudProgress = null;
     cloudProgressKnown = false;
     _premiumFlag = false;

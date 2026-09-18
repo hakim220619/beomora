@@ -54,6 +54,42 @@ void main() {
     expect(p.gems, before + 1000);
   });
 
+  group('isAdmin: dari koleksi admins server, bukan daftar di aplikasi', () {
+    Future<AuthProvider> authProvider() async {
+      SharedPreferences.setMockInitialValues({});
+      return AuthProvider(await SharedPreferences.getInstance());
+    }
+
+    test('bawaan bukan admin walau sudah login', () async {
+      final auth = await authProvider();
+      auth.email = 'siapa@saja.com';
+      expect(auth.signedIn, isTrue);
+      expect(auth.isAdmin, isFalse);
+    });
+
+    test('status admin hanya berlaku saat login', () async {
+      final auth = await authProvider();
+      auth.applyAdmin(true);
+      expect(auth.isAdmin, isFalse); // belum login
+      auth.email = 'admin@contoh.com';
+      expect(auth.isAdmin, isTrue);
+      auth.applyAdmin(false);
+      expect(auth.isAdmin, isFalse);
+    });
+
+    test('keluar akun mereset status admin', () async {
+      final auth = await authProvider();
+      auth.email = 'admin@contoh.com';
+      auth.applyAdmin(true);
+      expect(auth.isAdmin, isTrue);
+      await auth.signOut();
+      expect(auth.isAdmin, isFalse);
+      // Login ulang tanpa konfirmasi server → tetap bukan admin.
+      auth.email = 'admin@contoh.com';
+      expect(auth.isAdmin, isFalse);
+    });
+  });
+
   group('applyServerPremium: server tidak menurunkan premium aktif', () {
     Future<AuthProvider> authProvider() async {
       SharedPreferences.setMockInitialValues({});

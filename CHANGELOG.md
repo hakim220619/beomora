@@ -3,7 +3,7 @@
 Semua perubahan penting dicatat di sini. Versi mengikuti `pubspec.yaml`
 (`versi+kode build`).
 
-## Belum dirilis
+## 1.8.0 (build 19) — 16 September 2026
 
 ### Baru (Ujian)
 - **Ujian** di Ruang Latihan (kursus Inggris & Jepang): simulasi ujian
@@ -45,6 +45,16 @@ Semua perubahan penting dicatat di sini. Versi mengikuti `pubspec.yaml`
   unit / 48 pelajaran / 288 kata). Materi dibangun dari satu data induk
   (`tool/course_units_master.py` + terjemahan `course_units_de.py` /
   `course_units_ko.py`) lewat `tool/gen_course_units.py`.
+
+### Teknis
+- **Daftar admin pindah ke Firestore**: akun admin tidak lagi ditulis
+  di kode aplikasi maupun di `firestore.rules`, melainkan koleksi
+  `admins` dengan ID dokumen = alamat email. Rules memakai `exists()`
+  ke koleksi itu untuk izin tulis materi dan hadiah premium; aplikasi
+  mengecek dokumen `admins/{email}` setelah profil termuat untuk
+  menampilkan fitur admin di Pengaturan. Tambah/cabut admin cukup dari
+  Firebase Console tanpa rilis aplikasi. Sebelum publish rules baru,
+  buat dokumen `admins/<email>` untuk tiap admin yang sudah ada.
 
 ## 1.7.0 (build 18) — 9 September 2026
 
