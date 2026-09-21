@@ -3,6 +3,23 @@
 Semua perubahan penting dicatat di sini. Versi mengikuti `pubspec.yaml`
 (`versi+kode build`).
 
+## 1.8.1 (build 21) — 21 September 2026
+
+### Perbaikan
+- **Cache materi dibuang otomatis saat aplikasi di-update**: sebelumnya
+  cache hasil sinkron Firestore selalu menang atas asset bawaan, sehingga
+  materi baru yang ikut di-bundle saat rilis tidak pernah terlihat oleh
+  pengguna lama sampai mereka hapus data aplikasi. Kini build number
+  disimpan di prefs (`content_app_build`, via `package_info_plus`); kalau
+  berubah, cache materi + bank MCQ dibuang, `content_version` direset,
+  dan sinkron berikutnya langsung mengunduh ulang dari server. Tetap
+  tekan **Unggah materi** (admin) tiap rilis agar server ikut versi
+  terbaru — kalau tidak, sinkron akan menarik kembali materi lama dari
+  server.
+- **Skrip `tool/set_admin.js`**: tambah/cabut admin dari terminal
+  (`node tool/set_admin.js nama@gmail.com`, `--remove` untuk mencabut)
+  memakai sesi `firebase login` yang ada, tanpa Firebase Console.
+
 ## 1.8.0 (build 19) — 16 September 2026
 
 ### Baru (Ujian)
@@ -47,25 +64,13 @@ Semua perubahan penting dicatat di sini. Versi mengikuti `pubspec.yaml`
   `course_units_ko.py`) lewat `tool/gen_course_units.py`.
 
 ### Teknis
-- **Cache materi dibuang otomatis saat aplikasi di-update**: sebelumnya
-  cache hasil sinkron Firestore selalu menang atas asset bawaan, sehingga
-  materi baru yang ikut di-bundle saat rilis tidak pernah terlihat oleh
-  pengguna lama sampai mereka hapus data aplikasi. Kini build number
-  disimpan di prefs (`content_app_build`, via `package_info_plus`); kalau
-  berubah, cache materi + bank MCQ dibuang, `content_version` direset,
-  dan sinkron berikutnya langsung mengunduh ulang dari server. Tetap
-  tekan **Unggah materi** (admin) tiap rilis agar server ikut versi
-  terbaru — kalau tidak, sinkron akan menarik kembali materi lama dari
-  server.
 - **Daftar admin pindah ke Firestore**: akun admin tidak lagi ditulis
   di kode aplikasi maupun di `firestore.rules`, melainkan koleksi
   `admins` dengan ID dokumen = alamat email. Rules memakai `exists()`
   ke koleksi itu untuk izin tulis materi dan hadiah premium; aplikasi
   mengecek dokumen `admins/{email}` setelah profil termuat untuk
   menampilkan fitur admin di Pengaturan. Tambah/cabut admin cukup dari
-  Firebase Console tanpa rilis aplikasi, atau dari terminal:
-  `node tool/set_admin.js nama@gmail.com` (tambah) / `--remove` (cabut),
-  memakai sesi `firebase login` yang ada. Sebelum publish rules baru,
+  Firebase Console tanpa rilis aplikasi. Sebelum publish rules baru,
   buat dokumen `admins/<email>` untuk tiap admin yang sudah ada.
 
 ## 1.7.0 (build 18) — 9 September 2026
