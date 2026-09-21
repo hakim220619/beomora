@@ -27,4 +27,68 @@ void main() {
     expect(courses.length, 5);
     expect(courses.every((c) => c.units.isNotEmpty), isTrue);
   });
+
+  group('invalidateIfAppUpdated', () {
+    const cacheKeys = {
+      'content_json_en': '{"apa": "saja"}',
+      'content_mcq_ja': '[]',
+      'content_version': 123,
+      'content_last_check': 456,
+    };
+
+    test(
+      'install baru (tanpa jejak build & cache) → cuma catat build',
+      () async {
+        SharedPreferences.setMockInitialValues({});
+        final prefs = await SharedPreferences.getInstance();
+        expect(
+          await ContentService.invalidateIfAppUpdated(prefs, '19'),
+          isFalse,
+        );
+        expect(prefs.getString('content_app_build'), '19');
+      },
+    );
+
+    test('build sama → cache dibiarkan', () async {
+      SharedPreferences.setMockInitialValues({
+        ...cacheKeys,
+        'content_app_build': '19',
+      });
+      final prefs = await SharedPreferences.getInstance();
+      expect(await ContentService.invalidateIfAppUpdated(prefs, '19'), isFalse);
+      expect(prefs.getString('content_json_en'), '{"apa": "saja"}');
+      expect(prefs.getInt('content_version'), 123);
+    });
+
+    test('build berubah → cache & versi dibuang, build baru dicatat', () async {
+      SharedPreferences.setMockInitialValues({
+        ...cacheKeys,
+        'content_app_build': '18',
+      });
+      final prefs = await SharedPreferences.getInstance();
+      expect(await ContentService.invalidateIfAppUpdated(prefs, '19'), isTrue);
+      expect(prefs.containsKey('content_json_en'), isFalse);
+      expect(prefs.containsKey('content_mcq_ja'), isFalse);
+      expect(prefs.containsKey('content_version'), isFalse);
+      expect(prefs.containsKey('content_last_check'), isFalse);
+      expect(prefs.getString('content_app_build'), '19');
+    });
+
+    test('pengguna lama sebelum fitur ini (ada cache, tanpa jejak build) '
+        '→ cache dibuang', () async {
+      SharedPreferences.setMockInitialValues({...cacheKeys});
+      final prefs = await SharedPreferences.getInstance();
+      expect(await ContentService.invalidateIfAppUpdated(prefs, '19'), isTrue);
+      expect(prefs.containsKey('content_json_en'), isFalse);
+      expect(prefs.getString('content_app_build'), '19');
+    });
+
+    test('build number kosong → tidak melakukan apa-apa', () async {
+      SharedPreferences.setMockInitialValues({...cacheKeys});
+      final prefs = await SharedPreferences.getInstance();
+      expect(await ContentService.invalidateIfAppUpdated(prefs, ''), isFalse);
+      expect(prefs.getString('content_json_en'), '{"apa": "saja"}');
+      expect(prefs.containsKey('content_app_build'), isFalse);
+    });
+  });
 }

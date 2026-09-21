@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -34,6 +35,16 @@ Future<void> main() async {
     }
   }
   final prefs = await SharedPreferences.getInstance();
+  // Aplikasi baru di-update? Buang cache materi lama agar materi baru
+  // yang ikut di-bundle langsung terlihat (tanpa pengguna hapus data).
+  try {
+    final info = await PackageInfo.fromPlatform();
+    await ContentService.invalidateIfAppUpdated(prefs, info.buildNumber);
+  } catch (e) {
+    debugPrint(
+      'Beomora: info paket tidak terbaca, cache materi dibiarkan ($e)',
+    );
+  }
   // Materi: cache lokal / asset bawaan — instan & selalu tersedia.
   final courses = await ContentService.loadCourses(prefs: prefs);
   // Bank Soal Pilihan Ganda: cache hasil sinkron / bawaan aplikasi.

@@ -9,7 +9,8 @@ service cloud.firestore {
     // Admin = email akun login punya dokumen di koleksi `admins`
     // (ID dokumen = alamat email, mis. admins/nama@gmail.com).
     // Tambah/cabut admin cukup dari Firebase Console → Firestore →
-    // koleksi admins, tanpa rilis aplikasi atau deploy rules ulang.
+    // koleksi admins (atau `node tool/set_admin.js <email>`), tanpa
+    // rilis aplikasi atau deploy rules ulang.
     function isAdmin() {
       return request.auth != null
         && request.auth.token.email != null

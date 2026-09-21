@@ -27,15 +27,62 @@ import '../models/course.dart';
 /// jadi kuota gratis 50rb reads/hari cukup untuk puluhan ribu pengguna
 /// — dan kalaupun kuota habis, semua orang tetap bisa belajar dari
 /// cache/asset.
+///
+/// Invalidasi ([invalidateIfAppUpdated]): cache menang atas asset, jadi
+/// tanpa aturan ini materi baru yang ikut di-bundle saat rilis aplikasi
+/// tidak pernah terlihat oleh pengguna lama (cache lawas terus dipakai
+/// sampai mereka hapus data). Karena itu build number aplikasi ikut
+/// disimpan; begitu berubah, cache dibuang, asset bawaan dipakai, dan
+/// sinkron berikutnya dipaksa mengunduh ulang dari server.
 class ContentService {
   static const _langs = ['en', 'ja', 'id', 'ko', 'de'];
   static const _kVersion = 'content_version';
   static const _kLastCheck = 'content_last_check';
+  static const _kAppBuild = 'content_app_build';
   static const _checkInterval = Duration(hours: 6);
 
   static String _kJson(String lang) => 'content_json_$lang';
   static String _kMcq(String lang) => 'content_mcq_$lang';
   static String _assetPath(String lang) => 'assets/content/$lang.json';
+
+  /// Buang cache materi kalau aplikasi baru saja di-update (build number
+  /// berbeda dari yang tersimpan). Panggil SEBELUM [loadCourses] /
+  /// [loadMcqBanks] agar peluncuran pertama setelah update langsung
+  /// memakai asset bawaan versi baru. `content_version` direset ke 0 dan
+  /// jejak cek terakhir dihapus supaya [sync] berikutnya langsung
+  /// mengunduh ulang dari server (yang, kalau sudah diunggah admin,
+  /// lebih baru dari asset).
+  ///
+  /// [buildNumber] kosong (mis. platform tidak mendukung) → tidak
+  /// melakukan apa-apa. Mengembalikan `true` kalau cache dibuang.
+  static Future<bool> invalidateIfAppUpdated(
+    SharedPreferences prefs,
+    String buildNumber,
+  ) async {
+    if (buildNumber.isEmpty) return false;
+    final stored = prefs.getString(_kAppBuild);
+    if (stored == buildNumber) return false;
+    // Install baru (belum ada jejak build) tidak punya cache; cukup catat.
+    final hadCache =
+        _langs.any((l) => prefs.containsKey(_kJson(l))) ||
+        mcqCourseIds.any((l) => prefs.containsKey(_kMcq(l)));
+    if (stored != null || hadCache) {
+      for (final lang in _langs) {
+        await prefs.remove(_kJson(lang));
+      }
+      for (final lang in mcqCourseIds) {
+        await prefs.remove(_kMcq(lang));
+      }
+      await prefs.remove(_kVersion);
+      await prefs.remove(_kLastCheck);
+      debugPrint(
+        'BeomoraContent: aplikasi di-update '
+        '(${stored ?? '-'} → $buildNumber), cache materi dibuang',
+      );
+    }
+    await prefs.setString(_kAppBuild, buildNumber);
+    return stored != null || hadCache;
+  }
 
   /// Muat materi untuk dipakai aplikasi: cache lokal dulu, fallback
   /// asset bawaan. Tanpa [prefs] (mis. di test) langsung dari asset.
