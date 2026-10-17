@@ -96,7 +96,7 @@ async function main() {
     );
   }
   options.user = account.user;
-  options.tokens = account.tokens;
+  options                                                                                                                                                                                                                                                                     .tokens = account.tokens;
   if (typeof auth.setActiveAccount === 'function') auth.setActiveAccount(options, account);
   console.log(`Akun CLI: ${account.user && account.user.email}`);
   await requireAuth(options);
