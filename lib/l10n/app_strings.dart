@@ -449,6 +449,27 @@ class L {
           '5. Firestore Database → Create database (untuk menyimpan profil).\n\n'
           'Setelah itu jalankan ulang aplikasi.',
       'signed_out_msg': 'Berhasil keluar. Sampai jumpa di kelas! 👋',
+      // Hapus akun (wajib kebijakan Google Play)
+      'delete_account': 'Hapus Akun',
+      'delete_account_sub': 'Hapus akun & semua data secara permanen',
+      'delete_title': 'Hapus akun permanen?',
+      'delete_msg':
+          'Profil, nomor telepon, dan seluruh progres belajarmu akan dihapus dan TIDAK bisa dikembalikan. Langganan Premium di Google Play tidak otomatis berhenti — batalkan di Play Store.',
+      'delete_msg_password': 'Masukkan sandi akunmu untuk konfirmasi.',
+      'delete_msg_google':
+          'Kamu akan diminta memilih akun Google lagi untuk konfirmasi.',
+      'delete_password_hint': 'Sandi',
+      'delete_confirm': 'HAPUS',
+      'delete_done':
+          'Akunmu sudah dihapus. Terima kasih sudah belajar bersama Beomora 🦉',
+      'delete_failed': 'Gagal menghapus akun. Periksa koneksi lalu coba lagi.',
+      'delete_cancelled': 'Penghapusan akun dibatalkan.',
+      'delete_password_empty': 'Sandi wajib diisi.',
+      'delete_wrong_password': 'Sandi salah.',
+      'delete_wrong_account':
+          'Pilih akun Google yang sama dengan akun Beomora-mu.',
+      'delete_relogin':
+          'Sesi sudah lama. Keluar lalu masuk lagi, kemudian ulangi hapus akun.',
       // Pendaftaran akun (lewat Google, profil di Firestore)
       'register_title': 'Daftar Akun Beomora',
       'register_sub':
@@ -995,6 +1016,28 @@ class L {
           '5. Firestore Database → Create database (to store profiles).\n\n'
           'Then restart the app.',
       'signed_out_msg': 'Signed out. See you in class! 👋',
+      // Delete account (Google Play policy requirement)
+      'delete_account': 'Delete Account',
+      'delete_account_sub': 'Permanently delete your account & all data',
+      'delete_title': 'Delete account permanently?',
+      'delete_msg':
+          'Your profile, phone number, and all learning progress will be deleted and CANNOT be recovered. A Premium subscription on Google Play does not stop automatically — cancel it in the Play Store.',
+      'delete_msg_password': 'Enter your account password to confirm.',
+      'delete_msg_google':
+          'You will be asked to choose your Google account again to confirm.',
+      'delete_password_hint': 'Password',
+      'delete_confirm': 'DELETE',
+      'delete_done':
+          'Your account has been deleted. Thanks for learning with Beomora 🦉',
+      'delete_failed':
+          'Could not delete the account. Check your connection and try again.',
+      'delete_cancelled': 'Account deletion cancelled.',
+      'delete_password_empty': 'Password is required.',
+      'delete_wrong_password': 'Wrong password.',
+      'delete_wrong_account':
+          'Choose the same Google account as your Beomora account.',
+      'delete_relogin':
+          'Session is too old. Sign out, sign in again, then retry deleting.',
       // Account registration (via Google, Firestore profile)
       'register_title': 'Create Beomora Account',
       'register_sub':

@@ -656,6 +656,102 @@ class AuthProvider extends ChangeNotifier {
     onSignedOut?.call();
   }
 
+  /// Akun masuk lewat email & sandi (bukan Google) — hapus akun meminta
+  /// sandi untuk konfirmasi ulang.
+  bool get usesPassword =>
+      pendingUser?.providerData.any((p) => p.providerId == 'password') ?? false;
+
+  /// Hapus akun permanen (kebijakan Google Play): profil, kontak privat,
+  /// progres di Firestore, lalu akun Firebase Auth-nya sendiri.
+  /// Mengembalikan kunci l10n pesan galat, atau null kalau sukses.
+  ///
+  /// Login ulang dilakukan DULUAN — Firebase menolak `user.delete()`
+  /// untuk sesi lama, dan lebih aman gagal sebelum ada data terhapus.
+  /// Sengaja tidak memanggil [onBeforeSignOut]: flush progres justru
+  /// akan menulis ulang dokumen yang baru dihapus.
+  Future<String?> deleteAccount({String? password}) async {
+    final user = pendingUser;
+    if (user == null) return 'login_failed';
+    if (usesPassword && (password == null || password.isEmpty)) {
+      return 'delete_password_empty';
+    }
+    busy = true;
+    notifyListeners();
+    try {
+      if (usesPassword) {
+        await user
+            .reauthenticateWithCredential(
+              EmailAuthProvider.credential(
+                email: user.email ?? '',
+                password: password!,
+              ),
+            )
+            .timeout(const Duration(seconds: 20));
+      } else if (kIsWeb) {
+        await user.reauthenticateWithPopup(GoogleAuthProvider());
+      } else {
+        final account = await GoogleSignIn.instance.authenticate();
+        final idToken = account.authentication.idToken;
+        if (idToken == null) {
+          lastErrorDetail = 'ID token kosong dari Google Sign-In';
+          return 'delete_failed';
+        }
+        await user
+            .reauthenticateWithCredential(
+              GoogleAuthProvider.credential(idToken: idToken),
+            )
+            .timeout(const Duration(seconds: 20));
+      }
+
+      final batch = FirebaseFirestore.instance.batch();
+      batch.delete(_contactDoc(user.uid));
+      batch.delete(_userDoc(user.uid));
+      await batch.commit().timeout(const Duration(seconds: 20));
+
+      await user.delete().timeout(const Duration(seconds: 20));
+    } on GoogleSignInException catch (e) {
+      if (e.code == GoogleSignInExceptionCode.canceled) {
+        return 'delete_cancelled';
+      }
+      lastErrorDetail = '${e.code.name}: ${e.description}';
+      return 'delete_failed';
+    } on FirebaseAuthException catch (e) {
+      lastErrorDetail = '${e.code}: ${e.message}';
+      debugPrint('BeomoraAuth delete failed: $lastErrorDetail');
+      return switch (e.code) {
+        'wrong-password' || 'invalid-credential' => 'delete_wrong_password',
+        'user-mismatch' => 'delete_wrong_account',
+        'requires-recent-login' => 'delete_relogin',
+        'too-many-requests' => 'too_many_requests',
+        'popup-closed-by-user' ||
+        'cancelled-popup-request' ||
+        'web-context-canceled' => 'delete_cancelled',
+        _ => 'delete_failed',
+      };
+    } on FirebaseException catch (e) {
+      lastErrorDetail = '${e.code}: ${e.message}';
+      debugPrint('BeomoraAuth delete failed: $lastErrorDetail');
+      return e.code == 'permission-denied'
+          ? 'rules_not_published'
+          : 'delete_failed';
+    } catch (e) {
+      lastErrorDetail = '$e';
+      debugPrint('BeomoraAuth delete failed: $lastErrorDetail');
+      return 'delete_failed';
+    } finally {
+      busy = false;
+      notifyListeners();
+    }
+
+    try {
+      if (!kIsWeb) await GoogleSignIn.instance.signOut();
+    } catch (_) {}
+    needsRegistration = false;
+    _clear();
+    onSignedOut?.call();
+    return null;
+  }
+
   /// Migrasi akun lama: no. telepon yang dulu tersimpan di profil
   /// publik dipindah ke dokumen kontak privat lalu dihapus dari
   /// profil (best effort — dicoba lagi di sesi berikutnya bila gagal).

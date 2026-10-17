@@ -178,6 +178,10 @@ class SettingsScreen extends StatelessWidget {
             const SizedBox(height: 12),
             const _AdminHeartRegenTile(),
           ],
+          if (context.watch<AuthProvider>().signedIn) ...[
+            const SizedBox(height: 20),
+            const _DeleteAccountTile(),
+          ],
           const SizedBox(height: 32),
         ],
       ),
@@ -554,6 +558,134 @@ class _GrantDialogState extends State<_GrantDialog> {
                   _days == 0 ? null : Duration(days: _days),
                 )),
           child: Text(l.t('admin_grant_apply')),
+        ),
+      ],
+    );
+  }
+}
+
+/// Kartu "Hapus Akun" (wajib kebijakan Google Play): konfirmasi, login
+/// ulang (sandi atau pilih akun Google), lalu hapus permanen.
+class _DeleteAccountTile extends StatelessWidget {
+  const _DeleteAccountTile();
+
+  Future<void> _delete(BuildContext context) async {
+    final l = L.read(context);
+    final auth = context.read<AuthProvider>();
+    final messenger = ScaffoldMessenger.of(context);
+    final navigator = Navigator.of(context);
+    final password = await showDialog<String>(
+      context: context,
+      builder: (_) => _DeleteAccountDialog(askPassword: auth.usesPassword),
+    );
+    if (password == null) return;
+    final error = await auth.deleteAccount(password: password);
+    messenger
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          duration: const Duration(seconds: 6),
+          content: Text(l.t(error ?? 'delete_done')),
+        ),
+      );
+    if (error == null && navigator.canPop()) navigator.pop();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = L.of(context);
+    final busy = context.watch<AuthProvider>().busy;
+    return Card(
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        leading: busy
+            ? const SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(strokeWidth: 2.5),
+              )
+            : const Icon(Icons.delete_forever_rounded, color: DuoColors.red),
+        title: Text(
+          l.t('delete_account'),
+          style: const TextStyle(
+            fontWeight: FontWeight.w800,
+            color: DuoColors.red,
+          ),
+        ),
+        subtitle: Text(
+          l.t('delete_account_sub'),
+          style: const TextStyle(fontSize: 12.5),
+        ),
+        onTap: busy ? null : () => _delete(context),
+      ),
+    );
+  }
+}
+
+/// Dialog konfirmasi hapus akun. Mengembalikan sandi yang diisi (string
+/// kosong untuk akun Google), atau null kalau dibatalkan.
+class _DeleteAccountDialog extends StatefulWidget {
+  final bool askPassword;
+  const _DeleteAccountDialog({required this.askPassword});
+
+  @override
+  State<_DeleteAccountDialog> createState() => _DeleteAccountDialogState();
+}
+
+class _DeleteAccountDialogState extends State<_DeleteAccountDialog> {
+  final _passwordCtrl = TextEditingController();
+
+  @override
+  void dispose() {
+    _passwordCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = L.of(context);
+    final canSubmit = !widget.askPassword || _passwordCtrl.text.isNotEmpty;
+    return AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      title: Text(
+        l.t('delete_title'),
+        style: const TextStyle(fontWeight: FontWeight.w900),
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(l.t('delete_msg')),
+          const SizedBox(height: 12),
+          Text(
+            l.t(
+              widget.askPassword ? 'delete_msg_password' : 'delete_msg_google',
+            ),
+            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800),
+          ),
+          if (widget.askPassword)
+            TextField(
+              controller: _passwordCtrl,
+              obscureText: true,
+              autofocus: true,
+              decoration: InputDecoration(
+                hintText: l.t('delete_password_hint'),
+              ),
+              onChanged: (_) => setState(() {}),
+            ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text(l.t('cancel')),
+        ),
+        FilledButton(
+          style: FilledButton.styleFrom(backgroundColor: DuoColors.red),
+          onPressed: canSubmit
+              ? () => Navigator.of(context).pop(_passwordCtrl.text)
+              : null,
+          child: Text(l.t('delete_confirm')),
         ),
       ],
     );

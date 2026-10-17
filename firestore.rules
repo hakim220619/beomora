@@ -75,7 +75,9 @@ service cloud.firestore {
             || ('premiumGrantUntil' in resource.data
                 && request.resource.data.premiumGrantUntil
                     == resource.data.premiumGrantUntil));
-      allow delete: if false;
+      // Hapus hanya oleh pemiliknya (fitur "Hapus Akun").
+      allow delete: if request.auth != null
+        && request.auth.uid == uid;
 
       // Kontak privat (no. telepon): HANYA pemiliknya yang boleh
       // baca/tulis — tidak ikut terekspos saat pengguna lain membaca
