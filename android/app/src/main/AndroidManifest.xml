@@ -2,6 +2,8 @@
     <!-- Pengingat belajar harian (flutter_local_notifications) -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <!-- Latihan Bicara (speech_to_text): rekam ucapan untuk dinilai -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <application
         android:label="Beomora"
         android:name="${applicationName}"
@@ -62,6 +64,10 @@
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
+        </intent>
+        <!-- Android 11+: agar mesin pengenal suara terlihat oleh aplikasi -->
+        <intent>
+            <action android:name="android.speech.RecognitionService"/>
         </intent>
     </queries>
 </manifest>

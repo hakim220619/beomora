@@ -22,6 +22,10 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Beomora memakai mikrofon untuk Latihan Bicara: ucapanmu dinilai agar pelafalanmu bisa dikoreksi.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Beomora mengubah ucapanmu menjadi teks untuk mengoreksi pelafalan di Latihan Bicara.</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

@@ -261,6 +261,37 @@ class L {
       'exam_passage': 'Bacaan',
       'exam_estimate_disclaimer':
           'Perkiraan kasar dari persentase benar, bukan skor resmi.',
+      'speaking_title': 'Latihan Bicara',
+      'speaking_desc': 'ucapkan kata & kalimat, pelafalanmu dikoreksi',
+      'speaking_intro':
+          'Dengarkan contoh, lalu tekan mikrofon dan ucapkan. Kata yang '
+          'terdengar benar jadi hijau, yang keliru jadi merah. Lulus kalau '
+          'skor minimal 80%.',
+      'speaking_pick_unit': 'Pilih unit',
+      'speaking_free_note':
+          'Versi gratis: unit 1 sampai {n}. Buka semua unit dengan Premium',
+      'practice_free_speaking': 'Gratis: {n} unit pertama',
+      'speaking_say_this': 'Ucapkan kalimat ini',
+      'speaking_listen': 'Dengar',
+      'speaking_tap_mic': 'Ketuk mikrofon lalu bicara',
+      'speaking_listening': 'Mendengarkan… ketuk untuk selesai',
+      'speaking_preparing': 'Menyiapkan mikrofon…',
+      'speaking_retry': 'Ketuk mikrofon untuk mencoba lagi',
+      'speaking_pass': 'Bagus, pelafalanmu jelas! 🎉',
+      'speaking_fail': 'Hampir! Perhatikan kata yang merah',
+      'speaking_nothing': 'Suaramu tidak terdengar, coba lagi lebih dekat',
+      'speaking_heard': 'Terdengar',
+      'speaking_best': 'Terbaik',
+      'speaking_next': 'Lanjut',
+      'speaking_finish': 'Selesai',
+      'speaking_review': 'Perlu dilatih lagi',
+      'speaking_skipped': 'dilewati',
+      'speaking_no_permission':
+          'Mikrofon belum diizinkan. Izinkan akses mikrofon & pengenalan '
+          'suara untuk Beomora di pengaturan HP, lalu coba lagi.',
+      'speaking_no_locale':
+          'Bahasa ini belum didukung mesin pengenal suara di HP-mu. Pasang '
+          'bahasanya di pengaturan "Pengenalan suara" / Google, lalu coba lagi.',
       'listening_title': 'Latihan Dengar',
       'listening_desc':
           'Dengar paragraf lalu jawab soalnya, gaya TOEFL/IELTS/JLPT',
@@ -779,6 +810,36 @@ class L {
       'exam_estimate_disclaimer':
           'A rough estimate from the percentage correct, not an official '
           'score.',
+      'speaking_title': 'Speaking Practice',
+      'speaking_desc': 'say words & sentences, get your pronunciation checked',
+      'speaking_intro':
+          'Listen to the example, then tap the mic and speak. Words heard '
+          'correctly turn green, mistakes turn red. Score 80% or more to pass.',
+      'speaking_pick_unit': 'Choose a unit',
+      'speaking_free_note':
+          'Free version: units 1 to {n}. Unlock every unit with Premium',
+      'practice_free_speaking': 'Free: first {n} units',
+      'speaking_say_this': 'Say this out loud',
+      'speaking_listen': 'Listen',
+      'speaking_tap_mic': 'Tap the mic and speak',
+      'speaking_listening': 'Listening… tap to finish',
+      'speaking_preparing': 'Getting the mic ready…',
+      'speaking_retry': 'Tap the mic to try again',
+      'speaking_pass': 'Great, your pronunciation is clear! 🎉',
+      'speaking_fail': 'Almost! Check the words in red',
+      'speaking_nothing': "We couldn't hear you, try again closer to the mic",
+      'speaking_heard': 'Heard',
+      'speaking_best': 'Best',
+      'speaking_next': 'Next',
+      'speaking_finish': 'Finish',
+      'speaking_review': 'Needs more practice',
+      'speaking_skipped': 'skipped',
+      'speaking_no_permission':
+          'Microphone access is off. Allow microphone & speech recognition '
+          'for Beomora in your phone settings, then try again.',
+      'speaking_no_locale':
+          "Your phone's speech recognizer doesn't support this language yet. "
+          'Install it under "Speech recognition" / Google settings, then try again.',
       'listening_title': 'Listening Practice',
       'listening_desc':
           'Hear a passage, then answer questions, TOEFL/IELTS/JLPT style',

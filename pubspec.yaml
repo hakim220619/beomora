@@ -1,7 +1,7 @@
 name: beomora
 description: "Beomora - Aplikasi belajar bahasa dengan gamifikasi."
 publish_to: 'none'
-version: 1.8.1+21
+version: 1.9.0+22
 
 environment:
   sdk: ^3.10.7
@@ -33,6 +33,7 @@ dependencies:
   in_app_update: ^4.2.5
   google_mlkit_digital_ink_recognition: ^0.15.0
   package_info_plus: ^10.2.1
+  speech_to_text: ^7.4.0
 
 dev_dependencies:
   flutter_test:

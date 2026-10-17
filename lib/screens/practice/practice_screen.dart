@@ -11,6 +11,7 @@ import '../../models/course.dart';
 import '../../providers/progress_provider.dart';
 import '../../providers/settings_provider.dart';
 import '../../services/handwriting_service.dart';
+import '../../services/speech_scorer.dart';
 import '../../theme.dart';
 import '../lesson/lesson_screen.dart';
 import 'exam_list_screen.dart';
@@ -20,6 +21,7 @@ import 'handwriting_screen.dart';
 import 'letter_quiz_screen.dart';
 import 'listening_pack_screen.dart';
 import 'mcq_pack_screen.dart';
+import 'speaking_screen.dart';
 import 'memory_match_screen.dart';
 import 'time_challenge_screen.dart';
 
@@ -100,6 +102,18 @@ class PracticeScreen extends StatelessWidget {
                   ? null
                   : '👑 ${l.t('practice_free_listening').replaceFirst('{n}', '$kFreeListeningPassages')}',
               onTap: () => _push(context, ListeningPackScreen(course: course)),
+            ),
+          // Latihan Bicara: pengenal suara bawaan HP (ja/en/de/ko).
+          if (kSpeakingCourses.contains(course.id))
+            _GameCard(
+              emoji: '🎙️',
+              color: DuoColors.orange,
+              title: l.t('speaking_title'),
+              subtitle: l.t('speaking_desc'),
+              trailing: progress.premiumActive
+                  ? null
+                  : '👑 ${l.t('practice_free_speaking').replaceFirst('{n}', '$kFreeSpeakingUnits')}',
+              onTap: () => _push(context, SpeakingScreen(course: course)),
             ),
           // Mode Ujian: simulasi TOEFL/IELTS/PTE (en) & JLPT N5–N1 (ja).
           if (examsFor(course.id).isNotEmpty)
