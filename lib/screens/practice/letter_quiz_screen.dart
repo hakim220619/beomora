@@ -45,10 +45,19 @@ class LetterQuizScreen extends StatefulWidget {
   /// kuis langsung mulai di paket ini tanpa lewat pemilih paket.
   final String? initialCategoryId;
 
+  /// Paket racikan sendiri (mis. dari Tebak Kana Campur): kuis
+  /// langsung mulai di paket ini, di luar daftar [letterQuizFor].
+  final LetterQuizCategory? customCategory;
+
+  /// Jumlah soal per sesi; dibatasi jumlah huruf di paket.
+  final int questionCount;
+
   const LetterQuizScreen({
     super.key,
     required this.course,
     this.initialCategoryId,
+    this.customCategory,
+    this.questionCount = 10,
   });
 
   @override
@@ -56,7 +65,6 @@ class LetterQuizScreen extends StatefulWidget {
 }
 
 class _LetterQuizScreenState extends State<LetterQuizScreen> {
-  static const questionCount = 10;
   final _rng = Random();
 
   LetterQuizCategory? _category;
@@ -71,6 +79,11 @@ class _LetterQuizScreenState extends State<LetterQuizScreen> {
   @override
   void initState() {
     super.initState();
+    final custom = widget.customCategory;
+    if (custom != null) {
+      _startInternal(custom);
+      return;
+    }
     // Lompat langsung ke paket yang diminta (mis. dari halaman Materi).
     // Paket premium tidak dilompati untuk pengguna gratis: pemilih
     // paket tetap tampil dengan kartu bergembok.
@@ -97,7 +110,7 @@ class _LetterQuizScreenState extends State<LetterQuizScreen> {
     final items = [...cat.items]..shuffle(_rng);
     _category = cat;
     _questions = [
-      for (final item in items.take(min(questionCount, items.length)))
+      for (final item in items.take(min(widget.questionCount, items.length)))
         _makeQuestion(cat, item),
     ];
     _index = 0;
@@ -169,7 +182,13 @@ class _LetterQuizScreenState extends State<LetterQuizScreen> {
   Widget build(BuildContext context) {
     final l = L.of(context);
     return StudyScaffold(
-      appBar: AppBar(title: Text(l.t('letter_quiz'))),
+      appBar: AppBar(
+        title: Text(
+          widget.customCategory == null
+              ? l.t('letter_quiz')
+              : l.t('kana_mix_title'),
+        ),
+      ),
       body: _category == null
           ? _buildPicker(l)
           : _finished

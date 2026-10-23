@@ -118,6 +118,18 @@ class L {
       'letter_quiz': 'Tebak Huruf',
       'letter_quiz_desc': 'Bank soal huruf: tebak bunyi & lambangnya',
       'quiz_pick': 'Pilih paket soal',
+      'kana_mix_title': 'Tebak Kana Campur',
+      'kana_mix_desc':
+          'Hiragana + katakana + dakuten & handakuten, jumlah soal bebas',
+      'kana_mix_scripts': 'Jenis huruf',
+      'kana_mix_groups': 'Kelompok huruf',
+      'kana_mix_base': 'Dasar (gojūon)',
+      'kana_mix_dakuten': 'Dakuten & Handakuten (゛゜)',
+      'kana_mix_yoon': 'Yōon (きゃ, シュ…)',
+      'kana_mix_count': 'Jumlah soal',
+      'kana_mix_questions': 'soal',
+      'kana_mix_all': 'Semua',
+      'kana_mix_start': 'Mulai',
       // Tulis Huruf (tulisan tangan)
       'handwriting_title': 'Tulis Huruf',
       'handwriting_desc':
@@ -690,6 +702,18 @@ class L {
       'letter_quiz': 'Letter Quiz',
       'letter_quiz_desc': 'Letter bank: guess the sounds & symbols',
       'quiz_pick': 'Pick a question set',
+      'kana_mix_title': 'Kana Mix Quiz',
+      'kana_mix_desc':
+          'Hiragana + katakana + dakuten & handakuten, any number of questions',
+      'kana_mix_scripts': 'Scripts',
+      'kana_mix_groups': 'Character groups',
+      'kana_mix_base': 'Basic (gojūon)',
+      'kana_mix_dakuten': 'Dakuten & Handakuten (゛゜)',
+      'kana_mix_yoon': 'Yōon (きゃ, シュ…)',
+      'kana_mix_count': 'Number of questions',
+      'kana_mix_questions': 'questions',
+      'kana_mix_all': 'All',
+      'kana_mix_start': 'Start',
       // Write Letters (handwriting)
       'handwriting_title': 'Write Letters',
       'handwriting_desc':

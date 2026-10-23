@@ -35,6 +35,20 @@ class LetterQuizCategory {
 /// Semua huruf kana dari topik Materi Belajar (dasar + tambahan).
 List<KanaItem> _kanaOf(String topicId) => _guideKana('ja', topicId);
 
+/// Kelompok kana untuk Tebak Kana Campur — urutannya mengikuti
+/// urutan bagian di topik hiragana/katakana Materi Belajar.
+enum KanaGroup { base, dakuten, yoon }
+
+/// Huruf satu kelompok dari topik 'hiragana' atau 'katakana'.
+List<KanaItem> kanaGroup(String topicId, KanaGroup group) {
+  for (final topic in kStudyGuides['ja'] ?? <GuideTopic>[]) {
+    if (topic.id == topicId && group.index < topic.sections.length) {
+      return topic.sections[group.index].kana;
+    }
+  }
+  return const [];
+}
+
 /// Grid huruf dari topik Materi Belajar kursus mana pun.
 List<KanaItem> _guideKana(String courseId, String topicId) => [
   for (final topic in kStudyGuides[courseId] ?? <GuideTopic>[])

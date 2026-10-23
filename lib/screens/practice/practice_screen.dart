@@ -18,6 +18,7 @@ import 'exam_list_screen.dart';
 import 'flashcards_screen.dart';
 import 'handwriting_activation.dart';
 import 'handwriting_screen.dart';
+import 'kana_mix_screen.dart';
 import 'letter_quiz_screen.dart';
 import 'listening_pack_screen.dart';
 import 'mcq_pack_screen.dart';
@@ -68,6 +69,16 @@ class PracticeScreen extends StatelessWidget {
             subtitle: l.t('letter_quiz_desc'),
             onTap: () => _push(context, LetterQuizScreen(course: course)),
           ),
+          // Tebak Kana Campur: hiragana + katakana + dakuten/handakuten,
+          // jumlah soal bebas (khusus kursus Jepang).
+          if (course.id == 'ja')
+            _GameCard(
+              emoji: '🔀',
+              color: DuoColors.blue,
+              title: l.t('kana_mix_title'),
+              subtitle: l.t('kana_mix_desc'),
+              onTap: () => _push(context, KanaMixScreen(course: course)),
+            ),
           // Tulis Huruf: kanvas tulisan tangan. Kartu selalu tampil;
           // kalau fitur belum aktif / model belum ada, ketuk → alur
           // aktivasi (cek RAM & ruang, unduh model) lalu masuk.
