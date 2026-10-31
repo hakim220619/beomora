@@ -16,24 +16,116 @@ class ExamSection {
   /// Batas putar audio per bacaan (khusus listening; 0 = bebas).
   final int maxPlays;
 
+  /// Susunan jenis soal di bagian ini (mis. TOEFL Writing: 10 Build a
+  /// Sentence + 1 email + 1 diskusi). Kosong = soal diambil dari
+  /// [ExamPools] sesuai [kind] (cara lama).
+  final List<ExamPart> parts;
+
   const ExamSection(
     this.kind, {
     required this.questionCount,
     required this.minutes,
     this.maxPlays = 2,
+    this.parts = const [],
   });
+
+  /// Bagian berisi beberapa jenis soal; jumlah soal = jumlah tiap part.
+  ExamSection.mixed(
+    this.kind, {
+    required this.minutes,
+    required this.parts,
+    this.maxPlays = 2,
+  }) : questionCount = parts.fold(0, (n, p) => n + p.count);
 
   ExamSection copyWith({int? questionCount, int? minutes}) => ExamSection(
     kind,
     questionCount: questionCount ?? this.questionCount,
     minutes: minutes ?? this.minutes,
     maxPlays: maxPlays,
+    parts: questionCount == null || parts.isEmpty
+        ? parts
+        : _scaleParts(parts, questionCount),
+  );
+
+  /// Bagi [total] soal ke tiap part sebanding jumlah aslinya (esai
+  /// dilewati di versi mini karena butuh waktu lama).
+  static List<ExamPart> _scaleParts(List<ExamPart> parts, int total) {
+    final scorable = [
+      for (final p in parts)
+        if (p.type != ExamPartType.essay) p,
+    ];
+    if (scorable.isEmpty) return [parts.first.withCount(min(total, 1))];
+    final all = scorable.fold(0, (n, p) => n + p.count);
+    final counts = [for (final p in scorable) (p.count * total / all).floor()];
+    var rest = total - counts.fold(0, (a, b) => a + b);
+    for (var i = 0; rest > 0; i = (i + 1) % counts.length, rest--) {
+      counts[i]++;
+    }
+    return [
+      for (var i = 0; i < scorable.length; i++)
+        if (counts[i] > 0) scorable[i].withCount(counts[i]),
+    ];
+  }
+}
+
+/// Jenis soal dalam satu [ExamPart].
+enum ExamPartType { mcq, reading, listening, typing, order, pick, essay }
+
+/// Sekelompok soal sejenis dalam satu bagian, dengan sumbernya sendiri.
+class ExamPart {
+  final ExamPartType type;
+  final int count;
+  final List<McqQuestion> mcq;
+  final List<ReadingPassage> passages;
+  final List<ListeningPassage> audio;
+  final List<WritingItem> typing;
+  final List<OrderItem> order;
+  final List<WordPickItem> pick;
+  final List<EssayItem> essays;
+
+  const ExamPart._(
+    this.type,
+    this.count, {
+    this.mcq = const [],
+    this.passages = const [],
+    this.audio = const [],
+    this.typing = const [],
+    this.order = const [],
+    this.pick = const [],
+    this.essays = const [],
+  });
+
+  const ExamPart.mcq(List<McqQuestion> pool, int count)
+    : this._(ExamPartType.mcq, count, mcq: pool);
+  const ExamPart.reading(List<ReadingPassage> pool, int count)
+    : this._(ExamPartType.reading, count, passages: pool);
+  const ExamPart.listening(List<ListeningPassage> pool, int count)
+    : this._(ExamPartType.listening, count, audio: pool);
+  const ExamPart.typing(List<WritingItem> pool, int count)
+    : this._(ExamPartType.typing, count, typing: pool);
+  const ExamPart.order(List<OrderItem> pool, int count)
+    : this._(ExamPartType.order, count, order: pool);
+  const ExamPart.pick(List<WordPickItem> pool, int count)
+    : this._(ExamPartType.pick, count, pick: pool);
+  const ExamPart.essay(List<EssayItem> pool, int count)
+    : this._(ExamPartType.essay, count, essays: pool);
+
+  ExamPart withCount(int n) => ExamPart._(
+    type,
+    n,
+    mcq: mcq,
+    passages: passages,
+    audio: audio,
+    typing: typing,
+    order: order,
+    pick: pick,
+    essays: essays,
   );
 }
 
 /// Cara mengubah persentase benar menjadi perkiraan skor ujian asli.
 enum ExamScoring {
-  toefl, // per bagian 0–30
+  toefl, // per bagian band 1–6 (format 2026) + padanan 0–30
   ielts, // band 1–9
   pte, // 10–90
   jlptN5, // Pengetahuan Bahasa 120 + Choukai 60, lulus 80
@@ -80,21 +172,117 @@ class WritingItem {
   final List<String> answers; // jawaban yang diterima; [0] ditampilkan
   final String? hint; // petunjuk kecil (mis. bentuk dasar kata)
 
+  /// Dikte (PTE Write from Dictation): kalimat [answers] pertama
+  /// dibacakan TTS, [text] tidak ditampilkan; benar bila ≥ 80% kata
+  /// kalimat itu tertulis.
+  final bool dictation;
+
   const WritingItem({
     required this.prompt,
     required this.text,
     required this.answers,
     this.hint,
+    this.dictation = false,
   });
 
   static String normalize(String s) =>
       s.toLowerCase().replaceAll(RegExp(r"[\s\.,!?;:'’\-—、。「」！？]"), '').trim();
 
   bool accepts(String input) {
+    if (dictation) return dictationScore(input) >= 0.8;
     final n = normalize(input);
     if (n.isEmpty) return false;
     return answers.any((a) => normalize(a) == n);
   }
+
+  /// Porsi kata kalimat dikte yang tertulis (urutan bebas, tiap kata
+  /// dihitung sekali), 0–1.
+  double dictationScore(String input) {
+    List<String> words(String s) => s
+        .toLowerCase()
+        .split(RegExp(r'\s+'))
+        .map((w) => w.replaceAll(RegExp(r"[^a-z0-9']"), ''))
+        .where((w) => w.isNotEmpty)
+        .toList();
+    final target = words(answers.first);
+    if (target.isEmpty) return 0;
+    final typed = words(input);
+    var hit = 0;
+    for (final w in target) {
+      if (typed.remove(w)) hit++;
+    }
+    return hit / target.length;
+  }
+}
+
+/// Soal susun: potongan diurutkan menjadi kalimat/paragraf yang benar
+/// (TOEFL Build a Sentence, PTE Reorder Paragraphs). [pieces] ditulis
+/// dalam URUTAN BENAR; layar yang mengacaknya.
+class OrderItem {
+  final Map<String, String> prompt; // instruksi per bahasa UI
+  /// Konteks opsional (mis. kalimat lawan bicara di Build a Sentence).
+  final String? context;
+  final List<String> pieces;
+
+  /// Penyambung antarpotongan saat ditampilkan ("" untuk paragraf
+  /// yang ditumpuk, " " untuk kata).
+  final String joiner;
+
+  const OrderItem({
+    required this.prompt,
+    required this.pieces,
+    this.context,
+    this.joiner = ' ',
+  });
+
+  String get answerText => pieces.join(joiner == '' ? '\n' : joiner);
+}
+
+/// Soal tandai kata (PTE Highlight Incorrect Words): audio membacakan
+/// [spoken]; teks yang ditampilkan sama kecuali satu kata di
+/// [wrongIndex] (indeks kata, dipisah spasi) yang diganti [shownWord].
+class WordPickItem {
+  final Map<String, String> prompt;
+  final String spoken;
+  final int wrongIndex;
+  final String shownWord;
+
+  const WordPickItem({
+    required this.prompt,
+    required this.spoken,
+    required this.wrongIndex,
+    required this.shownWord,
+  });
+
+  List<String> get spokenWords => spoken.split(' ');
+  List<String> get shownWords => [
+    for (var i = 0; i < spokenWords.length; i++)
+      i == wrongIndex ? shownWord : spokenWords[i],
+  ];
+}
+
+/// Soal esai (IELTS Writing Task 1/2, TOEFL Email & Academic
+/// Discussion, PTE Essay/Summarize). Tidak dinilai otomatis: setelah
+/// ujian pengguna membandingkan dengan [modelAnswer] dan [checklist].
+class EssayItem {
+  final Map<String, String> title; // nama tugas per bahasa UI
+  final String task; // soal (bahasa Inggris), boleh memuat tabel data
+  final int minWords;
+  final int? maxWords;
+  final String modelAnswer;
+  final List<Map<String, String>> checklist; // kriteria per bahasa UI
+
+  const EssayItem({
+    required this.title,
+    required this.task,
+    required this.minWords,
+    required this.modelAnswer,
+    required this.checklist,
+    this.maxWords,
+  });
+
+  static int wordCount(String s) =>
+      s.trim().isEmpty ? 0 : s.trim().split(RegExp(r'\s+')).length;
 }
 
 /// Sumber soal per bagian untuk satu ujian. Pool boleh lebih besar dari
@@ -199,6 +387,9 @@ class ExamItem {
   final McqQuestion? mcq;
   final List<String> options; // urutan pilihan yang sudah diacak
   final WritingItem? writing;
+  final OrderItem? order;
+  final WordPickItem? pick;
+  final EssayItem? essay;
 
   /// Bacaan (reading: ditampilkan; listening: dibacakan TTS, transkrip
   /// baru dibuka di ulasan). Soal-soal dari bacaan yang sama berurutan.
@@ -219,22 +410,96 @@ class ExamItem {
     this.passageTranslation,
   }) : mcq = q,
        options = [...q.options]..shuffle(rng),
-       writing = null;
+       writing = null,
+       order = null,
+       pick = null,
+       essay = null;
 
   ExamItem.typing(this.section, WritingItem w)
     : mcq = null,
       options = const [],
       writing = w,
+      order = null,
+      pick = null,
+      essay = null,
+      passageId = null,
+      passageTitle = null,
+      passageText = w.dictation ? w.answers.first : null,
+      passageTranslation = null;
+
+  /// Soal susun: [options] = potongan yang sudah diacak; jawaban
+  /// pengguna = potongan berurutan dipisah "\u0001".
+  ExamItem.ordering(this.section, OrderItem o, Random rng)
+    : mcq = null,
+      options = _shuffledPieces(o.pieces, rng),
+      writing = null,
+      order = o,
+      pick = null,
+      essay = null,
       passageId = null,
       passageTitle = null,
       passageText = null,
       passageTranslation = null;
 
-  bool get isTyping => writing != null;
-  bool get isAudio => section == ExamSectionKind.listening;
+  /// Soal tandai kata: jawaban pengguna = indeks kata (teks).
+  ExamItem.picking(this.section, WordPickItem p)
+    : mcq = null,
+      options = const [],
+      writing = null,
+      order = null,
+      pick = p,
+      essay = null,
+      passageId = null,
+      passageTitle = null,
+      passageText = p.spoken,
+      passageTranslation = null;
 
-  String get correctAnswer =>
-      mcq != null ? mcq!.options[mcq!.answer] : writing!.answers.first;
+  ExamItem.essayTask(this.section, EssayItem e)
+    : mcq = null,
+      options = const [],
+      writing = null,
+      order = null,
+      pick = null,
+      essay = e,
+      passageId = null,
+      passageTitle = null,
+      passageText = null,
+      passageTranslation = null;
+
+  static const orderSeparator = '\u0001';
+
+  static List<String> _shuffledPieces(List<String> pieces, Random rng) {
+    final out = [...pieces];
+    // Jangan sampai acakannya kebetulan sudah urut.
+    for (var i = 0; i < 5; i++) {
+      out.shuffle(rng);
+      if (out.join() != pieces.join() || pieces.length < 2) break;
+    }
+    return out;
+  }
+
+  bool get isTyping => writing != null || essay != null;
+  bool get isDictation => writing?.dictation ?? false;
+  bool get isOrder => order != null;
+  bool get isPick => pick != null;
+  bool get isEssay => essay != null;
+
+  /// Ada audio yang dibacakan (bagian listening, dikte, tandai kata).
+  bool get isAudio =>
+      section == ExamSectionKind.listening || isDictation || isPick;
+
+  /// Esai tidak dinilai otomatis — tidak ikut hitungan benar/salah.
+  bool get scored => !isEssay;
+
+  String get correctAnswer {
+    if (mcq != null) return mcq!.options[mcq!.answer];
+    if (order != null) return order!.answerText;
+    if (pick != null) {
+      return '${pick!.shownWord} → ${pick!.spokenWords[pick!.wrongIndex]}';
+    }
+    if (essay != null) return essay!.modelAnswer;
+    return writing!.answers.first;
+  }
 
   bool get answered => userAnswer != null && userAnswer!.trim().isNotEmpty;
 
@@ -242,6 +507,12 @@ class ExamItem {
     final a = userAnswer;
     if (a == null) return false;
     if (writing != null) return writing!.accepts(a);
+    if (order != null) {
+      return a.split(orderSeparator).join('\u0002') ==
+          order!.pieces.join('\u0002');
+    }
+    if (pick != null) return a == '${pick!.wrongIndex}';
+    if (essay != null) return false;
     return a == correctAnswer;
   }
 }
@@ -296,6 +567,9 @@ class ExamSession {
     ExamSection s,
     Random rng,
   ) {
+    if (s.parts.isNotEmpty) {
+      return [for (final part in s.parts) ..._buildPart(s.kind, part, rng)];
+    }
     final n = s.questionCount;
     switch (s.kind) {
       case ExamSectionKind.vocab:
@@ -352,6 +626,80 @@ class ExamSession {
     }
   }
 
+  static List<ExamItem> _buildPart(
+    ExamSectionKind kind,
+    ExamPart part,
+    Random rng,
+  ) {
+    final n = part.count;
+    List<T> pick<T>(List<T> pool) => ([...pool]..shuffle(rng)).take(n).toList();
+    switch (part.type) {
+      case ExamPartType.mcq:
+        return _pickMcq(kind, part.mcq, n, rng);
+      case ExamPartType.typing:
+        return [for (final w in pick(part.typing)) ExamItem.typing(kind, w)];
+      case ExamPartType.order:
+        return [
+          for (final o in pick(part.order)) ExamItem.ordering(kind, o, rng),
+        ];
+      case ExamPartType.pick:
+        return [for (final p in pick(part.pick)) ExamItem.picking(kind, p)];
+      case ExamPartType.essay:
+        return [for (final e in pick(part.essays)) ExamItem.essayTask(kind, e)];
+      case ExamPartType.reading:
+        return _fromPassages(
+          n,
+          [...part.passages]..shuffle(rng),
+          (p) => p.questions,
+          (p, q) => ExamItem.choice(
+            kind,
+            q,
+            rng,
+            passageId: p.id,
+            passageTitle: p.title,
+            passageText: p.text,
+          ),
+          rng,
+        );
+      case ExamPartType.listening:
+        return _fromPassages(
+          n,
+          [...part.audio]..shuffle(rng),
+          (p) => p.questions,
+          (p, q) => ExamItem.choice(
+            kind,
+            q,
+            rng,
+            passageId: p.id,
+            passageTitle: p.title,
+            passageText: p.transcript,
+            passageTranslation: p.translation,
+          ),
+          rng,
+        );
+    }
+  }
+
+  /// Ambil soal dari bacaan/audio teracak sampai [n] soal; soal dari
+  /// bacaan yang sama tetap berurutan.
+  static List<ExamItem> _fromPassages<P>(
+    int n,
+    List<P> passages,
+    List<McqQuestion> Function(P) questionsOf,
+    ExamItem Function(P, McqQuestion) make,
+    Random rng,
+  ) {
+    final out = <ExamItem>[];
+    for (final p in passages) {
+      if (out.length >= n) break;
+      final qs = [...questionsOf(p)]..shuffle(rng);
+      for (final q in qs.take(n - out.length)) {
+        out.add(make(p, q));
+      }
+    }
+    return out;
+  }
+
   static List<ExamItem> _pickMcq(
     ExamSectionKind kind,
     List<McqQuestion> pool,
@@ -369,18 +717,29 @@ class ExamSession {
     for (var i = 0; i < sections.length; i++)
       ExamSectionResult(
         sections[i].kind,
-        items[i].where((e) => e.correct).length,
-        items[i].length,
+        items[i].where((e) => e.scored && e.correct).length,
+        items[i].where((e) => e.scored).length,
       ),
   ];
 
   int get totalCorrect =>
-      items.fold(0, (n, l) => n + l.where((e) => e.correct).length);
+      items.fold(0, (n, l) => n + l.where((e) => e.scored && e.correct).length);
+
+  /// Soal yang dinilai otomatis (tanpa esai).
+  int get totalScored =>
+      items.fold(0, (n, l) => n + l.where((e) => e.scored).length);
 
   List<ExamItem> get missed => [
     for (final l in items)
       for (final e in l)
-        if (!e.correct) e,
+        if (e.scored && !e.correct) e,
+  ];
+
+  /// Esai yang ditulis — diulas dengan contoh jawaban & daftar cek.
+  List<ExamItem> get essays => [
+    for (final l in items)
+      for (final e in l)
+        if (e.isEssay) e,
   ];
 }
 
@@ -422,7 +781,18 @@ class ExamScore {
   static String _fmtBand(double b) =>
       b == b.roundToDouble() ? b.toInt().toString() : b.toStringAsFixed(1);
 
-  static ExamScore compute(ExamScoring scoring, List<ExamSectionResult> rs) {
+  /// Band TOEFL iBT 2026: 1–6 per setengah band.
+  static double _toeflBand(double p) => ((1 + 5 * p) * 2).round() / 2;
+
+  static ExamScore compute(
+    ExamScoring scoring,
+    List<ExamSectionResult> results,
+  ) {
+    // Bagian yang seluruhnya esai (dinilai sendiri) tidak ikut skor.
+    final rs = [
+      for (final r in results)
+        if (r.total > 0) r,
+    ];
     final per = <ExamSectionKind, String>{};
     double pctOf(ExamSectionKind k) {
       for (final r in rs) {
@@ -445,14 +815,21 @@ class ExamScore {
 
     switch (scoring) {
       case ExamScoring.toefl:
-        var total = 0, max = 0;
+        // Format 2026: band 1–6 per bagian; skor lama 0–120 (0–30 per
+        // bagian) ditampilkan sebagai padanan seperti laporan resmi.
+        var bands = 0.0, legacy = 0, max = 0;
         for (final r in rs) {
-          final s = _scale(r.pct, 30);
-          per[r.kind] = '$s/30';
-          total += s;
+          final b = _toeflBand(r.pct);
+          per[r.kind] = 'Band ${_fmtBand(b)}';
+          bands += b;
+          legacy += _scale(r.pct, 30);
           max += 30;
         }
-        return ExamScore(perSection: per, overall: '$total/$max');
+        final avg = rs.isEmpty ? 1.0 : (bands / rs.length * 2).round() / 2;
+        return ExamScore(
+          perSection: per,
+          overall: 'Band ${_fmtBand(avg)} · ≈ $legacy/$max',
+        );
       case ExamScoring.ielts:
         var sum = 0.0;
         for (final r in rs) {

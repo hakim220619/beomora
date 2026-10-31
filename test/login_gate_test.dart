@@ -11,6 +11,7 @@ import 'package:beomora/providers/progress_provider.dart';
 import 'package:beomora/providers/settings_provider.dart';
 import 'package:beomora/screens/login_screen.dart';
 import 'package:beomora/screens/main_screen.dart';
+import 'package:beomora/screens/onboarding_screen.dart';
 import 'package:beomora/services/content_service.dart';
 
 void main() {
@@ -51,5 +52,14 @@ void main() {
     });
     expect(find.byType(MainScreen), findsOneWidget);
     expect(find.byType(LoginScreen), findsNothing);
+  });
+
+  testWidgets('login tanpa onboarding → OnboardingScreen', (tester) async {
+    await pumpApp(tester, {
+      'auth_name': 'Dani',
+      'auth_email': 'dani@example.com',
+    });
+    expect(find.byType(OnboardingScreen), findsOneWidget);
+    expect(find.byType(MainScreen), findsNothing);
   });
 }

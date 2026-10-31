@@ -25,15 +25,42 @@ class SpeechService {
   Completer<List<String>>? _pending;
   List<String> _last = const [];
 
+  /// Status/galat baru dihiraukan setelah sesi aktif benar-benar mulai
+  /// (status 'listening' atau hasil pertama). Status "berhenti" sisa
+  /// sesi sebelumnya yang telat datang tidak boleh menutup sesi baru.
+  bool _armed = false;
+
+  /// Setelah 'notListening', hasil akhir masih bisa menyusul; tunggu
+  /// sebentar (atau sampai 'done') sebelum menilai.
+  Timer? _graceTimer;
+
+  /// Berhenti otomatis setelah pengguna diam sejenak.
+  Timer? _silenceTimer;
+
+  /// Pengaman kalau mesin tidak pernah mulai mendengar.
+  Timer? _startTimer;
+
+  static const _silence = Duration(milliseconds: 1200);
+  static const _grace = Duration(milliseconds: 1500);
+
   Future<bool> _init() async {
     if (_ready == true) return true;
     try {
       _ready = await _stt.initialize(
-        onError: (_) => _finish(),
+        onError: (_) {
+          if (_armed) _finish();
+        },
         onStatus: (s) {
-          if (s == SpeechToText.doneStatus ||
-              s == SpeechToText.notListeningStatus) {
+          if (s == SpeechToText.listeningStatus) {
+            _armed = true;
+            return;
+          }
+          if (!_armed) return;
+          if (s == SpeechToText.doneStatus) {
             _finish();
+          } else if (s == SpeechToText.notListeningStatus) {
+            _graceTimer?.cancel();
+            _graceTimer = Timer(_grace, _finish);
           }
         },
       );
@@ -73,11 +100,14 @@ class SpeechService {
   }
 
   /// Dengarkan satu ucapan sampai pengguna diam / [stop] dipanggil.
-  /// [onPartial] menerima transkrip sementara. Hasil: semua tebakan
-  /// transkrip (bisa kosong kalau tidak ada suara yang terdengar).
+  /// [onPartial] menerima transkrip sementara. [isEnough] dicek tiap
+  /// transkrip baru; kalau true (ucapan sudah cocok target), langsung
+  /// berhenti tanpa menunggu diam. Hasil: semua tebakan transkrip (bisa
+  /// kosong kalau tidak ada suara yang terdengar).
   Future<List<String>> listenOnce(
     String ttsLocale, {
     void Function(String partial)? onPartial,
+    bool Function(List<String> heard)? isEnough,
   }) async {
     if (!await _init()) return const [];
     final localeId = await _localeFor(ttsLocale);
@@ -85,26 +115,41 @@ class SpeechService {
     final done = Completer<List<String>>();
     _pending = done;
     _last = const [];
+    _armed = false;
     try {
       await _stt.listen(
         onResult: (SpeechRecognitionResult r) {
-          final words = r.alternates
-              .map((a) => a.recognizedWords)
-              .where((w) => w.trim().isNotEmpty)
-              .toList();
+          if (!identical(_pending, done)) return;
+          _armed = true;
+          final words = <String>{
+            r.recognizedWords,
+            ...r.alternates.map((a) => a.recognizedWords),
+          }.where((w) => w.trim().isNotEmpty).toList();
           if (words.isNotEmpty) _last = words;
           onPartial?.call(r.recognizedWords);
-          if (r.finalResult) _finish();
+          if (r.finalResult) {
+            _finish();
+          } else if (words.isNotEmpty) {
+            if (isEnough?.call(words) ?? false) {
+              stop();
+            } else {
+              _silenceTimer?.cancel();
+              _silenceTimer = Timer(_silence, stop);
+            }
+          }
         },
         listenOptions: SpeechListenOptions(
           localeId: localeId,
           partialResults: true,
           cancelOnError: true,
-          listenMode: ListenMode.confirmation,
+          listenMode: ListenMode.dictation,
           listenFor: const Duration(seconds: 15),
           pauseFor: const Duration(seconds: 3),
         ),
       );
+      _startTimer = Timer(const Duration(seconds: 4), () {
+        if (!_armed) _finish();
+      });
     } catch (_) {
       _finish();
     }
@@ -118,6 +163,9 @@ class SpeechService {
   }
 
   void _finish() {
+    _graceTimer?.cancel();
+    _silenceTimer?.cancel();
+    _startTimer?.cancel();
     final p = _pending;
     if (p == null || p.isCompleted) return;
     _pending = null;

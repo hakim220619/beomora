@@ -1,3 +1,6 @@
+import 'exam_en_listening_more.dart';
+import 'jlpt_exam_n4.dart';
+import 'jlpt_exam_n5.dart';
 import '../models/listening.dart';
 import 'listening_bank_de.dart';
 import 'listening_bank_id.dart';
@@ -56,7 +59,7 @@ List<ListeningPack> listeningPacksFor(String courseId) {
           },
           premium: true,
           maxPlays: 2,
-          passages: _enToefl,
+          passages: [..._enToefl, ...toeflListenMore],
         ),
         ListeningPack(
           id: 'en_listen_ielts',
@@ -68,7 +71,7 @@ List<ListeningPack> listeningPacksFor(String courseId) {
           },
           premium: true,
           maxPlays: 2,
-          passages: _enIelts,
+          passages: [..._enIelts, ...ieltsListenMore],
         ),
         ListeningPack(
           id: 'en_listen_pte',
@@ -80,7 +83,7 @@ List<ListeningPack> listeningPacksFor(String courseId) {
           },
           premium: true,
           maxPlays: 1,
-          passages: _enPte,
+          passages: [..._enPte, ...pteListenMore],
         ),
       ];
     case 'ja':
@@ -95,7 +98,7 @@ List<ListeningPack> listeningPacksFor(String courseId) {
           },
           premium: true,
           maxPlays: 2,
-          passages: _jaN5,
+          passages: [..._jaN5, ...listeningJaN5More],
         ),
         ListeningPack(
           id: 'ja_listen_n4',
@@ -107,7 +110,7 @@ List<ListeningPack> listeningPacksFor(String courseId) {
           },
           premium: true,
           maxPlays: 2,
-          passages: _jaN4,
+          passages: [..._jaN4, ...listeningJaN4More],
         ),
         ListeningPack(
           id: 'ja_listen_n3',

@@ -99,4 +99,54 @@ void main() {
       expect(local.xpOn(DateTime(2020, 1, 1)), 0);
     },
   );
+
+  test('HP baru: onboarding, target & bahasa ikut dari akun', () async {
+    final oldPhone = await freshProvider();
+    oldPhone.setActiveCourse('ja');
+    oldPhone.setStreakGoal(90);
+    oldPhone.setUiLang('en');
+    oldPhone.completeOnboarding();
+    oldPhone.addXp(10);
+    final cloud = oldPhone.exportCloudJson();
+
+    final newPhone = await freshProvider();
+    expect(newPhone.onboarded, isFalse);
+    expect(newPhone.reconcileCloudJson(cloud), CloudMerge.applied);
+    expect(newPhone.onboarded, isTrue);
+    expect(newPhone.activeCourseId, 'ja');
+    expect(newPhone.streakGoalDays, 90);
+    expect(newPhone.uiLang, 'en');
+  });
+
+  test(
+    'data server versi lama (tanpa kunci onboarded) → dianggap sudah',
+    () async {
+      final oldPhone = await freshProvider();
+      oldPhone.addXp(10);
+      final m = jsonDecode(oldPhone.exportCloudJson()) as Map<String, dynamic>
+        ..remove('onboarded');
+      final newPhone = await freshProvider();
+      newPhone.reconcileCloudJson(jsonEncode(m));
+      expect(newPhone.onboarded, isTrue);
+    },
+  );
+
+  test('akun baru yang belum onboarding tetap belum', () async {
+    final half = await freshProvider();
+    half.setUiLang('id');
+    final newPhone = await freshProvider();
+    newPhone.reconcileCloudJson(half.exportCloudJson());
+    expect(newPhone.onboarded, isFalse);
+  });
+
+  test('versi lama sudah onboarding di HP ini → tidak diulang', () async {
+    SharedPreferences.setMockInitialValues({'onboarded': true});
+    final p = ProgressProvider(await SharedPreferences.getInstance());
+    expect(p.onboarded, isTrue);
+    p.resetAll(); // keluar akun → akun berikutnya memilih ulang
+    expect(
+      ProgressProvider(await SharedPreferences.getInstance()).onboarded,
+      isFalse,
+    );
+  });
 }

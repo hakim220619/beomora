@@ -5,6 +5,10 @@ const int kSpeakingPassPercent = 80;
 /// mendukung bahasa-bahasa ini).
 const Set<String> kSpeakingCourses = {'ja', 'en', 'de', 'ko'};
 
+/// Saklar fitur Latihan Bicara. Sementara dimatikan (deteksi suara
+/// bawaan HP belum cukup andal); ubah ke true untuk menampilkannya lagi.
+const bool kSpeakingEnabled = false;
+
 /// Hasil penilaian satu ucapan terhadap teks target.
 class SpeechScore {
   /// Token target (kata / potongan kalimat) sesuai urutan tampil.

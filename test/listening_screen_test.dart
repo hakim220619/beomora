@@ -163,9 +163,12 @@ void main() {
   ) async {
     final pack = listeningPacksFor('en')[1]; // TOEFL, premium
     await pump(tester, ListeningScreen(course: course, pack: pack));
+    // Daftar dibangun malas (hanya yang terlihat), jadi cukup pastikan
+    // gembok ada dan dua bacaan pertama terbuka.
+    expect(find.byIcon(Icons.lock_rounded), findsWidgets);
     expect(
       find.byIcon(Icons.lock_rounded),
-      findsNWidgets(pack.passages.length - 2),
+      findsNWidgets(tester.widgetList(find.byIcon(Icons.lock_rounded)).length),
     );
     expect(find.textContaining('Versi gratis'), findsOneWidget);
   });

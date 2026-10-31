@@ -91,24 +91,36 @@ void main() {
     });
   }
 
-  /// Mesin pengenal suara mengirim hasil akhir [words].
-  Future<void> recognize(WidgetTester tester, List<String> words) async {
-    await tester.binding.defaultBinaryMessenger.handlePlatformMessage(
-      sttChannel.name,
-      sttChannel.codec.encodeMethodCall(
-        MethodCall(
-          'textRecognition',
-          jsonEncode({
-            'alternates': [
-              for (final w in words) {'recognizedWords': w, 'confidence': 0.9},
-            ],
-            'resultType': 2,
-          }),
-        ),
-      ),
-      (_) {},
+  Future<void> send(WidgetTester tester, String method, Object? args) =>
+      tester.binding.defaultBinaryMessenger.handlePlatformMessage(
+        sttChannel.name,
+        sttChannel.codec.encodeMethodCall(MethodCall(method, args)),
+        (_) {},
+      );
+
+  /// Mesin pengenal suara mengirim hasil akhir (atau sementara) [words].
+  Future<void> recognize(
+    WidgetTester tester,
+    List<String> words, {
+    bool isFinal = true,
+  }) async {
+    await send(
+      tester,
+      'textRecognition',
+      jsonEncode({
+        'alternates': [
+          for (final w in words) {'recognizedWords': w, 'confidence': 0.9},
+        ],
+        'resultType': isFinal ? 2 : 0,
+      }),
     );
     await settle(tester);
+  }
+
+  /// Mesin mengirim status ('listening', 'notListening', 'done').
+  Future<void> status(WidgetTester tester, String s) async {
+    await send(tester, 'notifyStatus', s);
+    await tester.pump();
   }
 
   Future<ProgressProvider> pump(WidgetTester tester) async {
@@ -172,6 +184,74 @@ void main() {
     expect(progress.xp, greaterThan(xpBefore));
 
     // Habiskan timer internal plugin (batas waktu hasil akhir, konfeti).
+    await tester.pumpWidget(const SizedBox());
+    await tester.pump(const Duration(seconds: 30));
+  });
+
+  testWidgets('hasil akhir yang datang setelah notListening tetap dinilai', (
+    tester,
+  ) async {
+    mockPlatform(tester);
+    await pump(tester);
+    await tester.tap(find.text('1. Salam'));
+    await settle(tester);
+
+    await tester.tap(find.byIcon(Icons.mic_rounded));
+    await settle(tester);
+    // Status "berhenti" sisa sesi lama sebelum sesi baru mulai: abaikan.
+    await status(tester, 'notListening');
+    await settle(tester);
+    expect(
+      find.text('Suaramu tidak terdengar, coba lagi lebih dekat'),
+      findsNothing,
+    );
+
+    // Urutan khas Android: notListening dulu, hasil akhir menyusul.
+    await status(tester, 'listening');
+    await status(tester, 'notListening');
+    await tester.pump(const Duration(milliseconds: 400));
+    await recognize(tester, ['Thank you very much']);
+    expect(find.text('100%'), findsOneWidget);
+
+    await tester.pumpWidget(const SizedBox());
+    await tester.pump(const Duration(seconds: 30));
+  });
+
+  testWidgets('berhenti otomatis saat diam atau ucapan sudah tepat', (
+    tester,
+  ) async {
+    mockPlatform(tester);
+    await pump(tester);
+    await tester.tap(find.text('1. Salam'));
+    await settle(tester);
+
+    // Diam setelah sebagian kalimat → mesin diminta berhenti.
+    await tester.tap(find.byIcon(Icons.mic_rounded));
+    await settle(tester);
+    calls.clear();
+    await recognize(tester, ['thank you'], isFinal: false);
+    expect(calls, isNot(contains('stop')));
+    await tester.pump(const Duration(milliseconds: 1300));
+    expect(calls, contains('stop'));
+    await recognize(tester, ['thank you']);
+
+    // Ucapan sementara sudah tepat → langsung berhenti tanpa menunggu.
+    await tester.tap(find.byIcon(Icons.mic_rounded));
+    await settle(tester);
+    calls.clear();
+    await send(
+      tester,
+      'textRecognition',
+      jsonEncode({
+        'alternates': [
+          {'recognizedWords': 'Thank you very much', 'confidence': 0.9},
+        ],
+        'resultType': 0,
+      }),
+    );
+    await tester.pump();
+    expect(calls, contains('stop'));
+
     await tester.pumpWidget(const SizedBox());
     await tester.pump(const Duration(seconds: 30));
   });

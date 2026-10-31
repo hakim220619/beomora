@@ -161,12 +161,12 @@ class _ExamScreenState extends State<ExamScreen> {
     final progress = context.read<ProgressProvider>();
     _score = ExamScore.compute(widget.exam.scoring, _session.results);
     final label = widget.mini
-        ? '${_session.totalCorrect}/${_session.totalQuestions}'
+        ? '${_session.totalCorrect}/${_session.totalScored}'
         : _score.overall;
     final xp = progress.reportExam(
       examId: widget.exam.id + (widget.mini ? '_mini' : ''),
       correct: _session.totalCorrect,
-      total: _session.totalQuestions,
+      total: _session.totalScored,
       scoreLabel: label,
     );
     setState(() {
@@ -192,7 +192,7 @@ class _ExamScreenState extends State<ExamScreen> {
     final next = _itemIdx + delta;
     if (next < 0 || next >= _items.length) return;
     // Pindah bacaan listening → hentikan audio.
-    if (_items[next].passageId != _item.passageId) _stopAudio();
+    if (_audioKey(_items[next]) != _audioKey(_item)) _stopAudio();
     setState(() {
       _itemIdx = next;
       _syncTypeField();
@@ -207,15 +207,20 @@ class _ExamScreenState extends State<ExamScreen> {
 
   // --- Audio listening -----------------------------------------------------
 
+  /// Kunci jatah putar: per bacaan, atau per soal untuk dikte/tandai
+  /// kata yang tidak punya bacaan.
+  String _audioKey(ExamItem it) =>
+      it.passageId ?? 'item${identityHashCode(it)}';
+
   int _playsLeft(ExamItem it) {
     final max = _section.maxPlays;
     if (max == 0) return 1;
-    return max - (_plays[it.passageId!] ?? 0);
+    return max - (_plays[_audioKey(it)] ?? 0);
   }
 
   Future<void> _play(ExamItem it) async {
     if (_playing || _playsLeft(it) <= 0) return;
-    final id = it.passageId!;
+    final id = _audioKey(it);
     _plays[id] = (_plays[id] ?? 0) + 1;
     final gen = ++_gen;
     setState(() => _playing = true);
@@ -415,7 +420,16 @@ class _ExamScreenState extends State<ExamScreen> {
         if (it.passageText != null && !it.isAudio) _PassageCard(item: it, l: l),
         if (it.isAudio) _buildAudioCard(l, it),
         const SizedBox(height: 12),
-        if (it.isTyping) _buildTyping(l, it) else _buildChoice(l, it),
+        if (it.isEssay)
+          _buildEssay(l, it)
+        else if (it.isOrder)
+          _buildOrder(l, it)
+        else if (it.isPick)
+          _buildPick(l, it)
+        else if (it.isTyping)
+          _buildTyping(l, it)
+        else
+          _buildChoice(l, it),
         const SizedBox(height: 18),
         Row(
           children: [
@@ -557,16 +571,18 @@ class _ExamScreenState extends State<ExamScreen> {
                     color: Theme.of(context).hintColor,
                   ),
                 ),
-                const SizedBox(height: 12),
-                Text(
-                  w.text,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w900,
-                    height: 1.45,
+                if (!w.dictation) ...[
+                  const SizedBox(height: 12),
+                  Text(
+                    w.text,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w900,
+                      height: 1.45,
+                    ),
                   ),
-                ),
+                ],
                 if (w.hint != null) ...[
                   const SizedBox(height: 8),
                   Text(
@@ -592,6 +608,273 @@ class _ExamScreenState extends State<ExamScreen> {
           decoration: InputDecoration(hintText: l.t('exam_type_answer')),
           onChanged: (v) => it.userAnswer = v,
           onSubmitted: (_) => _go(1),
+        ),
+      ],
+    );
+  }
+
+  /// Kartu instruksi kecil di atas soal susun/tandai kata.
+  Widget _promptCard(String text, {String? context}) => Card(
+    child: Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          Text(
+            text,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w800,
+              color: Theme.of(this.context).hintColor,
+            ),
+          ),
+          if (context != null) ...[
+            const SizedBox(height: 10),
+            Text(
+              '💬 $context',
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w900),
+            ),
+          ],
+        ],
+      ),
+    ),
+  );
+
+  /// Soal susun: ketuk potongan sesuai urutan; ketuk potongan di jawaban
+  /// untuk mengembalikannya.
+  Widget _buildOrder(L l, ExamItem it) {
+    final o = it.order!;
+    final chosen = (it.userAnswer == null || it.userAnswer!.isEmpty)
+        ? <String>[]
+        : it.userAnswer!.split(ExamItem.orderSeparator);
+    final remaining = [...it.options];
+    for (final c in chosen) {
+      remaining.remove(c);
+    }
+    final paragraph = o.joiner == '';
+    void setChosen(List<String> v) => setState(
+      () => it.userAnswer = v.isEmpty ? null : v.join(ExamItem.orderSeparator),
+    );
+    Widget piece(
+      String text, {
+      required VoidCallback onTap,
+      bool used = false,
+    }) {
+      final card = InkWell(
+        key: used ? null : ValueKey('exam_piece_$text'),
+        borderRadius: BorderRadius.circular(12),
+        onTap: onTap,
+        child: Container(
+          width: paragraph ? double.infinity : null,
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          decoration: BoxDecoration(
+            color: used
+                ? DuoColors.purple.withValues(alpha: 0.14)
+                : Theme.of(context).cardTheme.color,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: used ? DuoColors.purple : Theme.of(context).dividerColor,
+              width: 1.5,
+            ),
+          ),
+          child: Text(
+            text,
+            style: TextStyle(
+              fontSize: paragraph ? 14 : 16,
+              fontWeight: FontWeight.w800,
+              height: 1.35,
+            ),
+          ),
+        ),
+      );
+      return paragraph
+          ? Padding(padding: const EdgeInsets.only(bottom: 8), child: card)
+          : card;
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _promptCard(o.prompt[l.code] ?? o.prompt['id']!, context: o.context),
+        const SizedBox(height: 12),
+        Text(
+          l.t('exam_order_answer'),
+          style: const TextStyle(fontWeight: FontWeight.w900),
+        ),
+        const SizedBox(height: 6),
+        Container(
+          constraints: const BoxConstraints(minHeight: 56),
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(
+              color: DuoColors.purple.withValues(alpha: 0.5),
+              width: 1.5,
+            ),
+          ),
+          child: chosen.isEmpty
+              ? Center(
+                  child: Text(
+                    l.t('exam_order_hint'),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Theme.of(context).hintColor,
+                    ),
+                  ),
+                )
+              : paragraph
+              ? Column(
+                  children: [
+                    for (var i = 0; i < chosen.length; i++)
+                      piece(
+                        '${i + 1}. ${chosen[i]}',
+                        used: true,
+                        onTap: () => setChosen([...chosen]..removeAt(i)),
+                      ),
+                  ],
+                )
+              : Wrap(
+                  spacing: 6,
+                  runSpacing: 6,
+                  children: [
+                    for (var i = 0; i < chosen.length; i++)
+                      piece(
+                        chosen[i],
+                        used: true,
+                        onTap: () => setChosen([...chosen]..removeAt(i)),
+                      ),
+                  ],
+                ),
+        ),
+        const SizedBox(height: 14),
+        if (paragraph)
+          for (final r in remaining)
+            piece(r, onTap: () => setChosen([...chosen, r]))
+        else
+          Wrap(
+            spacing: 6,
+            runSpacing: 6,
+            alignment: WrapAlignment.center,
+            children: [
+              for (final r in remaining)
+                piece(r, onTap: () => setChosen([...chosen, r])),
+            ],
+          ),
+      ],
+    );
+  }
+
+  /// Tandai kata: ketuk kata yang berbeda dari audio.
+  Widget _buildPick(L l, ExamItem it) {
+    final p = it.pick!;
+    final words = p.shownWords;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _promptCard(p.prompt[l.code] ?? p.prompt['id']!),
+        const SizedBox(height: 12),
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(14),
+            child: Wrap(
+              spacing: 4,
+              runSpacing: 6,
+              children: [
+                for (var i = 0; i < words.length; i++)
+                  InkWell(
+                    key: ValueKey('exam_word_$i'),
+                    borderRadius: BorderRadius.circular(8),
+                    onTap: () => setState(
+                      () => it.userAnswer = it.userAnswer == '$i' ? null : '$i',
+                    ),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: it.userAnswer == '$i'
+                            ? DuoColors.yellow.withValues(alpha: 0.5)
+                            : null,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        words[i],
+                        style: const TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Esai: tugas + kolom tulis panjang + hitungan kata.
+  Widget _buildEssay(L l, ExamItem it) {
+    final e = it.essay!;
+    final words = EssayItem.wordCount(_typeCtrl.text);
+    final ok =
+        words >= e.minWords && (e.maxWords == null || words <= e.maxWords!);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '✍️ ${e.title[l.code] ?? e.title['id']}',
+                  style: const TextStyle(fontWeight: FontWeight.w900),
+                ),
+                const SizedBox(height: 8),
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxHeight: 300),
+                  child: SingleChildScrollView(
+                    child: SelectableText(
+                      e.task,
+                      style: const TextStyle(fontSize: 14.5, height: 1.5),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
+        TextField(
+          controller: _typeCtrl,
+          minLines: 8,
+          maxLines: 16,
+          keyboardType: TextInputType.multiline,
+          style: const TextStyle(fontSize: 15, height: 1.45),
+          decoration: InputDecoration(
+            hintText: l.t('exam_essay_hint'),
+            border: const OutlineInputBorder(),
+          ),
+          onChanged: (v) => setState(() => it.userAnswer = v),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          l
+              .t(e.maxWords == null ? 'exam_words_min' : 'exam_words_range')
+              .replaceFirst('{n}', '$words')
+              .replaceFirst('{min}', '${e.minWords}')
+              .replaceFirst('{max}', '${e.maxWords ?? ''}'),
+          textAlign: TextAlign.right,
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w800,
+            color: ok ? DuoColors.green : Theme.of(context).hintColor,
+          ),
         ),
       ],
     );
@@ -714,7 +997,7 @@ class _ExamResultView extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = L.of(context);
     final hint = Theme.of(context).hintColor;
-    final total = session.totalQuestions;
+    final total = session.totalScored;
     final correct = session.totalCorrect;
     final pct = total == 0 ? 0 : (correct * 100 / total).round();
     final ring = pct >= 70
@@ -724,6 +1007,7 @@ class _ExamResultView extends StatelessWidget {
         : DuoColors.red;
     final passed = score.passed;
     final missed = session.missed;
+    final essays = session.essays;
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
@@ -819,7 +1103,9 @@ class _ExamResultView extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          '${r.correct}/${r.total}',
+                          r.total == 0
+                              ? l.t('exam_self_assess')
+                              : '${r.correct}/${r.total}',
                           style: TextStyle(color: hint, fontSize: 13),
                         ),
                         if (!session.mini &&
@@ -853,6 +1139,15 @@ class _ExamResultView extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 18),
+        if (essays.isNotEmpty) ...[
+          Text(
+            l.t('exam_essay_review'),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w900),
+          ),
+          const SizedBox(height: 8),
+          for (final e in essays) _EssayReviewCard(item: e, l: l),
+          const SizedBox(height: 10),
+        ],
         if (missed.isNotEmpty) ...[
           Text(
             l.t('exam_review_title'),
@@ -893,11 +1188,25 @@ class _MissedCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final hint = Theme.of(context).hintColor;
-    final question = item.isTyping
-        ? '${item.writing!.prompt[l.code] ?? item.writing!.prompt['id']!}\n'
-              '${item.writing!.text}'
-        : item.mcq!.question[l.code] ?? item.mcq!.question['id']!;
-    final yours = item.answered ? item.userAnswer! : l.t('exam_unanswered');
+    final question = switch (item) {
+      ExamItem(:final order?) => [
+        order.prompt[l.code] ?? order.prompt['id']!,
+        ?order.context,
+      ].join('\n'),
+      ExamItem(:final pick?) => pick.prompt[l.code] ?? pick.prompt['id']!,
+      ExamItem(:final writing?) => [
+        writing.prompt[l.code] ?? writing.prompt['id']!,
+        if (!writing.dictation) writing.text,
+      ].join('\n'),
+      _ => item.mcq!.question[l.code] ?? item.mcq!.question['id']!,
+    };
+    final yours = !item.answered
+        ? l.t('exam_unanswered')
+        : item.isOrder
+        ? item.userAnswer!.split(ExamItem.orderSeparator).join(' / ')
+        : item.isPick
+        ? item.pick!.shownWords[int.parse(item.userAnswer!)]
+        : item.userAnswer!;
     final transcript = item.isAudio ? item.passageText : null;
     return Container(
       width: double.infinity,
@@ -977,6 +1286,113 @@ class _MissedCard extends StatelessWidget {
             ),
           ],
         ],
+      ),
+    );
+  }
+}
+
+/// Ulasan esai: jumlah kata, tulisan pengguna, contoh jawaban, dan
+/// daftar cek untuk menilai sendiri.
+class _EssayReviewCard extends StatefulWidget {
+  final ExamItem item;
+  final L l;
+  const _EssayReviewCard({required this.item, required this.l});
+
+  @override
+  State<_EssayReviewCard> createState() => _EssayReviewCardState();
+}
+
+class _EssayReviewCardState extends State<_EssayReviewCard> {
+  final Set<int> _checked = {};
+
+  @override
+  Widget build(BuildContext context) {
+    final l = widget.l;
+    final e = widget.item.essay!;
+    final text = widget.item.userAnswer ?? '';
+    final words = EssayItem.wordCount(text);
+    final hint = Theme.of(context).hintColor;
+    return Card(
+      margin: const EdgeInsets.only(bottom: 10),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(14, 12, 14, 6),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '✍️ ${e.title[l.code] ?? e.title['id']}',
+              style: const TextStyle(fontWeight: FontWeight.w900),
+            ),
+            Text(
+              l
+                  .t('exam_words_written')
+                  .replaceFirst('{n}', '$words')
+                  .replaceFirst('{min}', '${e.minWords}'),
+              style: TextStyle(
+                fontSize: 12,
+                color: words >= e.minWords ? DuoColors.green : DuoColors.red,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            Theme(
+              data: Theme.of(
+                context,
+              ).copyWith(dividerColor: Colors.transparent),
+              child: Column(
+                children: [
+                  ExpansionTile(
+                    tilePadding: EdgeInsets.zero,
+                    title: Text(
+                      l.t('exam_essay_yours'),
+                      style: TextStyle(fontSize: 13, color: hint),
+                    ),
+                    children: [
+                      SelectableText(
+                        text.isEmpty ? l.t('exam_unanswered') : text,
+                        style: const TextStyle(fontSize: 13.5, height: 1.5),
+                      ),
+                    ],
+                  ),
+                  ExpansionTile(
+                    tilePadding: EdgeInsets.zero,
+                    title: Text(
+                      l.t('exam_essay_model'),
+                      style: TextStyle(fontSize: 13, color: hint),
+                    ),
+                    children: [
+                      SelectableText(
+                        e.modelAnswer,
+                        style: const TextStyle(fontSize: 13.5, height: 1.5),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Text(
+              l
+                  .t('exam_essay_checklist')
+                  .replaceFirst('{n}', '${_checked.length}')
+                  .replaceFirst('{total}', '${e.checklist.length}'),
+              style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 13),
+            ),
+            for (var i = 0; i < e.checklist.length; i++)
+              CheckboxListTile(
+                dense: true,
+                contentPadding: EdgeInsets.zero,
+                controlAffinity: ListTileControlAffinity.leading,
+                value: _checked.contains(i),
+                activeColor: DuoColors.green,
+                onChanged: (v) => setState(
+                  () => v == true ? _checked.add(i) : _checked.remove(i),
+                ),
+                title: Text(
+                  e.checklist[i][l.code] ?? e.checklist[i]['id']!,
+                  style: const TextStyle(fontSize: 13),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

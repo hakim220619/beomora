@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../l10n/app_strings.dart';
 import '../providers/auth_provider.dart';
+import '../providers/settings_provider.dart';
 import '../widgets/beomora_logo.dart';
 import '../widgets/google_sign_in_button.dart';
 import 'email_auth_screen.dart';
@@ -23,6 +24,12 @@ class LoginScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              // Bahasa lengkap dipilih setelah login; tombol kecil ini
+              // supaya halaman login sendiri bisa dibaca.
+              const Align(
+                alignment: Alignment.centerRight,
+                child: _LangToggle(),
+              ),
               const Spacer(),
               const Center(child: BeomoraLogo(size: 150)),
               const SizedBox(height: 24),
@@ -69,6 +76,26 @@ class LoginScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// Pilihan bahasa UI ringkas di pojok halaman login.
+class _LangToggle extends StatelessWidget {
+  const _LangToggle();
+
+  @override
+  Widget build(BuildContext context) {
+    final settings = context.watch<SettingsProvider>();
+    return SegmentedButton<String>(
+      showSelectedIcon: false,
+      style: const ButtonStyle(visualDensity: VisualDensity.compact),
+      segments: const [
+        ButtonSegment(value: 'id', label: Text('🇮🇩 ID')),
+        ButtonSegment(value: 'en', label: Text('🇬🇧 EN')),
+      ],
+      selected: {settings.uiLang},
+      onSelectionChanged: (v) => settings.setUiLang(v.first),
     );
   }
 }

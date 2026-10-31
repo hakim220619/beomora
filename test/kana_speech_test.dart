@@ -38,9 +38,11 @@ void main() {
       expect(romajiToHiragana(''), isNull);
     });
 
-    test('semua bacaan paket kanji N5 bisa diubah ke hiragana', () {
-      final kanji = letterQuizFor('ja').firstWhere((c) => c.id == 'kanji_n5');
-      for (final item in kanji.items) {
+    test('semua bacaan paket kanji N5 & N4 bisa diubah ke hiragana', () {
+      final packs = letterQuizFor(
+        'ja',
+      ).where((c) => c.id == 'kanji_n5' || c.id == 'kanji_n4');
+      for (final item in [for (final p in packs) ...p.items]) {
         final kana = romajiToHiragana(item.romaji);
         expect(kana, isNotNull, reason: '${item.kana} ${item.romaji}');
         expect(containsKanji(kana!), isFalse);

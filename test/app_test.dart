@@ -143,7 +143,7 @@ void main() {
         equals(quizPack.items.map((k) => k.kana).toSet()),
         reason: 'kanji di materi dan paket kuis harus sama',
       );
-      expect(kanjiInGuide.length, 62);
+      expect(kanjiInGuide.length, greaterThanOrEqualTo(90));
       for (final topics in kStudyGuides.values) {
         expect(topics, isNotEmpty);
         for (final topic in topics) {
@@ -171,12 +171,47 @@ void main() {
     });
   });
 
-  testWidgets('aplikasi boot ke onboarding lalu bisa lanjut', (tester) async {
+  testWidgets('belum login → halaman login dulu, belum onboarding', (
+    tester,
+  ) async {
     SharedPreferences.setMockInitialValues({});
+    final prefs = (await tester.runAsync(SharedPreferences.getInstance))!;
+    final courses = (await tester.runAsync(ContentService.loadCourses))!;
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          Provider<List<Course>>.value(value: courses),
+          ChangeNotifierProvider(create: (_) => SettingsProvider(prefs)),
+          ChangeNotifierProvider(create: (_) => ProgressProvider(prefs)),
+          ChangeNotifierProvider(create: (_) => AuthProvider(prefs)),
+        ],
+        child: const BeomoraApp(),
+      ),
+    );
+    for (var i = 0; i < 5; i++) {
+      await tester.pump(const Duration(milliseconds: 150));
+    }
+    expect(find.text('MASUK DENGAN GOOGLE'), findsOneWidget);
+    expect(find.text('Selamat datang di Beomora!'), findsNothing);
+
+    // Tombol bahasa kecil di halaman login.
+    await tester.tap(find.text('🇬🇧 EN'));
+    await tester.pump(const Duration(milliseconds: 300));
+    expect(find.text('MASUK DENGAN GOOGLE'), findsNothing);
+  });
+
+  testWidgets('sudah login, belum onboarding → pilih bahasa, kursus, target', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({
+      'auth_name': 'Dani',
+      'auth_email': 'dani@example.com',
+    });
     // I/O asli (asset & prefs) harus lewat runAsync di dalam testWidgets,
     // kalau tidak future-nya tak pernah selesai di zona fake-async.
     final prefs = (await tester.runAsync(SharedPreferences.getInstance))!;
     final courses = (await tester.runAsync(ContentService.loadCourses))!;
+    final progress = ProgressProvider(prefs);
 
     // Beberapa widget Material punya animasi berkelanjutan, jadi pakai
     // pump berdurasi tetap, bukan pumpAndSettle.
@@ -191,7 +226,7 @@ void main() {
         providers: [
           Provider<List<Course>>.value(value: courses),
           ChangeNotifierProvider(create: (_) => SettingsProvider(prefs)),
-          ChangeNotifierProvider(create: (_) => ProgressProvider(prefs)),
+          ChangeNotifierProvider.value(value: progress),
           ChangeNotifierProvider(create: (_) => AuthProvider(prefs)),
         ],
         child: const BeomoraApp(),
@@ -201,27 +236,26 @@ void main() {
 
     // Layar onboarding: sambutan + pilihan bahasa UI.
     expect(find.text('Selamat datang di Beomora!'), findsOneWidget);
-    expect(find.text('LANJUT'), findsOneWidget);
-
     await tester.tap(find.text('LANJUT'));
     await settle();
     expect(find.text('Mau belajar bahasa apa?'), findsOneWidget);
 
-    await tester.tap(find.textContaining('Bahasa Inggris'));
+    await tester.tap(find.textContaining('Bahasa Jepang'));
     await settle();
-    // Target XP harian tidak ditanya lagi (bawaan 20 XP, ubah di
-    // Pengaturan); langsung ke pilihan tantangan streak.
     await tester.tap(find.text('LANJUT'));
     await settle();
-    expect(find.text('Tentukan target harianmu'), findsNothing);
     expect(find.text('Pilih tantangan streak-mu 🔥'), findsOneWidget);
+    await tester.tap(find.textContaining('90'));
+    await settle();
 
     await tester.tap(find.text('MULAI BELAJAR'));
     await settle();
 
-    // Menu utama digembok: setelah onboarding wajib login Google dulu.
-    expect(find.text('Masuk dulu, yuk!'), findsOneWidget);
-    expect(find.text('MASUK DENGAN GOOGLE'), findsOneWidget);
-    expect(find.text('Belajar'), findsNothing);
+    // Pilihan tersimpan di progres (ikut tersinkron ke akun).
+    expect(progress.onboarded, isTrue);
+    expect(progress.activeCourseId, 'ja');
+    expect(progress.streakGoalDays, 90);
+    expect(progress.exportCloudJson(), contains('"onboarded":true'));
+    expect(find.text('Selamat datang di Beomora!'), findsNothing);
   });
 }

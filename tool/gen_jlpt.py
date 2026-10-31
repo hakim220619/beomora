@@ -2,6 +2,13 @@
 # Tiap entri: (kana, romaji, arti_id, arti_en). Kanji ikut di kana bila
 # lazim ditulis begitu untuk level tsb. Divalidasi: kana unik per level,
 # romaji & arti tidak kosong.
+# Tambahan N5/N4 (menuju ±800 / ±700 kata) ada di jlpt_n5_extra.py dan
+# jlpt_n4_extra.py — format sama.
+
+import os, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from jlpt_n5_extra import WORDS as N5_EXTRA
+from jlpt_n4_extra import WORDS as N4_EXTRA
 
 N5 = [
   # Angka & hitungan
@@ -53,7 +60,7 @@ N5 = [
   ("は","ha","gigi","tooth"),("て","te","tangan","hand"),
   ("あし","ashi","kaki","leg; foot"),("からだ","karada","tubuh","body"),
   # Makanan & minuman
-  ("ごはん","gohan","nasi; makan","rice; meal"),("パン","pan","roti","bread"),
+  ("ごはん","gohan","nasi; makanan","rice; meal"),("パン","pan","roti","bread"),
   ("みず","mizu","air","water"),("おちゃ","ocha","teh","tea"),
   ("コーヒー","koohii","kopi","coffee"),("ぎゅうにゅう","gyuunyuu","susu","milk"),
   ("にく","niku","daging","meat"),("さかな","sakana","ikan","fish"),
@@ -104,7 +111,7 @@ N5 = [
   ("いそがしい","isogashii","sibuk","busy"),("はやい","hayai","cepat","fast"),
   # Kata kerja
   ("たべる","taberu","makan","to eat"),("のむ","nomu","minum","to drink"),
-  ("みる","miru","melihat","to see"),("きく","kiku","mendengar","to listen"),
+  ("みる","miru","melihat; menonton","to see; to watch"),("きく","kiku","mendengar; bertanya","to listen; to ask"),
   ("はなす","hanasu","berbicara","to speak"),("よむ","yomu","membaca","to read"),
   ("かく","kaku","menulis","to write"),("いく","iku","pergi","to go"),
   ("くる","kuru","datang","to come"),("かえる","kaeru","pulang","to return"),
@@ -140,13 +147,12 @@ N5 = [
 
 N4 = [
   ("しゃかい","shakai","masyarakat","society"),("せいかつ","seikatsu","kehidupan","life"),
-  ("しごと","shigoto","pekerjaan","work"),("かいしゃ","kaisha","perusahaan","company"),
   ("しゃちょう","shachou","direktur","company president"),("てんいん","tenin","pelayan toko","clerk"),
   ("きゃく","kyaku","tamu; pelanggan","guest; customer"),("うけつけ","uketsuke","resepsionis","reception"),
   ("かいぎ","kaigi","rapat","meeting"),("よてい","yotei","rencana; jadwal","plan; schedule"),
   ("やくそく","yakusoku","janji","promise"),("つごう","tsugou","keadaan; kondisi","circumstances"),
   ("りゆう","riyuu","alasan","reason"),("いけん","iken","pendapat","opinion"),
-  ("せつめい","setsumei","penjelasan","explanation"),("しつもん","shitsumon","pertanyaan","question"),
+  ("せつめい","setsumei","penjelasan","explanation"),
   ("へんじ","henji","balasan","reply"),("あいさつ","aisatsu","salam","greeting"),
   ("けいけん","keiken","pengalaman","experience"),("しゅみ","shumi","hobi","hobby"),
   ("きぶん","kibun","suasana hati","mood"),("きもち","kimochi","perasaan","feeling"),
@@ -172,12 +178,11 @@ N4 = [
   ("なおす","naosu","memperbaiki","to fix"),("こわす","kowasu","merusak","to break"),
   ("すてる","suteru","membuang","to throw away"),("ひろう","hirou","memungut","to pick up"),
   ("はこぶ","hakobu","mengangkut","to carry"),("おくる","okuru","mengirim","to send"),
-  ("うける","ukeru","menerima; mengikuti","to receive; to take"),("わたす","watasu","menyerahkan","to hand over"),
+  ("うける","ukeru","menerima; mengikuti","to receive; to take"),
   ("つたえる","tsutaeru","menyampaikan","to convey"),("しらべる","shiraberu","memeriksa","to investigate"),
-  ("かんがえる","kangaeru","memikirkan","to think"),("おぼえる","oboeru","mengingat","to memorize"),
-  ("わすれる","wasureru","lupa","to forget"),("なれる","nareru","terbiasa","to get used to"),
+  ("かんがえる","kangaeru","memikirkan","to think"),
+  ("なれる","nareru","terbiasa","to get used to"),
   ("つづける","tsuzukeru","melanjutkan","to continue"),("やめる","yameru","berhenti","to quit"),
-  ("はじめる","hajimeru","memulai","to begin"),("おわる","owaru","berakhir","to end"),
   ("てつだう","tetsudau","membantu","to help"),("せわする","sewasuru","merawat","to take care"),
   ("しんぱいする","shinpaisuru","khawatir","to worry"),("あんしんする","anshinsuru","lega","to be relieved"),
   ("びっくりする","bikkurisuru","terkejut","to be surprised"),("えんりょする","enryosuru","sungkan","to hold back"),
@@ -185,24 +190,24 @@ N4 = [
   ("よやくする","yoyakusuru","memesan","to reserve"),("しょうかいする","shoukaisuru","memperkenalkan","to introduce"),
   ("あんないする","annaisuru","memandu","to guide"),("せつめいする","setsumeisuru","menjelaskan","to explain"),
   # Sifat N4
-  ("べんり","benri","praktis","convenient"),("ふべん","fuben","tidak praktis","inconvenient"),
+  ("ふべん","fuben","tidak praktis","inconvenient"),
   ("あんぜん","anzen","aman","safe"),("きけん","kiken","berbahaya","dangerous"),
-  ("たいせつ","taisetsu","penting","important"),("ひつよう","hitsuyou","perlu","necessary"),
+  ("ひつよう","hitsuyou","perlu","necessary"),
   ("じゆうな","jiyuuna","bebas","free"),("むりな","murina","mustahil; memaksakan","impossible"),
-  ("ふくざつ","fukuzatsu","rumit","complicated"),("かんたん","kantan","sederhana","simple"),
-  ("じょうぶ","joubu","kuat; awet","sturdy"),("ていねい","teinei","sopan; teliti","polite; careful"),
-  ("まじめ","majime","serius; rajin","serious; diligent"),("しんせつ","shinsetsu","baik hati","kind"),
+  ("ふくざつ","fukuzatsu","rumit","complicated"),
+  ("ていねい","teinei","sopan; teliti","polite; careful"),
+  ("まじめ","majime","serius; rajin","serious; diligent"),
   ("ねっしん","nesshin","antusias","enthusiastic"),("ざんねん","zannen","sayang sekali","regrettable"),
   ("へん","hen","aneh","strange"),("とくべつ","tokubetsu","istimewa","special"),
   ("じゅうぶん","juubun","cukup","enough"),("うまい","umai","mahir; enak","skillful; tasty"),
 ]
 
 N3 = [
-  ("けいけん","keiken3","pengalaman","experience"),("のうりょく","nouryoku","kemampuan","ability"),
+  ("のうりょく","nouryoku","kemampuan","ability"),
   ("せいかく","seikaku","sifat; watak","personality"),("たいど","taido","sikap","attitude"),
   ("じょうたい","joutai","keadaan","condition; state"),("じょうきょう","joukyou","situasi","situation"),
   ("かんけい","kankei","hubungan","relationship"),("えいきょう","eikyou","pengaruh","influence"),
-  ("こうか","kouka","efek","effect"),("もんだい","mondai","masalah; soal","problem"),
+  ("こうか","kouka","efek","effect"),
   ("かいけつ","kaiketsu","penyelesaian","solution"),("げんじょう","genjou","kondisi saat ini","present state"),
   ("もくひょう","mokuhyou","target","target"),("けいかく","keikaku","rencana","plan"),
   ("じっこう","jikkou","pelaksanaan","execution"),("かつどう","katsudou","kegiatan","activity"),
@@ -243,11 +248,23 @@ N3 = [
   ("正確","seikaku","akurat","accurate"),("あいまい","aimai","ambigu","vague"),
   ("せっきょくてき","sekkyokuteki","proaktif","proactive"),("しょうきょくてき","shoukyokuteki","pasif","passive"),
   ("こうへい","kouhei","adil","fair"),("ふこうへい","fukouhei","tidak adil","unfair"),
-  ("ゆうめい","yuumei","terkenal","famous"),("じゅうよう","juuyou","penting","important"),
+  ("じゅうよう","juuyou","penting","important"),
   ("きちょう","kichou","berharga","valuable"),("きけんな","kikenna","berisiko","risky"),
   ("すなお","sunao","jujur; penurut","obedient"),("しょうじき","shoujiki","jujur","honest"),
   ("らくてん","rakuten","optimis","optimistic"),("しんちょう","shinchou","hati-hati","cautious"),
 ]
+
+
+N5 = N5 + N5_EXTRA
+N4 = N4 + N4_EXTRA
+
+# Kata yang sama (kana+romaji) tidak boleh muncul di dua level.
+_level_of = {}
+for _lv, _rows in [('N5', N5), ('N4', N4), ('N3', N3)]:
+    for _r in _rows:
+        _k = (_r[0].rstrip('23'), _r[1].rstrip('23'))
+        assert _k not in _level_of, f'{_k} ada di {_level_of[_k]} dan {_lv}'
+        _level_of[_k] = _lv
 
 
 def slug_clean(kana):

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../../data/kanji_bank.dart';
 import '../../data/question_bank.dart';
 import '../../l10n/app_strings.dart';
 import '../../models/course.dart';
@@ -12,6 +13,7 @@ import '../../services/tts_service.dart';
 import '../../theme.dart';
 import '../../widgets/study/study_background.dart';
 import '../practice/letter_quiz_screen.dart';
+import '../practice/vocab_practice_screen.dart';
 import '../premium_screen.dart';
 
 /// Detail satu topik materi: grid kana yang bisa diketuk untuk
@@ -119,11 +121,19 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
     final isPremium = context.watch<AuthProvider>().isPremium;
     final locked = quizCat != null && quizCat.premium && !isPremium;
     final visible = _visibleSections(l.code);
+    // Topik kosakata: tombol menuju Latihan Kosakata (pilih kata sendiri).
+    final vocabFab =
+        quizCat == null &&
+        widget.topic.id.contains('vocab') &&
+        widget.topic.sections.any((s) => s.examples.isNotEmpty);
+    final hasFab = quizCat != null || vocabFab;
 
     return StudyScaffold(
       appBar: AppBar(title: Text(widget.topic.title[l.code] ?? '')),
       floatingActionButton: quizCat == null
-          ? null
+          ? (vocabFab
+                ? vocabPracticeFab(context, widget.course, [widget.topic])
+                : null)
           : FloatingActionButton.extended(
               backgroundColor: locked ? DuoColors.purple : DuoColors.green,
               foregroundColor: Colors.white,
@@ -151,7 +161,7 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
               ),
             ),
       body: ListView(
-        padding: EdgeInsets.fromLTRB(16, 4, 16, quizCat == null ? 32 : 96),
+        padding: EdgeInsets.fromLTRB(16, 4, 16, hasFab ? 96 : 32),
         children: [
           if (_searchable) ...[
             TextField(
@@ -272,8 +282,12 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
                   item: section.kana[i],
                   active: _activeKana == section.kana[i].kana,
                   onTap: () {
-                    _speak(spokenFormOf(section.kana[i]));
-                    setState(() => _activeKana = section.kana[i].kana);
+                    final item = section.kana[i];
+                    _speak(spokenFormOf(item));
+                    setState(() => _activeKana = item.kana);
+                    // Kanji: tampilkan semua bacaan & contoh katanya.
+                    final kanji = kanjiEntryOf(item.kana);
+                    if (kanji != null) _showKanji(context, l, kanji);
                   },
                 ),
               ),
@@ -287,6 +301,122 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
                   onSpeak: () => _speak(ex.target),
                 ),
             ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showKanji(BuildContext context, L l, KanjiEntry k) {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (_) => _KanjiSheet(
+        entry: k,
+        l: l,
+        onSpeak: (text) => TtsService.instance.speak(text, widget.ttsLocale),
+      ),
+    );
+  }
+}
+
+/// Detail satu kanji: arti, on'yomi, kun'yomi, dan contoh kata.
+class _KanjiSheet extends StatelessWidget {
+  final KanjiEntry entry;
+  final L l;
+  final ValueChanged<String> onSpeak;
+
+  const _KanjiSheet({
+    required this.entry,
+    required this.l,
+    required this.onSpeak,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final hint = Theme.of(context).hintColor;
+    Widget readings(String label, List<String> values) => Padding(
+      padding: const EdgeInsets.only(top: 6),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 92,
+            child: Text(
+              label,
+              style: TextStyle(fontWeight: FontWeight.w700, color: hint),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              values.isEmpty ? '—' : values.join('、'),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    return SafeArea(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.sizeOf(context).height * 0.8,
+        ),
+        child: ListView(
+          shrinkWrap: true,
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+          children: [
+            Row(
+              children: [
+                Text(
+                  entry.kanji,
+                  style: const TextStyle(
+                    fontSize: 64,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Text(
+                    entry.meaning[l.code] ?? entry.meaning['id']!,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            readings(l.t('kanji_on'), entry.on),
+            readings(l.t('kanji_kun'), entry.kun),
+            const SizedBox(height: 14),
+            Text(
+              l.t('kanji_examples'),
+              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w900),
+            ),
+            for (final w in entry.words)
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                title: Text(
+                  w.word,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                subtitle: Text(
+                  '${w.kana} · ${w.romaji}\n${w.meaning[l.code] ?? w.meaning['id']}',
+                ),
+                isThreeLine: true,
+                trailing: IconButton(
+                  icon: const Icon(
+                    Icons.volume_up_rounded,
+                    color: DuoColors.blue,
+                  ),
+                  onPressed: () => onSpeak(w.kana),
+                ),
+              ),
           ],
         ),
       ),

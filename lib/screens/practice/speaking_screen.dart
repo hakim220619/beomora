@@ -160,6 +160,14 @@ class _SpeakingScreenState extends State<SpeakingScreen> {
       onPartial: (p) {
         if (mounted && _mic == _Mic.listening) setState(() => _partial = p);
       },
+      // Sudah terucap lengkap & tepat → langsung nilai, tak perlu diam.
+      isEnough: (heard) =>
+          scoreSpeech(
+            courseId: _course.id,
+            tokens: item.tokens,
+            heard: heard,
+          ).percent >=
+          100,
     );
     if (!mounted || _unit == null || !identical(item, _items[_index])) return;
     final score = scoreSpeech(

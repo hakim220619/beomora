@@ -1,0 +1,7 @@
+<id>
+🔀 Baru: Tebak Kana Campur!
+Latih hiragana & katakana sekaligus, lengkap dengan dakuten, handakuten, dan yōon. Pilih sendiri kelompok hurufnya dan bebas tentukan jumlah soal.
+✏️ Soal Cocokkan Pasangan kini bisa dijawab dengan menarik garis dari kiri ke kanan
+• Latihan Bicara dinonaktifkan sementara untuk penyempurnaan
+• Perbaikan kecil & peningkatan performa
+</id>

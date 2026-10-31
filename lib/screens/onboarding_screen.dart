@@ -36,15 +36,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       setState(() => _step++);
       return;
     }
-    final settings = context.read<SettingsProvider>();
     final progress = context.read<ProgressProvider>();
     progress.setActiveCourse(_courseId!);
     // Target XP harian memakai bawaan provider (20 XP); bisa diubah
     // kapan saja di Pengaturan.
     progress.setStreakGoal(_streakGoal);
-    // Cukup tandai selesai — gerbang di main.dart yang menentukan
-    // layar berikutnya (wajib login dulu sebelum menu utama).
-    settings.setOnboarded();
+    // Tandai selesai — tersinkron ke akun, gerbang di main.dart lalu
+    // membuka menu utama.
+    progress.completeOnboarding();
   }
 
   @override

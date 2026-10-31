@@ -51,6 +51,14 @@ class ProgressProvider extends ChangeNotifier {
   final SharedPreferences _prefs;
 
   String activeCourseId = 'en';
+
+  /// Sudah memilih bahasa, kursus & target (onboarding setelah login).
+  /// Ikut tersinkron, jadi login di HP lain langsung ke menu utama.
+  bool onboarded = false;
+
+  /// Bahasa UI pilihan pengguna, ikut tersinkron ke akun. null = belum
+  /// pernah dicatat (data versi lama).
+  String? uiLang;
   int xp = 0;
   int gems = 100;
   int _hearts = maxHearts;
@@ -111,8 +119,19 @@ class ProgressProvider extends ChangeNotifier {
     heartRegenMinutes =
         _prefs.getInt(kHeartRegenPref) ?? defaultHeartRegenMinutes;
     _load();
+    // Versi lama menandai onboarding di pengaturan perangkat (sebelum
+    // login) — pindahkan sekali ke progres.
+    if (_prefs.getBool(_kLegacyOnboarded) ?? false) {
+      _prefs.remove(_kLegacyOnboarded);
+      if (!onboarded) {
+        onboarded = true;
+        _save(touch: false);
+      }
+    }
     _checkStreakOnLaunch();
   }
+
+  static const _kLegacyOnboarded = 'onboarded';
 
   /// Terapkan menit regenerasi nyawa dari server/admin (dijepit 1-1440).
   void applyHeartRegenMinutes(int minutes) {
@@ -217,6 +236,22 @@ class ProgressProvider extends ChangeNotifier {
     activeCourseId = courseId;
     coursesTried.add(courseId);
     _checkAchievements();
+    _save();
+    notifyListeners();
+  }
+
+  /// Selesai memilih bahasa, kursus & target setelah login.
+  void completeOnboarding() {
+    onboarded = true;
+    _save();
+    notifyListeners();
+  }
+
+  /// Catat bahasa UI agar ikut tersinkron (dipanggil saat pengguna
+  /// mengganti bahasa).
+  void setUiLang(String lang) {
+    if (uiLang == lang) return;
+    uiLang = lang;
     _save();
     notifyListeners();
   }
@@ -424,6 +459,9 @@ class ProgressProvider extends ChangeNotifier {
 
   void resetAll() {
     activeCourseId = 'en';
+    // Akun berikutnya memilih ulang setelah login; bahasa UI perangkat
+    // dibiarkan.
+    onboarded = false;
     xp = 0;
     gems = 100;
     _hearts = maxHearts;
@@ -598,6 +636,10 @@ class ProgressProvider extends ChangeNotifier {
 
   void _applyMap(Map<String, dynamic> m) {
     activeCourseId = m['activeCourseId'] ?? 'en';
+    // Kunci absen = ditulis versi lama, yang selalu onboarding dulu
+    // sebelum progres tersimpan — anggap sudah onboarding.
+    onboarded = m['onboarded'] ?? true;
+    uiLang = m['uiLang'] ?? uiLang;
     xp = m['xp'] ?? 0;
     gems = m['gems'] ?? 100;
     _hearts = m['hearts'] ?? maxHearts;
@@ -655,6 +697,8 @@ class ProgressProvider extends ChangeNotifier {
 
   Map<String, dynamic> _toMap() => {
     'activeCourseId': activeCourseId,
+    'onboarded': onboarded,
+    if (uiLang != null) 'uiLang': uiLang,
     'xp': xp,
     'gems': gems,
     'hearts': _hearts,

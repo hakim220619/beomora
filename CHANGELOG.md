@@ -3,6 +3,30 @@
 Semua perubahan penting dicatat di sini. Versi mengikuti `pubspec.yaml`
 (`versi+kode build`).
 
+## 1.10.0 (build 25) — 24 Oktober 2026
+
+### Baru
+- **Tebak Kana Campur** di Ruang Latihan (kursus Jepang): racik sendiri
+  paket kuis — hiragana dan/atau katakana; huruf dasar (gojūon),
+  dakuten & handakuten, serta yōon — lalu pilih bebas jumlah soal
+  (slider 5 sampai semua huruf, atau 10/20/30/50/100/Semua). Memakai
+  mesin Tebak Huruf (arah soal acak, TTS, ulasan huruf yang salah, XP).
+- **Garis penghubung di soal Cocokkan Pasangan**: pasangan bisa
+  dicocokkan dengan menarik garis dari kotak kiri ke kotak kanan (ketuk
+  kiri → kanan tetap bisa). Pasangan yang benar tersambung garis lengkung
+  berwarna; salah → garis hilang dan kotak berkedip merah.
+
+### Perubahan
+- **Latihan Bicara dinonaktifkan sementara** (`kSpeakingEnabled = false`
+  di `speech_scorer.dart`): kartu disembunyikan dari Ruang Latihan selama
+  deteksi suara disempurnakan. Kode tetap ada, termasuk perbaikan deteksi:
+  sesi tidak lagi ditutup sebelum hasil akhir datang, status sisa sesi
+  lama diabaikan, mode `dictation`, dan berhenti otomatis saat diam /
+  ucapan sudah tepat.
+
+### Perbaikan
+- Tombol **Mulai** di Tebak Kana Campur tidak lagi memicu galat provider.
+
 ## 1.8.1 (build 21) — 21 September 2026
 
 ### Perbaikan

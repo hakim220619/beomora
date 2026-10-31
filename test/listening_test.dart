@@ -39,7 +39,7 @@ void main() {
     });
 
     test(
-      'setiap bacaan valid: transkrip, terjemahan, >3 soal, 4 pilihan unik',
+      'setiap bacaan valid: transkrip, terjemahan, ≥2 soal, 4 pilihan unik',
       () {
         final ids = <String>{};
         for (final courseId in kListeningCourses) {
@@ -53,7 +53,8 @@ void main() {
               expect(ids.add(p.id), isTrue, reason: 'id ganda ${p.id}');
               expect(
                 p.transcript.trim().length,
-                greaterThan(40),
+                // 即時応答 / Choose a Response: satu ucapan pendek saja.
+                greaterThan(5),
                 reason: '${p.id} transkrip terlalu pendek',
               );
               // Kursus Indonesia: transkrip sudah Indonesia, cukup
@@ -69,10 +70,14 @@ void main() {
               // pengacakan berarti.
               expect(
                 p.questions.length,
-                greaterThan(kListeningQuestionsPerRound),
+                // 即時応答 / Choose a Response cukup 2 soal.
+                greaterThanOrEqualTo(2),
                 reason: '${p.id} soal kurang untuk diacak',
               );
-              expect(p.questionsPerRound, kListeningQuestionsPerRound);
+              expect(
+                p.questionsPerRound,
+                min(kListeningQuestionsPerRound, p.questions.length),
+              );
               for (final q in p.questions) {
                 expect(q.options.length, 4, reason: '${p.id}: ${q.question}');
                 expect(

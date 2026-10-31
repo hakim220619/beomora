@@ -1,9 +1,14 @@
 import '../models/exam.dart';
 import '../models/listening.dart';
-import 'exam_bank.dart';
-import 'exam_writing_bank_en.dart';
+import 'exam_en_listening_more.dart';
+import 'exam_en_reading_more.dart';
+import 'exam_en_writing_more.dart';
 import 'exam_writing_bank_ja.dart';
+import 'jlpt_exam_n4.dart';
+import 'jlpt_exam_n5.dart';
 import 'jlpt_grammar_bank.dart';
+import 'jlpt_vocab_quiz.dart';
+import 'kanji_bank.dart';
 import 'jlpt_vocab.dart';
 import 'jlpt_vocab_adv.dart';
 import 'listening_bank.dart';
@@ -54,32 +59,51 @@ ExamBlueprint? examById(String id) {
 // Inggris — TOEFL iBT, IELTS Academic, PTE Academic
 // ---------------------------------------------------------------------------
 final List<ExamBlueprint> _en = [
+  // TOEFL iBT format Januari 2026 (Speaking belum tersedia). Tes aslinya
+  // adaptif; di sini jumlah soal tetap mendekati satu tahap tes.
   ExamBlueprint(
     id: 'en_toefl',
     courseId: 'en',
     emoji: '🎓',
-    title: const {'id': 'TOEFL iBT', 'en': 'TOEFL iBT'},
+    title: const {'id': 'TOEFL iBT (2026)', 'en': 'TOEFL iBT (2026)'},
     subtitle: const {
-      'id': 'Reading 20 · Listening 28 · Writing 10 (tanpa Speaking)',
-      'en': 'Reading 20 · Listening 28 · Writing 10 (no Speaking)',
+      'id': 'Reading 28 · Listening 24 · Writing 12 · skor band 1–6',
+      'en': 'Reading 28 · Listening 24 · Writing 12 · 1–6 band score',
     },
-    sections: const [
-      ExamSection(ExamSectionKind.reading, questionCount: 20, minutes: 35),
-      ExamSection(
-        ExamSectionKind.listening,
-        questionCount: 28,
-        minutes: 36,
-        maxPlays: 1,
+    sections: [
+      ExamSection.mixed(
+        ExamSectionKind.reading,
+        minutes: 30,
+        parts: [
+          ExamPart.typing(toeflCompleteWords, 10),
+          ExamPart.reading(toeflDailyLife, 8),
+          ExamPart.reading([
+            ...readingEnAcademic,
+            ...readingEnAcademicMore,
+          ], 10),
+        ],
       ),
-      ExamSection(ExamSectionKind.writing, questionCount: 10, minutes: 30),
+      ExamSection.mixed(
+        ExamSectionKind.listening,
+        minutes: 29,
+        maxPlays: 1,
+        parts: [
+          ExamPart.listening(toeflChooseResponse, 8),
+          ExamPart.listening([..._listeningPack('en', 'en_listen_toefl')], 16),
+        ],
+      ),
+      ExamSection.mixed(
+        ExamSectionKind.writing,
+        minutes: 23,
+        parts: [
+          ExamPart.order(toeflBuildSentence, 10),
+          ExamPart.essay(toeflEmail, 1),
+          ExamPart.essay(toeflDiscussion, 1),
+        ],
+      ),
     ],
     scoring: ExamScoring.toefl,
-    pools: ExamPools(
-      reading: readingEnAcademic,
-      readingExtra: examToefl,
-      listening: _listeningPack('en', 'en_listen_toefl'),
-      writing: writingEnAcademic,
-    ),
+    pools: const ExamPools(),
   ),
   ExamBlueprint(
     id: 'en_ielts',
@@ -87,53 +111,79 @@ final List<ExamBlueprint> _en = [
     emoji: '📘',
     title: const {'id': 'IELTS Academic', 'en': 'IELTS Academic'},
     subtitle: const {
-      'id': 'Listening 40 · Reading 40 · Writing 10 (tanpa Speaking)',
-      'en': 'Listening 40 · Reading 40 · Writing 10 (no Speaking)',
+      'id': 'Listening 40 · Reading 40 · Writing Task 1 & 2 (tanpa Speaking)',
+      'en': 'Listening 40 · Reading 40 · Writing Task 1 & 2 (no Speaking)',
     },
-    sections: const [
-      ExamSection(
+    sections: [
+      ExamSection.mixed(
         ExamSectionKind.listening,
-        questionCount: 40,
         minutes: 30,
         maxPlays: 1,
+        parts: [
+          ExamPart.listening([..._listeningPack('en', 'en_listen_ielts')], 40),
+        ],
       ),
-      ExamSection(ExamSectionKind.reading, questionCount: 40, minutes: 60),
-      ExamSection(ExamSectionKind.writing, questionCount: 10, minutes: 30),
+      ExamSection.mixed(
+        ExamSectionKind.reading,
+        minutes: 60,
+        parts: [
+          ExamPart.reading([
+            ...readingEnAcademic,
+            ...readingEnAcademicMore,
+          ], 40),
+        ],
+      ),
+      ExamSection.mixed(
+        ExamSectionKind.writing,
+        minutes: 60,
+        parts: [ExamPart.essay(ieltsTask1, 1), ExamPart.essay(ieltsTask2, 1)],
+      ),
     ],
     scoring: ExamScoring.ielts,
-    pools: ExamPools(
-      reading: readingEnAcademic,
-      readingExtra: examIelts,
-      listening: _listeningPack('en', 'en_listen_ielts'),
-      writing: writingEnAcademic,
-    ),
+    pools: const ExamPools(),
   ),
+  // PTE Academic: urutan resmi Speaking & Writing → Reading → Listening
+  // (bagian Speaking belum tersedia, jadi bagian pertama hanya Writing).
   ExamBlueprint(
     id: 'en_pte',
     courseId: 'en',
     emoji: '💻',
     title: const {'id': 'PTE Academic', 'en': 'PTE Academic'},
     subtitle: const {
-      'id': 'Reading 18 · Listening 18 · Writing 8 (tanpa Speaking)',
-      'en': 'Reading 18 · Listening 18 · Writing 8 (no Speaking)',
+      'id': 'Writing 2 · Reading 15 · Listening 14 (tanpa Speaking)',
+      'en': 'Writing 2 · Reading 15 · Listening 14 (no Speaking)',
     },
-    sections: const [
-      ExamSection(ExamSectionKind.reading, questionCount: 18, minutes: 30),
-      ExamSection(
-        ExamSectionKind.listening,
-        questionCount: 18,
+    sections: [
+      ExamSection.mixed(
+        ExamSectionKind.writing,
         minutes: 30,
-        maxPlays: 1,
+        parts: [
+          ExamPart.essay(pteSummarizeWritten, 1),
+          ExamPart.essay(pteEssay, 1),
+        ],
       ),
-      ExamSection(ExamSectionKind.writing, questionCount: 8, minutes: 20),
+      ExamSection.mixed(
+        ExamSectionKind.reading,
+        minutes: 30,
+        parts: [
+          ExamPart.mcq(pteReadingFillBlanks, 6),
+          ExamPart.reading([...readingEnAcademic, ...readingEnAcademicMore], 5),
+          ExamPart.order(pteReorder, 4),
+        ],
+      ),
+      ExamSection.mixed(
+        ExamSectionKind.listening,
+        minutes: 35,
+        maxPlays: 1,
+        parts: [
+          ExamPart.listening([..._listeningPack('en', 'en_listen_pte')], 8),
+          ExamPart.pick(pteHighlightIncorrect, 3),
+          ExamPart.typing(pteDictation, 3),
+        ],
+      ),
     ],
     scoring: ExamScoring.pte,
-    pools: ExamPools(
-      reading: readingEnAcademic,
-      readingExtra: examPte,
-      listening: _listeningPack('en', 'en_listen_pte'),
-      writing: writingEnAcademic,
-    ),
+    pools: const ExamPools(),
   ),
 ];
 
@@ -147,24 +197,49 @@ final List<ExamBlueprint> _ja = [
     emoji: '🌸',
     title: const {'id': 'JLPT N5', 'en': 'JLPT N5'},
     subtitle: const {
-      'id': 'Kosakata 35 · Tata bahasa 20 · Bacaan 12 · Dengar 24',
-      'en': 'Vocabulary 35 · Grammar 20 · Reading 12 · Listening 24',
+      'id': 'Kosakata 21 · Tata bahasa 17 · Bacaan 6 · Dengar 24',
+      'en': 'Vocabulary 21 · Grammar 17 · Reading 6 · Listening 24',
     },
-    sections: const [
-      ExamSection(ExamSectionKind.vocab, questionCount: 35, minutes: 20),
-      ExamSection(ExamSectionKind.grammar, questionCount: 20, minutes: 20),
-      ExamSection(ExamSectionKind.reading, questionCount: 12, minutes: 20),
-      ExamSection(ExamSectionKind.listening, questionCount: 24, minutes: 30),
-      ExamSection(ExamSectionKind.writing, questionCount: 10, minutes: 10),
+    // Susunan soal JLPT sejak 2020: 漢字読み 7, 表記 5, 文脈規定 6,
+    // 言い換え類義 3 · 文法 17 · 読解 6 · 聴解 24.
+    sections: [
+      ExamSection.mixed(
+        ExamSectionKind.vocab,
+        minutes: 20,
+        parts: [
+          ExamPart.mcq(kanjiReadingQuestions(kanjiN5Sections), 7),
+          ExamPart.mcq(kanjiSpellingQuestions(kanjiN5Sections), 5),
+          ExamPart.mcq(vocabContextN5, 6),
+          ExamPart.mcq(vocabParaphraseN5, 3),
+        ],
+      ),
+      ExamSection.mixed(
+        ExamSectionKind.grammar,
+        minutes: 20,
+        parts: [
+          ExamPart.mcq([...grammarN5, ...grammarN5More], 17),
+        ],
+      ),
+      ExamSection.mixed(
+        ExamSectionKind.reading,
+        minutes: 20,
+        parts: [
+          ExamPart.reading([...readingJaN5, ...readingJaN5More], 6),
+        ],
+      ),
+      ExamSection.mixed(
+        ExamSectionKind.listening,
+        minutes: 30,
+        parts: [ExamPart.listening(_listeningPack('ja', 'ja_listen_n5'), 24)],
+      ),
+      const ExamSection(
+        ExamSectionKind.writing,
+        questionCount: 10,
+        minutes: 10,
+      ),
     ],
     scoring: ExamScoring.jlptN5,
-    pools: ExamPools(
-      vocab: vocabToMcq(jlptN5),
-      grammar: grammarN5,
-      reading: readingJaN5,
-      listening: _listeningPack('ja', 'ja_listen_n5'),
-      writing: writingJaN5,
-    ),
+    pools: ExamPools(writing: writingJaN5),
   ),
   ExamBlueprint(
     id: 'ja_n4',
@@ -172,24 +247,50 @@ final List<ExamBlueprint> _ja = [
     emoji: '🍁',
     title: const {'id': 'JLPT N4', 'en': 'JLPT N4'},
     subtitle: const {
-      'id': 'Kosakata 35 · Tata bahasa 20 · Bacaan 15 · Dengar 28',
-      'en': 'Vocabulary 35 · Grammar 20 · Reading 15 · Listening 28',
+      'id': 'Kosakata 28 · Tata bahasa 21 · Bacaan 8 · Dengar 28',
+      'en': 'Vocabulary 28 · Grammar 21 · Reading 8 · Listening 28',
     },
-    sections: const [
-      ExamSection(ExamSectionKind.vocab, questionCount: 35, minutes: 25),
-      ExamSection(ExamSectionKind.grammar, questionCount: 20, minutes: 25),
-      ExamSection(ExamSectionKind.reading, questionCount: 15, minutes: 30),
-      ExamSection(ExamSectionKind.listening, questionCount: 28, minutes: 35),
-      ExamSection(ExamSectionKind.writing, questionCount: 10, minutes: 10),
+    // Susunan soal JLPT sejak 2020: 漢字読み 7, 表記 5, 文脈規定 8,
+    // 言い換え類義 4, 用法 4 · 文法 21 · 読解 8 · 聴解 28.
+    sections: [
+      ExamSection.mixed(
+        ExamSectionKind.vocab,
+        minutes: 25,
+        parts: [
+          ExamPart.mcq(kanjiReadingQuestions(kanjiN4Sections), 7),
+          ExamPart.mcq(kanjiSpellingQuestions(kanjiN4Sections), 5),
+          ExamPart.mcq(vocabContextN4, 8),
+          ExamPart.mcq(vocabParaphraseN4, 4),
+          ExamPart.mcq(vocabUsageN4, 4),
+        ],
+      ),
+      ExamSection.mixed(
+        ExamSectionKind.grammar,
+        minutes: 25,
+        parts: [
+          ExamPart.mcq([...grammarN4, ...grammarN4More], 21),
+        ],
+      ),
+      ExamSection.mixed(
+        ExamSectionKind.reading,
+        minutes: 30,
+        parts: [
+          ExamPart.reading([...readingJaN4, ...readingJaN4More], 8),
+        ],
+      ),
+      ExamSection.mixed(
+        ExamSectionKind.listening,
+        minutes: 35,
+        parts: [ExamPart.listening(_listeningPack('ja', 'ja_listen_n4'), 28)],
+      ),
+      const ExamSection(
+        ExamSectionKind.writing,
+        questionCount: 10,
+        minutes: 10,
+      ),
     ],
     scoring: ExamScoring.jlptN4,
-    pools: ExamPools(
-      vocab: vocabToMcq(jlptN4),
-      grammar: grammarN4,
-      reading: readingJaN4,
-      listening: _listeningPack('ja', 'ja_listen_n4'),
-      writing: writingJaN4,
-    ),
+    pools: ExamPools(writing: writingJaN4),
   ),
   ExamBlueprint(
     id: 'ja_n3',

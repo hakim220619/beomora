@@ -10,6 +10,7 @@ const Set<String> kWritableLetterCategories = {
   'katakana',
   'kana_mix',
   'kanji_n5',
+  'kanji_n4',
   'hangul',
   'alphabet_en',
   'alphabet_id',
@@ -40,6 +41,7 @@ const Map<String, List<String>> _groupTopics = {
   'katakana': ['katakana'],
   'kana_mix': ['hiragana', 'katakana'],
   'kanji_n5': ['kanji_n5'],
+  'kanji_n4': ['kanji_n4'],
   'hangul': ['hangul'],
 };
 

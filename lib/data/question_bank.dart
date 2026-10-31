@@ -1,4 +1,5 @@
 import '../models/guide.dart';
+import 'kanji_bank.dart';
 import 'study_guides.dart';
 
 /// Bank soal "Tebak Huruf": paket pasangan lambang ↔ bacaan per kursus.
@@ -20,6 +21,15 @@ class LetterQuizCategory {
   final String symbolPromptKey; // lambang ditampilkan → tebak bacaan
   final String readingPromptKey; // bacaan ditampilkan → tebak lambang
 
+  /// Teks yang diucapkan TTS untuk satu item. null = bawaan
+  /// (`spokenFormOf`: kanji dibaca lewat romaji-nya). Paket kata
+  /// mengisinya karena sisi kanannya arti, bukan romaji.
+  final String Function(KanaItem item)? spokenForm;
+
+  /// Sumber pengecoh. null = [items]. Dipakai Latihan Kosakata agar
+  /// tetap ada 4 pilihan walau kata yang dipilih cuma sedikit.
+  final List<KanaItem>? distractors;
+
   const LetterQuizCategory({
     required this.id,
     required this.emoji,
@@ -29,6 +39,8 @@ class LetterQuizCategory {
     this.premium = false,
     this.symbolPromptKey = 'quiz_prompt_reading',
     this.readingPromptKey = 'quiz_prompt_symbol',
+    this.spokenForm,
+    this.distractors,
   });
 }
 
@@ -74,17 +86,45 @@ final List<KanaItem> _indonesianAlphabet = _letters(
   'N:en O:o P:pe Q:ki R:er S:es T:te U:u V:ve W:we X:eks Y:ye Z:zet',
 );
 
-/// Kanji dasar level N5 (bacaan umum) — paket premium.
-final List<KanaItem> _kanjiN5 = _parsePairs(
-  '一:ichi 二:ni 三:san 四:yon 五:go 六:roku 七:nana 八:hachi 九:kyuu '
-  '十:juu 百:hyaku 千:sen 万:man 円:en 日:hi 月:tsuki 火:hi 水:mizu '
-  '木:ki 金:kane 土:tsuchi 年:toshi 時:toki 分:fun 半:han 今:ima '
-  '週:shuu 人:hito 男:otoko 女:onna 子:ko 父:chichi 母:haha 友:tomo '
-  '学:gaku 校:kou 生:sei 山:yama 川:kawa 田:ta 空:sora 雨:ame '
-  '花:hana 本:hon 語:go 国:kuni 車:kuruma 駅:eki 大:dai 小:shou '
-  '中:naka 上:ue 下:shita 左:hidari 右:migi 手:te 目:me 口:kuchi '
-  '耳:mimi 白:shiro 赤:aka 青:ao',
-);
+/// Kanji per level (lambang ↔ bacaan paling umum) dari [kanjiN5Sections]
+/// dst. — paket premium di Tebak Huruf, juga dipakai Tulis Huruf.
+List<KanaItem> _kanjiItems(List<KanjiSection> sections) => [
+  for (final s in sections)
+    for (final k in s.entries) KanaItem(k.kanji, k.romaji),
+];
+
+final List<KanaItem> kanjiN5 = _kanjiItems(kanjiN5Sections);
+final List<KanaItem> kanjiN4 = _kanjiItems(kanjiN4Sections);
+
+/// Data lengkap satu kanji (bacaan on/kun, arti, contoh kata).
+final Map<String, KanjiEntry> _kanjiIndex = {
+  for (final s in [...kanjiN5Sections, ...kanjiN4Sections])
+    for (final k in s.entries) k.kanji: k,
+};
+
+KanjiEntry? kanjiEntryOf(String kanji) => _kanjiIndex[kanji];
+
+/// Item kuis yang membawa jenis soalnya sendiri — dipakai kuis yang
+/// mencampur beberapa jenis soal (mis. Tebak Kanji: arti, bacaan, baca
+/// kata). Pengecoh hanya diambil dari item berjenis sama, dan teks
+/// pertanyaannya mengikuti item, bukan paket.
+class QuizItem extends KanaItem {
+  final String kind;
+  final String symbolPromptKey;
+  final String readingPromptKey;
+
+  /// Yang dibacakan TTS; null = bawaan paket.
+  final String? speak;
+
+  const QuizItem(
+    super.kana,
+    super.romaji, {
+    required this.kind,
+    required this.symbolPromptKey,
+    required this.readingPromptKey,
+    this.speak,
+  });
+}
 
 /// Kata kerja tak beraturan Inggris (dasar → lampau) — paket premium.
 final List<KanaItem> _irregularVerbs = _parsePairs(
@@ -132,7 +172,15 @@ List<LetterQuizCategory> letterQuizFor(String courseId) {
           id: 'kanji_n5',
           emoji: '🈴',
           title: const {'id': 'Kanji Dasar (N5)', 'en': 'Basic Kanji (N5)'},
-          items: _kanjiN5,
+          items: kanjiN5,
+          ttsLocale: 'ja-JP',
+          premium: true,
+        ),
+        LetterQuizCategory(
+          id: 'kanji_n4',
+          emoji: '🈷️',
+          title: const {'id': 'Kanji N4', 'en': 'Kanji N4'},
+          items: kanjiN4,
           ttsLocale: 'ja-JP',
           premium: true,
         ),

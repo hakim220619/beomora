@@ -1,4 +1,5 @@
 import '../models/guide.dart';
+import 'kanji_bank.dart';
 
 /// Konten Materi Belajar per kursus. Teks penjelasan tersedia dalam
 /// bahasa UI 'id' dan 'en'.
@@ -160,211 +161,7 @@ final List<GuideTopic> _japanese = [
       ),
     ],
   ),
-  GuideTopic(
-    id: 'kanji_n5',
-    emoji: '漢',
-    title: const {'id': 'Kanji Dasar (N5)', 'en': 'Basic Kanji (N5)'},
-    subtitle: const {
-      'id': '62 kanji per tema + contoh kata, ketuk untuk dengar',
-      'en': '62 kanji by theme + example words, tap to listen',
-    },
-    sections: [
-      GuideSection(
-        title: const {'id': 'Cara membaca kanji', 'en': 'How kanji are read'},
-        body: const {
-          'id':
-              "Satu kanji bisa punya beberapa bacaan. Kun'yomi (bacaan Jepang) dipakai saat kanji berdiri sendiri, on'yomi (bacaan serapan Tionghoa) saat digabung dengan kanji lain. Grid di bawah menampilkan satu bacaan paling umum; bacaan lainnya muncul lewat contoh kata.",
-          'en':
-              "One kanji can have several readings. Kun'yomi (the Japanese reading) is used when a kanji stands alone, on'yomi (the Chinese-derived reading) when it is combined with other kanji. The grids below show the most common reading; other readings appear in the example words.",
-        },
-        examples: const [
-          GuideExample('日', {
-            'id': 'hari, matahari (berdiri sendiri)',
-            'en': 'day, sun (on its own)',
-          }, romaji: 'hi'),
-          GuideExample('日曜日', {
-            'id': 'hari Minggu',
-            'en': 'Sunday',
-          }, romaji: 'nichiyoubi'),
-          GuideExample('今日', {
-            'id': 'hari ini (bacaan khusus)',
-            'en': 'today (special reading)',
-          }, romaji: 'kyou'),
-        ],
-      ),
-      GuideSection(
-        title: const {'id': 'Angka & uang', 'en': 'Numbers & money'},
-        body: const {
-          'id':
-              '四 bisa dibaca yon atau shi, 七 nana atau shichi, 九 kyuu atau ku. Dalam percakapan sehari-hari yon dan nana lebih sering dipakai.',
-          'en':
-              '四 can be read yon or shi, 七 nana or shichi, 九 kyuu or ku. In everyday speech yon and nana are more common.',
-        },
-        kana: _kana(
-          '一:ichi 二:ni 三:san 四:yon 五:go 六:roku 七:nana 八:hachi 九:kyuu '
-          '十:juu 百:hyaku 千:sen 万:man 円:en',
-        ),
-        examples: const [
-          GuideExample('三百円', {
-            'id': '300 yen',
-            'en': '300 yen',
-          }, romaji: 'sanbyaku en'),
-          GuideExample('一万円', {
-            'id': '10.000 yen',
-            'en': '10,000 yen',
-          }, romaji: 'ichiman en'),
-        ],
-      ),
-      GuideSection(
-        title: const {'id': 'Waktu & hari', 'en': 'Time & days'},
-        body: const {
-          'id':
-              'Nama hari = kanji elemen + 曜日 (youbi): 日 Minggu, 月 Senin, 火 Selasa, 水 Rabu, 木 Kamis, 金 Jumat, 土 Sabtu.',
-          'en':
-              'Day names = element kanji + 曜日 (youbi): 日 Sunday, 月 Monday, 火 Tuesday, 水 Wednesday, 木 Thursday, 金 Friday, 土 Saturday.',
-        },
-        kana: _kana(
-          '日:hi 月:tsuki 火:hi 水:mizu 木:ki 金:kane 土:tsuchi '
-          '年:toshi 時:toki 分:fun 半:han 今:ima 週:shuu',
-        ),
-        examples: const [
-          GuideExample('月曜日', {
-            'id': 'hari Senin',
-            'en': 'Monday',
-          }, romaji: 'getsuyoubi'),
-          GuideExample('三時半', {
-            'id': 'jam setengah empat (3.30)',
-            'en': 'half past three',
-          }, romaji: 'sanjihan'),
-          GuideExample('今週', {
-            'id': 'minggu ini',
-            'en': 'this week',
-          }, romaji: 'konshuu'),
-          GuideExample('今年', {
-            'id': 'tahun ini',
-            'en': 'this year',
-          }, romaji: 'kotoshi'),
-        ],
-      ),
-      GuideSection(
-        title: const {'id': 'Orang & keluarga', 'en': 'People & family'},
-        body: const {
-          'id':
-              '父 dan 母 dipakai untuk orang tua sendiri. Untuk orang tua orang lain pakai お父さん (otousan) dan お母さん (okaasan).',
-          'en':
-              "父 and 母 refer to your own parents. For someone else's parents use お父さん (otousan) and お母さん (okaasan).",
-        },
-        kana: _kana('人:hito 男:otoko 女:onna 子:ko 父:chichi 母:haha 友:tomo'),
-        examples: const [
-          GuideExample('女の子', {
-            'id': 'anak perempuan',
-            'en': 'girl',
-          }, romaji: 'onna no ko'),
-          GuideExample('友達', {
-            'id': 'teman',
-            'en': 'friend',
-          }, romaji: 'tomodachi'),
-          GuideExample('日本人', {
-            'id': 'orang Jepang',
-            'en': 'Japanese person',
-          }, romaji: 'nihonjin'),
-        ],
-      ),
-      GuideSection(
-        title: const {'id': 'Belajar & bahasa', 'en': 'Study & language'},
-        body: const {
-          'id':
-              '本 berarti buku, tapi 日本 (nihon) berarti Jepang. Tambahkan 語 untuk nama bahasa dan 人 untuk kebangsaan.',
-          'en':
-              '本 means book, but 日本 (nihon) means Japan. Add 語 for a language name and 人 for nationality.',
-        },
-        kana: _kana('学:gaku 校:kou 生:sei 本:hon 語:go 国:kuni'),
-        examples: const [
-          GuideExample('学校', {
-            'id': 'sekolah',
-            'en': 'school',
-          }, romaji: 'gakkou'),
-          GuideExample('学生', {
-            'id': 'pelajar, mahasiswa',
-            'en': 'student',
-          }, romaji: 'gakusei'),
-          GuideExample('日本語', {
-            'id': 'bahasa Jepang',
-            'en': 'Japanese language',
-          }, romaji: 'nihongo'),
-          GuideExample('中国', {
-            'id': 'Tiongkok',
-            'en': 'China',
-          }, romaji: 'chuugoku'),
-        ],
-      ),
-      GuideSection(
-        title: const {'id': 'Alam & kota', 'en': 'Nature & town'},
-        body: const {
-          'id':
-              'Banyak kanji alam berbentuk gambar: 山 tiga puncak gunung, 川 aliran sungai, 田 petak sawah, 雨 tetesan hujan.',
-          'en':
-              'Many nature kanji are pictures: 山 three mountain peaks, 川 a flowing river, 田 rice paddy plots, 雨 falling raindrops.',
-        },
-        kana: _kana('山:yama 川:kawa 田:ta 空:sora 雨:ame 花:hana 車:kuruma 駅:eki'),
-        examples: const [
-          GuideExample('火山', {
-            'id': 'gunung berapi',
-            'en': 'volcano',
-          }, romaji: 'kazan'),
-          GuideExample('山田', {
-            'id': 'Yamada (nama keluarga)',
-            'en': 'Yamada (family name)',
-          }, romaji: 'yamada'),
-          GuideExample('雨の日', {
-            'id': 'hari hujan',
-            'en': 'rainy day',
-          }, romaji: 'ame no hi'),
-        ],
-      ),
-      GuideSection(
-        title: const {'id': 'Ukuran & arah', 'en': 'Size & direction'},
-        body: const {
-          'id':
-              '大 dan 小 sering muncul sebagai kata sifat 大きい (ookii) dan 小さい (chiisai). 上下左右 = atas, bawah, kiri, kanan.',
-          'en':
-              '大 and 小 usually appear as the adjectives 大きい (ookii) and 小さい (chiisai). 上下左右 = up, down, left, right.',
-        },
-        kana: _kana('大:dai 小:shou 中:naka 上:ue 下:shita 左:hidari 右:migi'),
-        examples: const [
-          GuideExample('大きい', {'id': 'besar', 'en': 'big'}, romaji: 'ookii'),
-          GuideExample('小さい', {
-            'id': 'kecil',
-            'en': 'small',
-          }, romaji: 'chiisai'),
-          GuideExample('右手', {
-            'id': 'tangan kanan',
-            'en': 'right hand',
-          }, romaji: 'migite'),
-        ],
-      ),
-      GuideSection(
-        title: const {'id': 'Tubuh & warna', 'en': 'Body & colors'},
-        body: const {
-          'id':
-              'Warna menjadi kata sifat dengan akhiran い: 白い putih, 赤い merah, 青い biru.',
-          'en':
-              'Colors become adjectives with the ending い: 白い white, 赤い red, 青い blue.',
-        },
-        kana: _kana('手:te 目:me 口:kuchi 耳:mimi 白:shiro 赤:aka 青:ao'),
-        examples: const [
-          GuideExample('赤い花', {
-            'id': 'bunga merah',
-            'en': 'red flower',
-          }, romaji: 'akai hana'),
-          GuideExample('青い空', {
-            'id': 'langit biru',
-            'en': 'blue sky',
-          }, romaji: 'aoi sora'),
-        ],
-      ),
-    ],
-  ),
+  ..._kanjiTopics(),
   GuideTopic(
     id: 'ja_particles',
     emoji: '🔗',
@@ -10676,3 +10473,73 @@ sieben:zi-ben acht:akht neun:noin zehn:tseen elf:elf zwölf:tsvölf
     ],
   ),
 ];
+
+/// Topik Materi Kanji N5 & N4 dari [kanjiN5Sections] dst.: grid kanji
+/// (ketuk → semua bacaan & contoh kata) plus contoh kata per tema.
+List<GuideTopic> _kanjiTopics() {
+  GuideTopic build(
+    String id,
+    String emoji,
+    String level,
+    List<KanjiSection> data, {
+    GuideSection? intro,
+  }) {
+    final count = data.fold<int>(0, (n, s) => n + s.entries.length);
+    return GuideTopic(
+      id: id,
+      emoji: emoji,
+      title: {'id': 'Kanji $level', 'en': 'Kanji $level'},
+      subtitle: {
+        'id': '$count kanji per tema: bacaan on/kun + contoh kata',
+        'en': '$count kanji by theme: on/kun readings + example words',
+      },
+      sections: [
+        ?intro,
+        for (final s in data)
+          GuideSection(
+            title: s.title,
+            body: s.note,
+            kana: [for (final k in s.entries) KanaItem(k.kanji, k.romaji)],
+            examples: [
+              for (final k in s.entries)
+                for (final w in k.words)
+                  GuideExample(w.word, w.meaning, romaji: w.romaji),
+            ],
+          ),
+      ],
+    );
+  }
+
+  return [
+    build(
+      'kanji_n5',
+      '漢',
+      'N5',
+      kanjiN5Sections,
+      intro: const GuideSection(
+        title: {'id': 'Cara membaca kanji', 'en': 'How kanji are read'},
+        body: {
+          'id':
+              "Satu kanji bisa punya beberapa bacaan. Kun'yomi (bacaan Jepang) dipakai saat kanji berdiri sendiri, on'yomi (bacaan serapan Tionghoa) saat digabung dengan kanji lain. Grid di bawah menampilkan satu bacaan paling umum — ketuk kanji untuk melihat semua bacaan & contoh katanya.",
+          'en':
+              "One kanji can have several readings. Kun'yomi (the Japanese reading) is used when a kanji stands alone, on'yomi (the Chinese-derived reading) when it is combined with other kanji. The grids below show the most common reading — tap a kanji to see all its readings and example words.",
+        },
+        examples: [
+          GuideExample('日', {
+            'id': 'hari, matahari (berdiri sendiri)',
+            'en': 'day, sun (on its own)',
+          }, romaji: 'hi'),
+          GuideExample('日曜日', {
+            'id': 'hari Minggu',
+            'en': 'Sunday',
+          }, romaji: 'nichiyoubi'),
+          GuideExample('今日', {
+            'id': 'hari ini (bacaan khusus)',
+            'en': 'today (special reading)',
+          }, romaji: 'kyou'),
+        ],
+      ),
+    ),
+    build('kanji_n4', '🈷️', 'N4', kanjiN4Sections),
+  ];
+}

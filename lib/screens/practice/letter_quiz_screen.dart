@@ -24,15 +24,19 @@ class _Question {
   final String prompt;
   final String answer;
   final List<String> options;
-  final String speakText; // lambang yang diucapkan TTS
+  final String symbol; // lambang asli (kana/kanji/kata)
+  final String speakText; // yang diucapkan TTS
   final bool symbolToReading;
+  final String promptKey; // kunci l10n teks pertanyaan
 
   const _Question({
     required this.prompt,
     required this.answer,
     required this.options,
+    required this.symbol,
     required this.speakText,
     required this.symbolToReading,
+    required this.promptKey,
   });
 }
 
@@ -49,7 +53,9 @@ class LetterQuizScreen extends StatefulWidget {
   /// langsung mulai di paket ini, di luar daftar [letterQuizFor].
   final LetterQuizCategory? customCategory;
 
-  /// Jumlah soal per sesi; dibatasi jumlah huruf di paket.
+  /// Jumlah soal per sesi. Paket bawaan dibatasi jumlah hurufnya;
+  /// paket racikan ([customCategory]) yang isinya lebih sedikit
+  /// diisi ulang dengan item acak dari paket yang sama.
   final int questionCount;
 
   const LetterQuizScreen({
@@ -107,12 +113,8 @@ class _LetterQuizScreenState extends State<LetterQuizScreen> {
   void _start(LetterQuizCategory cat) => setState(() => _startInternal(cat));
 
   void _startInternal(LetterQuizCategory cat) {
-    final items = [...cat.items]..shuffle(_rng);
     _category = cat;
-    _questions = [
-      for (final item in items.take(min(widget.questionCount, items.length)))
-        _makeQuestion(cat, item),
-    ];
+    _questions = [for (final item in _pickItems(cat)) _makeQuestion(cat, item)];
     _index = 0;
     _correct = 0;
     _picked = null;
@@ -121,27 +123,78 @@ class _LetterQuizScreenState extends State<LetterQuizScreen> {
     _earnedXp = 0;
   }
 
+  /// Urutan item soal, diacak. Kalau jumlah soal paket racikan
+  /// melebihi isinya, item diulang merata (selisih maks. satu kali)
+  /// dan disusun agar soal yang sama tidak muncul berturut-turut.
+  List<KanaItem> _pickItems(LetterQuizCategory cat) {
+    final items = [...cat.items]..shuffle(_rng);
+    final count = widget.customCategory == null
+        ? min(widget.questionCount, items.length)
+        : widget.questionCount;
+    if (count <= items.length) return items.take(count).toList();
+    // Sisa jatah setiap item (per indeks); kelebihannya jatuh ke item
+    // terdepan hasil acak.
+    final left = [
+      for (var i = 0; i < items.length; i++)
+        count ~/ items.length + (i < count % items.length ? 1 : 0),
+    ];
+    final out = <int>[];
+    for (var n = count; n > 0; n--) {
+      final open = [
+        for (var i = 0; i < items.length; i++)
+          if (left[i] > 0 && (out.isEmpty || i != out.last)) i,
+      ];
+      // Item yang jatahnya lebih dari separuh sisa soal wajib diambil
+      // sekarang, kalau tidak nanti terpaksa berurutan.
+      final forced = open.where((i) => left[i] * 2 > n);
+      final pick = open.isEmpty
+          ? left.indexWhere((c) => c > 0)
+          : forced.isNotEmpty
+          ? forced.first
+          : open[_rng.nextInt(open.length)];
+      out.add(pick);
+      left[pick]--;
+    }
+    return [for (final i in out) items[i]];
+  }
+
   _Question _makeQuestion(LetterQuizCategory cat, KanaItem item) {
     final symbolToReading = _rng.nextBool();
     // Kumpulkan 3 pengecoh unik dari paket yang sama.
     String sideOf(KanaItem i) => symbolToReading ? i.romaji : i.kana;
     final answer = sideOf(item);
     final options = <String>{answer};
-    final pool = [...cat.items]..shuffle(_rng);
+    final pool = [...(cat.distractors ?? cat.items)]..shuffle(_rng);
+    // Kuis campuran (QuizItem): pengecoh hanya dari jenis soal yang sama.
+    final kind = item is QuizItem ? item.kind : null;
     for (final p in pool) {
       if (options.length >= 4) break;
+      if ((p is QuizItem ? p.kind : null) != kind) continue;
       // Jangan sampai ada dua jawaban benar: di arah bacaan → lambang,
       // lambang lain dengan bacaan sama (mis. あ vs ア di paket
       // campuran, ず vs づ) tidak boleh jadi pengecoh.
       if (!symbolToReading && p.romaji == item.romaji) continue;
+      // Begitu pula arah sebaliknya: lambang sama dengan bacaan/arti
+      // lain (kata yang sama di dua level JLPT) bukan pengecoh.
+      if (symbolToReading && p.kana == item.kana) continue;
       options.add(sideOf(p));
     }
     return _Question(
       prompt: symbolToReading ? item.kana : item.romaji,
       answer: answer,
       options: options.toList()..shuffle(_rng),
-      speakText: spokenFormOf(item),
+      symbol: item.kana,
+      speakText:
+          (item is QuizItem ? item.speak : null) ??
+          cat.spokenForm?.call(item) ??
+          spokenFormOf(item),
       symbolToReading: symbolToReading,
+      promptKey: switch ((item, symbolToReading)) {
+        (QuizItem i, true) => i.symbolPromptKey,
+        (QuizItem i, false) => i.readingPromptKey,
+        (_, true) => cat.symbolPromptKey,
+        (_, false) => cat.readingPromptKey,
+      },
     );
   }
 
@@ -186,7 +239,8 @@ class _LetterQuizScreenState extends State<LetterQuizScreen> {
         title: Text(
           widget.customCategory == null
               ? l.t('letter_quiz')
-              : l.t('kana_mix_title'),
+              : widget.customCategory!.title[l.code] ??
+                    widget.customCategory!.title['id']!,
         ),
       ),
       body: _category == null
@@ -205,7 +259,7 @@ class _LetterQuizScreenState extends State<LetterQuizScreen> {
                       children: [
                         for (final q in _missed)
                           _MissedChip(
-                            symbol: q.speakText,
+                            symbol: q.symbol,
                             reading: q.symbolToReading ? q.answer : q.prompt,
                             onTap: () => TtsService.instance.speak(
                               q.speakText,
@@ -286,11 +340,7 @@ class _LetterQuizScreenState extends State<LetterQuizScreen> {
         ),
         const SizedBox(height: 20),
         Text(
-          l.t(
-            q.symbolToReading
-                ? _category!.symbolPromptKey
-                : _category!.readingPromptKey,
-          ),
+          l.t(q.promptKey),
           textAlign: TextAlign.center,
           style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
         ),

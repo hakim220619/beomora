@@ -6,10 +6,13 @@ import 'package:beomora/models/exam.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void _expectValidMcq(McqQuestion q, String where) {
-  expect(q.options.length, 4, reason: '$where: ${q.question['id']}');
+  // 4 pilihan; khusus soal IELTS True/False/Not Given cukup 3.
+  final tfng = q.options.toSet().containsAll(['True', 'False', 'Not Given']);
+  final n = tfng ? 3 : 4;
+  expect(q.options.length, n, reason: '$where: ${q.question['id']}');
   expect(
     q.options.toSet().length,
-    4,
+    n,
     reason: '$where: pilihan dobel di "${q.question['id']}"',
   );
   expect(q.options.any((o) => o.trim().isEmpty), isFalse, reason: where);
@@ -43,11 +46,15 @@ void main() {
     test('jumlah soal mengikuti ujian asli', () {
       int count(String id, ExamSectionKind k) =>
           examById(id)!.section(k)!.questionCount;
-      expect(count('en_toefl', ExamSectionKind.reading), 20);
-      expect(count('en_toefl', ExamSectionKind.listening), 28);
+      // TOEFL format 2026 (satu tahap tes adaptif) & JLPT sejak 2020.
+      expect(count('en_toefl', ExamSectionKind.reading), 28);
+      expect(count('en_toefl', ExamSectionKind.listening), 24);
+      expect(count('en_toefl', ExamSectionKind.writing), 12);
       expect(count('en_ielts', ExamSectionKind.reading), 40);
       expect(count('en_ielts', ExamSectionKind.listening), 40);
-      expect(count('ja_n5', ExamSectionKind.vocab), 35);
+      expect(count('ja_n5', ExamSectionKind.vocab), 21);
+      expect(count('ja_n4', ExamSectionKind.vocab), 28);
+      expect(count('en_ielts', ExamSectionKind.writing), 2);
       expect(count('ja_n5', ExamSectionKind.listening), 24);
       expect(count('ja_n4', ExamSectionKind.listening), 28);
       expect(count('ja_n3', ExamSectionKind.listening), 28);
@@ -58,13 +65,38 @@ void main() {
     });
 
     test('pool tiap bagian cukup untuk jumlah soal (tanpa pengulangan)', () {
+      int available(ExamPart p) => switch (p.type) {
+        ExamPartType.mcq => p.mcq.length,
+        ExamPartType.reading => p.passages.fold(
+          0,
+          (n, r) => n + r.questions.length,
+        ),
+        ExamPartType.listening => p.audio.fold(
+          0,
+          (n, a) => n + a.questions.length,
+        ),
+        ExamPartType.typing => p.typing.length,
+        ExamPartType.order => p.order.length,
+        ExamPartType.pick => p.pick.length,
+        ExamPartType.essay => p.essays.length,
+      };
       for (final e in all) {
         for (final s in e.sections) {
-          expect(
-            e.pools.available(s.kind),
-            greaterThanOrEqualTo(s.questionCount),
-            reason: '${e.id} ${s.kind.name}',
-          );
+          if (s.parts.isEmpty) {
+            expect(
+              e.pools.available(s.kind),
+              greaterThanOrEqualTo(s.questionCount),
+              reason: '${e.id} ${s.kind.name}',
+            );
+          }
+          for (final p in s.parts) {
+            // Pool minimal 2× kebutuhan supaya sesi tidak selalu sama.
+            expect(
+              available(p),
+              greaterThanOrEqualTo(p.count * 2),
+              reason: '${e.id} ${s.kind.name} ${p.type.name}',
+            );
+          }
         }
       }
     });
@@ -72,18 +104,50 @@ void main() {
     test('semua soal pilihan ganda & bacaan valid', () {
       for (final e in all) {
         final p = e.pools;
-        for (final q in [...p.vocab, ...p.grammar, ...p.readingExtra]) {
+        final parts = [for (final s in e.sections) ...s.parts];
+        for (final q in [
+          ...p.vocab,
+          ...p.grammar,
+          ...p.readingExtra,
+          for (final part in parts) ...part.mcq,
+        ]) {
           _expectValidMcq(q, e.id);
         }
         final ids = <String>{};
-        for (final r in p.reading) {
+        final passages = {
+          ...p.reading,
+          for (final part in parts) ...part.passages,
+        };
+        for (final r in passages) {
           expect(ids.add(r.id), isTrue, reason: '${e.id}: id bacaan dobel');
           expect(r.text.trim(), isNotEmpty, reason: r.id);
           expect(r.title['id'], isNotEmpty, reason: r.id);
           expect(r.title['en'], isNotEmpty, reason: r.id);
-          expect(r.questions.length, greaterThanOrEqualTo(4), reason: r.id);
+          // Teks harian TOEFL & 情報検索 cukup 2 soal.
+          expect(r.questions.length, greaterThanOrEqualTo(2), reason: r.id);
           for (final q in r.questions) {
             _expectValidMcq(q, r.id);
+          }
+        }
+        for (final part in parts) {
+          for (final o in part.order) {
+            expect(o.pieces.length, greaterThanOrEqualTo(3), reason: e.id);
+            expect(o.pieces.toSet().length, o.pieces.length, reason: e.id);
+          }
+          for (final w in part.pick) {
+            expect(
+              w.shownWords[w.wrongIndex],
+              isNot(w.spokenWords[w.wrongIndex]),
+              reason: w.spoken,
+            );
+          }
+          for (final es in part.essays) {
+            expect(es.task.trim(), isNotEmpty, reason: e.id);
+            expect(es.modelAnswer.trim(), isNotEmpty, reason: e.id);
+            expect(es.checklist, isNotEmpty, reason: e.id);
+          }
+          for (final w in part.typing) {
+            expect(w.accepts(w.answers.first), isTrue, reason: w.text);
           }
         }
         for (final w in p.writing) {
@@ -116,8 +180,10 @@ void main() {
           );
           for (final it in s.items[i]) {
             expect(it.section, e.sections[i].kind);
-            if (it.isTyping) {
+            if (it.isTyping || it.isPick) {
               expect(it.options, isEmpty);
+            } else if (it.isOrder) {
+              expect(it.options.toSet(), it.order!.pieces.toSet());
             } else {
               expect(it.options.toSet(), it.mcq!.options.toSet());
               expect(it.options, contains(it.correctAnswer));
@@ -173,7 +239,7 @@ void main() {
           it.userAnswer = it.correctAnswer;
         }
       }
-      expect(s.totalCorrect, s.totalQuestions);
+      expect(s.totalCorrect, s.totalScored);
       expect(s.missed, isEmpty);
       final w = const WritingItem(
         prompt: {'id': 'x', 'en': 'x'},
@@ -188,15 +254,15 @@ void main() {
   });
 
   group('Perkiraan skor', () {
-    test('TOEFL: per bagian /30, total dijumlah', () {
+    test('TOEFL 2026: band 1–6 per bagian + padanan 0–30', () {
       final sc = ExamScore.compute(ExamScoring.toefl, const [
         ExamSectionResult(ExamSectionKind.reading, 20, 20),
         ExamSectionResult(ExamSectionKind.listening, 14, 28),
         ExamSectionResult(ExamSectionKind.writing, 5, 10),
       ]);
-      expect(sc.perSection[ExamSectionKind.reading], '30/30');
-      expect(sc.perSection[ExamSectionKind.listening], '15/30');
-      expect(sc.overall, '60/90');
+      expect(sc.perSection[ExamSectionKind.reading], 'Band 6');
+      expect(sc.perSection[ExamSectionKind.listening], 'Band 3.5');
+      expect(sc.overall, 'Band 4.5 · ≈ 60/90');
       expect(sc.passed, isNull);
     });
 

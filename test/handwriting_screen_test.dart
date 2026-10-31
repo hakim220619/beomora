@@ -146,7 +146,7 @@ void main() {
     );
     final xpBefore = progress.xp;
 
-    // Pemilih paket: Premium → semua terbuka, termasuk kanji N5.
+    // Pemilih paket: Premium → semua terbuka, termasuk kanji N5 & N4.
     expect(find.text('Pilih paket soal'), findsOneWidget);
     expect(find.text('Hiragana'), findsOneWidget);
     expect(find.byIcon(Icons.lock_rounded), findsNothing);
@@ -226,8 +226,8 @@ void main() {
   ) async {
     mockChannels(tester);
     await pump(tester, const HandwritingScreen(course: course));
-    // Gratis: paket kanji N5 bergembok.
-    expect(find.byIcon(Icons.lock_rounded), findsOneWidget);
+    // Gratis: paket kanji N5 & N4 bergembok.
+    expect(find.byIcon(Icons.lock_rounded), findsNWidgets(2));
     await tester.tap(find.text('Katakana'));
     await settle(tester);
     await tester.tap(find.textContaining('Mulai menulis'));

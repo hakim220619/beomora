@@ -5,7 +5,6 @@ class SettingsProvider extends ChangeNotifier {
   static const _kUiLang = 'ui_lang';
   static const _kTheme = 'theme_mode';
   static const _kSound = 'sound_on';
-  static const _kOnboarded = 'onboarded';
   static const _kReminderOn = 'reminder_on';
   static const _kReminderHour = 'reminder_hour';
   static const _kReminderMinute = 'reminder_minute';
@@ -18,7 +17,6 @@ class SettingsProvider extends ChangeNotifier {
   String _uiLang;
   ThemeMode _themeMode;
   bool _soundOn;
-  bool _onboarded;
   bool _reminderOn;
   int _reminderHour;
   int _reminderMinute;
@@ -30,7 +28,6 @@ class SettingsProvider extends ChangeNotifier {
     : _uiLang = _prefs.getString(_kUiLang) ?? 'id',
       _themeMode = _readTheme(_prefs),
       _soundOn = _prefs.getBool(_kSound) ?? true,
-      _onboarded = _prefs.getBool(_kOnboarded) ?? false,
       _reminderOn = _prefs.getBool(_kReminderOn) ?? true,
       _reminderHour = _prefs.getInt(_kReminderHour) ?? 19,
       _reminderMinute = _prefs.getInt(_kReminderMinute) ?? 0,
@@ -49,7 +46,6 @@ class SettingsProvider extends ChangeNotifier {
   String get uiLang => _uiLang;
   ThemeMode get themeMode => _themeMode;
   bool get soundOn => _soundOn;
-  bool get onboarded => _onboarded;
   bool get reminderOn => _reminderOn;
   TimeOfDay get reminderTime =>
       TimeOfDay(hour: _reminderHour, minute: _reminderMinute);
@@ -91,12 +87,6 @@ class SettingsProvider extends ChangeNotifier {
   void setSoundOn(bool on) {
     _soundOn = on;
     _prefs.setBool(_kSound, on);
-    notifyListeners();
-  }
-
-  void setOnboarded() {
-    _onboarded = true;
-    _prefs.setBool(_kOnboarded, true);
     notifyListeners();
   }
 

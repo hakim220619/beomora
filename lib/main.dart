@@ -73,6 +73,14 @@ Future<void> main() async {
   settings.addListener(
     () => unawaited(NotificationService.sync(settings, progress)),
   );
+  // Bahasa UI ikut tersinkron lewat progres: ganti bahasa → dicatat
+  // ke progres; progres dari akun (HP lain) → bahasa UI ikut.
+  progress.uiLang ??= settings.uiLang;
+  settings.addListener(() => progress.setUiLang(settings.uiLang));
+  progress.addListener(() {
+    final lang = progress.uiLang;
+    if (lang != null && lang != settings.uiLang) settings.setUiLang(lang);
+  });
   var lastActive = progress.lastActiveDay;
   progress.addListener(() {
     if (progress.lastActiveDay == lastActive) return;
@@ -101,6 +109,9 @@ class BeomoraApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final settings = context.watch<SettingsProvider>();
     final auth = context.watch<AuthProvider>();
+    final onboarded = context.select<ProgressProvider, bool>(
+      (p) => p.onboarded,
+    );
     return MaterialApp(
       title: 'Beomora',
       debugShowCheckedModeBanner: false,
@@ -114,12 +125,13 @@ class BeomoraApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      // Gerbang aplikasi: onboarding → login (wajib) → menu utama.
-      home: !settings.onboarded
-          ? const OnboardingScreen()
-          : auth.signedIn
+      // Gerbang aplikasi: login (wajib) → onboarding (bahasa, kursus,
+      // target; dilewati kalau akun sudah pernah) → menu utama.
+      home: !auth.signedIn
+          ? const LoginScreen()
+          : onboarded
           ? const MainScreen()
-          : const LoginScreen(),
+          : const OnboardingScreen(),
     );
   }
 }

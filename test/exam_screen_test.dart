@@ -74,8 +74,24 @@ void main() {
   /// Jawab soal aktif: ketuk pilihan pertama, atau ketik pada soal tulis.
   Future<void> answerCurrent(WidgetTester tester) async {
     final field = find.byType(TextField);
+    Finder keyed(String prefix) => find.byWidgetPredicate(
+      (w) =>
+          w.key is ValueKey<String> &&
+          (w.key! as ValueKey<String>).value.startsWith(prefix),
+    );
+    final piece = keyed('exam_piece_');
+    final word = keyed('exam_word_');
     if (field.evaluate().isNotEmpty) {
       await tester.enterText(field, 'jawaban');
+    } else if (piece.evaluate().isNotEmpty) {
+      // Soal susun: ketuk semua potongan sampai habis.
+      while (piece.evaluate().isNotEmpty) {
+        await tester.ensureVisible(piece.first);
+        await tester.tap(piece.first);
+        await tester.pump();
+      }
+    } else if (word.evaluate().isNotEmpty) {
+      await tester.tap(word.first);
     } else {
       await tester.tap(find.byType(ChoiceCard).first);
     }
@@ -158,9 +174,9 @@ void main() {
     await tapText(tester, 'MULAI UJIAN PENUH');
     await tester.pump(const Duration(milliseconds: 400));
     expect(find.text('Bagian 1 dari 5'), findsOneWidget);
-    expect(find.text('35 soal · 20 menit'), findsOneWidget);
+    expect(find.text('21 soal · 20 menit'), findsOneWidget);
     await tapText(tester, 'MULAI BAGIAN');
-    expect(find.text('1/35'), findsOneWidget);
+    expect(find.text('1/21'), findsOneWidget);
     expect(find.text('20:00'), findsOneWidget);
 
     // Biarkan waktu habis → bagian 2 dibuka otomatis.

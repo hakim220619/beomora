@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../../data/en_exam_vocab.dart';
 import '../../data/jlpt_vocab.dart';
 import '../../data/study_guides.dart';
 import '../../l10n/app_strings.dart';
@@ -12,6 +13,7 @@ import '../../services/tts_service.dart';
 import '../../theme.dart';
 import '../../widgets/study/study_background.dart';
 import '../course_select_screen.dart';
+import '../practice/vocab_practice_screen.dart';
 import 'guide_detail_screen.dart';
 
 /// Tab Materi: daftar referensi belajar lengkap untuk kursus aktif —
@@ -41,8 +43,10 @@ class MaterialsScreen extends StatelessWidget {
     // Topik kosakata tematik dikelompokkan di balik satu kartu.
     final topics = allTopics.where((t) => !t.id.contains('vocab')).toList();
     final vocabTopics = [
-      // Kosakata JLPT (N5/N4/N3) tampil di depan untuk kursus Jepang.
+      // Kosakata ujian tampil di depan: JLPT (N5/N4/N3) untuk kursus
+      // Jepang, Akademik/IELTS/TOEIC untuk kursus Inggris.
       if (course.id == 'ja') ..._jlptVocabTopics(),
+      if (course.id == 'en') ..._englishExamVocabTopics(),
       ...allTopics.where((t) => t.id.contains('vocab')),
     ];
 
@@ -188,8 +192,9 @@ class _VocabListScreenState extends State<_VocabListScreen> {
       appBar: AppBar(
         title: Text('${l.t('materials_vocab_title')} ${course.flag}'),
       ),
+      floatingActionButton: vocabPracticeFab(context, course, topics),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
+        padding: const EdgeInsets.fromLTRB(16, 4, 16, 96),
         children: [
           TextField(
             controller: _searchCtrl,
@@ -370,43 +375,106 @@ class _VocabHitRow extends StatelessWidget {
   }
 }
 
-/// Bangun topik materi kosakata JLPT (N5/N4/N3) dari [jlptN5] dst.
-/// Tiap level dipecah menjadi bagian ±16 kata agar mudah dibaca.
-List<GuideTopic> _jlptVocabTopics() {
-  GuideTopic build(String id, String emoji, String level, List<JVocab> vocab) {
-    const chunk = 16;
-    final sections = <GuideSection>[];
-    for (var i = 0; i < vocab.length; i += chunk) {
-      final part = vocab.sublist(i, (i + chunk).clamp(0, vocab.length));
-      sections.add(
-        GuideSection(
-          title: {
-            'id': 'Bagian ${sections.length + 1}',
-            'en': 'Part ${sections.length + 1}',
-          },
-          examples: [
-            for (final w in part)
-              GuideExample(w.kana, w.meaning, romaji: w.romaji),
-          ],
-        ),
-      );
-    }
-    return GuideTopic(
-      id: id,
-      emoji: emoji,
-      title: {'id': 'JLPT $level', 'en': 'JLPT $level'},
-      subtitle: {
-        'id': '${vocab.length} kosakata $level, ketuk untuk dengar',
-        'en': '${vocab.length} $level words, tap to listen',
-      },
-      sections: sections,
+/// Topik kosakata ujian: daftar kata dipecah menjadi bagian ±16 kata
+/// agar mudah dibaca.
+GuideTopic _examVocabTopic({
+  required String id,
+  required String emoji,
+  required String title,
+  required List<GuideExample> words,
+  required Map<String, String> subtitle,
+}) {
+  const chunk = 16;
+  final sections = <GuideSection>[];
+  for (var i = 0; i < words.length; i += chunk) {
+    sections.add(
+      GuideSection(
+        title: {
+          'id': 'Bagian ${sections.length + 1}',
+          'en': 'Part ${sections.length + 1}',
+        },
+        examples: words.sublist(i, (i + chunk).clamp(0, words.length)),
+      ),
     );
   }
+  return GuideTopic(
+    id: id,
+    emoji: emoji,
+    title: {'id': title, 'en': title},
+    subtitle: subtitle,
+    sections: sections,
+  );
+}
+
+/// Topik kosakata JLPT (N5/N4/N3) dari [jlptN5] dst.
+List<GuideTopic> _jlptVocabTopics() {
+  GuideTopic build(String id, String emoji, String level, List<JVocab> v) =>
+      _examVocabTopic(
+        id: id,
+        emoji: emoji,
+        title: 'JLPT $level',
+        words: [
+          for (final w in v) GuideExample(w.kana, w.meaning, romaji: w.romaji),
+        ],
+        subtitle: {
+          'id': '${v.length} kosakata $level, ketuk untuk dengar',
+          'en': '${v.length} $level words, tap to listen',
+        },
+      );
 
   return [
     build('vocab_jlpt_n5', '🌸', 'N5', jlptN5),
     build('vocab_jlpt_n4', '🍁', 'N4', jlptN4),
     build('vocab_jlpt_n3', '🗻', 'N3', jlptN3),
+  ];
+}
+
+/// Topik kosakata ujian Inggris: Akademik (Academic Word List, dipakai
+/// TOEFL/IELTS/PTE), IELTS (tema) dan TOEIC, dari [academicVocab] dst.
+List<GuideTopic> _englishExamVocabTopics() {
+  GuideTopic build(
+    String id,
+    String emoji,
+    String exam,
+    String focusId,
+    String focusEn,
+    List<EVocab> v,
+  ) => _examVocabTopic(
+    id: id,
+    emoji: emoji,
+    title: exam,
+    words: [for (final w in v) GuideExample(w.word, w.meaning, romaji: w.pron)],
+    subtitle: {
+      'id': '${v.length} kosakata $focusId, ketuk untuk dengar',
+      'en': '${v.length} $focusEn words, tap to listen',
+    },
+  );
+
+  return [
+    build(
+      'en_vocab_academic',
+      '🎓',
+      'Akademik (TOEFL · IELTS · PTE)',
+      'akademik',
+      'academic',
+      academicVocab,
+    ),
+    build(
+      'en_vocab_ielts',
+      '🌏',
+      'IELTS',
+      'tema esai & speaking',
+      'essay & speaking',
+      ieltsVocab,
+    ),
+    build(
+      'en_vocab_toeic',
+      '💼',
+      'TOEIC',
+      'kantor & bisnis',
+      'office & business',
+      toeicVocab,
+    ),
   ];
 }
 

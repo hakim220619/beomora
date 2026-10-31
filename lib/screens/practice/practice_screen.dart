@@ -18,7 +18,7 @@ import 'exam_list_screen.dart';
 import 'flashcards_screen.dart';
 import 'handwriting_activation.dart';
 import 'handwriting_screen.dart';
-import 'kana_mix_screen.dart';
+import 'quiz_setup_screen.dart';
 import 'letter_quiz_screen.dart';
 import 'listening_pack_screen.dart';
 import 'mcq_pack_screen.dart';
@@ -62,22 +62,44 @@ class PracticeScreen extends StatelessWidget {
                 : null,
             onTap: () => _push(context, MemoryMatchScreen(course: course)),
           ),
-          _GameCard(
-            emoji: '🔤',
-            color: DuoColors.red,
-            title: l.t('letter_quiz'),
-            subtitle: l.t('letter_quiz_desc'),
-            onTap: () => _push(context, LetterQuizScreen(course: course)),
-          ),
-          // Tebak Kana Campur: hiragana + katakana + dakuten/handakuten,
-          // jumlah soal bebas (khusus kursus Jepang).
-          if (course.id == 'ja')
+          // Jepang: Tebak Huruf diganti tiga kuis racikan dengan jumlah
+          // soal bebas (Kana Campur, Kanji, Kata). Paket Tebak Huruf
+          // tetap bisa dibuka dari halaman Materi.
+          if (course.id == 'ja') ...[
             _GameCard(
               emoji: '🔀',
               color: DuoColors.blue,
               title: l.t('kana_mix_title'),
               subtitle: l.t('kana_mix_desc'),
               onTap: () => _push(context, KanaMixScreen(course: course)),
+            ),
+            _GameCard(
+              emoji: '漢',
+              color: DuoColors.red,
+              title: l.t('kanji_quiz_title'),
+              subtitle: l.t('kanji_quiz_desc'),
+              trailing: progress.premiumActive
+                  ? null
+                  : '👑 ${l.t('quiz_free_badge').replaceFirst('{n}', '$kFreeMcqLimit')}',
+              onTap: () => _push(context, KanjiQuizScreen(course: course)),
+            ),
+            _GameCard(
+              emoji: '📖',
+              color: DuoColors.green,
+              title: l.t('word_quiz_title'),
+              subtitle: l.t('word_quiz_desc'),
+              trailing: progress.premiumActive
+                  ? null
+                  : '👑 ${l.t('quiz_free_badge').replaceFirst('{n}', '$kFreeMcqLimit')}',
+              onTap: () => _push(context, WordQuizScreen(course: course)),
+            ),
+          ] else
+            _GameCard(
+              emoji: '🔤',
+              color: DuoColors.red,
+              title: l.t('letter_quiz'),
+              subtitle: l.t('letter_quiz_desc'),
+              onTap: () => _push(context, LetterQuizScreen(course: course)),
             ),
           // Tulis Huruf: kanvas tulisan tangan. Kartu selalu tampil;
           // kalau fitur belum aktif / model belum ada, ketuk → alur
@@ -115,7 +137,7 @@ class PracticeScreen extends StatelessWidget {
               onTap: () => _push(context, ListeningPackScreen(course: course)),
             ),
           // Latihan Bicara: pengenal suara bawaan HP (ja/en/de/ko).
-          if (kSpeakingCourses.contains(course.id))
+          if (kSpeakingEnabled && kSpeakingCourses.contains(course.id))
             _GameCard(
               emoji: '🎙️',
               color: DuoColors.orange,
