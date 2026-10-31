@@ -3,6 +3,60 @@
 Semua perubahan penting dicatat di sini. Versi mengikuti `pubspec.yaml`
 (`versi+kode build`).
 
+## 1.12.0 (build 27) — 1 November 2026
+
+### Baru
+- **Detail kosakata**: ketuk kata di Materi → Kosakata (atau hasil
+  pencarian) untuk melihat contoh kalimat (bisa didengar, dengan romaji &
+  terjemahan) dan catatan penggunaan (jenis kata, pola, kolokasi, bentuk
+  sopan). Tersedia untuk semua kosakata JLPT N5–N3 (1.609 kata) dan
+  kosakata ujian Inggris Akademik/IELTS/TOEIC (1.452 kata). Topik
+  tematik menampilkan kalimat dari topiknya yang memuat kata itu.
+
+## 1.11.0 (build 26) — 31 Oktober 2026
+
+### Baru
+- **Tebak Kanji** & **Tebak Kata** di Ruang Latihan (kursus Jepang)
+  menggantikan Tebak Huruf; jumlah soal bebas (gratis maks. 10 per
+  sesi). Tebak Kanji: pilih level N5/N4 dan jenis soal (arti, bacaan
+  on/kun, baca kata). Tebak Kata: kosakata JLPT N5–N1.
+- **Latihan Kosakata**: tombol mengapung di Materi → Kosakata; pilih kata
+  sendiri (per topik / cari), tentukan jumlah soal. Soal melebihi jumlah
+  kata diulang merata & tidak berurutan sama.
+- **Kanji N5 (100) & N4 (185)** dengan on'yomi, kun'yomi, arti, dan
+  contoh kata (`tool/gen_kanji.py`). Ketuk kanji di Materi → panel
+  detail. Paket Kanji N4 di Tebak Huruf & Tulis Huruf.
+- **Kosakata JLPT diperbanyak**: N5 233 → 806, N4 108 → 712
+  (`tool/jlpt_n5_extra.py`, `tool/jlpt_n4_extra.py`); kata yang sama di
+  dua level ditolak generator.
+- **Kosakata ujian Inggris** (Materi → Kosakata): Akademik/AWL 592
+  (TOEFL · IELTS · PTE), IELTS 347, TOEIC 513 (`tool/gen_en_exam_vocab.py`).
+- **Mode Ujian diperbarui**:
+  - JLPT N5/N4 mengikuti susunan soal sejak 2020; kosakata gaya asli
+    (漢字読み, 表記, 文脈規定, 言い換え, 用法) tanpa terjemahan/romaji;
+    bank tata bahasa, bacaan (termasuk 情報検索), dan dengar diperbanyak.
+  - TOEFL iBT format 2026 (Complete the Words, Daily Life, Choose a
+    Response, Build a Sentence, Email, Academic Discussion), skor band
+    1–6 + padanan 0–120.
+  - IELTS Writing Task 1 & 2; Reading dengan True/False/Not Given.
+  - PTE: Summarize Written Text, Essay, Fill in the Blanks, Reorder
+    Paragraphs, Highlight Incorrect Words, Write from Dictation.
+  - Bentuk soal baru: susun potongan, tandai kata, dikte, esai (dinilai
+    sendiri dengan contoh jawaban & daftar cek).
+
+### Perubahan
+- **Login dulu**, baru pilih bahasa, kursus, dan target. Pilihan &
+  bahasa UI tersimpan di akun, jadi login di HP lain langsung ke menu
+  utama. Tombol bahasa ID/EN di halaman login.
+- Tebak Huruf disembunyikan dari Ruang Latihan kursus Jepang (paket
+  tetap bisa dibuka dari Materi).
+- Arti ごはん, みる, きく dirapikan; かいしゃ dan beberapa kata dasar
+  dipindah ke N5.
+
+### Perbaikan
+- Kuis kanji: daftar huruf yang salah kini menampilkan kanjinya.
+- Kata yang sama di dua level JLPT tidak lagi muncul sebagai pengecoh.
+
 ## 1.10.0 (build 25) — 24 Oktober 2026
 
 ### Baru

@@ -15,6 +15,7 @@ import '../../widgets/study/study_background.dart';
 import '../practice/letter_quiz_screen.dart';
 import '../practice/vocab_practice_screen.dart';
 import '../premium_screen.dart';
+import 'vocab_detail_sheet.dart';
 
 /// Detail satu topik materi: grid kana yang bisa diketuk untuk
 /// mendengar pengucapan, paragraf penjelasan, dan contoh berbunyi.
@@ -299,6 +300,18 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
                   example: ex,
                   uiLang: l.code,
                   onSpeak: () => _speak(ex.target),
+                  // Kata di topik kosakata: ketuk → contoh kalimat &
+                  // penggunaan. Baris kalimat cukup didengar.
+                  onTap:
+                      widget.topic.id.contains('vocab') && !isVocabSentence(ex)
+                      ? () => showVocabDetail(
+                          context,
+                          courseId: widget.course.id,
+                          ttsLocale: widget.ttsLocale,
+                          word: ex,
+                          topic: widget.topic,
+                        )
+                      : null,
                 ),
             ],
           ],
@@ -484,17 +497,19 @@ class _ExampleRow extends StatelessWidget {
   final GuideExample example;
   final String uiLang;
   final VoidCallback onSpeak;
+  final VoidCallback? onTap;
 
   const _ExampleRow({
     required this.example,
     required this.uiLang,
     required this.onSpeak,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Container(
+    final row = Container(
       margin: const EdgeInsets.only(top: 8),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
@@ -547,6 +562,12 @@ class _ExampleRow extends StatelessWidget {
           ),
         ],
       ),
+    );
+    if (onTap == null) return row;
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
+      child: row,
     );
   }
 }

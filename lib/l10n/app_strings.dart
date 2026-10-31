@@ -39,6 +39,9 @@ class L {
       'vocab_search_hint_romanization': 'Cari kata, romanisasi, atau arti…',
       'vocab_search_hint_plain': 'Cari kata atau arti…',
       'vocab_search_empty': 'Tidak ada kosakata yang cocok',
+      'vocab_detail_examples': 'Contoh kalimat',
+      'vocab_detail_usage': 'Penggunaan',
+      'vocab_detail_none': 'Belum ada contoh kalimat untuk kata ini.',
       'vocab_search_count': 'kata ditemukan',
       // Onboarding
       'onb_welcome_title': 'Selamat datang di Beomora!',
@@ -666,6 +669,9 @@ class L {
           'Search word, romanization, or meaning…',
       'vocab_search_hint_plain': 'Search word or meaning…',
       'vocab_search_empty': 'No matching vocabulary',
+      'vocab_detail_examples': 'Example sentences',
+      'vocab_detail_usage': 'Usage',
+      'vocab_detail_none': 'No example sentence for this word yet.',
       'vocab_search_count': 'words found',
       // Onboarding
       'onb_welcome_title': 'Welcome to Beomora!',

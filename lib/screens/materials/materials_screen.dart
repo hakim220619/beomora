@@ -15,6 +15,7 @@ import '../../widgets/study/study_background.dart';
 import '../course_select_screen.dart';
 import '../practice/vocab_practice_screen.dart';
 import 'guide_detail_screen.dart';
+import 'vocab_detail_sheet.dart';
 
 /// Tab Materi: daftar referensi belajar lengkap untuk kursus aktif —
 /// hiragana/katakana untuk Jepang, grammar dasar untuk Inggris, dst.
@@ -288,6 +289,15 @@ class _VocabListScreenState extends State<_VocabListScreen> {
                 hit: h,
                 uiLang: l.code,
                 onSpeak: () => _speak(h.word.target),
+                onTap: isVocabSentence(h.word)
+                    ? null
+                    : () => showVocabDetail(
+                        context,
+                        courseId: course.id,
+                        ttsLocale: course.ttsLocale,
+                        word: h.word,
+                        topic: h.topic,
+                      ),
               ),
           ],
         ],
@@ -301,18 +311,20 @@ class _VocabHitRow extends StatelessWidget {
   final _VocabHit hit;
   final String uiLang;
   final VoidCallback onSpeak;
+  final VoidCallback? onTap;
 
   const _VocabHitRow({
     required this.hit,
     required this.uiLang,
     required this.onSpeak,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final w = hit.word;
-    return Container(
+    final row = Container(
       margin: const EdgeInsets.only(top: 8),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
@@ -371,6 +383,12 @@ class _VocabHitRow extends StatelessWidget {
           ),
         ],
       ),
+    );
+    if (onTap == null) return row;
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
+      child: row,
     );
   }
 }

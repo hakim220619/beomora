@@ -1,0 +1,10 @@
+<id>
+✨ Beomora 1.12.0
+💬 Ketuk kosakata: contoh kalimat & cara pakai (Jepang & Inggris, 3.000+ kata)
+📚 Kosakata JLPT N5 800+ & N4 700+, plus Akademik, IELTS & TOEIC
+漢 Kanji N5 & N4 (285) lengkap bacaan on/kun & contoh kata
+🎯 Tebak Kanji & Tebak Kata, jumlah soal bebas
+🗒️ Latihan Kosakata: pilih kata sendiri
+📝 Mode Ujian: format JLPT terbaru, TOEFL 2026, IELTS Writing, soal PTE
+🔐 Pilihan & targetmu tersimpan di akun
+</id>

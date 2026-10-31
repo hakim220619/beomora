@@ -1,0 +1,9 @@
+<id>
+✨ Beomora 1.11.0
+📚 Kosakata JLPT N5 800+ & N4 700+, plus Akademik (TOEFL·IELTS·PTE), IELTS & TOEIC
+漢 Kanji N5 & N4 (285) lengkap bacaan on/kun & contoh kata
+🎯 Tebak Kanji & Tebak Kata, jumlah soal bebas
+🗒️ Latihan Kosakata: pilih kata sendiri
+📝 Mode Ujian diperbarui: format JLPT terbaru, TOEFL 2026, IELTS Writing Task 1 & 2, soal PTE
+🔐 Login dulu, pilihan & targetmu tersimpan di akun
+</id>
