@@ -1,0 +1,8 @@
+<id>
+✨ Beomora 1.13.0
+🔊 Latihan Kosakata: putar kata yang kamu pilih, satu per satu
+🔁 Ulangi terus-menerus untuk menghafal sambil mendengar
+⏩ Atur kecepatan suara 0.5× sampai 2×
+⚡ Mencentang kata kini jauh lebih cepat, walau daftarnya ratusan kata
+• Perbaikan kecil & peningkatan performa
+</id>

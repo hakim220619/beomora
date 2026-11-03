@@ -3,6 +3,23 @@
 Semua perubahan penting dicatat di sini. Versi mengikuti `pubspec.yaml`
 (`versi+kode build`).
 
+## 1.13.0 (build 28) — 3 November 2026
+
+### Baru
+- **Putar kosakata terpilih** di Latihan Kosakata: tombol ▶ di bar bawah
+  membacakan kata yang dicentang satu per satu (⏹ untuk berhenti). Kata
+  yang sedang dibacakan tampil di bar bawah dan disorot di daftar.
+- **Ulangi terus-menerus** (🔁): putaran mulai lagi dari kata pertama
+  sampai dihentikan; bisa dinyalakan/dimatikan saat sedang memutar.
+- **Kecepatan suara** 0.5× · 0.75× · 1× · 1.25× · 1.5× · 2× (ketuk untuk
+  berganti); jeda antar kata ikut menyesuaikan. Pilihan tersimpan di
+  perangkat.
+
+### Perbaikan
+- Centang kata di Latihan Kosakata tidak lagi tertunda: daftar kini
+  hanya menggambar baris yang terlihat (sebelumnya 800+ baris digambar
+  ulang tiap ketukan di topik JLPT N5).
+
 ## 1.12.0 (build 27) — 1 November 2026
 
 ### Baru
