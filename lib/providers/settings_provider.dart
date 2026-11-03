@@ -11,6 +11,7 @@ class SettingsProvider extends ChangeNotifier {
   static const _kShowIcons = 'show_icons';
   static const _kHandwriting = 'handwriting_on';
   static const _kHandwritingWifi = 'handwriting_wifi_only';
+  static const _kPlaySpeed = 'vocab_play_speed_x';
 
   final SharedPreferences _prefs;
 
@@ -23,6 +24,7 @@ class SettingsProvider extends ChangeNotifier {
   bool _showIcons;
   bool _handwritingOn;
   bool _handwritingWifiOnly;
+  double _playSpeed;
 
   SettingsProvider(this._prefs)
     : _uiLang = _prefs.getString(_kUiLang) ?? 'id',
@@ -33,7 +35,8 @@ class SettingsProvider extends ChangeNotifier {
       _reminderMinute = _prefs.getInt(_kReminderMinute) ?? 0,
       _showIcons = _prefs.getBool(_kShowIcons) ?? false,
       _handwritingOn = _prefs.getBool(_kHandwriting) ?? false,
-      _handwritingWifiOnly = _prefs.getBool(_kHandwritingWifi) ?? true;
+      _handwritingWifiOnly = _prefs.getBool(_kHandwritingWifi) ?? true,
+      _playSpeed = (_prefs.getDouble(_kPlaySpeed) ?? 1.0).clamp(0.5, 2.0);
 
   /// Tema hanya dua pilihan: terang (siang) atau gelap (malam).
   /// Nilai lama "system" dipetakan ke terang.
@@ -59,6 +62,15 @@ class SettingsProvider extends ChangeNotifier {
 
   /// Unduh model tulisan tangan hanya lewat Wi-Fi (default: ya).
   bool get handwritingWifiOnly => _handwritingWifiOnly;
+
+  /// Kecepatan putar kosakata sebagai kelipatan normal (0.5×–2×).
+  double get playSpeed => _playSpeed;
+
+  void setPlaySpeed(double speed) {
+    _playSpeed = speed.clamp(0.5, 2.0);
+    _prefs.setDouble(_kPlaySpeed, _playSpeed);
+    notifyListeners();
+  }
 
   void setHandwritingOn(bool on) {
     _handwritingOn = on;

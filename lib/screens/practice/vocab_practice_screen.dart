@@ -9,6 +9,8 @@ import '../../l10n/app_strings.dart';
 import '../../models/course.dart';
 import '../../models/guide.dart';
 import '../../providers/progress_provider.dart';
+import '../../providers/settings_provider.dart';
+import '../../services/tts_service.dart';
 import '../../theme.dart';
 import '../../widgets/duo_button.dart';
 import '../../widgets/study/study_background.dart';
@@ -67,15 +69,100 @@ class VocabPracticeScreen extends StatefulWidget {
 class _VocabPracticeScreenState extends State<VocabPracticeScreen> {
   static const _presets = [5, 10, 20, 30, 50];
   static const _maxCount = 100;
+  // Kelipatan kecepatan suara; 1× = laju TTS 0.45 dengan jeda 700 ms.
+  static const _speeds = [0.5, 0.75, 1.0, 1.25, 1.5, 2.0];
+
+  static String _speedLabel(double x) =>
+      '${x.toStringAsFixed(2).replaceFirst(RegExp(r'\.?0+$'), '')}×';
+
+  /// Kecepatan berikutnya setelah [x] (berputar kembali ke yang terkecil).
+  static double _nextSpeed(double x) =>
+      _speeds.firstWhere((s) => s > x + 0.001, orElse: () => _speeds.first);
 
   final _searchCtrl = TextEditingController();
   String _query = '';
   final Set<String> _selected = {};
 
+  // Putar kata terpilih berurutan: antrean dibekukan saat mulai, dan
+  // token dinaikkan untuk membatalkan putaran yang sedang berjalan.
+  List<_Word> _queue = const [];
+  int? _playing; // indeks di [_queue] yang sedang dibacakan
+  int _playToken = 0;
+  bool _loop = false; // ulangi antrean terus-menerus sampai dihentikan
+
   @override
   void dispose() {
+    _playToken++;
+    TtsService.instance.stop();
     _searchCtrl.dispose();
     super.dispose();
+  }
+
+  Future<void> _play(List<_Word> all) async {
+    final queue = {
+      for (final w in all)
+        if (_selected.contains(w.key)) w.key: w,
+    }.values.toList();
+    if (queue.isEmpty) return;
+    final token = ++_playToken;
+    setState(() => _queue = queue);
+    // [_loop] dibaca tiap akhir putaran, jadi boleh diubah saat berjalan.
+    play:
+    do {
+      for (var i = 0; i < queue.length; i++) {
+        if (!mounted || token != _playToken) return;
+        setState(() => _playing = i);
+        // Kecepatan dibaca per kata agar perubahan langsung terasa.
+        final x = context.read<SettingsProvider>().playSpeed;
+        final done = await TtsService.instance.speakAndWait(
+          queue[i].example.target,
+          widget.course.ttsLocale,
+          rate: min(0.45 * x, 1.0),
+        );
+        if (!mounted || token != _playToken) return;
+        if (!done) break play;
+        await Future<void>.delayed(Duration(milliseconds: (700 / x).round()));
+      }
+    } while (_loop);
+    if (mounted && token == _playToken) setState(() => _playing = null);
+  }
+
+  void _stopPlay() {
+    _playToken++;
+    TtsService.instance.stop();
+    if (_playing != null) setState(() => _playing = null);
+  }
+
+  bool _isPlaying(_Word w) =>
+      _playing != null && _queue[_playing!].key == w.key;
+
+  // Daftar kata disusun sekali per bahasa UI (bukan tiap ketukan), dan
+  // hasil cari disimpan per kata kunci — topik JLPT berisi ratusan kata.
+  String? _wordsLang;
+  List<({GuideTopic topic, List<_Word> words})> _groups = const [];
+  List<_Word> _all = const [];
+  String? _hitsQuery;
+  List<_Word> _hits = const [];
+  late final Set<int> _expanded = {if (widget.topics.length == 1) 0};
+
+  void _ensureWords(String uiLang) {
+    if (_wordsLang == uiLang) return;
+    _wordsLang = uiLang;
+    _groups = [
+      for (final t in widget.topics) (topic: t, words: _wordsOf(t, uiLang)),
+    ];
+    _all = [for (final g in _groups) ...g.words];
+    _hitsQuery = null;
+    // Kunci memuat arti, jadi berubah saat bahasa UI diganti.
+    _selected.retainAll({for (final w in _all) w.key});
+  }
+
+  List<_Word> _hitsFor(String q) {
+    if (_hitsQuery != q) {
+      _hitsQuery = q;
+      _hits = {for (final w in _all.where(_matches)) w.key: w}.values.toList();
+    }
+    return _hits;
   }
 
   /// Kata per topik; kata yang sama di dua topik cukup satu kunci.
@@ -111,6 +198,7 @@ class _VocabPracticeScreenState extends State<VocabPracticeScreen> {
   );
 
   Future<void> _openCountSheet(List<_Word> all) async {
+    _stopPlay();
     final premium = context.read<ProgressProvider>().premiumActive;
     final maxCount = premium ? _maxCount : kFreeMcqLimit;
     final picked = {
@@ -160,18 +248,14 @@ class _VocabPracticeScreenState extends State<VocabPracticeScreen> {
   @override
   Widget build(BuildContext context) {
     final l = L.of(context);
-    final groups = [
-      for (final t in widget.topics) (topic: t, words: _wordsOf(t, l.code)),
-    ];
-    final all = [for (final g in groups) ...g.words];
+    final settings = context.watch<SettingsProvider>();
+    _ensureWords(l.code);
+    final all = _all;
     final searching = _query.trim().isNotEmpty;
     final hits = searching
-        ? {for (final w in all.where(_matches)) w.key: w}.values.toList()
+        ? _hitsFor(_query.trim().toLowerCase())
         : const <_Word>[];
-    final selectedCount = {
-      for (final w in all)
-        if (_selected.contains(w.key)) w.key,
-    }.length;
+    final selectedCount = _selected.length;
 
     return StudyScaffold(
       appBar: AppBar(title: Text(l.t('vocab_practice_title'))),
@@ -231,29 +315,38 @@ class _VocabPracticeScreenState extends State<VocabPracticeScreen> {
             ),
           ),
           Expanded(
+            // Hanya baris yang terlihat yang dibangun (builder/sliver).
             child: searching
-                ? ListView(
-                    padding: const EdgeInsets.fromLTRB(8, 0, 8, 16),
-                    children: [
-                      if (hits.isEmpty)
-                        Padding(
+                ? (hits.isEmpty
+                      ? ListView(
                           padding: const EdgeInsets.symmetric(vertical: 40),
-                          child: Text(
-                            l.t('vocab_search_empty'),
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              color: Theme.of(context).hintColor,
+                          children: [
+                            Text(
+                              l.t('vocab_search_empty'),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                color: Theme.of(context).hintColor,
+                              ),
                             ),
-                          ),
+                          ],
+                        )
+                      : ListView.builder(
+                          padding: const EdgeInsets.fromLTRB(8, 0, 8, 16),
+                          itemCount: hits.length,
+                          itemBuilder: (_, i) => _wordTile(hits[i]),
+                        ))
+                : CustomScrollView(
+                    slivers: [
+                      SliverPadding(
+                        padding: const EdgeInsets.fromLTRB(8, 0, 8, 16),
+                        sliver: SliverMainAxisGroup(
+                          slivers: [
+                            for (var i = 0; i < _groups.length; i++)
+                              _topicSliver(i, l),
+                          ],
                         ),
-                      for (final w in hits) _wordTile(w),
-                    ],
-                  )
-                : ListView(
-                    padding: const EdgeInsets.fromLTRB(8, 0, 8, 16),
-                    children: [
-                      for (final g in groups) _topicTile(g.topic, g.words, l),
+                      ),
                     ],
                   ),
           ),
@@ -269,15 +362,70 @@ class _VocabPracticeScreenState extends State<VocabPracticeScreen> {
               children: [
                 Expanded(
                   child: Text(
-                    '$selectedCount ${l.t('vocab_practice_selected')}',
+                    _playing == null
+                        ? '$selectedCount ${l.t('vocab_practice_selected')}'
+                        : '🔊 ${_queue[_playing!].example.target} '
+                              '(${_playing! + 1}/${_queue.length})',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w900,
                     ),
                   ),
                 ),
+                TextButton(
+                  style: TextButton.styleFrom(
+                    minimumSize: const Size(44, 40),
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                  ),
+                  onPressed: () =>
+                      settings.setPlaySpeed(_nextSpeed(settings.playSpeed)),
+                  child: Tooltip(
+                    message: l.t('vocab_practice_speed'),
+                    child: Text(
+                      _speedLabel(settings.playSpeed),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w900,
+                        color: DuoColors.blue,
+                      ),
+                    ),
+                  ),
+                ),
+                IconButton(
+                  tooltip: l.t(
+                    _loop ? 'vocab_practice_loop_off' : 'vocab_practice_loop',
+                  ),
+                  isSelected: _loop,
+                  onPressed: () => setState(() => _loop = !_loop),
+                  icon: const Icon(Icons.repeat_rounded),
+                  selectedIcon: const Icon(
+                    Icons.repeat_on_rounded,
+                    color: DuoColors.blue,
+                  ),
+                ),
+                IconButton.filledTonal(
+                  tooltip: l.t(
+                    _playing == null
+                        ? 'vocab_practice_play'
+                        : 'vocab_practice_stop',
+                  ),
+                  onPressed: _playing != null
+                      ? _stopPlay
+                      : (selectedCount == 0 ? null : () => _play(all)),
+                  icon: Icon(
+                    _playing == null
+                        ? Icons.play_arrow_rounded
+                        : Icons.stop_rounded,
+                    color: selectedCount == 0 && _playing == null
+                        ? null
+                        : DuoColors.blue,
+                  ),
+                ),
+                const SizedBox(width: 8),
                 SizedBox(
-                  width: 150,
+                  width: 120,
                   child: DuoButton(
                     label: l.t('vocab_practice_next'),
                     color: DuoColors.blue,
@@ -295,44 +443,89 @@ class _VocabPracticeScreenState extends State<VocabPracticeScreen> {
     );
   }
 
-  Widget _topicTile(GuideTopic topic, List<_Word> words, L l) {
+  /// Satu topik sebagai kartu: judul (buka/tutup + centang semua) dan,
+  /// bila terbuka, daftar kata yang dibangun malas per baris.
+  Widget _topicSliver(int index, L l) {
+    final (:topic, :words) = _groups[index];
+    final open = _expanded.contains(index);
     final picked = words.where((w) => _selected.contains(w.key)).length;
-    return Card(
-      margin: const EdgeInsets.only(bottom: 8),
-      clipBehavior: Clip.antiAlias,
-      child: ExpansionTile(
-        initiallyExpanded: widget.topics.length == 1,
-        shape: const Border(),
-        leading: Checkbox(
-          tristate: true,
-          value: picked == 0 ? false : (picked == words.length ? true : null),
-          activeColor: DuoColors.blue,
-          onChanged: (_) => _toggleAll(words, picked < words.length),
+    final card = Theme.of(context).cardTheme;
+    return SliverPadding(
+      padding: const EdgeInsets.only(bottom: 8),
+      sliver: DecoratedSliver(
+        decoration: ShapeDecoration(
+          color: card.color,
+          shape: card.shape ?? const RoundedRectangleBorder(),
         ),
-        title: Text(
-          '${topic.emoji} ${topic.title[l.code] ?? ''}',
-          style: const TextStyle(fontWeight: FontWeight.w900),
+        sliver: SliverMainAxisGroup(
+          slivers: [
+            SliverToBoxAdapter(
+              child: Material(
+                type: MaterialType.transparency,
+                child: ListTile(
+                  shape: card.shape,
+                  onTap: () => setState(
+                    () => open ? _expanded.remove(index) : _expanded.add(index),
+                  ),
+                  leading: Checkbox(
+                    tristate: true,
+                    value: picked == 0
+                        ? false
+                        : (picked == words.length ? true : null),
+                    activeColor: DuoColors.blue,
+                    onChanged: (_) => _toggleAll(words, picked < words.length),
+                  ),
+                  title: Text(
+                    '${topic.emoji} ${topic.title[l.code] ?? ''}',
+                    style: const TextStyle(fontWeight: FontWeight.w900),
+                  ),
+                  subtitle: Text('$picked/${words.length}'),
+                  trailing: AnimatedRotation(
+                    turns: open ? 0.5 : 0,
+                    duration: const Duration(milliseconds: 200),
+                    child: const Icon(Icons.expand_more_rounded),
+                  ),
+                ),
+              ),
+            ),
+            if (open)
+              SliverPadding(
+                padding: const EdgeInsets.only(bottom: 8),
+                sliver: SliverList.builder(
+                  itemCount: words.length,
+                  itemBuilder: (_, i) => _wordTile(words[i]),
+                ),
+              ),
+          ],
         ),
-        subtitle: Text('$picked/${words.length}'),
-        children: [for (final w in words) _wordTile(w)],
       ),
     );
   }
 
   Widget _wordTile(_Word w) {
     final romaji = w.example.romaji;
-    return CheckboxListTile(
-      dense: true,
-      value: _selected.contains(w.key),
-      activeColor: DuoColors.blue,
-      controlAffinity: ListTileControlAffinity.leading,
-      onChanged: (_) => _toggle(w),
-      title: Text(
-        w.example.target,
-        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800),
-      ),
-      subtitle: Text(
-        romaji == null ? w.item.romaji : '$romaji · ${w.item.romaji}',
+    // Material transparan: tinta & warna sorot tergambar di atas kartu.
+    return Material(
+      type: MaterialType.transparency,
+      child: CheckboxListTile(
+        dense: true,
+        value: _selected.contains(w.key),
+        activeColor: DuoColors.blue,
+        controlAffinity: ListTileControlAffinity.leading,
+        onChanged: (_) => _toggle(w),
+        tileColor: _isPlaying(w)
+            ? DuoColors.blue.withValues(alpha: 0.12)
+            : null,
+        secondary: _isPlaying(w)
+            ? const Icon(Icons.graphic_eq_rounded, color: DuoColors.blue)
+            : null,
+        title: Text(
+          w.example.target,
+          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800),
+        ),
+        subtitle: Text(
+          romaji == null ? w.item.romaji : '$romaji · ${w.item.romaji}',
+        ),
       ),
     );
   }

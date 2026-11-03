@@ -174,6 +174,11 @@ class L {
       'vocab_practice_all': 'Pilih semua',
       'vocab_practice_none': 'Kosongkan',
       'vocab_practice_next': 'Lanjut',
+      'vocab_practice_play': 'Putar kata yang dipilih',
+      'vocab_practice_stop': 'Berhenti memutar',
+      'vocab_practice_loop': 'Ulangi terus-menerus',
+      'vocab_practice_loop_off': 'Matikan pengulangan',
+      'vocab_practice_speed': 'Kecepatan suara',
       'vocab_practice_repeat':
           'Soal lebih banyak dari kata yang dipilih — sisanya diulang acak',
       // Tulis Huruf (tulisan tangan)
@@ -805,6 +810,11 @@ class L {
       'vocab_practice_all': 'Select all',
       'vocab_practice_none': 'Clear',
       'vocab_practice_next': 'Next',
+      'vocab_practice_play': 'Play selected words',
+      'vocab_practice_stop': 'Stop playing',
+      'vocab_practice_loop': 'Repeat continuously',
+      'vocab_practice_loop_off': 'Turn off repeat',
+      'vocab_practice_speed': 'Voice speed',
       'vocab_practice_repeat':
           'More questions than chosen words — the rest repeat at random',
       // Write Letters (handwriting)
