@@ -9,13 +9,14 @@ import '../../data/mcq_packs.dart';
 import '../../l10n/app_strings.dart';
 import '../../models/course.dart';
 import '../../providers/progress_provider.dart';
+import '../../services/exercise_generator.dart';
 import '../../providers/settings_provider.dart';
 import '../../services/handwriting_service.dart';
 import '../../services/speech_scorer.dart';
 import '../../theme.dart';
+import '../../widgets/duo_button.dart';
 import '../lesson/lesson_screen.dart';
 import 'exam_list_screen.dart';
-import 'flashcards_screen.dart';
 import 'handwriting_activation.dart';
 import 'handwriting_screen.dart';
 import 'quiz_setup_screen.dart';
@@ -23,7 +24,6 @@ import 'letter_quiz_screen.dart';
 import 'listening_pack_screen.dart';
 import 'mcq_pack_screen.dart';
 import 'speaking_screen.dart';
-import 'memory_match_screen.dart';
 import 'time_challenge_screen.dart';
 
 class PracticeScreen extends StatelessWidget {
@@ -45,23 +45,9 @@ class PracticeScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 110),
         children: [
-          _GameCard(
-            emoji: '🃏',
-            color: DuoColors.blue,
-            title: l.t('flashcards'),
-            subtitle: l.t('flashcards_desc'),
-            onTap: () => _push(context, FlashcardsScreen(course: course)),
-          ),
-          _GameCard(
-            emoji: '🧩',
-            color: DuoColors.purple,
-            title: l.t('memory_game'),
-            subtitle: l.t('memory_desc'),
-            trailing: progress.bestMemoryMoves > 0
-                ? '${l.t('best')}: ${progress.bestMemoryMoves} ${l.t('moves').toLowerCase()}'
-                : null,
-            onTap: () => _push(context, MemoryMatchScreen(course: course)),
-          ),
+          // Kartu Kilat & Memory Match dikeluarkan dari Ruang Latihan
+          // (FlashcardsScreen & MemoryMatchScreen tetap ada di kode bila
+          // ingin dipasang lagi).
           // Jepang: Tebak Huruf diganti tiga kuis racikan dengan jumlah
           // soal bebas (Kana Campur, Kanji, Kata). Paket Tebak Huruf
           // tetap bisa dibuka dari halaman Materi.
@@ -175,7 +161,7 @@ class PracticeScreen extends StatelessWidget {
             color: DuoColors.green,
             title: l.t('free_practice'),
             subtitle: l.t('free_practice_desc'),
-            onTap: () => _push(context, LessonScreen(course: course)),
+            onTap: () => _openFreePractice(context, course),
           ),
         ],
       ),
@@ -186,13 +172,29 @@ class PracticeScreen extends StatelessWidget {
     final settings = context.read<SettingsProvider>();
     final language = HandwritingService.languageFor(course.id);
     if (language == null) return;
-    var ready =
-        settings.handwritingOn &&
-        await HandwritingService.instance.isModelDownloaded(language);
-    if (!context.mounted) return;
-    if (!ready) ready = await showHandwritingActivation(context, course);
+    // Model sudah terbukti ada di sesi ini → langsung buka. Selain itu,
+    // dialog aktivasi tampil seketika dengan loading selagi model dicek
+    // (cek native bisa beberapa detik) dan menutup sendiri kalau siap.
+    final ready =
+        (settings.handwritingOn &&
+            HandwritingService.instance.isKnownDownloaded(language)) ||
+        await showHandwritingActivation(context, course);
     if (!ready || !context.mounted) return;
     _push(context, HandwritingScreen(course: course));
+  }
+
+  /// Latihan Bebas: pilih jumlah soal dulu (minimal 10), lalu mulai.
+  Future<void> _openFreePractice(BuildContext context, Course course) async {
+    final learned =
+        context.read<ProgressProvider>().masteredWords[course.id] ?? <String>{};
+    final available = ExerciseGenerator.practicePool(course, learned).length;
+    final count = await showModalBottomSheet<int>(
+      context: context,
+      showDragHandle: true,
+      builder: (_) => _FreePracticeSheet(available: available),
+    );
+    if (count == null || !context.mounted) return;
+    _push(context, LessonScreen(course: course, practiceCount: count));
   }
 
   void _push(BuildContext context, Widget screen) {
@@ -280,6 +282,131 @@ class _GameCard extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Pilih jumlah soal Latihan Bebas: −/+ dan angka cepat, minimal 10,
+/// maksimal 100 atau sebanyak kata yang tersedia (soal tak berulang).
+class _FreePracticeSheet extends StatefulWidget {
+  /// Kata tersedia untuk latihan (selalu ≥ 10, lihat practicePool).
+  final int available;
+  const _FreePracticeSheet({required this.available});
+
+  static const minCount = 10;
+  static const presets = [10, 15, 20, 30, 50, 100];
+
+  int get maxCount => available.clamp(minCount, 100);
+
+  @override
+  State<_FreePracticeSheet> createState() => _FreePracticeSheetState();
+}
+
+class _FreePracticeSheetState extends State<_FreePracticeSheet> {
+  int _count = _FreePracticeSheet.minCount;
+
+  void _set(int v) => setState(
+    () => _count = v.clamp(_FreePracticeSheet.minCount, widget.maxCount),
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    final l = L.of(context);
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              '💪 ${l.t('free_practice_count')}',
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w900),
+            ),
+            Text(
+              l.t('free_practice_min'),
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 12.5,
+                color: Theme.of(context).hintColor,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton.filledTonal(
+                  onPressed: _count > _FreePracticeSheet.minCount
+                      ? () => _set(_count - 5)
+                      : null,
+                  icon: const Icon(Icons.remove_rounded),
+                ),
+                SizedBox(
+                  width: 110,
+                  child: Text(
+                    '$_count',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 36,
+                      fontWeight: FontWeight.w900,
+                      color: DuoColors.green,
+                    ),
+                  ),
+                ),
+                IconButton.filledTonal(
+                  onPressed: _count < widget.maxCount
+                      ? () => _set(_count + 5)
+                      : null,
+                  icon: const Icon(Icons.add_rounded),
+                ),
+              ],
+            ),
+            Center(child: Text(l.t('kana_mix_questions'))),
+            const SizedBox(height: 4),
+            Text(
+              l
+                  .t('questions_available')
+                  .replaceFirst('{n}', '${widget.maxCount}'),
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 12,
+                color: Theme.of(context).hintColor,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Wrap(
+              alignment: WrapAlignment.center,
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final n in _FreePracticeSheet.presets.where(
+                  (n) => n <= widget.maxCount,
+                ))
+                  ChoiceChip(
+                    label: Text(
+                      '$n',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w800,
+                        color: _count == n ? Colors.white : null,
+                      ),
+                    ),
+                    selected: _count == n,
+                    showCheckmark: false,
+                    selectedColor: DuoColors.green,
+                    onSelected: (_) => _set(n),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 18),
+            DuoButton(
+              label: l.t('start_lesson'),
+              color: DuoColors.green,
+              onPressed: () => Navigator.of(context).pop(_count),
+            ),
+          ],
         ),
       ),
     );

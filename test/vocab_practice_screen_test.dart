@@ -77,7 +77,7 @@ void main() {
     await tester.tap(find.text('ねこ'));
     await tester.tap(find.text('いぬ'));
     await tester.pump();
-    expect(find.text('2 kata dipilih'), findsOneWidget);
+    expect(find.text('2 kata'), findsOneWidget);
 
     await tester.tap(find.text('Lanjut'));
     await tester.pump();

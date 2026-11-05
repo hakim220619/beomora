@@ -170,7 +170,7 @@ class L {
       'vocab_practice_title': 'Latihan Kosakata',
       'vocab_practice_btn': 'Latihan Kosakata',
       'vocab_practice_pick': 'Pilih kata yang mau dihafal',
-      'vocab_practice_selected': 'kata dipilih',
+      'vocab_practice_selected': 'kata',
       'vocab_practice_all': 'Pilih semua',
       'vocab_practice_none': 'Kosongkan',
       'vocab_practice_next': 'Lanjut',
@@ -198,6 +198,8 @@ class L {
       'handwriting_delete': 'Hapus',
       'handwriting_deleted': 'Model dihapus',
       'handwriting_activate_title': 'Aktifkan Tulis Huruf?',
+      'handwriting_checking': 'Menyiapkan Tulis Huruf…',
+      'handwriting_checking_sub': 'Memeriksa model tulisan tangan di perangkat',
       'handwriting_activate_body':
           'Model tulisan tangan untuk {lang} perlu diunduh (sekitar {n} MB). '
           'Pengenalan berjalan offline di perangkat, tanpa mengirim tulisan '
@@ -415,7 +417,18 @@ class L {
       'topup_desc': 'Top-up koin (pembelian uang asli)',
       'topup_label': 'TOP-UP',
       'time_challenge': 'Tantangan Waktu',
-      'time_desc': 'Jawab sebanyak mungkin dalam 60 detik!',
+      'time_desc': 'Jawab sebanyak mungkin sebelum waktu habis!',
+      'time_count': 'Jumlah soal',
+      'time_duration': 'Waktu',
+      'time_unlimited': 'Tanpa batas',
+      'time_minutes': '{n} menit',
+      'time_hours': '{n} jam',
+      'time_minutes_unit': 'mnt',
+      'time_all_done': 'Semua soal selesai! 🎉',
+      'time_question_of': 'Soal {i}/{n}',
+      'free_practice_count': 'Berapa soal?',
+      'free_practice_min': 'Minimal 10 soal',
+      'questions_available': 'Maks. {n} soal (sesuai kata yang tersedia)',
       'free_practice': 'Latihan Bebas',
       'free_practice_desc': 'Latihan campuran, pulihkan 1 nyawa ❤️',
       'need_lessons': 'Selesaikan minimal 1 pelajaran dulu ya!',
@@ -431,6 +444,7 @@ class L {
       'weekly_xp': 'XP minggu ini',
       'you': '(Kamu)',
       'leaderboard_info': 'Kumpulkan XP dan raih puncak papan juara kelas! 🏆',
+      'leaderboard_reset': 'Reset dalam {t} · tiap Minggu 23:59 WIB',
       'leaderboard_alone':
           'Belum ada pelajar lain minggu ini — ajak temanmu belajar! 🎒',
       // Kalender Belajar
@@ -806,7 +820,7 @@ class L {
       'vocab_practice_title': 'Vocabulary Drill',
       'vocab_practice_btn': 'Vocabulary Drill',
       'vocab_practice_pick': 'Pick the words to memorize',
-      'vocab_practice_selected': 'words selected',
+      'vocab_practice_selected': 'words',
       'vocab_practice_all': 'Select all',
       'vocab_practice_none': 'Clear',
       'vocab_practice_next': 'Next',
@@ -834,6 +848,8 @@ class L {
       'handwriting_delete': 'Delete',
       'handwriting_deleted': 'Model deleted',
       'handwriting_activate_title': 'Enable Write Letters?',
+      'handwriting_checking': 'Getting Write Letters ready…',
+      'handwriting_checking_sub': 'Checking the handwriting model on this device',
       'handwriting_activate_body':
           'The handwriting model for {lang} needs to be downloaded (about '
           '{n} MB). Recognition runs offline on your device; your writing is '
@@ -1047,7 +1063,18 @@ class L {
       'topup_desc': 'Gem top-up (real money purchase)',
       'topup_label': 'TOP-UP',
       'time_challenge': 'Time Challenge',
-      'time_desc': 'Answer as many as you can in 60 seconds!',
+      'time_desc': 'Answer as many as you can before time runs out!',
+      'time_count': 'Questions',
+      'time_duration': 'Time',
+      'time_unlimited': 'No limit',
+      'time_minutes': '{n} min',
+      'time_hours': '{n} h',
+      'time_minutes_unit': 'min',
+      'time_all_done': 'All questions done! 🎉',
+      'time_question_of': 'Question {i}/{n}',
+      'free_practice_count': 'How many questions?',
+      'free_practice_min': 'At least 10 questions',
+      'questions_available': 'Max {n} questions (words available)',
       'free_practice': 'Free Practice',
       'free_practice_desc': 'Mixed practice, restores 1 heart ❤️',
       'need_lessons': 'Complete at least 1 lesson first!',
@@ -1063,6 +1090,7 @@ class L {
       'weekly_xp': 'XP this week',
       'you': '(You)',
       'leaderboard_info': 'Earn XP and climb to the top of the class! 🏆',
+      'leaderboard_reset': 'Resets in {t} · every Sunday 23:59 WIB',
       'leaderboard_alone':
           'No other students this week yet — invite your friends! 🎒',
       // Study Calendar

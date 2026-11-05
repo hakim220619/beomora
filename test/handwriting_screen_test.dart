@@ -42,6 +42,7 @@ void main() {
     recognized = const [];
     downloads.clear();
     closed.clear();
+    HandwritingService.instance.resetCache();
   });
 
   void mockChannels(
@@ -126,6 +127,8 @@ void main() {
   /// Tunggu callback kanal + animasi dialog/snackbar selesai.
   Future<void> settle(WidgetTester tester) async {
     await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+    // Dialog aktivasi: cek model selesai → AnimatedSize membesar.
     await tester.pump(const Duration(milliseconds: 400));
   }
 
@@ -323,13 +326,13 @@ void main() {
       expect(find.text('Aktifkan Tulis Huruf?'), findsOneWidget);
       expect(find.textContaining('Bahasa Jepang'), findsOneWidget);
       expect(find.textContaining('sekitar 30 MB'), findsOneWidget);
-      // Kolom "Disarankan": RAM 3,0 GB & ruang 200 MB. RAM 2 GB hanya
+      // Baris "Disarankan": RAM 3,0 GB & ruang 200 MB. RAM 2 GB hanya
       // peringatan (kuning), unduh tetap boleh.
-      expect(find.text('3,0 GB'), findsOneWidget);
-      expect(find.text('200 MB'), findsOneWidget);
-      expect(find.text('2,0 GB !'), findsOneWidget);
+      expect(find.text('Disarankan 3,0 GB'), findsOneWidget);
+      expect(find.text('Disarankan 200 MB'), findsOneWidget);
+      expect(find.text('2,0 GB'), findsOneWidget);
       expect(find.text('mungkin lambat saat memuat'), findsOneWidget);
-      expect(find.text('6,0 GB ✓'), findsOneWidget);
+      expect(find.text('6,0 GB'), findsOneWidget);
       expect(find.text('cukup'), findsOneWidget);
       expect(settings.handwritingOn, isFalse);
 
@@ -374,7 +377,7 @@ void main() {
       await settle(tester);
 
       // Matikan "hanya Wi-Fi" lalu unduh → gagal.
-      await tester.tap(find.byType(Checkbox));
+      await tester.tap(find.byType(Switch));
       await tester.pump();
       expect(settings.handwritingWifiOnly, isFalse);
       await tester.tap(find.text('Unduh & aktifkan'));

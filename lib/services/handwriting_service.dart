@@ -120,12 +120,26 @@ class HandwritingService {
     throw last!;
   }
 
+  /// Model yang sudah terbukti ada di sesi ini — cek berikutnya langsung
+  /// dijawab tanpa memanggil native (cek pertama bisa beberapa detik).
+  final Set<String> _knownDownloaded = {};
+
+  /// `true` kalau model [language] sudah terbukti ada di sesi ini.
+  bool isKnownDownloaded(String language) =>
+      _knownDownloaded.contains(language);
+
+  /// Lupakan cache sesi (dipakai test).
+  @visibleForTesting
+  void resetCache() => _knownDownloaded.clear();
+
   Future<bool> isModelDownloaded(String language) async {
+    if (_knownDownloaded.contains(language)) return true;
     try {
       final r = await _manage<Object?>({
         'task': 'check',
         'model': language,
       }).timeout(checkTimeout);
+      if (r == true) _knownDownloaded.add(language);
       return r == true;
     } catch (e) {
       debugPrint('HandwritingService: cek model $language gagal: $e');
@@ -142,7 +156,9 @@ class HandwritingService {
         'model': language,
         'wifi': wifiOnly,
       });
-      return r.toString() == 'success';
+      final ok = r.toString() == 'success';
+      if (ok) _knownDownloaded.add(language);
+      return ok;
     } catch (e) {
       // Tampil di logcat/console sebagai "flutter : HandwritingService ..."
       // supaya penyebab gagal unduh bisa dilacak dari perangkat.
@@ -152,6 +168,7 @@ class HandwritingService {
   }
 
   Future<bool> deleteModel(String language) async {
+    _knownDownloaded.remove(language);
     final r = await _manage<Object?>({'task': 'delete', 'model': language});
     return r.toString() == 'success';
   }

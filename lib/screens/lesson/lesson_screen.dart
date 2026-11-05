@@ -28,8 +28,15 @@ class LessonScreen extends StatefulWidget {
   final Lesson? lesson; // null saat latihan bebas
   final bool isPractice;
 
-  const LessonScreen({super.key, required this.course, this.lesson})
-    : isPractice = lesson == null;
+  /// Jumlah soal latihan bebas (dipilih sebelum mulai, minimal 10).
+  final int practiceCount;
+
+  const LessonScreen({
+    super.key,
+    required this.course,
+    this.lesson,
+    this.practiceCount = 10,
+  }) : isPractice = lesson == null;
 
   @override
   State<LessonScreen> createState() => _LessonScreenState();
@@ -53,7 +60,12 @@ class _LessonScreenState extends State<LessonScreen> {
     if (widget.isPractice) {
       final progress = context.read<ProgressProvider>();
       final learned = progress.masteredWords[widget.course.id] ?? <String>{};
-      _queue = generator.freePractice(widget.course, learned, uiLang);
+      _queue = generator.freePractice(
+        widget.course,
+        learned,
+        uiLang,
+        count: widget.practiceCount,
+      );
     } else {
       _queue = generator.forLesson(widget.course, widget.lesson!, uiLang);
     }

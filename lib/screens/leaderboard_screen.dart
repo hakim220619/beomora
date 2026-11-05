@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:math' show max;
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -100,6 +103,8 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
               textAlign: TextAlign.center,
               style: TextStyle(color: isDark ? Colors.white70 : DuoColors.eel),
             ),
+            const SizedBox(height: 6),
+            _ResetCountdown(onReset: () => _load(force: true)),
             const SizedBox(height: 16),
             if (loading)
               const Padding(
@@ -348,6 +353,75 @@ class _RowTile extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Hitung mundur ke reset mingguan (Minggu 23:59:59 WIB). Diperbarui
+/// tiap 30 detik; saat minggu berganti, papan dimuat ulang.
+class _ResetCountdown extends StatefulWidget {
+  final VoidCallback onReset;
+  const _ResetCountdown({required this.onReset});
+
+  @override
+  State<_ResetCountdown> createState() => _ResetCountdownState();
+}
+
+class _ResetCountdownState extends State<_ResetCountdown> {
+  late DateTime _resetAt = ProgressProvider.weekResetAt(DateTime.now());
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(seconds: 30), (_) => _tick());
+  }
+
+  void _tick() {
+    final now = DateTime.now();
+    if (!now.toUtc().isBefore(_resetAt)) {
+      _resetAt = ProgressProvider.weekResetAt(now);
+      widget.onReset();
+    }
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  String _format(Duration left, String code) {
+    final id = code == 'id';
+    final d = left.inDays;
+    final h = left.inHours % 24;
+    final m = left.inMinutes % 60;
+    if (d > 0) return id ? '${d}h ${h}j' : '${d}d ${h}h';
+    if (h > 0) return id ? '${h}j ${m}m' : '${h}h ${m}m';
+    return id ? '${max(m, 1)}m' : '${max(m, 1)}m';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = L.of(context);
+    final left = _resetAt.difference(DateTime.now().toUtc());
+    return Center(
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+        decoration: BoxDecoration(
+          color: DuoColors.blue.withValues(alpha: 0.12),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Text(
+          '⏳ ${l.t('leaderboard_reset').replaceFirst('{t}', _format(left, l.code))}',
+          style: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w800,
+            color: DuoColors.blue,
+          ),
+        ),
       ),
     );
   }

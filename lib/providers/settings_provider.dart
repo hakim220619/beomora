@@ -39,10 +39,11 @@ class SettingsProvider extends ChangeNotifier {
       _playSpeed = (_prefs.getDouble(_kPlaySpeed) ?? 1.0).clamp(0.5, 2.0);
 
   /// Tema hanya dua pilihan: terang (siang) atau gelap (malam).
-  /// Nilai lama "system" dipetakan ke terang.
+  /// Bawaan (belum pernah memilih): gelap/papan tulis. Nilai lama
+  /// "system" dipetakan ke terang.
   static ThemeMode _readTheme(SharedPreferences prefs) {
     final index = prefs.getInt(_kTheme);
-    final mode = index == null ? ThemeMode.light : ThemeMode.values[index];
+    final mode = index == null ? ThemeMode.dark : ThemeMode.values[index];
     return mode == ThemeMode.dark ? ThemeMode.dark : ThemeMode.light;
   }
 

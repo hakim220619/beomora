@@ -40,11 +40,28 @@ class ExerciseGenerator {
   /// Soal pilihan ganda acak untuk mode Tantangan Waktu.
   Exercise randomChoice(Course course, String uiLang) {
     final pool = course.allWords;
-    final word = pool[_rng.nextInt(pool.length)];
+    return choiceFor(course, pool[_rng.nextInt(pool.length)], uiLang);
+  }
+
+  /// Soal pilihan ganda (dua arah acak) untuk [word] tertentu.
+  Exercise choiceFor(Course course, WordItem word, String uiLang) {
     final type = _rng.nextBool()
         ? ExerciseType.multipleChoice
         : ExerciseType.reverseChoice;
-    return _forWord(type, word, pool, uiLang);
+    return _forWord(type, word, course.allWords, uiLang);
+  }
+
+  /// Kata unik kursus (kata yang sama di beberapa pelajaran dihitung
+  /// sekali) — batas jumlah soal Tantangan Waktu.
+  static List<WordItem> uniqueWords(Course course) =>
+      {for (final w in course.allWords) w.target: w}.values.toList();
+
+  /// Kata untuk Latihan Bebas: kata yang sudah dikuasai; kalau kurang
+  /// dari 10 (batas minimal soal), semua kata kursus.
+  static List<WordItem> practicePool(Course course, Set<String> learned) {
+    final all = uniqueWords(course);
+    final mastered = all.where((w) => learned.contains(w.target)).toList();
+    return mastered.length < 10 ? all : mastered;
   }
 
   /// Soal campuran dari kata-kata yang sudah dipelajari (latihan bebas).
@@ -52,14 +69,19 @@ class ExerciseGenerator {
     Course course,
     Set<String> learnedTargets,
     String uiLang, {
-    int count = 8,
+    int count = 10,
   }) {
     final pool = course.allWords;
-    var learned = pool.where((w) => learnedTargets.contains(w.target)).toList();
-    if (learned.length < 4) learned = pool;
-    learned.shuffle(_rng);
+    final learned = practicePool(course, learnedTargets);
+    // Jumlah soal dibatasi kata tersedia di layar pilihan, jadi
+    // normalnya tiap kata keluar sekali; pengaman: kalau tetap lebih,
+    // kata diulang per putaran yang diacak ulang.
+    final picks = <WordItem>[];
+    while (picks.length < count && learned.isNotEmpty) {
+      picks.addAll(learned.toList()..shuffle(_rng));
+    }
     final exercises = <Exercise>[];
-    for (final word in learned.take(count)) {
+    for (final word in picks.take(count)) {
       final types = <ExerciseType>[
         ExerciseType.multipleChoice,
         ExerciseType.reverseChoice,

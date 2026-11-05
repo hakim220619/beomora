@@ -49,6 +49,13 @@ class _Word {
   const _Word(this.key, this.example, this.item);
 }
 
+/// Pembatas bagian (mis. "Bagian 1") di daftar kata satu topik.
+class _Section {
+  final String title;
+  final List<_Word> words;
+  const _Section(this.title, this.words);
+}
+
 /// Latihan Kosakata: pilih kata dari topik kosakata Materi, tentukan
 /// jumlah soal, lalu hafalkan lewat kuis pilihan ganda (kata ↔ arti).
 /// Jumlah soal boleh melebihi kata yang dipilih — sisanya diulang acak.
@@ -74,10 +81,6 @@ class _VocabPracticeScreenState extends State<VocabPracticeScreen> {
 
   static String _speedLabel(double x) =>
       '${x.toStringAsFixed(2).replaceFirst(RegExp(r'\.?0+$'), '')}×';
-
-  /// Kecepatan berikutnya setelah [x] (berputar kembali ke yang terkecil).
-  static double _nextSpeed(double x) =>
-      _speeds.firstWhere((s) => s > x + 0.001, orElse: () => _speeds.first);
 
   final _searchCtrl = TextEditingController();
   String _query = '';
@@ -139,7 +142,9 @@ class _VocabPracticeScreenState extends State<VocabPracticeScreen> {
   // Daftar kata disusun sekali per bahasa UI (bukan tiap ketukan), dan
   // hasil cari disimpan per kata kunci — topik JLPT berisi ratusan kata.
   String? _wordsLang;
-  List<({GuideTopic topic, List<_Word> words})> _groups = const [];
+  /// [rows] = isi topik saat dibuka: [_Section] (pembatas) atau [_Word].
+  List<({GuideTopic topic, List<_Word> words, List<Object> rows})> _groups =
+      const [];
   List<_Word> _all = const [];
   String? _hitsQuery;
   List<_Word> _hits = const [];
@@ -148,9 +153,7 @@ class _VocabPracticeScreenState extends State<VocabPracticeScreen> {
   void _ensureWords(String uiLang) {
     if (_wordsLang == uiLang) return;
     _wordsLang = uiLang;
-    _groups = [
-      for (final t in widget.topics) (topic: t, words: _wordsOf(t, uiLang)),
-    ];
+    _groups = [for (final t in widget.topics) _groupOf(t, uiLang)];
     _all = [for (final g in _groups) ...g.words];
     _hitsQuery = null;
     // Kunci memuat arti, jadi berubah saat bahasa UI diganti.
@@ -166,10 +169,25 @@ class _VocabPracticeScreenState extends State<VocabPracticeScreen> {
   }
 
   /// Kata per topik; kata yang sama di dua topik cukup satu kunci.
-  List<_Word> _wordsOf(GuideTopic topic, String uiLang) => [
-    for (final s in topic.sections)
-      for (final e in s.examples) _wordOf(e, uiLang),
-  ];
+  /// Topik berbagian (Bagian 1, 2, …) mendapat pembatas di [rows].
+  ({GuideTopic topic, List<_Word> words, List<Object> rows}) _groupOf(
+    GuideTopic topic,
+    String uiLang,
+  ) {
+    final words = <_Word>[];
+    final rows = <Object>[];
+    final withHeaders =
+        topic.sections.where((s) => s.examples.isNotEmpty).length > 1;
+    for (final s in topic.sections) {
+      if (s.examples.isEmpty) continue;
+      final part = [for (final e in s.examples) _wordOf(e, uiLang)];
+      final title = s.title[uiLang] ?? s.title.values.firstOrNull ?? '';
+      if (withHeaders && title.isNotEmpty) rows.add(_Section(title, part));
+      rows.addAll(part);
+      words.addAll(part);
+    }
+    return (topic: topic, words: words, rows: rows);
+  }
 
   _Word _wordOf(GuideExample e, String uiLang) {
     final meaning = e.meaning[uiLang] ?? e.meaning.values.first;
@@ -374,22 +392,72 @@ class _VocabPracticeScreenState extends State<VocabPracticeScreen> {
                     ),
                   ),
                 ),
-                TextButton(
-                  style: TextButton.styleFrom(
-                    minimumSize: const Size(44, 40),
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                // Ketuk → daftar kecepatan muncul ke atas, pilih langsung.
+                PopupMenuButton<double>(
+                  tooltip: l.t('vocab_practice_speed'),
+                  initialValue: _speeds.firstWhere(
+                    (s) => (s - settings.playSpeed).abs() < 0.001,
+                    orElse: () => 1.0,
                   ),
-                  onPressed: () =>
-                      settings.setPlaySpeed(_nextSpeed(settings.playSpeed)),
-                  child: Tooltip(
-                    message: l.t('vocab_practice_speed'),
-                    child: Text(
-                      _speedLabel(settings.playSpeed),
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w900,
-                        color: DuoColors.blue,
+                  position: PopupMenuPosition.over,
+                  offset: Offset(0, -32.0 * _speeds.length - 20),
+                  constraints: const BoxConstraints(minWidth: 72, maxWidth: 88),
+                  menuPadding: const EdgeInsets.symmetric(vertical: 4),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  onSelected: settings.setPlaySpeed,
+                  itemBuilder: (_) => [
+                    for (final s in _speeds.reversed)
+                      PopupMenuItem(
+                        value: s,
+                        height: 32,
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: 18,
+                              child: (s - settings.playSpeed).abs() < 0.001
+                                  ? const Icon(
+                                      Icons.check_rounded,
+                                      size: 14,
+                                      color: DuoColors.blue,
+                                    )
+                                  : null,
+                            ),
+                            Text(
+                              _speedLabel(s),
+                              style: const TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
+                  ],
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 10,
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          _speedLabel(settings.playSpeed),
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w900,
+                            color: DuoColors.blue,
+                          ),
+                        ),
+                        const Icon(
+                          Icons.arrow_drop_up_rounded,
+                          size: 20,
+                          color: DuoColors.blue,
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -446,7 +514,7 @@ class _VocabPracticeScreenState extends State<VocabPracticeScreen> {
   /// Satu topik sebagai kartu: judul (buka/tutup + centang semua) dan,
   /// bila terbuka, daftar kata yang dibangun malas per baris.
   Widget _topicSliver(int index, L l) {
-    final (:topic, :words) = _groups[index];
+    final (:topic, :words, :rows) = _groups[index];
     final open = _expanded.contains(index);
     final picked = words.where((w) => _selected.contains(w.key)).length;
     final card = Theme.of(context).cardTheme;
@@ -492,12 +560,57 @@ class _VocabPracticeScreenState extends State<VocabPracticeScreen> {
               SliverPadding(
                 padding: const EdgeInsets.only(bottom: 8),
                 sliver: SliverList.builder(
-                  itemCount: words.length,
-                  itemBuilder: (_, i) => _wordTile(words[i]),
+                  itemCount: rows.length,
+                  itemBuilder: (_, i) => switch (rows[i]) {
+                    final _Section s => _sectionHeader(s),
+                    final r => _wordTile(r as _Word),
+                  },
                 ),
               ),
           ],
         ),
+      ),
+    );
+  }
+
+  /// Pembatas bagian: judul + centang semua kata di bagian itu. Tetap
+  /// tampil apa pun kata yang sedang dipilih.
+  Widget _sectionHeader(_Section s) {
+    final picked = s.words.where((w) => _selected.contains(w.key)).length;
+    final hint = Theme.of(context).hintColor;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(4, 8, 12, 0),
+      child: Row(
+        children: [
+          Checkbox(
+            tristate: true,
+            value: picked == 0
+                ? false
+                : (picked == s.words.length ? true : null),
+            activeColor: DuoColors.blue,
+            visualDensity: VisualDensity.compact,
+            onChanged: (_) => _toggleAll(s.words, picked < s.words.length),
+          ),
+          Text(
+            s.title,
+            style: const TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w900,
+              color: DuoColors.blue,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(child: Divider(color: hint.withValues(alpha: 0.3))),
+          const SizedBox(width: 8),
+          Text(
+            '$picked/${s.words.length}',
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+              color: hint,
+            ),
+          ),
+        ],
       ),
     );
   }

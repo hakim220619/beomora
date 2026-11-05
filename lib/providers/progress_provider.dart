@@ -501,13 +501,31 @@ class ProgressProvider extends ChangeNotifier {
   static String _dayKey(DateTime d) =>
       '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
 
-  /// Kunci minggu (mis. `2026-w35`) — juga dipakai LeaderboardService
-  /// untuk menyaring papan juara ke minggu berjalan.
-  static String weekOf(DateTime d) {
-    final firstDay = DateTime(d.year, 1, 1);
-    final week = ((d.difference(firstDay).inDays) / 7).floor();
-    return '${d.year}-w$week';
+  /// Papan juara memakai zona tetap WIB (UTC+7), bukan jam lokal HP,
+  /// agar semua pengguna berganti minggu di detik yang sama.
+  static const _wibOffset = Duration(hours: 7);
+
+  /// Senin 00:00 WIB minggu berjalan, sebagai tanggal UTC yang
+  /// kolomnya = jam dinding WIB.
+  static DateTime _wibMonday(DateTime d) {
+    final w = d.toUtc().add(_wibOffset);
+    return DateTime.utc(w.year, w.month, w.day - (w.weekday - 1));
   }
+
+  /// Kunci minggu = tanggal Senin-nya, mis. `w20261102` (Senin 00:00:00
+  /// s.d. Minggu 23:59:59 WIB). Juga dipakai LeaderboardService untuk
+  /// menyaring papan juara ke minggu berjalan. Format beda dari kunci
+  /// lama (`2026-w44`) supaya data lama tidak tercampur.
+  static String weekOf(DateTime d) {
+    final m = _wibMonday(d);
+    String two(int n) => n.toString().padLeft(2, '0');
+    return 'w${m.year}${two(m.month)}${two(m.day)}';
+  }
+
+  /// Saat papan juara direset: Senin 00:00:00 WIB berikutnya
+  /// (tepat setelah Minggu 23:59:59), dalam UTC.
+  static DateTime weekResetAt(DateTime d) =>
+      _wibMonday(d).add(const Duration(days: 7)).subtract(_wibOffset);
 
   void _touchDaily(int earnedXp) {
     final today = _dayKey(DateTime.now());
