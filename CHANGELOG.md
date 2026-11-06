@@ -3,6 +3,46 @@
 Semua perubahan penting dicatat di sini. Versi mengikuti `pubspec.yaml`
 (`versi+kode build`).
 
+## 1.14.0 (build 29) — 5 November 2026
+
+### Baru
+- **Tantangan Waktu bisa diatur sendiri**: isi jumlah soal (atau ∞ tanpa
+  batas) dan waktu dalam menit (1–600 menit / 10 jam) dengan kolom
+  angka + tombol −/+. Jumlah soal maksimal = kata unik kursus (Jepang
+  576, kursus lain 288) dan soal tidak berulang sampai semua kata
+  keluar. Selesai saat waktu habis atau semua soal terjawab; timer
+  tampil m:ss / j:mm:ss dan "Soal 3/20".
+- **Latihan Bebas: pilih jumlah soal** sebelum mulai (minimal 10,
+  maksimal 100 atau sebanyak kata yang dikuasai), tanpa soal ulang.
+  Kalau kata dikuasai kurang dari 10, dipakai semua kata kursus.
+- **Papan Juara reset tiap Minggu 23:59:59 WIB** untuk semua pengguna
+  (zona tetap WIB, bukan jam HP), dengan hitung mundur "Reset dalam …".
+- **Latihan Kosakata**: pembatas Bagian 1, 2, … per topik dengan
+  centang per bagian dan hitungan terpilih.
+
+### Perubahan
+- **Tampilan bawaan Papan Tulis (gelap)** untuk pengguna yang belum
+  pernah memilih tema.
+- **Kecepatan suara** di Latihan Kosakata: ketuk → daftar kecepatan
+  muncul ke atas, pilih langsung. Bar bawah kini "3 kata".
+- **Tulis Huruf**: popup langsung tampil dengan loading selagi model
+  dicek (sebelumnya layar diam beberapa detik); hasil cek diingat
+  selama sesi sehingga ketukan berikutnya langsung masuk. Dialog
+  aktivasi didesain ulang (kartu RAM & ruang dengan status berwarna,
+  sakelar Wi-Fi, progress unduh).
+- **Kartu Kilat & Memory Match dikeluarkan** dari Ruang Latihan (kode
+  layar tetap ada).
+
+### Perbaikan
+- Catatan panjang "kosongkan sekitar … MB lagi" di dialog Tulis Huruf
+  tidak lagi meluap di layar sempit.
+
+### Teknis
+- Kunci minggu papan juara berganti format (`2026-w44` →
+  `w20261102`, tanggal Senin WIB). Saat rilis, XP mingguan semua orang
+  mulai dari 0; pengguna versi lama tidak tampil di papan versi baru
+  (dan sebaliknya) sampai update.
+
 ## 1.13.0 (build 28) — 3 November 2026
 
 ### Baru

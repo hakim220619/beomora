@@ -1,0 +1,9 @@
+<id>
+✨ Beomora 1.14.0
+⏱️ Tantangan Waktu: atur sendiri jumlah soal & berapa menit
+💪 Latihan Bebas: pilih jumlah soal (min. 10), tanpa soal ulang
+🏆 Papan Juara reset tiap Minggu 23:59 WIB + hitung mundur
+🗂️ Latihan Kosakata: pembatas per bagian & pilih kecepatan suara langsung
+✍️ Tulis Huruf lebih cepat dibuka, tampilan aktivasi baru
+🌙 Tampilan bawaan kini Papan Tulis (gelap)
+</id>
