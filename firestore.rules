@@ -30,11 +30,12 @@ service cloud.firestore {
     match /users/{uid} {
       // Baca boleh oleh pengguna login mana pun (untuk leaderboard dsb.)
       allow read: if request.auth != null;
-      // Admin: boleh mengubah HANYA field hadiah premium di dokumen
-      // pengguna mana pun (fitur "Hadiahkan premium" di Pengaturan).
+      // Admin: boleh mengubah HANYA field hadiah premium & nomor kuota
+      // premium di dokumen pengguna mana pun (fitur "Hadiahkan premium"
+      // dan "Bagikan kuota ke pengguna lama" di Pengaturan).
       allow update: if isAdmin()
         && request.resource.data.diff(resource.data).affectedKeys()
-            .hasOnly(['premiumGrantUntil']);
+            .hasOnly(['premiumGrantUntil', 'earlyBirdNo']);
       // Tulis hanya oleh pemiliknya, dan data wajib berbentuk benar:
       // nama string 1-40 karakter, email sesuai akun login, dan
       // progres (kalau ada) berupa string JSON < 100rb karakter.
@@ -74,7 +75,26 @@ service cloud.firestore {
         && (!('premiumGrantUntil' in request.resource.data)
             || ('premiumGrantUntil' in resource.data
                 && request.resource.data.premiumGrantUntil
-                    == resource.data.premiumGrantUntil));
+                    == resource.data.premiumGrantUntil))
+        // Kuota premium pendaftar awal: saat MEMBUAT profil, nomor
+        // wajib sama dengan penghitung content/earlyBird yang naik
+        // tepat +1 dalam tulisan yang sama (aturan penghitung di bawah
+        // memastikan kuota masih dibuka & belum habis). Setelahnya
+        // pemilik tidak boleh menambah/mengubah nomornya.
+        && (!('earlyBirdNo' in request.resource.data)
+            || (request.method == 'create'
+                && request.resource.data.earlyBirdNo is int
+                && getAfter(/databases/$(database)/documents/content/earlyBird)
+                    .data.count == request.resource.data.earlyBirdNo
+                && ((!exists(/databases/$(database)/documents/content/earlyBird)
+                      && request.resource.data.earlyBirdNo == 1)
+                    || (exists(/databases/$(database)/documents/content/earlyBird)
+                      && get(/databases/$(database)/documents/content/earlyBird)
+                          .data.count == request.resource.data.earlyBirdNo - 1)))
+            || (request.method == 'update'
+                && 'earlyBirdNo' in resource.data
+                && request.resource.data.earlyBirdNo
+                    == resource.data.earlyBirdNo));
       // Hapus hanya oleh pemiliknya (fitur "Hapus Akun").
       allow delete: if request.auth != null
         && request.auth.uid == uid;
@@ -98,6 +118,28 @@ service cloud.firestore {
     match /content/{doc} {
       allow read: if true;
       allow write: if isAdmin();
+    }
+
+    // Penghitung kuota premium pendaftar awal `{count: N}`. Selain
+    // admin (aturan di atas), pengguna yang SEDANG mendaftar boleh
+    // menaikkannya tepat +1 — hanya kalau kuota dibuka
+    // (config.premiumForAll), belum melewati config.premiumForAllLimit,
+    // profilnya belum ada sebelumnya, dan profil yang dibuat dalam
+    // transaksi yang sama memuat nomor yang sama.
+    match /content/earlyBird {
+      allow create, update: if request.auth != null
+        && request.resource.data.keys().hasOnly(['count'])
+        && request.resource.data.count is int
+        && request.resource.data.count
+            == (resource == null ? 0 : resource.data.count) + 1
+        && get(/databases/$(database)/documents/content/config)
+            .data.get('premiumForAll', false) == true
+        && request.resource.data.count
+            <= get(/databases/$(database)/documents/content/config)
+                .data.get('premiumForAllLimit', 500)
+        && !exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && getAfter(/databases/$(database)/documents/users/$(request.auth.uid))
+            .data.get('earlyBirdNo', 0) == request.resource.data.count;
     }
 
     // Selain itu: tolak semua.

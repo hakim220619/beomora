@@ -8,11 +8,13 @@ import '../../l10n/app_strings.dart';
 import '../../models/course.dart';
 import '../../models/guide.dart';
 import '../../providers/auth_provider.dart';
+import '../../providers/settings_provider.dart';
 import '../../services/kana_speech.dart';
 import '../../services/tts_service.dart';
 import '../../theme.dart';
 import '../../widgets/study/study_background.dart';
-import '../practice/letter_quiz_screen.dart';
+import '../../widgets/vocab_star_button.dart';
+import '../practice/letter_pick_screen.dart';
 import '../practice/vocab_practice_screen.dart';
 import '../premium_screen.dart';
 import 'vocab_detail_sheet.dart';
@@ -128,6 +130,11 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
         widget.topic.id.contains('vocab') &&
         widget.topic.sections.any((s) => s.examples.isNotEmpty);
     final hasFab = quizCat != null || vocabFab;
+    // Kata berbintang di topik ini → bagian "⭐ Favorit" paling atas.
+    final isVocab = widget.topic.id.contains('vocab');
+    final starred = isVocab && !_searching
+        ? _starredIn(context.watch<SettingsProvider>())
+        : const <GuideExample>[];
 
     return StudyScaffold(
       appBar: AppBar(title: Text(widget.topic.title[l.code] ?? '')),
@@ -154,9 +161,11 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
                 MaterialPageRoute(
                   builder: (_) => locked
                       ? const PremiumScreen()
-                      : LetterQuizScreen(
+                      // Pilih huruf dulu (per bagian), lalu jumlah soal.
+                      : LetterPickScreen(
                           course: widget.course,
-                          initialCategoryId: quizCat.id,
+                          category: quizCat,
+                          topic: widget.topic,
                         ),
                 ),
               ),
@@ -237,13 +246,44 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
                 ],
               ),
             ),
+          if (starred.isNotEmpty)
+            _buildSection(
+              context,
+              l,
+              GuideSection(
+                title: {l.code: '⭐ ${l.t('vocab_starred')}'},
+                examples: starred,
+              ),
+              action: VocabStarClearButton(
+                courseId: widget.course.id,
+                words: [for (final e in starred) e.target],
+              ),
+            ),
           for (final section in visible) _buildSection(context, l, section),
         ],
       ),
     );
   }
 
-  Widget _buildSection(BuildContext context, L l, GuideSection section) {
+  /// Kata berbintang yang ada di topik ini, urut saat ditandai.
+  List<GuideExample> _starredIn(SettingsProvider settings) {
+    final byTarget = <String, GuideExample>{};
+    for (final s in widget.topic.sections) {
+      for (final e in s.examples) {
+        byTarget.putIfAbsent(e.target, () => e);
+      }
+    }
+    return [
+      for (final t in settings.starredWords(widget.course.id)) ?byTarget[t],
+    ];
+  }
+
+  Widget _buildSection(
+    BuildContext context,
+    L l,
+    GuideSection section, {
+    Widget? action, // mis. tombol reset di judul Favorit
+  }) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Card(
       margin: const EdgeInsets.only(bottom: 14),
@@ -252,9 +292,19 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              section.title[l.code] ?? '',
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w900),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    section.title[l.code] ?? '',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                ),
+                ?action,
+              ],
             ),
             if (section.body != null) ...[
               const SizedBox(height: 6),
@@ -300,6 +350,13 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
                   example: ex,
                   uiLang: l.code,
                   onSpeak: () => _speak(ex.target),
+                  trailing:
+                      widget.topic.id.contains('vocab') && !isVocabSentence(ex)
+                      ? VocabStarButton(
+                          courseId: widget.course.id,
+                          word: ex.target,
+                        )
+                      : null,
                   // Kata di topik kosakata: ketuk → contoh kalimat &
                   // penggunaan. Baris kalimat cukup didengar.
                   onTap:
@@ -498,12 +555,14 @@ class _ExampleRow extends StatelessWidget {
   final String uiLang;
   final VoidCallback onSpeak;
   final VoidCallback? onTap;
+  final Widget? trailing; // mis. bintang favorit
 
   const _ExampleRow({
     required this.example,
     required this.uiLang,
     required this.onSpeak,
     this.onTap,
+    this.trailing,
   });
 
   @override
@@ -552,6 +611,7 @@ class _ExampleRow extends StatelessWidget {
               ],
             ),
           ),
+          ?trailing,
           IconButton(
             onPressed: onSpeak,
             icon: const Icon(

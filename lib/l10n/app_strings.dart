@@ -179,6 +179,15 @@ class L {
       'vocab_practice_loop': 'Ulangi terus-menerus',
       'vocab_practice_loop_off': 'Matikan pengulangan',
       'vocab_practice_speed': 'Kecepatan suara',
+      'vocab_starred': 'Favorit',
+      'letter_pick_hint': 'Pilih huruf yang mau dilatih',
+      'letter_pick_count': 'huruf',
+      'letter_pick_other': 'Lainnya',
+      'vocab_star': 'Tandai favorit',
+      'vocab_unstar': 'Hapus dari favorit',
+      'vocab_starred_clear': 'Kosongkan favorit',
+      'vocab_starred_clear_msg': '{n} kata akan dilepas dari Favorit.',
+      'vocab_starred_clear_ok': 'Kosongkan',
       'vocab_practice_repeat':
           'Soal lebih banyak dari kata yang dipilih — sisanya diulang acak',
       // Tulis Huruf (tulisan tangan)
@@ -235,7 +244,7 @@ class L {
       'handwriting_letters': 'huruf',
       'handwriting_start': 'Mulai menulis',
       'handwriting_free_note': 'Versi gratis: {n} huruf per sesi',
-      'handwriting_unlock': 'Buka {n} huruf per sesi dengan Premium',
+      'handwriting_unlock': 'Premium bebas pilih jumlah huruf',
       'practice_free_handwriting': 'Gratis: {n} huruf per sesi',
       'practice_free_listening': 'Gratis: {n} bacaan pertama tiap paket',
       'quiz_prompt_reading': 'Bagaimana bunyinya?',
@@ -576,7 +585,7 @@ class L {
       'content_upload_success':
           'Materi terunggah & terverifikasi di server! 🎉',
       'content_upload_failed': 'Gagal mengunggah materi.',
-      'admin_premium_all': 'Premium untuk semua pengguna',
+      'admin_premium_all': 'Kuota premium pendaftar awal',
       'save': 'SIMPAN',
       'update_ready':
           'Versi baru sudah terunduh. Mulai ulang untuk menerapkan?',
@@ -590,11 +599,35 @@ class L {
       'admin_heart_regen_failed': 'Gagal menyimpan regenerasi nyawa.',
       'admin_heart_regen_invalid': 'Isi angka antara 1 sampai 1440.',
       'admin_premium_all_sub':
-          'Selama menyala, semua akun diperlakukan premium — berlaku '
-          'saat aplikasi pengguna dibuka ulang',
-      'admin_premium_all_on': 'Premium untuk semua: AKTIF 👑',
-      'admin_premium_all_off': 'Premium untuk semua: nonaktif',
+          'Selama menyala, pendaftar baru otomatis dapat premium permanen '
+          'sampai kuota habis. Terpakai: {used}/{limit}',
+      'admin_premium_all_on': 'Kuota premium: DIBUKA 👑',
+      'admin_premium_all_off':
+          'Kuota premium: ditutup (yang sudah dapat tetap premium)',
       'admin_premium_all_failed': 'Gagal menyimpan pengaturan.',
+      'admin_early_limit': 'Batas kuota premium',
+      'admin_early_limit_sub':
+          'Saat ini: {n} pengguna. Menurunkan batas tidak mencabut premium '
+          'yang sudah dibagikan',
+      'admin_early_limit_label': 'Jumlah pengguna',
+      'admin_early_limit_saved': 'Batas kuota premium diubah jadi {n}.',
+      'admin_early_limit_invalid': 'Isi angka antara 0 sampai 1000000.',
+      'admin_early_backfill': 'Bagikan kuota ke pengguna lama',
+      'admin_early_backfill_sub':
+          'Urut dari yang paling awal daftar sampai kuota habis. Aman '
+          'dijalankan ulang',
+      'admin_early_backfill_confirm':
+          'Sisa kuota akan dibagikan ke pengguna yang sudah terdaftar, '
+          'mulai dari yang paling awal daftar. Premium ini permanen. '
+          'Lanjutkan?',
+      'admin_early_backfill_run': 'BAGIKAN',
+      'admin_early_backfill_done': '{n} pengguna lama mendapat premium. 🎉',
+      'early_bird_title': 'Selamat, kamu dapat Premium! 🎉',
+      'early_bird_msg':
+          'Kamu mendapat akun Premium! Sebagai pengguna awal Beomora, semua '
+          'fitur Premium kini terbuka untukmu — gratis dan berlaku '
+          'selamanya. Selamat belajar, dan tetap semangat ya!',
+      'early_bird_ok': 'MULAI BELAJAR',
       'admin_grant': 'Hadiahkan premium',
       'admin_grant_sub':
           'Beri/cabut premium untuk pengguna tertentu lewat email',
@@ -829,6 +862,15 @@ class L {
       'vocab_practice_loop': 'Repeat continuously',
       'vocab_practice_loop_off': 'Turn off repeat',
       'vocab_practice_speed': 'Voice speed',
+      'vocab_starred': 'Starred',
+      'letter_pick_hint': 'Pick the characters to practice',
+      'letter_pick_count': 'characters',
+      'letter_pick_other': 'Others',
+      'vocab_star': 'Star this word',
+      'vocab_unstar': 'Remove star',
+      'vocab_starred_clear': 'Clear starred',
+      'vocab_starred_clear_msg': '{n} words will be unstarred.',
+      'vocab_starred_clear_ok': 'Clear',
       'vocab_practice_repeat':
           'More questions than chosen words — the rest repeat at random',
       // Write Letters (handwriting)
@@ -849,7 +891,8 @@ class L {
       'handwriting_deleted': 'Model deleted',
       'handwriting_activate_title': 'Enable Write Letters?',
       'handwriting_checking': 'Getting Write Letters ready…',
-      'handwriting_checking_sub': 'Checking the handwriting model on this device',
+      'handwriting_checking_sub':
+          'Checking the handwriting model on this device',
       'handwriting_activate_body':
           'The handwriting model for {lang} needs to be downloaded (about '
           '{n} MB). Recognition runs offline on your device; your writing is '
@@ -885,7 +928,7 @@ class L {
       'handwriting_letters': 'letters',
       'handwriting_start': 'Start writing',
       'handwriting_free_note': 'Free version: {n} letters per session',
-      'handwriting_unlock': 'Unlock {n} letters per session with Premium',
+      'handwriting_unlock': 'Premium lets you pick any number',
       'practice_free_handwriting': 'Free: {n} letters per session',
       'practice_free_listening': 'Free: first {n} passages per pack',
       'quiz_prompt_reading': 'How does it sound?',
@@ -1220,7 +1263,7 @@ class L {
           "Upload this app's bundled content to Firestore — every device syncs automatically",
       'content_upload_success': 'Content uploaded & verified on the server! 🎉',
       'content_upload_failed': 'Failed to upload content.',
-      'admin_premium_all': 'Premium for all users',
+      'admin_premium_all': 'Early sign-up premium quota',
       'save': 'SAVE',
       'update_ready': 'A new version has been downloaded. Restart to apply?',
       'update_restart': 'RESTART',
@@ -1232,11 +1275,33 @@ class L {
       'admin_heart_regen_failed': 'Failed to save heart regen.',
       'admin_heart_regen_invalid': 'Enter a number between 1 and 1440.',
       'admin_premium_all_sub':
-          'While on, every account is treated as premium — applies '
-          'when users reopen the app',
-      'admin_premium_all_on': 'Premium for all: ON 👑',
-      'admin_premium_all_off': 'Premium for all: off',
+          'While on, new sign-ups get permanent premium until the quota '
+          'runs out. Used: {used}/{limit}',
+      'admin_premium_all_on': 'Premium quota: OPEN 👑',
+      'admin_premium_all_off':
+          'Premium quota: closed (existing recipients keep premium)',
       'admin_premium_all_failed': 'Failed to save the setting.',
+      'admin_early_limit': 'Premium quota limit',
+      'admin_early_limit_sub':
+          'Currently: {n} users. Lowering it never revokes premium already '
+          'given',
+      'admin_early_limit_label': 'Number of users',
+      'admin_early_limit_saved': 'Premium quota limit set to {n}.',
+      'admin_early_limit_invalid': 'Enter a number between 0 and 1000000.',
+      'admin_early_backfill': 'Give quota to existing users',
+      'admin_early_backfill_sub':
+          'Earliest sign-ups first until the quota runs out. Safe to rerun',
+      'admin_early_backfill_confirm':
+          'The remaining quota will go to already-registered users, '
+          'earliest sign-ups first. This premium is permanent. Continue?',
+      'admin_early_backfill_run': 'GIVE',
+      'admin_early_backfill_done': '{n} existing users got premium. 🎉',
+      'early_bird_title': "Congrats, you've got Premium! 🎉",
+      'early_bird_msg':
+          'You now have a Premium account! As an early Beomora user, every '
+          'Premium feature is unlocked for you — free, forever. Happy '
+          'learning, and keep it up!',
+      'early_bird_ok': 'START LEARNING',
       'admin_grant': 'Gift premium',
       'admin_grant_sub': 'Grant/revoke premium for a specific user by email',
       'admin_grant_email': 'User email',

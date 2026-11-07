@@ -1,0 +1,8 @@
+<id>
+✨ Beomora 1.16.0
+🔤 Latihan Hiragana, Katakana & Kanji: pilih sendiri huruf mana yang mau dilatih + jumlah soalnya
+✍️ Tulis Huruf: pilih huruf/kanji per bagian dan atur jumlah soal
+👑 Premium bebas pilih hingga 100 soal per sesi
+⭐ Favorit kosakata: tandai dengan bintang, terkumpul di bagian paling atas
+✅ Tombol pilih semua / kosongkan kini berupa ikon
+</id>

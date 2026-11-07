@@ -132,6 +132,29 @@ void main() {
     await tester.pump(const Duration(milliseconds: 400));
   }
 
+  /// Pemilih huruf: centang bagian pertama (atau semua), Lanjut, pilih
+  /// jumlah soal [count] (null = bawaan), lalu Mulai.
+  Future<void> pickAndStart(
+    WidgetTester tester, {
+    bool all = false,
+    int? count,
+  }) async {
+    if (all) {
+      await tester.tap(find.byTooltip('Pilih semua'));
+    } else {
+      await tester.tap(find.byType(Checkbox).first);
+    }
+    await tester.pump();
+    await tester.tap(find.text('Lanjut'));
+    await settle(tester);
+    if (count != null) {
+      await tester.tap(find.widgetWithText(ChoiceChip, '$count'));
+      await tester.pump();
+    }
+    await tester.tap(find.text('Mulai'));
+    await settle(tester);
+  }
+
   /// Huruf yang sedang ditanyakan: bacaan (romaji) tampil besar di kartu.
   List<KanaItem> currentItems(List<KanaItem> all) =>
       all.where((i) => find.text(i.romaji).evaluate().isNotEmpty).toList();
@@ -156,25 +179,27 @@ void main() {
 
     await tester.tap(find.text('Hiragana'));
     await settle(tester);
-    // Langkah cakupan: bawaan Gojūon saja; pilih Semua → 104 huruf.
-    expect(find.text('Pilih cakupan huruf'), findsOneWidget);
+    // Pemilih huruf: kelompok per bagian Materi, kotak per huruf.
     expect(find.textContaining('Gojūon'), findsOneWidget);
     expect(find.textContaining('Dakuten'), findsOneWidget);
-    expect(find.textContaining('Yōon'), findsOneWidget);
-    expect(find.textContaining('· 46 huruf'), findsOneWidget);
-    // Satu tombol kembali saja (AppBar); menekannya mundur ke daftar paket.
-    expect(find.byType(BackButton), findsOneWidget);
-    expect(find.byIcon(Icons.arrow_back_rounded), findsNothing);
+    expect(find.text('0 huruf'), findsOneWidget);
+    await tester.tap(find.text('あ'));
+    await tester.pump();
+    expect(find.text('1 huruf'), findsOneWidget);
+    // Kembali → daftar paket.
     await tester.tap(find.byType(BackButton));
     await settle(tester);
     expect(find.text('Pilih paket soal'), findsOneWidget);
     await tester.tap(find.text('Hiragana'));
     await settle(tester);
-    expect(find.text('Pilih cakupan huruf'), findsOneWidget);
-    await tester.tap(find.text('Semua'));
+    await tester.tap(find.byTooltip('Pilih semua'));
     await tester.pump();
-    expect(find.textContaining('· 104 huruf'), findsOneWidget);
-    await tester.tap(find.textContaining('Mulai menulis'));
+    expect(find.text('104 huruf'), findsOneWidget);
+    await tester.tap(find.text('Lanjut'));
+    await settle(tester);
+    await tester.tap(find.widgetWithText(ChoiceChip, '10'));
+    await tester.pump();
+    await tester.tap(find.text('Mulai'));
     await settle(tester);
     expect(find.text('1/10'), findsOneWidget);
     expect(find.text('Tulis lambang untuk bunyi ini'), findsOneWidget);
@@ -233,8 +258,8 @@ void main() {
     expect(find.byIcon(Icons.lock_rounded), findsNWidgets(2));
     await tester.tap(find.text('Katakana'));
     await settle(tester);
-    await tester.tap(find.textContaining('Mulai menulis'));
-    await settle(tester);
+    // Gratis: jumlah soal maksimal 3.
+    await pickAndStart(tester);
     expect(find.text('1/3'), findsOneWidget);
     expect(
       find.textContaining('Versi gratis: 3 huruf per sesi'),
@@ -255,7 +280,7 @@ void main() {
     // Hasil: semua benar tapi tetap ada ajakan Premium.
     expect(find.text('Lanjut'), findsNothing);
     expect(
-      find.textContaining('Buka 10 huruf per sesi dengan Premium'),
+      find.textContaining('Premium bebas pilih jumlah huruf'),
       findsOneWidget,
     );
   });
@@ -265,8 +290,7 @@ void main() {
     await pump(tester, const HandwritingScreen(course: course));
     await tester.tap(find.text('Katakana'));
     await settle(tester);
-    await tester.tap(find.textContaining('Mulai menulis'));
-    await settle(tester);
+    await pickAndStart(tester);
 
     final canvas = tester.widget<InkCanvas>(find.byType(InkCanvas));
     await tester.drag(find.byType(InkCanvas), const Offset(40, 0));

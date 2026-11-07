@@ -115,7 +115,10 @@ class ProgressProvider extends ChangeNotifier {
   bool premiumActive = false;
 
   ProgressProvider(this._prefs) {
-    premiumActive = _prefs.getBool('auth_premium') ?? false;
+    // 'auth_early_bird' = premium kuota pendaftar awal (permanen).
+    premiumActive =
+        (_prefs.getBool('auth_premium') ?? false) ||
+        (_prefs.getBool('auth_early_bird') ?? false);
     heartRegenMinutes =
         _prefs.getInt(kHeartRegenPref) ?? defaultHeartRegenMinutes;
     _load();

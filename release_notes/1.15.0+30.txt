@@ -1,0 +1,8 @@
+<id>
+✨ Beomora 1.15.0
+⭐ Favorit: tandai kosakata dengan bintang, langsung terkumpul di bagian paling atas
+🧹 Kosongkan semua favorit sekali ketuk
+🗒️ Latihan Kosakata: kartu Favorit untuk pilih kata favorit dengan cepat
+✅ Tombol pilih semua / kosongkan kini berupa ikon, lebih ringkas
+🔊 Saat kosakata diputar, cukup tampil ikon suara
+</id>

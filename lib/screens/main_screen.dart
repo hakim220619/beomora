@@ -5,11 +5,13 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../l10n/app_strings.dart';
+import '../providers/auth_provider.dart';
 import '../providers/progress_provider.dart';
 import '../providers/settings_provider.dart';
 import '../services/notification_service.dart';
 import '../services/update_service.dart';
 import '../theme.dart';
+import '../widgets/duo_dialog.dart';
 import '../widgets/study/study_background.dart';
 import 'cabin/cabin_screen.dart';
 import 'learn/skill_tree_screen.dart';
@@ -42,10 +44,42 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _showStreakNotices();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       _checkAppUpdate();
+      // Dialog selamat premium tampil PALING AWAL saat app dibuka,
+      // sebelum pemberitahuan streak.
+      await _celebrateEarlyBird();
+      _showStreakNotices();
     });
+  }
+
+  /// Dialog sekali per akun saat mendapat premium dari kuota pendaftar
+  /// awal. Hanya dicek saat app dibuka: tunggu profil server termuat
+  /// (maks. beberapa detik); kalau kuota baru tiba belakangan, dialog
+  /// muncul di pembukaan app berikutnya — tidak menyela di tengah sesi.
+  Future<void> _celebrateEarlyBird() async {
+    final auth = context.read<AuthProvider>();
+    try {
+      await auth.profileReady.timeout(const Duration(seconds: 6));
+    } catch (_) {}
+    if (!mounted || !auth.pendingEarlyBirdCelebration) return;
+    auth.markEarlyBirdCelebrated();
+    final l = L.read(context);
+    await showDuoDialog<void>(
+      context,
+      emoji: '👑',
+      title: l.t('early_bird_title'),
+      message: l.t('early_bird_msg'),
+      // Lingkaran mahkota emas; tombol hijau = aksi utama khas app.
+      color: DuoColors.yellow,
+      actions: [
+        DuoDialogAction(
+          label: l.t('early_bird_ok'),
+          primary: true,
+          color: DuoColors.green,
+        ),
+      ],
+    );
   }
 
   /// Play In-App Update (flexible): unduh versi baru di latar

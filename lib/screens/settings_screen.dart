@@ -250,10 +250,10 @@ class _AdminUploadTileState extends State<_AdminUploadTile> {
   }
 }
 
-/// Kartu admin: saklar "premium untuk semua pengguna" — menulis field
-/// `premiumForAll` di dokumen `content/config` (hanya admin yang boleh,
-/// ditegakkan firestore.rules). Perangkat pengguna membacanya saat
-/// aplikasi dibuka.
+/// Kartu admin: kuota premium pendaftar awal — saklar buka/tutup
+/// (`premiumForAll`), batas kuota (`premiumForAllLimit`) di dokumen
+/// `content/config`, dan tombol bagikan sisa kuota ke pengguna lama.
+/// Hanya admin yang boleh menulis, ditegakkan firestore.rules.
 class _AdminPremiumAllTile extends StatefulWidget {
   const _AdminPremiumAllTile();
 
@@ -263,6 +263,99 @@ class _AdminPremiumAllTile extends StatefulWidget {
 
 class _AdminPremiumAllTileState extends State<_AdminPremiumAllTile> {
   bool _busy = false;
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<AuthProvider>().refreshEarlyBirdUsed();
+  }
+
+  void _snack(String text) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(duration: const Duration(seconds: 6), content: Text(text)),
+      );
+  }
+
+  Future<void> _editLimit() async {
+    final l = L.read(context);
+    final auth = context.read<AuthProvider>();
+    final controller = TextEditingController(text: '${auth.earlyBirdLimit}');
+    final limit = await showDialog<int>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l.t('admin_early_limit')),
+        content: TextField(
+          controller: controller,
+          keyboardType: TextInputType.number,
+          autofocus: true,
+          decoration: InputDecoration(
+            labelText: l.t('admin_early_limit_label'),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: Text(l.t('cancel')),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(
+              dialogContext,
+            ).pop(int.tryParse(controller.text.trim())),
+            child: Text(l.t('save')),
+          ),
+        ],
+      ),
+    );
+    if (limit == null || !mounted) return;
+    if (limit < 0 || limit > 1000000) {
+      _snack(l.t('admin_early_limit_invalid'));
+      return;
+    }
+    setState(() => _busy = true);
+    final error = await auth.setEarlyBirdLimit(limit);
+    if (!mounted) return;
+    setState(() => _busy = false);
+    _snack(
+      error == null
+          ? l.t('admin_early_limit_saved').replaceFirst('{n}', '$limit')
+          : '${l.t('admin_premium_all_failed')}\n($error)',
+    );
+  }
+
+  Future<void> _backfill() async {
+    final l = L.read(context);
+    final auth = context.read<AuthProvider>();
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l.t('admin_early_backfill')),
+        content: Text(l.t('admin_early_backfill_confirm')),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text(l.t('cancel')),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: Text(l.t('admin_early_backfill_run')),
+          ),
+        ],
+      ),
+    );
+    if (ok != true || !mounted) return;
+    setState(() => _busy = true);
+    final (count, error) = await auth.backfillEarlyBird();
+    if (!mounted) return;
+    setState(() => _busy = false);
+    _snack(
+      error == null
+          ? l.t('admin_early_backfill_done').replaceFirst('{n}', '$count')
+          : '${l.t('admin_premium_all_failed')}\n($error)',
+    );
+  }
 
   Future<void> _toggle(bool on) async {
     final l = L.read(context);
@@ -289,31 +382,73 @@ class _AdminPremiumAllTileState extends State<_AdminPremiumAllTile> {
   @override
   Widget build(BuildContext context) {
     final l = L.of(context);
-    final on = context.watch<AuthProvider>().globalPremium;
+    final auth = context.watch<AuthProvider>();
+    final on = auth.globalPremium;
+    final used = auth.earlyBirdUsed;
+    const pad = EdgeInsets.symmetric(horizontal: 16, vertical: 4);
     return Card(
-      child: SwitchListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-        secondary: _busy
-            ? const SizedBox(
-                width: 24,
-                height: 24,
-                child: CircularProgressIndicator(strokeWidth: 2.5),
-              )
-            : const Icon(
-                Icons.workspace_premium_rounded,
-                color: DuoColors.purple,
-              ),
-        title: Text(
-          l.t('admin_premium_all'),
-          style: const TextStyle(fontWeight: FontWeight.w800),
-        ),
-        subtitle: Text(
-          l.t('admin_premium_all_sub'),
-          style: const TextStyle(fontSize: 12.5),
-        ),
-        value: on,
-        activeThumbColor: DuoColors.green,
-        onChanged: _busy ? null : _toggle,
+      child: Column(
+        children: [
+          SwitchListTile(
+            contentPadding: pad,
+            secondary: _busy
+                ? const SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(strokeWidth: 2.5),
+                  )
+                : const Icon(
+                    Icons.workspace_premium_rounded,
+                    color: DuoColors.purple,
+                  ),
+            title: Text(
+              l.t('admin_premium_all'),
+              style: const TextStyle(fontWeight: FontWeight.w800),
+            ),
+            subtitle: Text(
+              l
+                  .t('admin_premium_all_sub')
+                  .replaceFirst('{used}', used == null ? '…' : '$used')
+                  .replaceFirst('{limit}', '${auth.earlyBirdLimit}'),
+              style: const TextStyle(fontSize: 12.5),
+            ),
+            value: on,
+            activeThumbColor: DuoColors.green,
+            onChanged: _busy ? null : _toggle,
+          ),
+          const Divider(height: 1),
+          ListTile(
+            contentPadding: pad,
+            leading: const Icon(Icons.groups_rounded, color: DuoColors.blue),
+            title: Text(
+              l.t('admin_early_limit'),
+              style: const TextStyle(fontWeight: FontWeight.w800),
+            ),
+            subtitle: Text(
+              l
+                  .t('admin_early_limit_sub')
+                  .replaceFirst('{n}', '${auth.earlyBirdLimit}'),
+              style: const TextStyle(fontSize: 12.5),
+            ),
+            trailing: const Icon(Icons.chevron_right_rounded),
+            onTap: _busy ? null : _editLimit,
+          ),
+          const Divider(height: 1),
+          ListTile(
+            contentPadding: pad,
+            leading: const Icon(Icons.history_rounded, color: DuoColors.orange),
+            title: Text(
+              l.t('admin_early_backfill'),
+              style: const TextStyle(fontWeight: FontWeight.w800),
+            ),
+            subtitle: Text(
+              l.t('admin_early_backfill_sub'),
+              style: const TextStyle(fontSize: 12.5),
+            ),
+            trailing: const Icon(Icons.chevron_right_rounded),
+            onTap: _busy ? null : _backfill,
+          ),
+        ],
       ),
     );
   }

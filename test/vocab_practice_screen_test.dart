@@ -107,7 +107,7 @@ void main() {
 
   testWidgets('pengguna gratis: jumlah soal maksimal 10', (tester) async {
     await pump(tester, premium: false);
-    await tester.tap(find.text('Pilih semua'));
+    await tester.tap(find.byTooltip('Pilih semua'));
     await tester.pump();
     await tester.tap(find.text('Lanjut'));
     await tester.pump();
@@ -120,5 +120,24 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(seconds: 1));
     expect(find.text('1/10'), findsOneWidget);
+  });
+
+  testWidgets('kartu Favorit di atas: kata berbintang bisa langsung dipilih', (
+    tester,
+  ) async {
+    await pump(tester);
+    expect(find.text('⭐ Favorit'), findsNothing);
+    final ctx = tester.element(find.byType(VocabPracticeScreen));
+    ctx.read<SettingsProvider>().toggleStarred('ja', 'いぬ');
+    await tester.pump();
+    expect(find.text('⭐ Favorit'), findsOneWidget);
+    expect(
+      tester.getTopLeft(find.text('⭐ Favorit')).dy,
+      lessThan(tester.getTopLeft(find.text('🐱 Tes')).dy),
+    );
+    // Centang kartu Favorit → kata ikut terpilih di topiknya juga.
+    await tester.tap(find.text('いぬ').first);
+    await tester.pump();
+    expect(find.text('1 kata'), findsOneWidget);
   });
 }

@@ -1,6 +1,7 @@
 // Keuntungan premium di ProgressProvider: hati tak terbatas,
 // XP dobel, dan pelindung streak otomatis. Plus aturan pencocokan
 // status premium lokal vs dokumen profil server di AuthProvider.
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -150,25 +151,71 @@ void main() {
       },
     );
 
-    test('saklar global admin: semua akun premium selama menyala', () async {
+    test('saklar kuota bukan berarti semua akun premium', () async {
       final auth = await authProvider();
-      expect(auth.isPremium, isFalse);
       auth.applyGlobalPremium(true);
-      expect(auth.isPremium, isTrue);
-      // Profil server premium:false tidak mematikan saklar global.
       auth.applyServerPremium({'premium': false});
-      expect(auth.isPremium, isTrue);
-      // Saklar mati → kembali mengikuti premium pribadi (tidak ada).
-      auth.applyGlobalPremium(false);
+      expect(auth.globalPremium, isTrue);
       expect(auth.isPremium, isFalse);
-      // Premium pribadi dari server tetap tersimpan walau saklar nyala.
+    });
+
+    test('kuota pendaftar awal (earlyBirdNo): premium permanen', () async {
+      final auth = await authProvider();
       auth.applyGlobalPremium(true);
-      final until = DateTime.now()
-          .add(const Duration(days: 31))
-          .millisecondsSinceEpoch;
-      auth.applyServerPremium({'premium': true, 'premiumUntil': until});
+      auth.applyServerPremium({'premium': false, 'earlyBirdNo': 12});
+      expect(auth.earlyBird, isTrue);
+      expect(auth.isPremium, isTrue);
+      // Saklar ditutup & batas diturunkan → tetap premium.
       auth.applyGlobalPremium(false);
-      expect(auth.isPremium, isTrue); // pribadi masih berlaku
+      auth.applyEarlyBirdLimit(5);
+      expect(auth.isPremium, isTrue);
+      // Bertahan setelah aplikasi dibuka ulang (cache prefs).
+      final prefs = await SharedPreferences.getInstance();
+      expect(AuthProvider(prefs).isPremium, isTrue);
+    });
+
+    test(
+      'lencana premium:true tanpa catatan pembelian bukan premium pribadi',
+      () async {
+        // Sync progres menulis `premium: true` untuk penerima hadiah/
+        // saklar — dulu terbaca sebagai premium seumur hidup.
+        final auth = await authProvider();
+        auth.applyServerPremium({'premium': true});
+        expect(auth.isPremium, isFalse);
+        // Pembelian seumur hidup selalu menulis kunci premiumUntil: null.
+        auth.applyServerPremium({'premium': true, 'premiumUntil': null});
+        expect(auth.isPremium, isTrue);
+      },
+    );
+
+    test('premium "seumur hidup" salinan server lama dikoreksi', () async {
+      // Cache lokal tercemar: flag true tanpa batas, bukan dari pembelian.
+      SharedPreferences.setMockInitialValues({'auth_premium': true});
+      final auth = AuthProvider(await SharedPreferences.getInstance());
+      expect(auth.isPremium, isTrue);
+      auth.applyServerPremium({'premium': true});
+      expect(auth.isPremium, isFalse);
+    });
+
+    test('pembelian di perangkat ini tidak dikoreksi server lama', () async {
+      final auth = await authProvider();
+      await auth.activatePremium();
+      auth.applyServerPremium({'premium': true});
+      expect(auth.isPremium, isTrue);
+    });
+
+    test('urutan pembagian kuota pengguna lama: createdAt terawal', () {
+      final order = AuthProvider.earlyBirdCandidates({
+        'c': {'createdAt': Timestamp.fromMillisecondsSinceEpoch(3000)},
+        'a': {'createdAt': Timestamp.fromMillisecondsSinceEpoch(1000)},
+        'z': <String, dynamic>{}, // tanpa createdAt → belakang
+        'b': {
+          'createdAt': Timestamp.fromMillisecondsSinceEpoch(2000),
+          'earlyBirdNo': 1, // sudah dapat → dilewati
+        },
+        'd': {'createdAt': Timestamp.fromMillisecondsSinceEpoch(2500)},
+      });
+      expect(order, ['a', 'd', 'c', 'z']);
     });
 
     test('lokal tidak aktif → ikuti server apa adanya', () async {

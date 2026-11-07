@@ -21,6 +21,7 @@ import '../../widgets/study/pencil_progress_bar.dart';
 import '../../widgets/study/quiz_result_view.dart';
 import '../../widgets/study/study_background.dart';
 import '../premium_screen.dart';
+import 'letter_pick_screen.dart';
 
 /// Tulis Huruf: dengar/lihat bacaan, tulis lambangnya di kanvas, dinilai
 /// oleh pengenalan tulisan tangan ML Kit (offline). Paket diambil dari
@@ -29,23 +30,27 @@ import '../premium_screen.dart';
 class HandwritingScreen extends StatefulWidget {
   final Course course;
 
-  const HandwritingScreen({super.key, required this.course});
+  /// Paket berisi huruf pilihan (dari [LetterPickScreen]): latihan
+  /// langsung mulai dengan [questionCount] soal, tanpa daftar paket.
+  final LetterQuizCategory? customCategory;
+  final int questionCount;
+
+  const HandwritingScreen({
+    super.key,
+    required this.course,
+    this.customCategory,
+    this.questionCount = 10,
+  });
 
   @override
   State<HandwritingScreen> createState() => _HandwritingScreenState();
 }
 
 class _HandwritingScreenState extends State<HandwritingScreen> {
-  static const questionCount = 10;
   final _rng = Random();
   final _canvas = InkCanvasController();
 
   LetterQuizCategory? _category;
-  // Langkah cakupan: paket yang dipilih tapi belum mulai, kelompoknya,
-  // dan indeks kelompok yang dicentang.
-  LetterQuizCategory? _scopeCat;
-  List<LetterGroup> _groups = const [];
-  final Set<int> _selected = {};
   List<KanaItem> _items = [];
   int _index = 0;
   int _correct = 0;
@@ -60,52 +65,70 @@ class _HandwritingScreenState extends State<HandwritingScreen> {
   String get _language => HandwritingService.languageFor(widget.course.id)!;
 
   @override
+  void initState() {
+    super.initState();
+    final custom = widget.customCategory;
+    if (custom != null) _startInternal(custom);
+  }
+
+  @override
   void dispose() {
     TtsService.instance.stop();
     _canvas.dispose();
     super.dispose();
   }
 
-  /// Paket dipilih: kalau punya beberapa kelompok, tanya cakupan dulu
-  /// (bawaan: kelompok pertama, mis. Gojūon saja); kalau tidak, langsung.
+  /// Paket dipilih: pilih huruf (per kelompok) & jumlah soal dulu.
   void _pick(LetterQuizCategory cat) {
-    final groups = writingGroupsFor(widget.course.id, cat);
-    if (groups.isEmpty) {
-      _start(cat, cat.items);
-      return;
-    }
-    setState(() {
-      _scopeCat = cat;
-      _groups = groups;
-      _selected
-        ..clear()
-        ..add(0);
-    });
+    final l = L.read(context);
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => LetterPickScreen(
+          course: widget.course,
+          category: cat,
+          groups: writingGroupsFor(widget.course.id, cat),
+          title: '${l.t('handwriting_title')} · ${cat.title[l.code] ?? ''}',
+          freeLimit: kFreeHandwritingQuestions,
+          onStart: (ctx, picked, count) => Navigator.of(ctx).push(
+            MaterialPageRoute(
+              builder: (_) => HandwritingScreen(
+                course: widget.course,
+                customCategory: picked,
+                questionCount: count,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
-  List<KanaItem> get _scopeItems => [
-    for (var i = 0; i < _groups.length; i++)
-      if (_selected.contains(i)) ..._groups[i].items,
-  ];
+  /// [widget.questionCount] huruf acak dari paket. Kalau melebihi isi
+  /// paket, huruf diulang per putaran (diacak ulang tiap putaran) dan
+  /// diusahakan tidak muncul dua kali berturut-turut.
+  List<KanaItem> _drawItems(List<KanaItem> pool) {
+    final out = <KanaItem>[];
+    while (out.length < widget.questionCount && pool.isNotEmpty) {
+      final round = [...pool]..shuffle(_rng);
+      if (out.isNotEmpty && round.length > 1 && round.first == out.last) {
+        round.add(round.removeAt(0));
+      }
+      out.addAll(round.take(widget.questionCount - out.length));
+    }
+    return out;
+  }
 
-  bool get _isPremium => context.read<ProgressProvider>().premiumActive;
+  void _start(LetterQuizCategory cat) => setState(() => _startInternal(cat));
 
-  /// Huruf per sesi: 10 untuk Premium, [kFreeHandwritingQuestions] gratis.
-  int get _sessionLimit =>
-      _isPremium ? questionCount : kFreeHandwritingQuestions;
-
-  void _start(LetterQuizCategory cat, List<KanaItem> pool) {
-    final items = [...pool]..shuffle(_rng);
-    setState(() {
-      _category = cat;
-      _items = items.take(min(_sessionLimit, items.length)).toList();
-      _index = 0;
-      _correct = 0;
-      _missed.clear();
-      _finished = false;
-      _earnedXp = 0;
-      _resetQuestion();
-    });
+  void _startInternal(LetterQuizCategory cat) {
+    _category = cat;
+    _items = _drawItems(cat.items);
+    _index = 0;
+    _correct = 0;
+    _missed.clear();
+    _finished = false;
+    _earnedXp = 0;
+    _resetQuestion();
   }
 
   void _resetQuestion() {
@@ -178,39 +201,20 @@ class _HandwritingScreenState extends State<HandwritingScreen> {
   @override
   Widget build(BuildContext context) {
     final l = L.of(context);
-    // Di langkah cakupan, tombol kembali (AppBar maupun tombol sistem)
-    // mundur ke daftar paket, bukan menutup layar.
-    final inScope = _category == null && _scopeCat != null;
-    return PopScope(
-      canPop: !inScope,
-      onPopInvokedWithResult: (didPop, _) {
-        if (!didPop && inScope) setState(() => _scopeCat = null);
-      },
-      child: StudyScaffold(
-        appBar: AppBar(
-          title: Text(l.t('handwriting_title')),
-          leading: BackButton(
-            onPressed: () => inScope
-                ? setState(() => _scopeCat = null)
-                : Navigator.of(context).maybePop(),
-          ),
-        ),
-        body: _category == null
-            ? (_scopeCat == null ? _buildPicker(l) : _buildScope(l))
-            : _finished
-            ? QuizResultView(
-                correct: _correct,
-                total: _items.length,
-                earnedXp: _earnedXp,
-                review: _buildReview(l),
-                onAgain: () => _start(
-                  _category!,
-                  _groups.isEmpty ? _category!.items : _scopeItems,
-                ),
-                onDone: () => Navigator.of(context).pop(),
-              )
-            : _buildQuiz(l),
-      ),
+    return StudyScaffold(
+      appBar: AppBar(title: Text(l.t('handwriting_title'))),
+      body: _category == null
+          ? _buildPicker(l)
+          : _finished
+          ? QuizResultView(
+              correct: _correct,
+              total: _items.length,
+              earnedXp: _earnedXp,
+              review: _buildReview(l),
+              onAgain: () => _start(_category!),
+              onDone: () => Navigator.of(context).pop(),
+            )
+          : _buildQuiz(l),
     );
   }
 
@@ -243,7 +247,7 @@ class _HandwritingScreenState extends State<HandwritingScreen> {
           _PremiumNote(
             text:
                 '${l.t('handwriting_free_note').replaceFirst('{n}', '$kFreeHandwritingQuestions')}. '
-                '${l.t('handwriting_unlock').replaceFirst('{n}', '$questionCount')}',
+                '${l.t('handwriting_unlock')}',
           ),
         ],
       ],
@@ -280,72 +284,6 @@ class _HandwritingScreenState extends State<HandwritingScreen> {
     );
   }
 
-  /// Langkah cakupan: chip per kelompok (multi-pilih) + "Semua".
-  Widget _buildScope(L l) {
-    final cat = _scopeCat!;
-    final total = _scopeItems.length;
-    final allSelected = _selected.length == _groups.length;
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-      children: [
-        Text(
-          cat.title[l.code] ?? cat.title['id']!,
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          l.t('handwriting_scope_title'),
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
-        ),
-        Text(
-          l.t('handwriting_scope_sub'),
-          style: TextStyle(color: Theme.of(context).hintColor),
-        ),
-        const SizedBox(height: 12),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: [
-            FilterChip(
-              label: Text(l.t('handwriting_scope_all')),
-              selected: allSelected,
-              onSelected: (_) => setState(() {
-                _selected.clear();
-                if (!allSelected) {
-                  _selected.addAll(List.generate(_groups.length, (i) => i));
-                } else {
-                  _selected.add(0);
-                }
-              }),
-            ),
-            for (var i = 0; i < _groups.length; i++)
-              FilterChip(
-                label: Text(
-                  '${_groups[i].title[l.code] ?? _groups[i].title['id']} '
-                  '(${_groups[i].items.length})',
-                ),
-                selected: _selected.contains(i),
-                onSelected: (on) => setState(() {
-                  if (on) {
-                    _selected.add(i);
-                  } else if (_selected.length > 1) {
-                    _selected.remove(i); // minimal satu kelompok
-                  }
-                }),
-              ),
-          ],
-        ),
-        const SizedBox(height: 20),
-        DuoButton(
-          label:
-              '${l.t('handwriting_start')} · $total ${l.t('handwriting_letters')}',
-          onPressed: total == 0 ? null : () => _start(cat, _scopeItems),
-          color: DuoColors.green,
-        ),
-      ],
-    );
-  }
-
   Widget _buildQuiz(L l) {
     final item = _items[_index];
     final checked = _lastCorrect != null;
@@ -377,7 +315,7 @@ class _HandwritingScreenState extends State<HandwritingScreen> {
             compact: true,
             text:
                 '${l.t('handwriting_free_note').replaceFirst('{n}', '$kFreeHandwritingQuestions')} · '
-                '${l.t('handwriting_unlock').replaceFirst('{n}', '$questionCount')}',
+                '${l.t('handwriting_unlock')}',
           ),
         ],
         const SizedBox(height: 16),

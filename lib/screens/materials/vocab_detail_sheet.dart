@@ -71,7 +71,8 @@ VocabDetail vocabDetailOf({
     for (final s in topic.sections) {
       for (final e in s.examples) {
         if (sentences.length >= 3) break;
-        if (!isVocabSentence(e) || !_mentions(courseId, e.target, word.target)) {
+        if (!isVocabSentence(e) ||
+            !_mentions(courseId, e.target, word.target)) {
           continue;
         }
         if (sentences.any((x) => x.text == e.target)) continue;

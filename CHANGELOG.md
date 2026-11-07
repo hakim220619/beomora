@@ -3,6 +3,89 @@
 Semua perubahan penting dicatat di sini. Versi mengikuti `pubspec.yaml`
 (`versi+kode build`).
 
+## 1.17.0 (build 32) — 8 November 2026
+
+### Baru
+- **Kuota Premium pendaftar awal**: saklar admin `premiumForAll` kini
+  membuka kuota — pendaftar baru otomatis mendapat Premium **permanen**
+  (field `earlyBirdNo` di profil) sampai mencapai `premiumForAllLimit`
+  (bawaan 500). Penghitung `content/earlyBird` dinaikkan tepat +1
+  dalam transaksi pendaftaran, ditegakkan `firestore.rules`.
+  Menutup kuota / menurunkan batas tidak mencabut premium yang sudah
+  dibagikan.
+- **Dialog "Selamat, kamu dapat Premium! 🎉"** sekali per akun, tampil
+  paling awal saat app dibuka (sebelum pemberitahuan streak).
+- **Admin (Pengaturan)**: ubah batas kuota, lihat kuota terpakai, dan
+  "Bagikan kuota ke pengguna lama" (urut dari yang paling awal daftar,
+  aman dijalankan ulang).
+
+### Perubahan
+- Saklar admin tidak lagi menjadikan SEMUA pengguna premium; premium
+  kini = kuota pendaftar awal, hadiah admin, atau pembelian.
+
+### Teknis
+- `AuthProvider`: `earlyBird`, `profileReady`, `applyEarlyBird`,
+  `setEarlyBirdLimit`, `refreshEarlyBirdUsed`, `backfillEarlyBird`,
+  `earlyBirdCandidates`; status disimpan di prefs `auth_early_bird`
+  (dibaca juga oleh `ProgressProvider`).
+- `firestore.rules`: admin boleh menulis `earlyBirdNo`; aturan baru
+  `content/earlyBird`. **Wajib deploy rules sebelum rilis.**
+- Tes `premium_test.dart` diperbarui.
+
+## 1.16.0 (build 31) — 8 November 2026
+
+### Baru
+- **Pilih huruf sebelum latihan (Materi)**: tombol latihan di topik
+  Hiragana, Katakana, Kanji N5/N4 (juga Hangul, Angka Korea & Jerman)
+  kini membuka pemilih huruf — kotak per huruf dikelompokkan per bagian
+  Materi (Gojūon, Dakuten, Yōon; kanji per tema), centang per bagian,
+  ikon pilih semua / kosongkan — lalu lembar jumlah soal. Huruf yang
+  tidak dipilih tetap jadi pengecoh agar selalu 4 pilihan.
+- **Tulis Huruf: pilih huruf/kanji & jumlah soal** memakai pemilih yang
+  sama (menggantikan langkah "Pilih cakupan huruf"). Gratis tetap 3
+  huruf per sesi; Premium bebas pilih hingga 100 (sebelumnya tetap 10).
+  Soal melebihi jumlah huruf → huruf diulang per putaran tanpa muncul
+  dua kali berturut-turut. "Lagi" mengulang dengan pilihan yang sama.
+
+### Perubahan
+- Teks ajakan Premium di Tulis Huruf: "Premium bebas pilih jumlah huruf".
+
+### Teknis
+- Layar baru `LetterPickScreen` (dipakai Materi & Tulis Huruf, dengan
+  `groups`, `freeLimit`, `onStart`).
+- Lembar jumlah soal dipindah ke widget bersama
+  `widgets/question_count_sheet.dart` (`showQuestionCountSheet`).
+- `HandwritingScreen` menerima `customCategory` + `questionCount`.
+- Tes baru `test/letter_pick_screen_test.dart`; tes Tulis Huruf
+  disesuaikan dengan alur baru.
+
+## 1.15.0 (build 30) — 8 November 2026
+
+### Baru
+- **Favorit kosakata (⭐)**: setiap kata di Materi → Kosakata (di dalam
+  topik dan di hasil pencarian) punya tombol bintang. Kata berbintang
+  terkumpul di bagian "⭐ Favorit" paling atas — di dalam topik (favorit
+  topik itu) dan di halaman daftar Kosakata (semua topik, dengan label
+  asal topik). Favorit disimpan per kursus di perangkat (belum sinkron).
+- **Kosongkan favorit**: ikon reset di judul bagian Favorit, dengan
+  konfirmasi; di dalam topik hanya melepas favorit topik itu.
+- **Latihan Kosakata: kartu Favorit** di bawah kolom pencarian berisi
+  kata berbintang dari topik yang dibuka; bisa centang semua sekaligus,
+  pilihan tersinkron dengan kartu topik asalnya.
+
+### Perubahan
+- Latihan Kosakata: tombol "Pilih semua" dan "Kosongkan" kini ikon
+  (keterangan muncul saat ditekan lama).
+- Saat memutar kosakata, bar bawah cukup menampilkan ikon suara
+  (tanpa kata & hitungan); kata yang dibaca tetap disorot di daftar.
+
+### Teknis
+- `SettingsProvider`: `starredWords`, `isStarred`, `toggleStarred`,
+  `removeStarred` (kunci `vocab_starred_<kursus>`).
+- Widget baru `VocabStarButton` & `VocabStarClearButton`.
+- Tes baru `test/vocab_star_test.dart` + tes kartu Favorit di Latihan
+  Kosakata.
+
 ## 1.14.0 (build 29) — 5 November 2026
 
 ### Baru

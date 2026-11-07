@@ -9,9 +9,11 @@ import '../../l10n/app_strings.dart';
 import '../../models/course.dart';
 import '../../models/guide.dart';
 import '../../providers/progress_provider.dart';
+import '../../providers/settings_provider.dart';
 import '../../services/tts_service.dart';
 import '../../theme.dart';
 import '../../widgets/study/study_background.dart';
+import '../../widgets/vocab_star_button.dart';
 import '../course_select_screen.dart';
 import '../practice/vocab_practice_screen.dart';
 import 'guide_detail_screen.dart';
@@ -176,6 +178,40 @@ class _VocabListScreenState extends State<_VocabListScreen> {
     return hits;
   }
 
+  /// Kata berbintang dari semua topik kosakata, urut saat ditandai.
+  List<_VocabHit> _starred(SettingsProvider settings) {
+    final byTarget = <String, _VocabHit>{};
+    for (final topic in widget.topics) {
+      for (final section in topic.sections) {
+        for (final w in section.examples) {
+          byTarget.putIfAbsent(w.target, () => _VocabHit(topic, w));
+        }
+      }
+    }
+    return [
+      for (final t in settings.starredWords(widget.course.id)) ?byTarget[t],
+    ];
+  }
+
+  Widget _hitRow(BuildContext context, _VocabHit h, String uiLang) =>
+      _VocabHitRow(
+        hit: h,
+        uiLang: uiLang,
+        onSpeak: () => _speak(h.word.target),
+        star: isVocabSentence(h.word)
+            ? null
+            : VocabStarButton(courseId: widget.course.id, word: h.word.target),
+        onTap: isVocabSentence(h.word)
+            ? null
+            : () => showVocabDetail(
+                context,
+                courseId: widget.course.id,
+                ttsLocale: widget.course.ttsLocale,
+                word: h.word,
+                topic: h.topic,
+              ),
+      );
+
   void _speak(String text) {
     HapticFeedback.selectionClick();
     TtsService.instance.speak(text, widget.course.ttsLocale);
@@ -188,6 +224,9 @@ class _VocabListScreenState extends State<_VocabListScreen> {
     final topics = widget.topics;
     final searching = _query.trim().isNotEmpty;
     final hits = searching ? _search(_query, l.code) : const <_VocabHit>[];
+    final starred = searching
+        ? const <_VocabHit>[]
+        : _starred(context.watch<SettingsProvider>());
 
     return StudyScaffold(
       appBar: AppBar(
@@ -237,6 +276,49 @@ class _VocabListScreenState extends State<_VocabListScreen> {
             ),
           ),
           const SizedBox(height: 12),
+          if (starred.isNotEmpty)
+            Card(
+              margin: const EdgeInsets.only(bottom: 12),
+              child: Theme(
+                // Tanpa garis pembatas bawaan ExpansionTile.
+                data: Theme.of(
+                  context,
+                ).copyWith(dividerColor: Colors.transparent),
+                child: ExpansionTile(
+                  initiallyExpanded: true,
+                  maintainState: true,
+                  tilePadding: const EdgeInsets.symmetric(horizontal: 16),
+                  childrenPadding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+                  title: Text(
+                    '⭐ ${l.t('vocab_starred')}',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      VocabStarClearButton(
+                        courseId: course.id,
+                        words: [for (final h in starred) h.word.target],
+                      ),
+                      const Icon(Icons.expand_more_rounded),
+                    ],
+                  ),
+                  subtitle: Text(
+                    '${starred.length} ${l.t('vocab_practice_selected')}',
+                    style: TextStyle(
+                      fontSize: 12.5,
+                      color: Theme.of(context).hintColor,
+                    ),
+                  ),
+                  children: [
+                    for (final h in starred) _hitRow(context, h, l.code),
+                  ],
+                ),
+              ),
+            ),
           if (!searching)
             for (var i = 0; i < topics.length; i++)
               _TopicCard(
@@ -284,21 +366,7 @@ class _VocabListScreenState extends State<_VocabListScreen> {
                 ),
               ),
             ),
-            for (final h in hits)
-              _VocabHitRow(
-                hit: h,
-                uiLang: l.code,
-                onSpeak: () => _speak(h.word.target),
-                onTap: isVocabSentence(h.word)
-                    ? null
-                    : () => showVocabDetail(
-                        context,
-                        courseId: course.id,
-                        ttsLocale: course.ttsLocale,
-                        word: h.word,
-                        topic: h.topic,
-                      ),
-              ),
+            for (final h in hits) _hitRow(context, h, l.code),
           ],
         ],
       ),
@@ -312,12 +380,14 @@ class _VocabHitRow extends StatelessWidget {
   final String uiLang;
   final VoidCallback onSpeak;
   final VoidCallback? onTap;
+  final Widget? star;
 
   const _VocabHitRow({
     required this.hit,
     required this.uiLang,
     required this.onSpeak,
     this.onTap,
+    this.star,
   });
 
   @override
@@ -376,6 +446,7 @@ class _VocabHitRow extends StatelessWidget {
               ],
             ),
           ),
+          ?star,
           IconButton(
             tooltip: hit.word.target,
             icon: const Icon(Icons.volume_up_rounded, color: DuoColors.blue),

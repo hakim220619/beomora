@@ -3,18 +3,16 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../data/mcq_packs.dart';
 import '../../data/question_bank.dart';
 import '../../l10n/app_strings.dart';
 import '../../models/course.dart';
 import '../../models/guide.dart';
-import '../../providers/progress_provider.dart';
 import '../../providers/settings_provider.dart';
 import '../../services/tts_service.dart';
 import '../../theme.dart';
 import '../../widgets/duo_button.dart';
+import '../../widgets/question_count_sheet.dart';
 import '../../widgets/study/study_background.dart';
-import '../premium_screen.dart';
 import 'letter_quiz_screen.dart';
 
 /// Tombol mengapung "Latihan Kosakata" untuk halaman kosakata Materi.
@@ -74,8 +72,6 @@ class VocabPracticeScreen extends StatefulWidget {
 }
 
 class _VocabPracticeScreenState extends State<VocabPracticeScreen> {
-  static const _presets = [5, 10, 20, 30, 50];
-  static const _maxCount = 100;
   // Kelipatan kecepatan suara; 1× = laju TTS 0.45 dengan jeda 700 ms.
   static const _speeds = [0.5, 0.75, 1.0, 1.25, 1.5, 2.0];
 
@@ -142,10 +138,13 @@ class _VocabPracticeScreenState extends State<VocabPracticeScreen> {
   // Daftar kata disusun sekali per bahasa UI (bukan tiap ketukan), dan
   // hasil cari disimpan per kata kunci — topik JLPT berisi ratusan kata.
   String? _wordsLang;
+
   /// [rows] = isi topik saat dibuka: [_Section] (pembatas) atau [_Word].
   List<({GuideTopic topic, List<_Word> words, List<Object> rows})> _groups =
       const [];
   List<_Word> _all = const [];
+  Map<String, _Word> _byTarget = const {}; // kata target → kata pertama
+  bool _starredOpen = true;
   String? _hitsQuery;
   List<_Word> _hits = const [];
   late final Set<int> _expanded = {if (widget.topics.length == 1) 0};
@@ -155,6 +154,10 @@ class _VocabPracticeScreenState extends State<VocabPracticeScreen> {
     _wordsLang = uiLang;
     _groups = [for (final t in widget.topics) _groupOf(t, uiLang)];
     _all = [for (final g in _groups) ...g.words];
+    _byTarget = {};
+    for (final w in _all) {
+      _byTarget.putIfAbsent(w.example.target, () => w);
+    }
     _hitsQuery = null;
     // Kunci memuat arti, jadi berubah saat bahasa UI diganti.
     _selected.retainAll({for (final w in _all) w.key});
@@ -217,22 +220,13 @@ class _VocabPracticeScreenState extends State<VocabPracticeScreen> {
 
   Future<void> _openCountSheet(List<_Word> all) async {
     _stopPlay();
-    final premium = context.read<ProgressProvider>().premiumActive;
-    final maxCount = premium ? _maxCount : kFreeMcqLimit;
     final picked = {
       for (final w in all)
         if (_selected.contains(w.key)) w.key: w.item,
     }.values.toList();
-    final count = await showModalBottomSheet<int>(
-      context: context,
-      isScrollControlled: true,
-      builder: (_) => _CountSheet(
-        selected: picked.length,
-        initial: min(max(picked.length, 10), maxCount),
-        maxCount: maxCount,
-        capped: !premium,
-        presets: _presets,
-      ),
+    final count = await showQuestionCountSheet(
+      context,
+      selected: picked.length,
     );
     if (count == null || !mounted) return;
     final l = L.read(context);
@@ -274,6 +268,10 @@ class _VocabPracticeScreenState extends State<VocabPracticeScreen> {
         ? _hitsFor(_query.trim().toLowerCase())
         : const <_Word>[];
     final selectedCount = _selected.length;
+    // Kartu Favorit: kata berbintang (dari Materi) yang ada di topik ini.
+    final starred = [
+      for (final t in settings.starredWords(widget.course.id)) ?_byTarget[t],
+    ];
 
     return StudyScaffold(
       appBar: AppBar(title: Text(l.t('vocab_practice_title'))),
@@ -319,15 +317,18 @@ class _VocabPracticeScreenState extends State<VocabPracticeScreen> {
                     ),
                   ),
                 ),
-                TextButton(
+                IconButton(
+                  tooltip: l.t('vocab_practice_all'),
                   onPressed: () => _toggleAll(searching ? hits : all, true),
-                  child: Text(l.t('vocab_practice_all')),
+                  icon: const Icon(Icons.done_all_rounded),
+                  color: DuoColors.blue,
                 ),
-                TextButton(
+                IconButton(
+                  tooltip: l.t('vocab_practice_none'),
                   onPressed: selectedCount == 0
                       ? null
                       : () => setState(_selected.clear),
-                  child: Text(l.t('vocab_practice_none')),
+                  icon: const Icon(Icons.remove_done_rounded),
                 ),
               ],
             ),
@@ -360,6 +361,16 @@ class _VocabPracticeScreenState extends State<VocabPracticeScreen> {
                         padding: const EdgeInsets.fromLTRB(8, 0, 8, 16),
                         sliver: SliverMainAxisGroup(
                           slivers: [
+                            if (starred.isNotEmpty)
+                              _cardSliver(
+                                title: '⭐ ${l.t('vocab_starred')}',
+                                words: starred,
+                                rows: starred,
+                                open: _starredOpen,
+                                onTap: () => setState(
+                                  () => _starredOpen = !_starredOpen,
+                                ),
+                              ),
                             for (var i = 0; i < _groups.length; i++)
                               _topicSliver(i, l),
                           ],
@@ -379,18 +390,25 @@ class _VocabPracticeScreenState extends State<VocabPracticeScreen> {
             child: Row(
               children: [
                 Expanded(
-                  child: Text(
-                    _playing == null
-                        ? '$selectedCount ${l.t('vocab_practice_selected')}'
-                        : '🔊 ${_queue[_playing!].example.target} '
-                              '(${_playing! + 1}/${_queue.length})',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w900,
-                    ),
-                  ),
+                  // Saat memutar cukup ikon suara (tanpa kata yang dibaca).
+                  child: _playing == null
+                      ? Text(
+                          '$selectedCount ${l.t('vocab_practice_selected')}',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        )
+                      : const Align(
+                          alignment: Alignment.centerLeft,
+                          child: Icon(
+                            Icons.volume_up_rounded,
+                            color: DuoColors.blue,
+                            size: 26,
+                          ),
+                        ),
                 ),
                 // Ketuk → daftar kecepatan muncul ke atas, pilih langsung.
                 PopupMenuButton<double>(
@@ -516,6 +534,24 @@ class _VocabPracticeScreenState extends State<VocabPracticeScreen> {
   Widget _topicSliver(int index, L l) {
     final (:topic, :words, :rows) = _groups[index];
     final open = _expanded.contains(index);
+    return _cardSliver(
+      title: '${topic.emoji} ${topic.title[l.code] ?? ''}',
+      words: words,
+      rows: rows,
+      open: open,
+      onTap: () =>
+          setState(() => open ? _expanded.remove(index) : _expanded.add(index)),
+    );
+  }
+
+  /// Kartu berisi judul (buka/tutup + centang semua) dan daftar kata.
+  Widget _cardSliver({
+    required String title,
+    required List<_Word> words,
+    required List<Object> rows,
+    required bool open,
+    required VoidCallback onTap,
+  }) {
     final picked = words.where((w) => _selected.contains(w.key)).length;
     final card = Theme.of(context).cardTheme;
     return SliverPadding(
@@ -532,9 +568,7 @@ class _VocabPracticeScreenState extends State<VocabPracticeScreen> {
                 type: MaterialType.transparency,
                 child: ListTile(
                   shape: card.shape,
-                  onTap: () => setState(
-                    () => open ? _expanded.remove(index) : _expanded.add(index),
-                  ),
+                  onTap: onTap,
                   leading: Checkbox(
                     tristate: true,
                     value: picked == 0
@@ -544,7 +578,7 @@ class _VocabPracticeScreenState extends State<VocabPracticeScreen> {
                     onChanged: (_) => _toggleAll(words, picked < words.length),
                   ),
                   title: Text(
-                    '${topic.emoji} ${topic.title[l.code] ?? ''}',
+                    title,
                     style: const TextStyle(fontWeight: FontWeight.w900),
                   ),
                   subtitle: Text('$picked/${words.length}'),
@@ -638,158 +672,6 @@ class _VocabPracticeScreenState extends State<VocabPracticeScreen> {
         ),
         subtitle: Text(
           romaji == null ? w.item.romaji : '$romaji · ${w.item.romaji}',
-        ),
-      ),
-    );
-  }
-}
-
-/// Lembar bawah: tentukan jumlah soal (−/+ dan pilihan cepat).
-class _CountSheet extends StatefulWidget {
-  final int selected;
-  final int initial;
-  final int maxCount;
-  final bool capped;
-  final List<int> presets;
-
-  const _CountSheet({
-    required this.selected,
-    required this.initial,
-    required this.maxCount,
-    required this.capped,
-    required this.presets,
-  });
-
-  @override
-  State<_CountSheet> createState() => _CountSheetState();
-}
-
-class _CountSheetState extends State<_CountSheet> {
-  late int _count = widget.initial;
-
-  void _set(int v) => setState(() => _count = v.clamp(1, widget.maxCount));
-
-  @override
-  Widget build(BuildContext context) {
-    final l = L.of(context);
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              l.t('kana_mix_count'),
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w900),
-            ),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton.filledTonal(
-                  onPressed: _count > 1 ? () => _set(_count - 1) : null,
-                  icon: const Icon(Icons.remove_rounded),
-                ),
-                SizedBox(
-                  width: 120,
-                  child: Text(
-                    '$_count',
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 36,
-                      fontWeight: FontWeight.w900,
-                      color: DuoColors.blue,
-                    ),
-                  ),
-                ),
-                IconButton.filledTonal(
-                  onPressed: _count < widget.maxCount
-                      ? () => _set(_count + 1)
-                      : null,
-                  icon: const Icon(Icons.add_rounded),
-                ),
-              ],
-            ),
-            Center(child: Text(l.t('kana_mix_questions'))),
-            const SizedBox(height: 12),
-            Wrap(
-              alignment: WrapAlignment.center,
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                for (final n in {
-                  widget.selected,
-                  ...widget.presets,
-                }.where((n) => n <= widget.maxCount).toList()..sort())
-                  ChoiceChip(
-                    label: Text(
-                      '$n',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w800,
-                        color: _count == n ? Colors.white : null,
-                      ),
-                    ),
-                    selected: _count == n,
-                    showCheckmark: false,
-                    selectedColor: DuoColors.blue,
-                    onSelected: (_) => _set(n),
-                  ),
-              ],
-            ),
-            if (_count > widget.selected) ...[
-              const SizedBox(height: 12),
-              Text(
-                '🔁 ${l.t('vocab_practice_repeat')}',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 12.5,
-                  color: Theme.of(context).hintColor,
-                ),
-              ),
-            ],
-            if (widget.capped) ...[
-              const SizedBox(height: 12),
-              InkWell(
-                borderRadius: BorderRadius.circular(14),
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const PremiumScreen()),
-                ),
-                child: Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: DuoColors.yellow.withValues(alpha: 0.16),
-                    borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: DuoColors.yellow, width: 1.5),
-                  ),
-                  child: Row(
-                    children: [
-                      const Text('👑', style: TextStyle(fontSize: 20)),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Text(
-                          l
-                              .t('quiz_free_cap')
-                              .replaceFirst('{n}', '${widget.maxCount}'),
-                          style: const TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w800,
-                          ),
-                        ),
-                      ),
-                      const Icon(Icons.chevron_right_rounded),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-            const SizedBox(height: 18),
-            DuoButton(
-              label: l.t('kana_mix_start'),
-              color: DuoColors.blue,
-              onPressed: () => Navigator.of(context).pop(_count),
-            ),
-          ],
         ),
       ),
     );

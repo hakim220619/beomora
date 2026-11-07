@@ -69,8 +69,26 @@ class AuthProvider extends ChangeNotifier {
     _premiumFlag = _prefs.getBool(kPremiumPref) ?? false;
     _premiumUntil = _prefs.getInt(kPremiumUntilPref);
     _globalPremium = _prefs.getBool(kGlobalPremiumPref) ?? false;
+    _earlyBirdLimit =
+        _prefs.getInt(kEarlyBirdLimitPref) ?? kEarlyBirdLimitDefault;
     _premiumGrantUntil = _prefs.getInt(kPremiumGrantPref);
-    if (configured) _init();
+    _earlyBird = _prefs.getBool(kEarlyBirdPref) ?? false;
+    _purchasedHere = _prefs.getBool(kPremiumPurchasedPref) ?? false;
+    if (configured) {
+      _init();
+    } else {
+      _profileReady.complete();
+    }
+  }
+
+  /// Selesai saat pemulihan profil pertama sejak app dibuka beres
+  /// (sukses, gagal, atau memang belum login) — dipakai menu utama
+  /// untuk menampilkan dialog selamat premium di awal.
+  final _profileReady = Completer<void>();
+  Future<void> get profileReady => _profileReady.future;
+
+  void _markProfileReady() {
+    if (!_profileReady.isCompleted) _profileReady.complete();
   }
 
   // ---------- Premium ----------
@@ -78,10 +96,15 @@ class AuthProvider extends ChangeNotifier {
   bool _premiumFlag = false;
   int? _premiumUntil; // epoch ms; null = seumur hidup
 
-  /// Premium aktif: saklar global admin menyala, ATAU hadiah admin
-  /// masih berlaku, ATAU premium pribadi (flag menyala dan — kalau
-  /// berlangganan — belum lewat masanya).
-  bool get isPremium => _globalPremium || _grantActive || _personalPremium;
+  /// Premium pribadi diaktifkan lewat pembelian di perangkat ini
+  /// ([activatePremium]) — bukan sekadar disalin dari dokumen server.
+  static const kPremiumPurchasedPref = 'auth_premium_purchased';
+  bool _purchasedHere = false;
+
+  /// Premium aktif: kuota premium pendaftar awal (permanen), ATAU
+  /// hadiah admin masih berlaku, ATAU premium pribadi (flag menyala
+  /// dan — kalau berlangganan — belum lewat masanya).
+  bool get isPremium => _earlyBird || _grantActive || _personalPremium;
 
   bool get _personalPremium =>
       _premiumFlag &&
@@ -130,18 +153,55 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  // ---------- Premium untuk semua (saklar admin) ----------
+  // ---------- Kuota premium pendaftar awal (saklar admin) ----------
 
-  /// Saklar global dari dokumen `content/config` field `premiumForAll`:
-  /// selama menyala, SEMUA pengguna diperlakukan premium tanpa membeli.
-  /// Dibaca tiap aplikasi dibuka (cache prefs untuk offline); hanya
-  /// admin yang bisa menulisnya — aturan Firestore koleksi `content`
-  /// menegakkan itu di sisi server.
+  /// Saklar dari dokumen `content/config` field `premiumForAll`:
+  /// selama menyala, kuota premium DIBUKA — pendaftar baru otomatis
+  /// mendapat premium PERMANEN (field `earlyBirdNo` di profil) sampai
+  /// jumlahnya mencapai `premiumForAllLimit`. Mematikan saklar atau
+  /// menurunkan batas tidak mencabut premium yang sudah dibagikan.
+  /// Hanya admin yang bisa menulis config — ditegakkan firestore.rules.
   static const kGlobalPremiumPref = 'global_premium';
+  static const kEarlyBirdLimitPref = 'early_bird_limit';
+  static const kEarlyBirdPref = 'auth_early_bird';
+  static const kEarlyBirdLimitDefault = 500;
   static const _configDocPath = 'content/config';
 
+  /// Penghitung kuota terpakai: `{count: N}`. Dinaikkan dalam transaksi
+  /// pendaftaran (rules memastikan tepat +1 dan tidak lewat batas).
+  static const _earlyBirdDocPath = 'content/earlyBird';
+
   bool _globalPremium = false;
+
+  /// Kuota premium sedang dibuka (bukan berarti pengguna ini premium).
   bool get globalPremium => _globalPremium;
+
+  int _earlyBirdLimit = kEarlyBirdLimitDefault;
+  int get earlyBirdLimit => _earlyBirdLimit;
+
+  /// Jumlah kuota terpakai (khusus tampilan admin; null = belum dimuat).
+  int? earlyBirdUsed;
+
+  /// Akun ini mendapat premium permanen dari kuota pendaftar awal.
+  bool _earlyBird = false;
+  bool get earlyBird => _earlyBird;
+
+  // Dialog "Selamat, kamu dapat Premium" — sekali per akun.
+  static const _kEarlyBirdCelebrated = 'early_bird_celebrated';
+
+  /// Dialog selamat premium kuota belum pernah ditampilkan untuk akun ini.
+  bool get pendingEarlyBirdCelebration =>
+      signedIn &&
+      _earlyBird &&
+      !(_prefs.getStringList(_kEarlyBirdCelebrated) ?? const []).contains(
+        email,
+      );
+
+  void markEarlyBirdCelebrated() {
+    final list = _prefs.getStringList(_kEarlyBirdCelebrated) ?? <String>[];
+    if (email == null || list.contains(email)) return;
+    _prefs.setStringList(_kEarlyBirdCelebrated, [...list, email!]);
+  }
 
   /// Kait ke ProgressProvider (dipasang main.dart): terapkan menit
   /// regenerasi nyawa dari `content/config` field `heartRegenMinutes`.
@@ -154,6 +214,10 @@ class AuthProvider extends ChangeNotifier {
           .get()
           .timeout(const Duration(seconds: 10));
       applyGlobalPremium(doc.data()?['premiumForAll'] == true);
+      applyEarlyBirdLimit(
+        (doc.data()?['premiumForAllLimit'] as num?)?.toInt() ??
+            kEarlyBirdLimitDefault,
+      );
       final regen = (doc.data()?['heartRegenMinutes'] as num?)?.toInt();
       if (regen != null) onHeartRegenMinutes?.call(regen);
     } catch (_) {
@@ -196,7 +260,146 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// (Khusus admin) Nyalakan/matikan premium untuk semua pengguna.
+  @visibleForTesting
+  void applyEarlyBirdLimit(int limit) {
+    if (limit == _earlyBirdLimit) return;
+    _earlyBirdLimit = limit;
+    _prefs.setInt(kEarlyBirdLimitPref, limit);
+    notifyListeners();
+  }
+
+  /// Terapkan status kuota premium dari dokumen profil. Server otoritas
+  /// penuh (klien pemilik tidak bisa menambah/mengubah `earlyBirdNo`).
+  @visibleForTesting
+  void applyEarlyBird(Map<String, dynamic> profile) {
+    _earlyBird = profile['earlyBirdNo'] is num;
+    _prefs.setBool(kEarlyBirdPref, _earlyBird);
+  }
+
+  /// (Khusus admin) Muat jumlah kuota terpakai dari server.
+  Future<void> refreshEarlyBirdUsed() async {
+    if (!configured) return;
+    try {
+      final doc = await FirebaseFirestore.instance
+          .doc(_earlyBirdDocPath)
+          .get(const GetOptions(source: Source.server))
+          .timeout(const Duration(seconds: 10));
+      earlyBirdUsed = (doc.data()?['count'] as num?)?.toInt() ?? 0;
+      notifyListeners();
+    } catch (e) {
+      debugPrint('BeomoraAuth baca kuota gagal: $e');
+    }
+  }
+
+  /// (Khusus admin) Ubah batas kuota premium pendaftar awal. Menurunkan
+  /// batas tidak mencabut premium yang sudah dibagikan. Mengembalikan
+  /// pesan galat, atau null kalau sukses.
+  Future<String?> setEarlyBirdLimit(int limit) async {
+    if (!configured) return 'Firebase belum dikonfigurasi';
+    try {
+      final doc = FirebaseFirestore.instance.doc(_configDocPath);
+      await doc
+          .set({
+            'premiumForAllLimit': limit,
+            'updatedAt': FieldValue.serverTimestamp(),
+          }, SetOptions(merge: true))
+          .timeout(const Duration(seconds: 15));
+      final check = await doc
+          .get(const GetOptions(source: Source.server))
+          .timeout(const Duration(seconds: 15));
+      if ((check.data()?['premiumForAllLimit'] as num?)?.toInt() != limit) {
+        return 'Verifikasi gagal: nilai di server tidak cocok';
+      }
+      applyEarlyBirdLimit(limit);
+      return null;
+    } catch (e) {
+      debugPrint('BeomoraAuth setEarlyBirdLimit gagal: $e');
+      return '$e';
+    }
+  }
+
+  /// Urutan pembagian kuota ke pengguna lama: yang paling awal daftar
+  /// (`createdAt`) duluan; tanpa `createdAt` di belakang, lalu per ID.
+  @visibleForTesting
+  static List<String> earlyBirdCandidates(
+    Map<String, Map<String, dynamic>> users,
+  ) {
+    final ids =
+        users.entries
+            .where((e) => e.value['earlyBirdNo'] == null)
+            .map((e) => e.key)
+            .toList()
+          ..sort((a, b) {
+            final ta = users[a]!['createdAt'];
+            final tb = users[b]!['createdAt'];
+            final ma = ta is Timestamp ? ta.millisecondsSinceEpoch : null;
+            final mb = tb is Timestamp ? tb.millisecondsSinceEpoch : null;
+            if (ma != null && mb != null && ma != mb) return ma.compareTo(mb);
+            if (ma != null && mb == null) return -1;
+            if (ma == null && mb != null) return 1;
+            return a.compareTo(b);
+          });
+    return ids;
+  }
+
+  /// (Khusus admin) Bagikan sisa kuota ke pengguna yang SUDAH terdaftar,
+  /// urut dari yang paling awal daftar. Slot dipesan dulu lewat
+  /// transaksi pada penghitung (aman bila ada pendaftar baru bersamaan),
+  /// baru nomornya ditulis ke profil. Aman dijalankan ulang — pengguna
+  /// yang sudah punya `earlyBirdNo` dilewati. Mengembalikan jumlah
+  /// pengguna yang mendapat premium, atau pesan galat.
+  Future<(int, String?)> backfillEarlyBird() async {
+    if (!configured) return (0, 'Firebase belum dikonfigurasi');
+    try {
+      final db = FirebaseFirestore.instance;
+      final cfg = await db
+          .doc(_configDocPath)
+          .get(const GetOptions(source: Source.server))
+          .timeout(const Duration(seconds: 15));
+      final limit =
+          (cfg.data()?['premiumForAllLimit'] as num?)?.toInt() ??
+          kEarlyBirdLimitDefault;
+      final snap = await db
+          .collection('users')
+          .get(const GetOptions(source: Source.server))
+          .timeout(const Duration(seconds: 60));
+      final candidates = earlyBirdCandidates({
+        for (final d in snap.docs) d.id: d.data(),
+      });
+
+      final counter = db.doc(_earlyBirdDocPath);
+      var start = 0;
+      var take = 0;
+      await db
+          .runTransaction((tx) async {
+            final c = await tx.get(counter);
+            start = (c.data()?['count'] as num?)?.toInt() ?? 0;
+            take = (limit - start).clamp(0, candidates.length);
+            if (take > 0) tx.set(counter, {'count': start + take});
+          })
+          .timeout(const Duration(seconds: 20));
+
+      // Batch Firestore maks. 500 tulisan.
+      for (var i = 0; i < take; i += 400) {
+        final batch = db.batch();
+        final end = (i + 400).clamp(0, take);
+        for (var j = i; j < end; j++) {
+          batch.update(db.collection('users').doc(candidates[j]), {
+            'earlyBirdNo': start + j + 1,
+          });
+        }
+        await batch.commit().timeout(const Duration(seconds: 30));
+      }
+      earlyBirdUsed = start + take;
+      notifyListeners();
+      return (take, null);
+    } catch (e) {
+      debugPrint('BeomoraAuth backfillEarlyBird gagal: $e');
+      return (0, '$e');
+    }
+  }
+
+  /// (Khusus admin) Buka/tutup kuota premium pendaftar awal.
   /// Menulis `content/config` lalu memverifikasi baca-ulang dari
   /// server. Mengembalikan pesan galat, atau null kalau sukses.
   Future<String?> setGlobalPremium(bool on) async {
@@ -229,6 +432,8 @@ class AuthProvider extends ChangeNotifier {
   Future<void> activatePremium({DateTime? until}) async {
     _premiumFlag = true;
     _premiumUntil = until?.millisecondsSinceEpoch;
+    _purchasedHere = true;
+    _prefs.setBool(kPremiumPurchasedPref, true);
     _persistPremiumPrefs();
     notifyListeners();
     try {
@@ -264,14 +469,24 @@ class AuthProvider extends ChangeNotifier {
     } else {
       _prefs.remove(kPremiumGrantPref);
     }
-    final flag = profile['premium'] == true;
+    applyEarlyBird(profile);
+    // Field `premium` juga ditulis sync progres sebagai lencana Papan
+    // Juara — bisa true karena hadiah/saklar admin, bukan pembelian.
+    // Pembelian sungguhan ([activatePremium]) SELALU menulis kunci
+    // `premiumUntil` (null = seumur hidup), jadi tanpa kunci itu flag
+    // tidak dianggap premium pribadi (dulu terbaca "seumur hidup").
+    final purchaseRecord = profile.containsKey('premiumUntil');
+    final flag = purchaseRecord && profile['premium'] == true;
     final until = (profile['premiumUntil'] as num?)?.toInt();
     final serverActive =
         flag &&
         (until == null || DateTime.now().millisecondsSinceEpoch < until);
-    // Bandingkan dengan premium PRIBADI — saklar global admin tidak
+    // Bandingkan dengan premium PRIBADI — premium kuota/hadiah tidak
     // boleh menghalangi penyimpanan premium pelanggan sungguhan.
-    if (!_personalPremium) {
+    // Premium pribadi lokal yang bukan hasil pembelian di perangkat ini
+    // (disalin dari server) ikut dikoreksi bila server tak punya catatan
+    // pembelian — pembeli asli dipulihkan Play restore tiap app dibuka.
+    if (!_personalPremium || (!_purchasedHere && !purchaseRecord)) {
       // Lokal tidak aktif → ikuti server apa adanya.
       _premiumFlag = flag;
       _premiumUntil = until;
@@ -373,7 +588,10 @@ class AuthProvider extends ChangeNotifier {
   /// aplikasi sebelum menyelesaikan pendaftaran) dikeluarkan agar
   /// login berikutnya kembali diarahkan ke pendaftaran.
   Future<void> _restore(User? user) async {
-    if (user == null || busy) return;
+    if (user == null || busy) {
+      _markProfileReady();
+      return;
+    }
     try {
       final doc = await _userDoc(user.uid).get();
       if (doc.exists) {
@@ -387,6 +605,8 @@ class AuthProvider extends ChangeNotifier {
       if (_prefs.getString(_kEmail) == user.email) {
         _store(user, null);
       }
+    } finally {
+      _markProfileReady();
     }
   }
 
@@ -588,21 +808,53 @@ class AuthProvider extends ChangeNotifier {
     busy = true;
     notifyListeners();
     try {
+      final db = FirebaseFirestore.instance;
       final doc = _userDoc(user.uid);
-      // Profil publik + kontak privat ditulis atomik dalam satu batch.
-      final batch = FirebaseFirestore.instance.batch();
-      batch.set(doc, {
+      Map<String, dynamic> profile() => {
         'name': trimmed,
         'email': user.email,
         'photoUrl': user.photoURL,
         'createdAt': FieldValue.serverTimestamp(),
         'updatedAt': FieldValue.serverTimestamp(),
-      });
-      batch.set(_contactDoc(user.uid), {
+      };
+      final contact = {
         'phone': phoneTrimmed,
         'updatedAt': FieldValue.serverTimestamp(),
-      });
-      await batch.commit().timeout(const Duration(seconds: 20));
+      };
+      // Profil publik + kontak privat ditulis atomik dalam satu
+      // transaksi — sekalian mengklaim kuota premium pendaftar awal
+      // kalau kuota sedang dibuka dan belum habis (rules memastikan
+      // penghitung naik tepat +1 dan nomornya cocok).
+      try {
+        await db
+            .runTransaction((tx) async {
+              final cfg = await tx.get(db.doc(_configDocPath));
+              final counterRef = db.doc(_earlyBirdDocPath);
+              final counter = await tx.get(counterRef);
+              final open = cfg.data()?['premiumForAll'] == true;
+              final limit =
+                  (cfg.data()?['premiumForAllLimit'] as num?)?.toInt() ??
+                  kEarlyBirdLimitDefault;
+              final count = (counter.data()?['count'] as num?)?.toInt() ?? 0;
+              final data = profile();
+              if (open && count < limit) {
+                data['earlyBirdNo'] = count + 1;
+                tx.set(counterRef, {'count': count + 1});
+              }
+              tx.set(doc, data);
+              tx.set(_contactDoc(user.uid), contact);
+            })
+            .timeout(const Duration(seconds: 20));
+      } on FirebaseException catch (e) {
+        // Klaim kuota ditolak (mis. rules belum diperbarui) — jangan
+        // gagalkan pendaftaran; simpan profil tanpa kuota.
+        if (e.code != 'permission-denied') rethrow;
+        debugPrint('BeomoraAuth klaim kuota ditolak: ${e.message}');
+        final batch = db.batch();
+        batch.set(doc, profile());
+        batch.set(_contactDoc(user.uid), contact);
+        await batch.commit().timeout(const Duration(seconds: 20));
+      }
 
       // Verifikasi: baca ulang dari server, bukan dari cache.
       final saved = await doc
@@ -809,9 +1061,13 @@ class AuthProvider extends ChangeNotifier {
     _premiumFlag = false;
     _premiumUntil = null;
     _premiumGrantUntil = null;
+    _earlyBird = false;
+    _purchasedHere = false;
     _prefs.remove(kPremiumPref);
     _prefs.remove(kPremiumUntilPref);
     _prefs.remove(kPremiumGrantPref);
+    _prefs.remove(kEarlyBirdPref);
+    _prefs.remove(kPremiumPurchasedPref);
     _prefs.remove(_kName);
     _prefs.remove(_kEmail);
     _prefs.remove(_kPhoto);
