@@ -1,6 +1,6 @@
 """Bangkitkan lib/data/vocab_examples.dart — contoh kalimat & catatan
-penggunaan per kata untuk kosakata JLPT (N5/N4/N3) dan kosakata ujian
-Inggris (Akademik/IELTS/TOEIC).
+penggunaan per kata untuk kosakata JLPT (N5/N4/N3), ungkapan Jepang
+(ja_phrases.dart) dan kosakata/ungkapan Inggris (en_exam_vocab.dart).
 
 Sumber data: tool/vocab_examples/ja_*.py & en_*.py, masing-masing berisi
 EXAMPLES = [(kata, kalimat, bacaan, terjemahan_id, terjemahan_en,
@@ -71,6 +71,16 @@ def check(lang, rows, valid):
                 stem = stem[:-1]
             if stem not in sent.replace(' ', ''):
                 warns.append(f'{key} tak muncul di: {sent}')
+        elif lang == 'ko':
+            # Kalimat Hangul + romanisasi + terjemahan id & en wajib;
+            # kecocokan kata dicek tool/check_ko_vocab.py.
+            if not reading.strip() or not t_en.strip():
+                errors.append(f'romanisasi/terjemahan en kosong: {key}')
+        elif lang == 'de':
+            # Kalimat Jerman + terjemahan id & en wajib (tanpa bacaan);
+            # kecocokan kata dicek tool/check_de_vocab.py.
+            if not t_en.strip():
+                errors.append(f'terjemahan en kosong: {key}')
         else:
             head = key.lower().split()[0][:4]
             if head not in sent.lower():
@@ -98,9 +108,32 @@ def main():
     ja = load('ja')
     en = load('en')
     ja_valid = dart_keys('lib/data/jlpt_vocab.dart', 'JVocab')
+    if (ROOT / 'lib/data/ja_phrases.dart').exists():
+        ja_valid += dart_keys('lib/data/ja_phrases.dart', 'JVocab')
     en_valid = dart_keys('lib/data/en_exam_vocab.dart', 'EVocab')
+    ko = load('ko')
+    ko_valid = (
+        dart_keys('lib/data/topik_vocab.dart', 'JVocab')
+        if (ROOT / 'lib/data/topik_vocab.dart').exists()
+        else []
+    )
+    if (ROOT / 'lib/data/ko_phrases.dart').exists():
+        ko_valid += dart_keys('lib/data/ko_phrases.dart', 'JVocab')
+    de = load('de')
+    de_valid = (
+        dart_keys('lib/data/goethe_vocab.dart', 'JVocab')
+        if (ROOT / 'lib/data/goethe_vocab.dart').exists()
+        else []
+    )
+    if (ROOT / 'lib/data/de_phrases.dart').exists():
+        de_valid += dart_keys('lib/data/de_phrases.dart', 'JVocab')
     failed = False
-    for lang, rows, valid in (('ja', ja, ja_valid), ('en', en, en_valid)):
+    for lang, rows, valid in (
+        ('ja', ja, ja_valid),
+        ('en', en, en_valid),
+        ('ko', ko, ko_valid),
+        ('de', de, de_valid),
+    ):
         errors, warns, missing = check(lang, rows, valid)
         for w in warns:
             print(f'[peringatan {lang}] {w}')
@@ -118,7 +151,7 @@ def main():
         '// tool/gen_vocab_examples.py; jangan edit manual.',
         'class VocabUsage {',
         '  final String sentence;',
-        '  final String reading; // romaji kalimat (Jepang); kosong untuk Inggris',
+        '  final String reading; // romaji/romanisasi (Jepang/Korea); kosong untuk Inggris',
         '  final String translationId;',
         '  final String translationEn; // kosong bila kalimatnya sudah Inggris',
         '  final String usageId;',
@@ -142,6 +175,8 @@ def main():
         '    switch (courseId) {',
         "      'ja' => vocabUsageJa[target],",
         "      'en' => vocabUsageEn[target],",
+        "      'ko' => vocabUsageKo[target],",
+        "      'de' => vocabUsageDe[target],",
         '      _ => null,',
         '    };',
         '',
@@ -149,11 +184,18 @@ def main():
         '',
         *emit('vocabUsageEn', en),
         '',
+        *emit('vocabUsageKo', ko),
+        '',
+        *emit('vocabUsageDe', de),
+        '',
     ]
     (ROOT / 'lib/data/vocab_examples.dart').write_text(
         '\n'.join(out), encoding='utf-8'
     )
-    print(f'OK: ja={len(ja)}/{len(ja_valid)} en={len(en)}/{len(en_valid)}')
+    print(
+        f'OK: ja={len(ja)}/{len(ja_valid)} en={len(en)}/{len(en_valid)} '
+        f'ko={len(ko)}/{len(ko_valid)} de={len(de)}/{len(de_valid)}'
+    )
 
 
 main()

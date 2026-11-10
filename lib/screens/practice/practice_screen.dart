@@ -87,6 +87,18 @@ class PracticeScreen extends StatelessWidget {
               subtitle: l.t('letter_quiz_desc'),
               onTap: () => _push(context, LetterQuizScreen(course: course)),
             ),
+          // Korea/Jerman: Tebak Kata dari kosakata inti per kategori.
+          if (course.id == 'ko' || course.id == 'de')
+            _GameCard(
+              emoji: '📖',
+              color: DuoColors.green,
+              title: l.t('word_quiz_title'),
+              subtitle: l.t('word_quiz_desc_${course.id}'),
+              trailing: progress.premiumActive
+                  ? null
+                  : '👑 ${l.t('quiz_free_badge').replaceFirst('{n}', '$kFreeMcqLimit')}',
+              onTap: () => _push(context, WordQuizScreen(course: course)),
+            ),
           // Tulis Huruf: kanvas tulisan tangan. Kartu selalu tampil;
           // kalau fitur belum aktif / model belum ada, ketuk → alur
           // aktivasi (cek RAM & ruang, unduh model) lalu masuk.

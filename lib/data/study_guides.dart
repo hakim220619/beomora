@@ -1,5 +1,7 @@
 import '../models/guide.dart';
+import 'de_grammar_guides.dart';
 import 'kanji_bank.dart';
+import 'ko_grammar_guides.dart';
 
 /// Konten Materi Belajar per kursus. Teks penjelasan tersedia dalam
 /// bahasa UI 'id' dan 'en'.
@@ -6103,6 +6105,9 @@ final List<GuideTopic> _korean = [
       ),
     ],
   ),
+  // Tata bahasa Korea (tingkat bicara, konjugasi, pola) — lihat
+  // ko_grammar_guides.dart.
+  ...koGrammarTopics,
   GuideTopic(
     id: 'ko_numbers',
     emoji: '🔢',
@@ -8115,6 +8120,9 @@ final List<GuideTopic> _german = [
       ),
     ],
   ),
+  // Tata bahasa Jerman (urutan kata, kasus, preposisi, Perfekt, …) —
+  // lihat de_grammar_guides.dart.
+  ...deGrammarTopics,
   GuideTopic(
     id: 'de_phrases',
     emoji: '🙏',

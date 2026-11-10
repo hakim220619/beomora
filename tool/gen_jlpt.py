@@ -9,6 +9,7 @@ import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from jlpt_n5_extra import WORDS as N5_EXTRA
 from jlpt_n4_extra import WORDS as N4_EXTRA
+import jlpt_themes
 
 N5 = [
   # Angka & hitungan
@@ -276,11 +277,28 @@ def dq(s):
     return s.replace('\\', '\\\\').replace("'", "\\'")
 
 
-def emit(level, rows):
-    # kana asli: buang suffix angka penanda unik (mis. "hana2"/"つき2")
+_HERE = os.path.dirname(os.path.abspath(__file__))
+
+
+def _labels(*sources):
+    out = []
+    for fname, listname in sources:
+        out += jlpt_themes.labels(os.path.join(_HERE, fname), listname)
+    return out
+
+
+def emit(level, rows, sources, themes):
+    # Susun per tema (lihat jlpt_themes.py), lalu tulis daftar kata +
+    # judul tema. Kana asli: buang suffix angka penanda unik
+    # (mis. "hana2"/"つき2").
+    arranged = jlpt_themes.arrange(level, rows, _labels(*sources), themes)
+    groups = [f'const List<Map<String, String>> jlpt{level}Groups = [']
+    for _, tid, ten, *_ in themes:
+        groups.append("  {'id': '%s', 'en': '%s'}," % (dq(tid), dq(ten)))
+    groups.append('];')
     out = [f'const List<JVocab> jlpt{level} = [']
     seen = set()
-    for kana, romaji, mid, men in rows:
+    for (kana, romaji, mid, men), group in arranged:
         real_kana = kana.rstrip('23')
         real_romaji = romaji.rstrip('23')
         key = (real_kana, real_romaji)
@@ -289,10 +307,10 @@ def emit(level, rows):
         assert key not in seen, f'{level} dobel: {real_kana}/{real_romaji}'
         seen.add(key)
         out.append(
-            "  JVocab('%s', '%s', {'id': '%s', 'en': '%s'})," %
-            (dq(real_kana), dq(real_romaji), dq(mid), dq(men)))
+            "  JVocab('%s', '%s', {'id': '%s', 'en': '%s'}, %d)," %
+            (dq(real_kana), dq(real_romaji), dq(mid), dq(men), group))
     out.append('];')
-    return '\n'.join(out), len(rows)
+    return '\n'.join(groups) + '\n\n' + '\n'.join(out), len(rows)
 
 
 header = '''// Dataset kosakata JLPT (N5/N4/N3) — sumber "Soal Pilihan Ganda" per
@@ -302,14 +320,22 @@ class JVocab {
   final String kana;
   final String romaji;
   final Map<String, String> meaning; // {'id':.., 'en':..}
-  const JVocab(this.kana, this.romaji, this.meaning);
+  /// Indeks tema di jlptN?Groups (judul bagian di halaman Materi).
+  final int group;
+  const JVocab(this.kana, this.romaji, this.meaning, [this.group = 0]);
 }
 '''
 
 parts = [header]
 total = 0
-for level, rows in [('N5', N5), ('N4', N4), ('N3', N3)]:
-    block, n = emit(level, rows)
+for level, rows, sources, themes in [
+    ('N5', N5, [('gen_jlpt.py', 'N5'), ('jlpt_n5_extra.py', 'WORDS')],
+     jlpt_themes.N5),
+    ('N4', N4, [('gen_jlpt.py', 'N4'), ('jlpt_n4_extra.py', 'WORDS')],
+     jlpt_themes.N4),
+    ('N3', N3, [('gen_jlpt.py', 'N3')], jlpt_themes.N3),
+]:
+    block, n = emit(level, rows, sources, themes)
     parts.append(block)
     total += n
 

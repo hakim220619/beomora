@@ -7,7 +7,10 @@ class EVocab {
   final String word;
   final String pron;
   final Map<String, String> meaning; // {'id':.., 'en':..}
-  const EVocab(this.word, this.pron, this.meaning);
+  /// Indeks grup di `<daftar>Groups` (judul bagian di halaman Materi);
+  /// 0 untuk daftar tanpa grup.
+  final int group;
+  const EVocab(this.word, this.pron, this.meaning, [this.group = 0]);
 }
 
 /// Akademik (TOEFL · IELTS · PTE): Academic Word List + tambahan.
@@ -4253,4 +4256,2113 @@ const List<EVocab> toeicVocab = [
     'id': 'tolok ukur',
     'en': 'standard for comparison',
   }),
+];
+
+/// Judul grup untuk [phraseVocab].
+const List<Map<String, String>> phraseVocabGroups = [
+  {'id': 'Keputusan & berubah pikiran', 'en': 'Decisions & changing your mind'},
+  {'id': 'Setuju & tidak setuju', 'en': 'Agreeing & disagreeing'},
+  {
+    'id': 'Minta tolong & menawarkan bantuan',
+    'en': 'Asking for & offering help',
+  },
+  {
+    'id': 'Maaf, terima kasih & menanggapinya',
+    'en': 'Apologizing, thanking & responding',
+  },
+  {'id': 'Perasaan & reaksi', 'en': 'Feelings & reactions'},
+  {
+    'id': 'Basa-basi & memulai obrolan',
+    'en': 'Small talk & starting a conversation',
+  },
+  {
+    'id': 'Mengakhiri obrolan & berpamitan',
+    'en': 'Ending a conversation & saying goodbye',
+  },
+  {
+    'id': 'Menjaga obrolan: klarifikasi & jeda',
+    'en': 'Keeping a conversation going: clarifying & pausing',
+  },
+  {'id': 'Belanja & restoran', 'en': 'Shopping & restaurants'},
+  {'id': 'Telepon, janji & waktu', 'en': 'Phone calls, appointments & time'},
+];
+
+/// Ungkapan percakapan sehari-hari yang paling sering dipakai.
+const List<EVocab> phraseVocab = [
+  EVocab('I\'ve changed my mind', 'aiv ceinjd mai maind', {
+    'id': 'aku berubah pikiran',
+    'en': 'I now think or want something different',
+  }, 0),
+  EVocab('On second thought', 'on se-kend thot', {
+    'id': 'setelah dipikir-pikir lagi',
+    'en': 'after thinking again (introduces a new decision)',
+  }, 0),
+  EVocab('It\'s up to you', 'its ap tu yu', {
+    'id': 'terserah kamu',
+    'en': 'you can decide',
+  }, 0),
+  EVocab('I don\'t mind', 'ai dount maind', {
+    'id': 'aku tidak keberatan; aku oke saja',
+    'en': 'either option is OK for me',
+  }, 0),
+  EVocab('Either is fine', 'i-dher iz fain', {
+    'id': 'yang mana saja boleh (dari dua pilihan)',
+    'en': 'both of the two options are acceptable',
+  }, 0),
+  EVocab('Whatever you think is best', 'wot-e-ver yu think iz best', {
+    'id': 'bagaimana baiknya menurutmu saja',
+    'en': 'I trust your judgement on this',
+  }, 0),
+  EVocab('I\'m not sure yet', 'aim not syur yet', {
+    'id': 'aku belum yakin',
+    'en': 'I haven\'t decided at this point',
+  }, 0),
+  EVocab('Let me think about it', 'let mi think e-baut it', {
+    'id': 'biar kupikirkan dulu',
+    'en': 'give me time before I decide',
+  }, 0),
+  EVocab('I can\'t decide', 'ai kent di-said', {
+    'id': 'aku bingung memilih',
+    'en': 'I\'m unable to choose',
+  }, 0),
+  EVocab('I\'m leaning towards', 'aim li-ning te-wordz', {
+    'id': 'aku condong ke (pilihan tertentu)',
+    'en': 'I\'m starting to prefer one option',
+  }, 0),
+  EVocab('I\'ve made up my mind', 'aiv meid ap mai maind', {
+    'id': 'aku sudah mantap memutuskan',
+    'en': 'my decision is final',
+  }, 0),
+  EVocab('Let\'s go with that', 'lets gou widh dhet', {
+    'id': 'kita pilih itu saja',
+    'en': 'let\'s choose that option',
+  }, 0),
+  EVocab('Let\'s do it', 'lets du it', {
+    'id': 'ayo kita lakukan',
+    'en': 'I\'m ready to start, let\'s go ahead',
+  }, 0),
+  EVocab('Why not?', 'wai not', {
+    'id': 'kenapa tidak? boleh juga',
+    'en': 'casual yes, there\'s no reason to refuse',
+  }, 0),
+  EVocab('Count me in', 'kaunt mi in', {
+    'id': 'aku ikut',
+    'en': 'include me in the plan',
+  }, 0),
+  EVocab('Count me out', 'kaunt mi aut', {
+    'id': 'aku tidak ikut',
+    'en': 'don\'t include me',
+  }, 0),
+  EVocab('I\'ll pass', 'ail pes', {
+    'id': 'aku lewat dulu; tidak usah, makasih',
+    'en': 'polite way to decline an offer',
+  }, 0),
+  EVocab('Maybe next time', 'mei-bi nekst taim', {
+    'id': 'mungkin lain kali',
+    'en': 'not now, perhaps another time',
+  }, 0),
+  EVocab('I\'ll let you know', 'ail let yu nou', {
+    'id': 'nanti kukabari',
+    'en': 'I\'ll tell you my decision later',
+  }, 0),
+  EVocab('That settles it', 'dhet se-telz it', {
+    'id': 'beres, sudah diputuskan',
+    'en': 'now the decision is clear',
+  }, 0),
+  EVocab('I agree', 'ai e-gri', {
+    'id': 'aku setuju',
+    'en': 'I have the same opinion',
+  }, 1),
+  EVocab('I couldn\'t agree more', 'ai ku-dent e-gri mor', {
+    'id': 'aku sangat setuju',
+    'en': 'I agree completely',
+  }, 1),
+  EVocab('Exactly', 'ig-zekt-li', {
+    'id': 'tepat sekali',
+    'en': 'that\'s precisely right',
+  }, 1),
+  EVocab('Absolutely', 'eb-se-lut-li', {
+    'id': 'tentu saja; jelas',
+    'en': 'strong yes',
+  }, 1),
+  EVocab('You\'re right', 'yor rait', {
+    'id': 'kamu benar',
+    'en': 'what you said is correct',
+  }, 1),
+  EVocab('Good point', 'gud point', {
+    'id': 'poin yang bagus',
+    'en': 'that\'s a useful thing to mention',
+  }, 1),
+  EVocab('Fair enough', 'fer i-naf', {
+    'id': 'masuk akal juga; oke deh',
+    'en': 'I accept your reason',
+  }, 1),
+  EVocab('That makes sense', 'dhet meiks sens', {
+    'id': 'itu masuk akal',
+    'en': 'I understand and it seems logical',
+  }, 1),
+  EVocab('Sounds good', 'saundz gud', {
+    'id': 'kedengarannya bagus; oke',
+    'en': 'I like that idea',
+  }, 1),
+  EVocab('Sounds like a plan', 'saundz laik e plen', {
+    'id': 'oke, sepakat begitu',
+    'en': 'agreed, let\'s do it that way',
+  }, 1),
+  EVocab('It\'s a deal', 'its e dil', {
+    'id': 'deal; sepakat',
+    'en': 'we have an agreement',
+  }, 1),
+  EVocab('Me too', 'mi tu', {
+    'id': 'aku juga',
+    'en': 'the same is true for me (positive)',
+  }, 1),
+  EVocab('Me neither', 'mi ni-dher', {
+    'id': 'aku juga tidak',
+    'en': 'the same is true for me (negative)',
+  }, 1),
+  EVocab('I guess so', 'ai ges sou', {
+    'id': 'kayaknya sih iya',
+    'en': 'unenthusiastic yes',
+  }, 1),
+  EVocab('Not really', 'not ri-li', {
+    'id': 'tidak juga; nggak terlalu',
+    'en': 'soft no',
+  }, 1),
+  EVocab('I don\'t think so', 'ai dount think sou', {
+    'id': 'kurasa tidak',
+    'en': 'polite no; I believe that\'s wrong',
+  }, 1),
+  EVocab('I\'m not so sure about that', 'aim not sou syur e-baut dhet', {
+    'id': 'aku kurang yakin soal itu',
+    'en': 'I have doubts about what you said',
+  }, 1),
+  EVocab('I see your point, but...', 'ai si yor point, bat', {
+    'id': 'aku paham maksudmu, tapi...',
+    'en': 'I understand you, but I think differently',
+  }, 1),
+  EVocab('I\'m afraid I disagree', 'aim e-freid ai dis-e-gri', {
+    'id': 'maaf, aku tidak setuju',
+    'en': 'polite way to say I don\'t agree',
+  }, 1),
+  EVocab('Let\'s agree to disagree', 'lets e-gri tu dis-e-gri', {
+    'id': 'ya sudah, kita beda pendapat saja',
+    'en': 'let\'s accept that we have different opinions',
+  }, 1),
+  EVocab('Can you help me?', 'ken yu help mi', {
+    'id': 'bisa bantu aku?',
+    'en': 'basic request for help',
+  }, 2),
+  EVocab('Could you do me a favor?', 'kud yu du mi e fei-ver', {
+    'id': 'boleh minta tolong?',
+    'en': 'polite request for a personal favour',
+  }, 2),
+  EVocab('Can you give me a hand?', 'ken yu giv mi e hend', {
+    'id': 'bisa bantu sebentar? (pekerjaan fisik)',
+    'en': 'request for practical help with a task',
+  }, 2),
+  EVocab('Would you mind...?', 'wud yu maind', {
+    'id': 'keberatan tidak kalau...?',
+    'en': 'very polite way to ask someone to do something',
+  }, 2),
+  EVocab('Sorry to bother you', 'so-ri tu bo-dher yu', {
+    'id': 'maaf mengganggu',
+    'en': 'polite opener before asking for something',
+  }, 2),
+  EVocab('Do you have a minute?', 'du yu hev e mi-nit', {
+    'id': 'ada waktu sebentar?',
+    'en': 'asking if someone is free to talk or help',
+  }, 2),
+  EVocab('If it\'s not too much trouble', 'if its not tu mac tra-bel', {
+    'id': 'kalau tidak merepotkan',
+    'en': 'softener added to a request',
+  }, 2),
+  EVocab('I could use some help', 'ai kud yuz sam help', {
+    'id': 'aku butuh sedikit bantuan nih',
+    'en': 'indirect way to say I need help',
+  }, 2),
+  EVocab('I\'d really appreciate it', 'aid ri-li e-pri-syi-eit it', {
+    'id': 'aku akan sangat berterima kasih',
+    'en': 'said when asking a favour, to show gratitude in advance',
+  }, 2),
+  EVocab('Do you need any help?', 'du yu nid e-ni help', {
+    'id': 'perlu bantuan?',
+    'en': 'offering help',
+  }, 2),
+  EVocab('Is there anything I can do?', 'iz dher e-ni-thing ai ken du', {
+    'id': 'ada yang bisa kubantu?',
+    'en': 'offering any kind of support',
+  }, 2),
+  EVocab('Let me help you', 'let mi help yu', {
+    'id': 'sini aku bantu',
+    'en': 'offering help directly',
+  }, 2),
+  EVocab('Let me get that for you', 'let mi get dhet for yu', {
+    'id': 'biar aku yang ambilkan/bawakan',
+    'en': 'offering to fetch, carry or pay for something',
+  }, 2),
+  EVocab('Allow me', 'e-lau mi', {
+    'id': 'mari, saya saja',
+    'en': 'formal offer to do a small task for someone',
+  }, 2),
+  EVocab('Leave it to me', 'liv it tu mi', {
+    'id': 'serahkan padaku',
+    'en': 'I\'ll take responsibility for it',
+  }, 2),
+  EVocab('I\'ll see what I can do', 'ail si wot ai ken du', {
+    'id': 'akan kuusahakan',
+    'en': 'I\'ll try but can\'t promise',
+  }, 2),
+  EVocab('I\'d be happy to help', 'aid bi he-pi tu help', {
+    'id': 'dengan senang hati aku bantu',
+    'en': 'willing agreement to help',
+  }, 2),
+  EVocab('Help yourself', 'help yor-self', {
+    'id': 'silakan ambil sendiri',
+    'en': 'take what you want, no need to ask',
+  }, 2),
+  EVocab('I can manage', 'ai ken me-nij', {
+    'id': 'aku bisa sendiri kok',
+    'en': 'declining help, I can do it alone',
+  }, 2),
+  EVocab('I\'ve got it', 'aiv got it', {
+    'id': 'sudah, biar aku saja',
+    'en': 'I have it under control, no help needed',
+  }, 2),
+  EVocab('I\'m so sorry', 'aim sou so-ri', {
+    'id': 'aku sungguh minta maaf',
+    'en': 'sincere apology',
+  }, 3),
+  EVocab('I apologize', 'ai e-po-le-jaiz', {
+    'id': 'saya mohon maaf',
+    'en': 'formal apology',
+  }, 3),
+  EVocab('My bad', 'mai bed', {
+    'id': 'salahku, sori',
+    'en': 'very casual admission of a small mistake',
+  }, 3),
+  EVocab('It\'s my fault', 'its mai folt', {
+    'id': 'ini salahku',
+    'en': 'I\'m responsible for the problem',
+  }, 3),
+  EVocab('Sorry I\'m late', 'so-ri aim leit', {
+    'id': 'maaf aku terlambat',
+    'en': 'apology for arriving late',
+  }, 3),
+  EVocab('I didn\'t mean to', 'ai di-dent min tu', {
+    'id': 'aku tidak sengaja',
+    'en': 'it was an accident, not my intention',
+  }, 3),
+  EVocab('It won\'t happen again', 'it wount he-pen e-gen', {
+    'id': 'tidak akan terulang lagi',
+    'en': 'promise after a mistake',
+  }, 3),
+  EVocab('Sorry for the trouble', 'so-ri for dhe tra-bel', {
+    'id': 'maaf sudah merepotkan',
+    'en': 'apology for causing someone extra work',
+  }, 3),
+  EVocab('No worries', 'nou wa-riz', {
+    'id': 'santai aja',
+    'en': 'casual reply to thanks or an apology',
+  }, 3),
+  EVocab('Never mind', 'ne-ver maind', {
+    'id': 'sudahlah, lupakan saja',
+    'en': 'forget it, it\'s not important',
+  }, 3),
+  EVocab('Don\'t worry about it', 'dount wa-ri e-baut it', {
+    'id': 'jangan dipikirkan',
+    'en': 'reassuring reply to an apology',
+  }, 3),
+  EVocab('No harm done', 'nou harm dan', {
+    'id': 'tidak apa-apa, tidak ada yang rusak',
+    'en': 'nothing bad happened, so it\'s fine',
+  }, 3),
+  EVocab('Thank you so much', 'thenk yu sou mac', {
+    'id': 'terima kasih banyak',
+    'en': 'strong thanks',
+  }, 3),
+  EVocab('I owe you one', 'ai ou yu wan', {
+    'id': 'aku utang budi sama kamu',
+    'en': 'I\'ll return the favour one day',
+  }, 3),
+  EVocab('That\'s very kind of you', 'dhets ve-ri kaind ov yu', {
+    'id': 'kamu baik sekali',
+    'en': 'polite thanks for someone\'s kindness',
+  }, 3),
+  EVocab('You\'re welcome', 'yor wel-kem', {
+    'id': 'sama-sama',
+    'en': 'standard reply to thank you',
+  }, 3),
+  EVocab('No problem', 'nou pro-blem', {
+    'id': 'tidak masalah',
+    'en': 'it was easy for me',
+  }, 3),
+  EVocab('Anytime', 'e-ni-taim', {
+    'id': 'kapan saja (siap bantu lagi)',
+    'en': 'I\'m happy to help again whenever you need',
+  }, 3),
+  EVocab('My pleasure', 'mai ple-zyer', {
+    'id': 'dengan senang hati (balasan terima kasih)',
+    'en': 'warm, polite reply to thanks',
+  }, 3),
+  EVocab('Don\'t mention it', 'dount men-syen it', {
+    'id': 'ah, bukan apa-apa',
+    'en': 'it was nothing, no need to thank me',
+  }, 3),
+  EVocab('That\'s great!', 'dhets greit', {
+    'id': 'bagus sekali!',
+    'en': 'reaction to good news',
+  }, 4),
+  EVocab('Good for you!', 'gud for yu', {
+    'id': 'selamat ya, ikut senang!',
+    'en': 'I\'m pleased about your success',
+  }, 4),
+  EVocab('Well done!', 'wel dan', {
+    'id': 'kerja bagus!',
+    'en': 'praise for an achievement',
+  }, 4),
+  EVocab('Congratulations!', 'ken-gre-cu-lei-syenz', {
+    'id': 'selamat!',
+    'en': 'said for a success or special event',
+  }, 4),
+  EVocab('I\'m so happy for you', 'aim sou he-pi for yu', {
+    'id': 'aku turut bahagia untukmu',
+    'en': 'sharing someone\'s joy',
+  }, 4),
+  EVocab('Lucky you!', 'la-ki yu', {
+    'id': 'beruntung banget kamu!',
+    'en': 'you\'re fortunate (a bit envious)',
+  }, 4),
+  EVocab('I can\'t wait!', 'ai kent weit', {
+    'id': 'aku sudah tidak sabar!',
+    'en': 'I\'m very excited about something coming',
+  }, 4),
+  EVocab('What a relief!', 'wot e ri-lif', {
+    'id': 'lega sekali!',
+    'en': 'I\'m glad the worry is over',
+  }, 4),
+  EVocab('Thank goodness', 'thenk gud-nes', {
+    'id': 'syukurlah',
+    'en': 'I\'m grateful something bad didn\'t happen',
+  }, 4),
+  EVocab('Really?', 'ri-li', {
+    'id': 'masa sih?',
+    'en': 'showing interest or mild surprise',
+  }, 4),
+  EVocab('No way!', 'nou wei', {
+    'id': 'masa?! nggak mungkin!',
+    'en': 'strong surprise or disbelief',
+  }, 4),
+  EVocab('You\'re kidding!', 'yor ki-ding', {
+    'id': 'kamu bercanda, kan!',
+    'en': 'I can\'t believe what you just told me',
+  }, 4),
+  EVocab('I can\'t believe it', 'ai kent bi-liv it', {
+    'id': 'aku tidak percaya',
+    'en': 'this is too surprising to accept',
+  }, 4),
+  EVocab('Oh no!', 'ou nou', {
+    'id': 'aduh! gawat!',
+    'en': 'reaction to bad news or a problem',
+  }, 4),
+  EVocab('That\'s too bad', 'dhets tu bed', {
+    'id': 'sayang sekali',
+    'en': 'sympathy for a disappointing situation',
+  }, 4),
+  EVocab('What a shame', 'wot e syeim', {
+    'id': 'sayang banget, ya',
+    'en': 'it\'s unfortunate that it happened',
+  }, 4),
+  EVocab('I\'m sorry to hear that', 'aim so-ri tu hir dhet', {
+    'id': 'aku ikut prihatin',
+    'en': 'sympathy for someone\'s bad news',
+  }, 4),
+  EVocab('How awful!', 'hau o-ful', {
+    'id': 'mengerikan sekali!',
+    'en': 'reaction to very bad news',
+  }, 4),
+  EVocab('I\'m sick of it', 'aim sik ov it', {
+    'id': 'aku sudah muak',
+    'en': 'I\'m tired of this and want it to stop',
+  }, 4),
+  EVocab('That\'s so annoying', 'dhets sou e-noi-ing', {
+    'id': 'nyebelin banget',
+    'en': 'this irritates me',
+  }, 4),
+  EVocab('Long time no see', 'long taim nou si', {
+    'id': 'lama tidak bertemu',
+    'en': 'it\'s been a long time since we met',
+  }, 5),
+  EVocab('How\'s it going?', 'haus it gou-ing', {
+    'id': 'gimana kabarnya? (santai)',
+    'en': 'casual way to ask how someone is',
+  }, 5),
+  EVocab('What\'s up?', 'wots ap', {
+    'id': 'ada apa? / apa kabar? (santai sekali)',
+    'en': 'very casual greeting asking what\'s happening',
+  }, 5),
+  EVocab('How have you been?', 'hau hev yu bin', {
+    'id': 'apa kabarmu selama ini?',
+    'en': 'asking about someone\'s life since you last met',
+  }, 5),
+  EVocab('Nice to meet you', 'nais tu mit yu', {
+    'id': 'senang berkenalan denganmu',
+    'en': 'said when meeting someone for the first time',
+  }, 5),
+  EVocab('What do you do?', 'wot du yu du', {
+    'id': 'apa pekerjaanmu?',
+    'en': 'asking about someone\'s job',
+  }, 5),
+  EVocab('Where are you from?', 'wer ar yu from', {
+    'id': 'kamu berasal dari mana?',
+    'en': 'asking about someone\'s hometown or country',
+  }, 5),
+  EVocab('How\'s your day going?', 'haus yor dei gou-ing', {
+    'id': 'bagaimana harimu sejauh ini?',
+    'en': 'asking how someone\'s day is so far',
+  }, 5),
+  EVocab('Lovely weather, isn\'t it?', 'lav-li we-dher i-zent it', {
+    'id': 'cuacanya cerah, ya?',
+    'en': 'weather comment used to open small talk',
+  }, 5),
+  EVocab('Have we met before?', 'hev wi met bi-for', {
+    'id': 'apa kita pernah bertemu sebelumnya?',
+    'en': 'asking whether you already know each other',
+  }, 5),
+  EVocab('I don\'t think we\'ve met', 'ai dount think wiv met', {
+    'id': 'sepertinya kita belum berkenalan',
+    'en': 'polite opener to introduce yourself to a stranger',
+  }, 5),
+  EVocab('Mind if I join you?', 'maind if ai join yu', {
+    'id': 'boleh saya bergabung?',
+    'en': 'asking to sit with or join someone',
+  }, 5),
+  EVocab('What brings you here?', 'wot brings yu hir', {
+    'id': 'apa yang membawamu ke sini?',
+    'en': 'asking why someone has come to a place',
+  }, 5),
+  EVocab('How do you know each other?', 'hau du yu nou ic a-dher', {
+    'id': 'bagaimana kalian bisa saling kenal?',
+    'en': 'asking how two people became acquainted',
+  }, 5),
+  EVocab('What\'s new?', 'wots nyu', {
+    'id': 'ada kabar terbaru apa?',
+    'en': 'asking for recent news in someone\'s life',
+  }, 5),
+  EVocab('How was your weekend?', 'hau woz yor wik-end', {
+    'id': 'bagaimana akhir pekanmu kemarin?',
+    'en': 'asking about someone\'s past weekend',
+  }, 5),
+  EVocab('Any plans for the weekend?', 'e-ni plenz for dhe wik-end', {
+    'id': 'ada rencana akhir pekan ini?',
+    'en': 'asking about someone\'s upcoming weekend plans',
+  }, 5),
+  EVocab('Is this seat taken?', 'iz dhis sit tei-ken', {
+    'id': 'kursi ini ada yang menempati?',
+    'en': 'asking whether a seat is free',
+  }, 5),
+  EVocab('Good to see you', 'gud tu si yu', {
+    'id': 'senang bertemu lagi denganmu',
+    'en': 'greeting someone you already know',
+  }, 5),
+  EVocab('Fancy seeing you here', 'fen-si si-ing yu hir', {
+    'id': 'wah, tak disangka ketemu di sini',
+    'en': 'surprise at meeting someone unexpectedly',
+  }, 5),
+  EVocab('How\'s work?', 'haus werk', {
+    'id': 'gimana kerjaanmu belakangan ini?',
+    'en': 'asking how someone\'s job is going lately',
+  }, 5),
+  EVocab('I\'d better get going', 'aid be-ter get gou-ing', {
+    'id': 'sebaiknya saya pergi sekarang',
+    'en': 'signalling that you need to leave',
+  }, 6),
+  EVocab('It was nice talking to you', 'it woz nais to-king tu yu', {
+    'id': 'senang mengobrol denganmu',
+    'en': 'polite closing after a conversation',
+  }, 6),
+  EVocab('Take care', 'teik ker', {
+    'id': 'jaga dirimu baik-baik',
+    'en': 'friendly farewell wishing someone well',
+  }, 6),
+  EVocab('See you later', 'si yu lei-ter', {
+    'id': 'sampai jumpa nanti',
+    'en': 'common casual goodbye',
+  }, 6),
+  EVocab('See you around', 'si yu e-raund', {
+    'id': 'sampai ketemu lagi kapan-kapan',
+    'en': 'casual goodbye with no fixed next meeting',
+  }, 6),
+  EVocab('Catch you later', 'kec yu lei-ter', {
+    'id': 'nanti ngobrol lagi ya (santai sekali)',
+    'en': 'very casual goodbye between friends',
+  }, 6),
+  EVocab('Have a good one', 'hev e gud wan', {
+    'id': 'semoga lancar harimu (santai)',
+    'en': 'casual all-purpose farewell wish',
+  }, 6),
+  EVocab('Have a nice day', 'hev e nais dei', {
+    'id': 'semoga harimu menyenangkan',
+    'en': 'polite wish for someone\'s day when parting',
+  }, 6),
+  EVocab('Keep in touch', 'kip in tac', {
+    'id': 'tetap berkabar ya',
+    'en': 'asking someone to keep contacting you',
+  }, 6),
+  EVocab('Say hi to everyone for me', 'sei hai tu ev-ri-wan for mi', {
+    'id': 'titip salam untuk semuanya',
+    'en': 'asking someone to pass on your greetings',
+  }, 6),
+  EVocab('Let\'s catch up soon', 'lets kec ap sun', {
+    'id': 'kapan-kapan kita ketemu dan ngobrol lagi ya',
+    'en': 'suggesting meeting again to share news',
+  }, 6),
+  EVocab('I\'ve got to run', 'aiv got tu ran', {
+    'id': 'saya harus buru-buru pergi',
+    'en': 'saying you must leave quickly',
+  }, 6),
+  EVocab('Safe travels', 'seif tre-velz', {
+    'id': 'selamat jalan, hati-hati di perjalanan',
+    'en': 'wishing someone a safe journey',
+  }, 6),
+  EVocab('Get home safe', 'get houm seif', {
+    'id': 'hati-hati sampai rumah',
+    'en': 'wishing someone gets home safely',
+  }, 6),
+  EVocab('Until next time', 'an-til nekst taim', {
+    'id': 'sampai jumpa di lain waktu',
+    'en': 'farewell expecting a later meeting',
+  }, 6),
+  EVocab('Talk to you soon', 'tok tu yu sun', {
+    'id': 'nanti kita bicara lagi',
+    'en': 'closing a call or message expecting more contact',
+  }, 6),
+  EVocab('Don\'t be a stranger', 'dount bi e strein-jer', {
+    'id': 'sering-sering kabari ya',
+    'en': 'urging someone to stay in contact',
+  }, 6),
+  EVocab('It\'s getting late', 'its ge-ting leit', {
+    'id': 'sudah larut nih',
+    'en': 'hinting that it\'s time to leave',
+  }, 6),
+  EVocab('I\'ll let you go', 'ail let yu gou', {
+    'id': 'ya sudah, saya tidak mau menahanmu lagi',
+    'en': 'polite way to end a conversation, especially on the phone',
+  }, 6),
+  EVocab('Bye for now', 'bai for nau', {
+    'id': 'dadah, sampai nanti',
+    'en': 'light goodbye implying contact again soon',
+  }, 6),
+  EVocab('Could you say that again?', 'kud yu sei dhet e-gen', {
+    'id': 'bisa diulangi?',
+    'en': 'asking someone to repeat what they said',
+  }, 7),
+  EVocab('Pardon?', 'par-den', {
+    'id': 'maaf, apa tadi? (sopan)',
+    'en': 'polite one-word request for repetition',
+  }, 7),
+  EVocab('Come again?', 'kam e-gen', {
+    'id': 'hah, apa tadi? (santai)',
+    'en': 'casual or surprised request for repetition',
+  }, 7),
+  EVocab('I didn\'t catch that', 'ai di-dent kec dhet', {
+    'id': 'saya kurang menangkap ucapanmu',
+    'en': 'saying you didn\'t hear or understand something',
+  }, 7),
+  EVocab('What do you mean?', 'wot du yu min', {
+    'id': 'apa maksudmu?',
+    'en': 'asking for the meaning of what was said',
+  }, 7),
+  EVocab('Could you speak a bit slower?', 'kud yu spik e bit slou-er', {
+    'id': 'bisa bicara sedikit lebih pelan?',
+    'en': 'asking someone to slow down',
+  }, 7),
+  EVocab('How do you spell that?', 'hau du yu spel dhet', {
+    'id': 'bagaimana ejaannya?',
+    'en': 'asking how a word or name is spelled',
+  }, 7),
+  EVocab('Does that make sense?', 'daz dhet meik sens', {
+    'id': 'apakah penjelasan saya bisa dipahami?',
+    'en': 'checking whether the listener understands',
+  }, 7),
+  EVocab('You know what I mean?', 'yu nou wot ai min', {
+    'id': 'kamu paham maksudku kan?',
+    'en': 'checking the listener follows your idea',
+  }, 7),
+  EVocab('So what you\'re saying is', 'sou wot yur sei-ing iz', {
+    'id': 'jadi maksudmu adalah',
+    'en': 'paraphrasing to check understanding',
+  }, 7),
+  EVocab('Let me see', 'let mi si', {
+    'id': 'coba saya ingat-ingat dulu',
+    'en': 'filler while you think or look something up',
+  }, 7),
+  EVocab('Let me think', 'let mi think', {
+    'id': 'biar saya pikir dulu',
+    'en': 'asking for a moment to think',
+  }, 7),
+  EVocab('Good question', 'gud kwes-cen', {
+    'id': 'pertanyaan bagus',
+    'en': 'acknowledging a question while buying time',
+  }, 7),
+  EVocab('How can I put it?', 'hau ken ai put it', {
+    'id': 'bagaimana ya bilangnya',
+    'en': 'filler while searching for the right words',
+  }, 7),
+  EVocab('What\'s the word?', 'wots dhe word', {
+    'id': 'apa ya istilahnya',
+    'en': 'searching aloud for a word you forgot',
+  }, 7),
+  EVocab('You know', 'yu nou', {
+    'id': 'kamu tahu kan (pengisi jeda)',
+    'en': 'common filler in casual speech',
+  }, 7),
+  EVocab('I mean', 'ai min', {
+    'id': 'maksud saya',
+    'en': 'used to correct or clarify what you just said',
+  }, 7),
+  EVocab('Where was I?', 'wer woz ai', {
+    'id': 'tadi sampai mana ya?',
+    'en': 'trying to resume after an interruption',
+  }, 7),
+  EVocab('As I was saying', 'ez ai woz sei-ing', {
+    'id': 'seperti yang tadi saya bilang',
+    'en': 'returning to your point after an interruption',
+  }, 7),
+  EVocab('Hold on a sec', 'hould on e sek', {
+    'id': 'tunggu sebentar',
+    'en': 'casual request to wait a moment',
+  }, 7),
+  EVocab('Just looking, thanks', 'jast lu-king thenks', {
+    'id': 'cuma lihat-lihat, terima kasih',
+    'en': 'telling a shop assistant you don\'t need help',
+  }, 8),
+  EVocab('How much is this?', 'hau mac iz dhis', {
+    'id': 'ini berapa harganya?',
+    'en': 'asking the price of an item',
+  }, 8),
+  EVocab(
+    'Do you have this in another size?',
+    'du yu hev dhis in e-na-dher saiz',
+    {
+      'id': 'ada ukuran lain untuk yang ini?',
+      'en': 'asking for a different size',
+    },
+    8,
+  ),
+  EVocab('Can I try this on?', 'ken ai trai dhis on', {
+    'id': 'boleh saya coba pakai ini?',
+    'en': 'asking to try on clothes',
+  }, 8),
+  EVocab('Where\'s the fitting room?', 'werz dhe fi-ting rum', {
+    'id': 'kamar pas di mana?',
+    'en': 'asking for the changing room',
+  }, 8),
+  EVocab('Is this on sale?', 'iz dhis on seil', {
+    'id': 'ini sedang diskon?',
+    'en': 'asking whether an item is discounted',
+  }, 8),
+  EVocab('Do you take cards?', 'du yu teik kardz', {
+    'id': 'bisa bayar pakai kartu?',
+    'en': 'asking whether card payment is accepted',
+  }, 8),
+  EVocab('I\'ll take it', 'ail teik it', {
+    'id': 'saya ambil yang ini',
+    'en': 'telling the seller you will buy it',
+  }, 8),
+  EVocab('Keep the change', 'kip dhe ceinj', {
+    'id': 'kembaliannya ambil saja',
+    'en': 'telling someone not to give you change',
+  }, 8),
+  EVocab('Can I get a receipt?', 'ken ai get e ri-sit', {
+    'id': 'boleh minta struknya?',
+    'en': 'asking for proof of payment',
+  }, 8),
+  EVocab('A table for two, please', 'e tei-bel for tu pliz', {
+    'id': 'meja untuk dua orang',
+    'en': 'asking a restaurant for a table',
+  }, 8),
+  EVocab('I have a reservation', 'ai hev e re-zer-vei-syen', {
+    'id': 'saya sudah reservasi',
+    'en': 'telling staff you booked a table',
+  }, 8),
+  EVocab('Can I see the menu?', 'ken ai si dhe me-nyu', {
+    'id': 'boleh lihat menunya?',
+    'en': 'asking for the menu',
+  }, 8),
+  EVocab('Are you ready to order?', 'ar yu re-di tu or-der', {
+    'id': 'sudah siap memesan?',
+    'en': 'waiter\'s question before taking an order',
+  }, 8),
+  EVocab('What do you recommend?', 'wot du yu re-ke-mend', {
+    'id': 'apa yang Anda rekomendasikan?',
+    'en': 'asking staff for a suggestion',
+  }, 8),
+  EVocab('I\'ll have the same', 'ail hev dhe seim', {
+    'id': 'saya pesan yang sama',
+    'en': 'ordering what someone else ordered',
+  }, 8),
+  EVocab('For here or to go?', 'for hir or tu gou', {
+    'id': 'makan di sini atau dibawa pulang?',
+    'en': 'asking whether food is eaten in or taken away',
+  }, 8),
+  EVocab('Anything else?', 'e-ni-thing els', {
+    'id': 'ada lagi?',
+    'en': 'staff asking whether you want more',
+  }, 8),
+  EVocab('That\'s all', 'dhets ol', {
+    'id': 'itu saja',
+    'en': 'saying your order is complete',
+  }, 8),
+  EVocab('Can I get the bill?', 'ken ai get dhe bil', {
+    'id': 'boleh minta bonnya?',
+    'en': 'asking to pay at a restaurant',
+  }, 8),
+  EVocab('Can we split the bill?', 'ken wi split dhe bil', {
+    'id': 'bisa bayar sendiri-sendiri?',
+    'en': 'asking to divide the payment',
+  }, 8),
+  EVocab('It\'s on me', 'its on mi', {
+    'id': 'biar saya yang traktir',
+    'en': 'saying you will pay for everyone',
+  }, 8),
+  EVocab('Who\'s calling, please?', 'huz ko-ling pliz', {
+    'id': 'dengan siapa saya bicara?',
+    'en': 'asking a caller\'s identity',
+  }, 9),
+  EVocab('Speaking', 'spi-king', {
+    'id': 'ya, saya sendiri (di telepon)',
+    'en': 'phone reply meaning the caller is talking to the right person',
+  }, 9),
+  EVocab('Can I take a message?', 'ken ai teik e me-sej', {
+    'id': 'mau titip pesan?',
+    'en': 'offering to note down a message for someone',
+  }, 9),
+  EVocab('Hold the line, please', 'hould dhe lain pliz', {
+    'id': 'mohon tunggu, jangan ditutup dulu',
+    'en': 'asking a caller to stay on the phone',
+  }, 9),
+  EVocab('You\'ve got the wrong number', 'yuv got dhe rong nam-ber', {
+    'id': 'Anda salah sambung',
+    'en': 'telling a caller they dialled the wrong number',
+  }, 9),
+  EVocab('I\'ll call you back', 'ail kol yu bek', {
+    'id': 'nanti saya telepon balik',
+    'en': 'promising to return a call',
+  }, 9),
+  EVocab('You\'re breaking up', 'yur brei-king ap', {
+    'id': 'suaramu putus-putus',
+    'en': 'saying the phone connection is bad',
+  }, 9),
+  EVocab('Can you hear me?', 'ken yu hir mi', {
+    'id': 'suaraku terdengar?',
+    'en': 'checking the call connection',
+  }, 9),
+  EVocab('Is now a good time?', 'iz nau e gud taim', {
+    'id': 'apakah sekarang waktunya pas?',
+    'en': 'checking whether someone can talk now',
+  }, 9),
+  EVocab('Sorry I missed your call', 'so-ri ai mist yor kol', {
+    'id': 'maaf tadi tidak sempat angkat teleponmu',
+    'en': 'explaining you didn\'t answer a call',
+  }, 9),
+  EVocab('Are you free on Friday?', 'ar yu fri on frai-dei', {
+    'id': 'kamu kosong hari Jumat?',
+    'en': 'asking about someone\'s availability',
+  }, 9),
+  EVocab('What time works for you?', 'wot taim works for yu', {
+    'id': 'jam berapa yang cocok untukmu?',
+    'en': 'asking someone\'s preferred time',
+  }, 9),
+  EVocab('How about Monday?', 'hau e-baut man-dei', {
+    'id': 'bagaimana kalau hari Senin?',
+    'en': 'suggesting a day to meet',
+  }, 9),
+  EVocab('Let me check my calendar', 'let mi cek mai ke-len-der', {
+    'id': 'coba saya cek jadwal dulu',
+    'en': 'checking your schedule before agreeing',
+  }, 9),
+  EVocab(
+    'I\'d like to make an appointment',
+    'aid laik tu meik en e-point-ment',
+    {
+      'id': 'saya ingin membuat janji temu',
+      'en': 'booking a visit with a doctor, office, etc.',
+    },
+    9,
+  ),
+  EVocab('I need to reschedule', 'ai nid tu ri-ske-jul', {
+    'id': 'saya perlu mengganti jadwal',
+    'en': 'asking to move an appointment',
+  }, 9),
+  EVocab('Something came up', 'sam-thing keim ap', {
+    'id': 'ada urusan mendadak',
+    'en': 'excuse for cancelling or changing plans',
+  }, 9),
+  EVocab('I\'m running late', 'aim ra-ning leit', {
+    'id': 'saya bakal agak terlambat',
+    'en': 'warning that you will arrive late',
+  }, 9),
+  EVocab('I\'m on my way', 'aim on mai wei', {
+    'id': 'saya sedang di jalan',
+    'en': 'saying you are already coming',
+  }, 9),
+  EVocab('See you then', 'si yu dhen', {
+    'id': 'sampai ketemu nanti sesuai janji',
+    'en': 'goodbye confirming an arranged meeting',
+  }, 9),
+  EVocab('What time is it?', 'wot taim iz it', {
+    'id': 'jam berapa sekarang?',
+    'en': 'asking the current time',
+  }, 9),
+];
+
+/// Judul grup untuk [phrasalVocab].
+const List<Map<String, String>> phrasalVocabGroups = [
+  {'id': 'Phrasal verb dengan GET', 'en': 'Phrasal verbs with GET'},
+  {'id': 'Phrasal verb dengan GO', 'en': 'Phrasal verbs with GO'},
+  {'id': 'Phrasal verb dengan COME', 'en': 'Phrasal verbs with COME'},
+  {'id': 'Phrasal verb dengan TAKE', 'en': 'Phrasal verbs with TAKE'},
+  {'id': 'Phrasal verb dengan PUT', 'en': 'Phrasal verbs with PUT'},
+  {'id': 'Phrasal verb dengan LOOK', 'en': 'Phrasal verbs with LOOK'},
+  {'id': 'Phrasal verb dengan TURN', 'en': 'Phrasal verbs with TURN'},
+  {
+    'id': 'Phrasal verb dengan GIVE & BRING',
+    'en': 'Phrasal verbs with GIVE & BRING',
+  },
+  {
+    'id': 'Phrasal verb dengan MAKE, SET, RUN & PICK',
+    'en': 'Phrasal verbs with MAKE, SET, RUN & PICK',
+  },
+  {
+    'id': 'Phrasal verb dengan KEEP, HOLD & CARRY',
+    'en': 'Phrasal verbs with KEEP, HOLD & CARRY',
+  },
+  {
+    'id': 'Phrasal verb dengan BREAK, CALL & CUT',
+    'en': 'Phrasal verbs with BREAK, CALL & CUT',
+  },
+  {
+    'id': 'Phrasal verb dengan SHOW, STAND & HANG',
+    'en': 'Phrasal verbs with SHOW, STAND & HANG',
+  },
+  {
+    'id': 'Phrasal verb dengan FALL, PASS, DROP & PULL',
+    'en': 'Phrasal verbs with FALL, PASS, DROP & PULL',
+  },
+  {
+    'id': 'Phrasal verb berpartikel UP',
+    'en': 'Phrasal verbs with the particle UP',
+  },
+  {
+    'id': 'Phrasal verb berpartikel DOWN',
+    'en': 'Phrasal verbs with the particle DOWN',
+  },
+  {'id': 'Kata kerja lain', 'en': 'Other verbs'},
+];
+
+/// Phrasal verb yang paling sering dipakai.
+const List<EVocab> phrasalVocab = [
+  EVocab('get up', 'get ap', {
+    'id': 'bangun (dari tidur)',
+    'en': 'rise from bed',
+  }, 0),
+  EVocab('get back', 'get bek', {
+    'id': 'kembali; pulang',
+    'en': 'return; come home',
+  }, 0),
+  EVocab('get out', 'get aut', {
+    'id': 'keluar (dari tempat)',
+    'en': 'leave a place',
+  }, 0),
+  EVocab('get on', 'get on', {
+    'id': 'naik (bus, kereta, pesawat)',
+    'en': 'board a bus, train or plane',
+  }, 0),
+  EVocab('get off', 'get of', {
+    'id': 'turun (dari kendaraan)',
+    'en': 'leave a bus, train or plane',
+  }, 0),
+  EVocab('get in', 'get in', {
+    'id': 'masuk (ke mobil); tiba',
+    'en': 'enter a car; arrive',
+  }, 0),
+  EVocab('get along', 'get e-long', {
+    'id': 'akur; rukun',
+    'en': 'have a friendly relationship',
+  }, 0),
+  EVocab('get over', 'get ou-ver', {
+    'id': 'pulih dari; melupakan',
+    'en': 'recover from',
+  }, 0),
+  EVocab('get through', 'get thru', {
+    'id': 'melewati (masa sulit)',
+    'en': 'survive a difficult time',
+  }, 0),
+  EVocab('get away', 'get e-wei', {
+    'id': 'kabur; pergi berlibur',
+    'en': 'escape; go on holiday',
+  }, 0),
+  EVocab('get together', 'get tu-ge-dher', {
+    'id': 'berkumpul; bertemu',
+    'en': 'meet socially',
+  }, 0),
+  EVocab('get rid of', 'get rid ov', {
+    'id': 'menyingkirkan; membuang',
+    'en': 'remove something unwanted',
+  }, 0),
+  EVocab('get by', 'get bai', {
+    'id': 'bertahan hidup (pas-pasan)',
+    'en': 'manage with little money',
+  }, 0),
+  EVocab('get into', 'get in-tu', {
+    'id': 'masuk ke; mulai menyukai',
+    'en': 'enter; become interested in',
+  }, 0),
+  EVocab('go on', 'gou on', {
+    'id': 'berlanjut; terjadi',
+    'en': 'continue; happen',
+  }, 1),
+  EVocab('go back', 'gou bek', {
+    'id': 'kembali (ke tempat semula)',
+    'en': 'return to a place',
+  }, 1),
+  EVocab('go out', 'gou aut', {
+    'id': 'keluar (bersenang-senang)',
+    'en': 'leave home for fun',
+  }, 1),
+  EVocab('go down', 'gou daun', {
+    'id': 'turun; menurun',
+    'en': 'decrease; descend',
+  }, 1),
+  EVocab('go up', 'gou ap', {
+    'id': 'naik; meningkat',
+    'en': 'increase; rise',
+  }, 1),
+  EVocab('go through', 'gou thru', {
+    'id': 'mengalami (hal berat)',
+    'en': 'experience something difficult',
+  }, 1),
+  EVocab('go off', 'gou of', {
+    'id': 'berbunyi (alarm); basi',
+    'en': 'ring (alarm); go bad (food)',
+  }, 1),
+  EVocab('go away', 'gou e-wei', {
+    'id': 'pergi; hilang',
+    'en': 'leave; disappear',
+  }, 1),
+  EVocab('go for', 'gou for', {
+    'id': 'memilih; mengejar (tujuan)',
+    'en': 'choose; try to achieve',
+  }, 1),
+  EVocab('go along with', 'gou e-long widh', {
+    'id': 'ikut menyetujui',
+    'en': 'agree with; accept',
+  }, 1),
+  EVocab('go out with', 'gou aut widh', {
+    'id': 'berpacaran dengan',
+    'en': 'date someone',
+  }, 1),
+  EVocab('come back', 'kam bek', {
+    'id': 'kembali (ke sini)',
+    'en': 'return here',
+  }, 2),
+  EVocab('come on', 'kam on', {
+    'id': 'ayo!; menyala',
+    'en': 'hurry up!; start working (device)',
+  }, 2),
+  EVocab('come up', 'kam ap', {
+    'id': 'muncul (topik, masalah)',
+    'en': 'arise; be mentioned',
+  }, 2),
+  EVocab('come out', 'kam aut', {
+    'id': 'keluar; terbit; dirilis',
+    'en': 'be published; appear',
+  }, 2),
+  EVocab('come in', 'kam in', {
+    'id': 'masuk (ke ruangan)',
+    'en': 'enter a room',
+  }, 2),
+  EVocab('come along', 'kam e-long', {
+    'id': 'ikut serta; berkembang',
+    'en': 'accompany; make progress',
+  }, 2),
+  EVocab('come across', 'kam e-kros', {
+    'id': 'menemukan secara kebetulan',
+    'en': 'find by chance',
+  }, 2),
+  EVocab('come over', 'kam ou-ver', {
+    'id': 'datang berkunjung (ke rumah)',
+    'en': 'visit someone\'s home',
+  }, 2),
+  EVocab('come down', 'kam daun', {
+    'id': 'turun (harga, dari atas)',
+    'en': 'fall; come to a lower place',
+  }, 2),
+  EVocab('come down with', 'kam daun widh', {
+    'id': 'jatuh sakit (terkena penyakit)',
+    'en': 'catch an illness',
+  }, 2),
+  EVocab('take off', 'teik of', {
+    'id': 'lepas landas; melepas (pakaian)',
+    'en': 'leave the ground; remove clothes',
+  }, 3),
+  EVocab('take on', 'teik on', {
+    'id': 'menerima (tugas); merekrut',
+    'en': 'accept work; hire',
+  }, 3),
+  EVocab('take out', 'teik aut', {
+    'id': 'mengeluarkan; mengajak keluar',
+    'en': 'remove from inside; invite out',
+  }, 3),
+  EVocab('take up', 'teik ap', {
+    'id': 'mulai menekuni (hobi); menyita',
+    'en': 'start a hobby; occupy',
+  }, 3),
+  EVocab('take back', 'teik bek', {
+    'id': 'mengembalikan (barang); menarik ucapan',
+    'en': 'return goods; retract words',
+  }, 3),
+  EVocab('take in', 'teik in', {
+    'id': 'memahami; menampung',
+    'en': 'absorb information; give shelter',
+  }, 3),
+  EVocab('take away', 'teik e-wei', {
+    'id': 'mengambil; membawa pergi',
+    'en': 'remove; carry off',
+  }, 3),
+  EVocab('take down', 'teik daun', {
+    'id': 'menurunkan; membongkar',
+    'en': 'remove from a high place',
+  }, 3),
+  EVocab('take after', 'teik af-ter', {
+    'id': 'mirip (orang tua)',
+    'en': 'resemble a parent',
+  }, 3),
+  EVocab('put on', 'put on', {
+    'id': 'memakai (pakaian)',
+    'en': 'dress in; wear',
+  }, 4),
+  EVocab('put off', 'put of', {'id': 'menunda', 'en': 'postpone'}, 4),
+  EVocab('put out', 'put aut', {
+    'id': 'memadamkan (api)',
+    'en': 'extinguish',
+  }, 4),
+  EVocab('put up', 'put ap', {
+    'id': 'memasang; menaikkan',
+    'en': 'erect; display',
+  }, 4),
+  EVocab('put down', 'put daun', {
+    'id': 'meletakkan',
+    'en': 'place on a surface',
+  }, 4),
+  EVocab('put away', 'put e-wei', {
+    'id': 'menyimpan (ke tempatnya)',
+    'en': 'store in its place',
+  }, 4),
+  EVocab('put back', 'put bek', {
+    'id': 'mengembalikan ke tempat semula',
+    'en': 'return to its original place',
+  }, 4),
+  EVocab('put up with', 'put ap widh', {
+    'id': 'tahan menghadapi; menoleransi',
+    'en': 'tolerate',
+  }, 4),
+  EVocab('put in', 'put in', {
+    'id': 'memasang; mencurahkan (usaha)',
+    'en': 'install; invest effort',
+  }, 4),
+  EVocab('look for', 'luk for', {'id': 'mencari', 'en': 'search for'}, 5),
+  EVocab('look after', 'luk af-ter', {
+    'id': 'merawat; menjaga',
+    'en': 'take care of',
+  }, 5),
+  EVocab('look up', 'luk ap', {
+    'id': 'mencari (di kamus/internet)',
+    'en': 'search in a reference',
+  }, 5),
+  EVocab('look out', 'luk aut', {'id': 'hati-hati!', 'en': 'be careful!'}, 5),
+  EVocab('look around', 'luk e-raund', {
+    'id': 'melihat-lihat',
+    'en': 'explore a place',
+  }, 5),
+  EVocab('look back', 'luk bek', {
+    'id': 'mengenang (masa lalu)',
+    'en': 'remember the past',
+  }, 5),
+  EVocab('look through', 'luk thru', {
+    'id': 'menelusuri isi; membaca sekilas',
+    'en': 'search through contents',
+  }, 5),
+  EVocab('look up to', 'luk ap tu', {
+    'id': 'mengagumi; menghormati',
+    'en': 'admire; respect',
+  }, 5),
+  EVocab('look down on', 'luk daun on', {
+    'id': 'meremehkan; memandang rendah',
+    'en': 'consider inferior',
+  }, 5),
+  EVocab('look out for', 'luk aut for', {
+    'id': 'mewaspadai; menjaga',
+    'en': 'watch for; protect',
+  }, 5),
+  EVocab('turn out', 'tern aut', {'id': 'ternyata', 'en': 'prove to be'}, 6),
+  EVocab('turn on', 'tern on', {'id': 'menyalakan', 'en': 'switch on'}, 6),
+  EVocab('turn off', 'tern of', {'id': 'mematikan', 'en': 'switch off'}, 6),
+  EVocab('turn around', 'tern e-raund', {
+    'id': 'berbalik; membaik',
+    'en': 'face the other way; improve',
+  }, 6),
+  EVocab('turn into', 'tern in-tu', {
+    'id': 'berubah menjadi',
+    'en': 'transform into',
+  }, 6),
+  EVocab('turn up', 'tern ap', {
+    'id': 'muncul; mengeraskan (volume)',
+    'en': 'appear; increase volume',
+  }, 6),
+  EVocab('turn back', 'tern bek', {
+    'id': 'putar balik',
+    'en': 'return the way you came',
+  }, 6),
+  EVocab('turn over', 'tern ou-ver', {'id': 'membalik', 'en': 'flip'}, 6),
+  EVocab('turn to', 'tern tu', {
+    'id': 'beralih ke; meminta bantuan',
+    'en': 'seek help from',
+  }, 6),
+  EVocab('give up', 'giv ap', {
+    'id': 'menyerah; berhenti (kebiasaan)',
+    'en': 'quit; stop trying',
+  }, 7),
+  EVocab('give back', 'giv bek', {
+    'id': 'mengembalikan (ke pemiliknya)',
+    'en': 'return to the owner',
+  }, 7),
+  EVocab('give away', 'giv e-wei', {
+    'id': 'memberikan cuma-cuma; membocorkan',
+    'en': 'give for free; reveal',
+  }, 7),
+  EVocab('give out', 'giv aut', {
+    'id': 'habis; berhenti berfungsi',
+    'en': 'become exhausted; stop working',
+  }, 7),
+  EVocab('give in', 'giv in', {'id': 'mengalah', 'en': 'yield'}, 7),
+  EVocab('bring up', 'bring ap', {
+    'id': 'mengangkat (topik); membesarkan (anak)',
+    'en': 'mention; raise a child',
+  }, 7),
+  EVocab('bring back', 'bring bek', {
+    'id': 'membawa kembali; mengingatkan',
+    'en': 'return with; recall memories',
+  }, 7),
+  EVocab('bring in', 'bring in', {
+    'id': 'mendatangkan; menghasilkan',
+    'en': 'introduce; earn',
+  }, 7),
+  EVocab('bring about', 'bring e-baut', {
+    'id': 'menyebabkan; mewujudkan',
+    'en': 'cause to happen',
+  }, 7),
+  EVocab('bring out', 'bring aut', {
+    'id': 'merilis; menonjolkan',
+    'en': 'release a product; reveal a quality',
+  }, 7),
+  EVocab('bring down', 'bring daun', {
+    'id': 'menurunkan; menjatuhkan',
+    'en': 'reduce; cause to fall',
+  }, 7),
+  EVocab('make up', 'meik ap', {
+    'id': 'berbaikan; mengarang',
+    'en': 'reconcile; invent',
+  }, 8),
+  EVocab('make up for', 'meik ap for', {
+    'id': 'menebus; mengganti',
+    'en': 'compensate for',
+  }, 8),
+  EVocab('set up', 'set ap', {
+    'id': 'mendirikan; menyiapkan',
+    'en': 'establish; arrange',
+  }, 8),
+  EVocab('set out', 'set aut', {
+    'id': 'memulai (usaha); memaparkan',
+    'en': 'begin a task; present clearly',
+  }, 8),
+  EVocab('set off', 'set of', {
+    'id': 'berangkat (perjalanan); memicu',
+    'en': 'start a journey; trigger',
+  }, 8),
+  EVocab('set back', 'set bek', {
+    'id': 'menghambat kemajuan',
+    'en': 'delay progress',
+  }, 8),
+  EVocab('run into', 'ran in-tu', {
+    'id': 'bertemu tak sengaja',
+    'en': 'meet by chance',
+  }, 8),
+  EVocab('run away', 'ran e-wei', {
+    'id': 'kabur; melarikan diri',
+    'en': 'flee',
+  }, 8),
+  EVocab('run over', 'ran ou-ver', {
+    'id': 'menabrak; melindas',
+    'en': 'hit with a vehicle',
+  }, 8),
+  EVocab('pick out', 'pik aut', {'id': 'memilih', 'en': 'select'}, 8),
+  EVocab('pick on', 'pik on', {
+    'id': 'mengganggu; merundung',
+    'en': 'bully; tease',
+  }, 8),
+  EVocab('keep up', 'kip ap', {
+    'id': 'mempertahankan; terus (bagus)',
+    'en': 'maintain; continue well',
+  }, 9),
+  EVocab('keep up with', 'kip ap widh', {
+    'id': 'tidak ketinggalan; mengimbangi',
+    'en': 'stay level with',
+  }, 9),
+  EVocab('keep on', 'kip on', {
+    'id': 'terus-menerus melakukan',
+    'en': 'continue repeatedly',
+  }, 9),
+  EVocab('keep away', 'kip e-wei', {
+    'id': 'menjauh; menjauhkan',
+    'en': 'stay at a distance',
+  }, 9),
+  EVocab('hold on', 'hould on', {
+    'id': 'tunggu sebentar; berpegangan',
+    'en': 'wait a moment; grip',
+  }, 9),
+  EVocab('hold up', 'hould ap', {
+    'id': 'menunda; menahan; merampok',
+    'en': 'delay; rob',
+  }, 9),
+  EVocab('hold back', 'hould bek', {
+    'id': 'menahan (diri, emosi)',
+    'en': 'restrain',
+  }, 9),
+  EVocab('carry on', 'ke-ri on', {
+    'id': 'melanjutkan',
+    'en': 'continue doing something',
+  }, 9),
+  EVocab('break down', 'breik daun', {
+    'id': 'mogok; rusak; menangis',
+    'en': 'stop working (machine)',
+  }, 10),
+  EVocab('break up', 'breik ap', {
+    'id': 'putus (pacaran); bubar',
+    'en': 'end a relationship',
+  }, 10),
+  EVocab('break into', 'breik in-tu', {
+    'id': 'membobol (masuk paksa)',
+    'en': 'enter by force',
+  }, 10),
+  EVocab('break out', 'breik aut', {
+    'id': 'pecah (perang, wabah); kabur',
+    'en': 'start suddenly; escape',
+  }, 10),
+  EVocab('call off', 'kol of', {'id': 'membatalkan', 'en': 'cancel'}, 10),
+  EVocab('call for', 'kol for', {
+    'id': 'memerlukan; menuntut',
+    'en': 'require; demand',
+  }, 10),
+  EVocab('call on', 'kol on', {
+    'id': 'meminta (seseorang bicara); mengunjungi',
+    'en': 'ask to speak; visit briefly',
+  }, 10),
+  EVocab('cut off', 'kat of', {
+    'id': 'memutus (aliran, sambungan)',
+    'en': 'disconnect',
+  }, 10),
+  EVocab('cut down on', 'kat daun on', {
+    'id': 'mengurangi konsumsi',
+    'en': 'consume less of',
+  }, 10),
+  EVocab('show up', 'syou ap', {
+    'id': 'datang; hadir',
+    'en': 'arrive (often late)',
+  }, 11),
+  EVocab('show off', 'syou of', {'id': 'pamer', 'en': 'boast'}, 11),
+  EVocab('stand up', 'stend ap', {
+    'id': 'berdiri',
+    'en': 'rise to your feet',
+  }, 11),
+  EVocab('stand out', 'stend aut', {
+    'id': 'menonjol',
+    'en': 'be noticeable',
+  }, 11),
+  EVocab('stand for', 'stend for', {
+    'id': 'merupakan singkatan dari',
+    'en': 'represent (abbreviation)',
+  }, 11),
+  EVocab('stand up for', 'stend ap for', {'id': 'membela', 'en': 'defend'}, 11),
+  EVocab('hang out', 'heng aut', {
+    'id': 'nongkrong',
+    'en': 'spend time casually',
+  }, 11),
+  EVocab('hang on', 'heng on', {
+    'id': 'tunggu dulu (santai)',
+    'en': 'wait briefly (casual)',
+  }, 11),
+  EVocab('fall apart', 'fol e-part', {
+    'id': 'hancur; berantakan',
+    'en': 'break into pieces',
+  }, 12),
+  EVocab('fall behind', 'fol bi-haind', {
+    'id': 'tertinggal',
+    'en': 'fail to keep pace',
+  }, 12),
+  EVocab('fall for', 'fol for', {
+    'id': 'jatuh cinta pada; tertipu',
+    'en': 'fall in love with; be tricked',
+  }, 12),
+  EVocab('pass away', 'pes e-wei', {
+    'id': 'meninggal dunia',
+    'en': 'die (polite)',
+  }, 12),
+  EVocab('pass out', 'pes aut', {'id': 'pingsan', 'en': 'faint'}, 12),
+  EVocab('drop out', 'drop aut', {
+    'id': 'putus sekolah; keluar (dari kegiatan)',
+    'en': 'leave school early',
+  }, 12),
+  EVocab('pull out', 'pul aut', {
+    'id': 'menarik keluar; mundur',
+    'en': 'withdraw',
+  }, 12),
+  EVocab('pull over', 'pul ou-ver', {
+    'id': 'menepi (kendaraan)',
+    'en': 'stop at the roadside',
+  }, 12),
+  EVocab('wake up', 'weik ap', {'id': 'terbangun', 'en': 'stop sleeping'}, 13),
+  EVocab('grow up', 'grou ap', {
+    'id': 'tumbuh dewasa',
+    'en': 'become an adult',
+  }, 13),
+  EVocab('end up', 'end ap', {
+    'id': 'akhirnya (berada/menjadi)',
+    'en': 'finally be in a situation',
+  }, 13),
+  EVocab('clean up', 'klin ap', {
+    'id': 'membersihkan; merapikan',
+    'en': 'tidy up',
+  }, 13),
+  EVocab('hurry up', 'ha-ri ap', {
+    'id': 'cepat-cepat; bergegas',
+    'en': 'move faster',
+  }, 13),
+  EVocab('back up', 'bek ap', {
+    'id': 'mencadangkan (data); mendukung',
+    'en': 'make a copy; support',
+  }, 13),
+  EVocab('warm up', 'worm ap', {
+    'id': 'pemanasan; menghangatkan',
+    'en': 'prepare with light exercise; heat',
+  }, 13),
+  EVocab('cheer up', 'cir ap', {
+    'id': 'menghibur; jadi ceria',
+    'en': 'become happier',
+  }, 13),
+  EVocab('mix up', 'miks ap', {
+    'id': 'tertukar; mencampuradukkan',
+    'en': 'confuse two things',
+  }, 13),
+  EVocab('fill up', 'fil ap', {
+    'id': 'mengisi penuh',
+    'en': 'fill completely',
+  }, 13),
+  EVocab('sit down', 'sit daun', {'id': 'duduk', 'en': 'take a seat'}, 14),
+  EVocab('calm down', 'kaam daun', {
+    'id': 'tenang; menenangkan',
+    'en': 'become relaxed',
+  }, 14),
+  EVocab('slow down', 'slou daun', {
+    'id': 'melambat; memperlambat',
+    'en': 'reduce speed',
+  }, 14),
+  EVocab('settle down', 'se-tel daun', {
+    'id': 'menetap; hidup mapan',
+    'en': 'start a stable life',
+  }, 14),
+  EVocab('write down', 'rait daun', {
+    'id': 'mencatat',
+    'en': 'record on paper',
+  }, 14),
+  EVocab('lie down', 'lai daun', {
+    'id': 'berbaring',
+    'en': 'rest horizontally',
+  }, 14),
+  EVocab('let down', 'let daun', {
+    'id': 'mengecewakan',
+    'en': 'disappoint',
+  }, 14),
+  EVocab('find out', 'faind aut', {
+    'id': 'mencari tahu; mengetahui',
+    'en': 'discover information',
+  }, 15),
+  EVocab('work out', 'werk aut', {
+    'id': 'berolahraga; berhasil',
+    'en': 'exercise; succeed',
+  }, 15),
+  EVocab('check out', 'cek aut', {
+    'id': 'check-out (hotel); melihat-lihat',
+    'en': 'leave a hotel; take a look at',
+  }, 15),
+  EVocab('check in', 'cek in', {
+    'id': 'lapor kedatangan (check-in)',
+    'en': 'register on arrival',
+  }, 15),
+  EVocab('work on', 'werk on', {
+    'id': 'mengerjakan; memperbaiki',
+    'en': 'spend time improving',
+  }, 15),
+  EVocab('sort out', 'sort aut', {
+    'id': 'membereskan; menyelesaikan',
+    'en': 'resolve; organize',
+  }, 15),
+  EVocab('move on', 'muv on', {
+    'id': 'melanjutkan hidup; beralih',
+    'en': 'start something new',
+  }, 15),
+  EVocab('hand out', 'hend aut', {'id': 'membagikan', 'en': 'distribute'}, 15),
+  EVocab('throw away', 'throu e-wei', {'id': 'membuang', 'en': 'discard'}, 15),
+  EVocab('try on', 'trai on', {
+    'id': 'mencoba (pakaian)',
+    'en': 'test clothes for fit',
+  }, 15),
+  EVocab('count on', 'kaunt on', {'id': 'mengandalkan', 'en': 'depend on'}, 15),
+  EVocab('fit in', 'fit in', {
+    'id': 'menyesuaikan diri; cocok',
+    'en': 'be accepted in a group',
+  }, 15),
+  EVocab('watch out', 'woc aut', {'id': 'awas; waspadai', 'en': 'beware'}, 15),
+];
+
+/// Judul grup untuk [idiomVocab].
+const List<Map<String, String>> idiomVocabGroups = [
+  {'id': 'Mudah & sulit', 'en': 'Easy & difficult'},
+  {'id': 'Waktu & kesempatan', 'en': 'Time & opportunity'},
+  {'id': 'Uang & harga', 'en': 'Money & price'},
+  {'id': 'Kerja & usaha', 'en': 'Work & effort'},
+  {'id': 'Perasaan & suasana hati', 'en': 'Feelings & mood'},
+  {'id': 'Kesehatan & tubuh', 'en': 'Health & body'},
+  {'id': 'Hubungan & komunikasi', 'en': 'Relationships & communication'},
+  {'id': 'Masalah & keputusan', 'en': 'Problems & decisions'},
+  {'id': 'Sukses & gagal', 'en': 'Success & failure'},
+  {'id': 'Rahasia & kejujuran', 'en': 'Secrets & honesty'},
+  {'id': 'Sifat & perilaku', 'en': 'Personality & behaviour'},
+  {'id': 'Lain-lain', 'en': 'Miscellaneous'},
+];
+
+/// Idiom yang umum dipakai.
+const List<EVocab> idiomVocab = [
+  EVocab('piece of cake', 'pis ov keik', {
+    'id': 'sangat mudah',
+    'en': 'something very easy',
+  }, 0),
+  EVocab('easier said than done', 'i-zi-er sed dhen dan', {
+    'id': 'gampang diucapkan, sulit dilakukan',
+    'en': 'harder to do than to talk about',
+  }, 0),
+  EVocab('a walk in the park', 'e wok in dhe park', {
+    'id': 'pekerjaan enteng dan menyenangkan',
+    'en': 'an easy, pleasant task',
+  }, 0),
+  EVocab('not rocket science', 'not ro-ket sai-ens', {
+    'id': 'tidak serumit yang dibayangkan',
+    'en': 'not complicated at all',
+  }, 0),
+  EVocab('get the hang of it', 'get dhe heng ov it', {
+    'id': 'mulai terbiasa dan bisa melakukannya',
+    'en': 'learn how to do something',
+  }, 0),
+  EVocab('smooth sailing', 'smudh sei-ling', {
+    'id': 'berjalan lancar tanpa hambatan',
+    'en': 'progress without problems',
+  }, 0),
+  EVocab('a tough nut to crack', 'e taf nat tu krek', {
+    'id': 'masalah atau orang yang sulit ditaklukkan',
+    'en': 'a hard problem or person to deal with',
+  }, 0),
+  EVocab('an uphill battle', 'en ap-hil be-tel', {
+    'id': 'perjuangan berat melawan banyak rintangan',
+    'en': 'a long struggle against difficulties',
+  }, 0),
+  EVocab('a tall order', 'e tol or-der', {
+    'id': 'permintaan yang sulit dipenuhi',
+    'en': 'a demand that is hard to meet',
+  }, 0),
+  EVocab('jump through hoops', 'jamp thru hups', {
+    'id': 'harus melewati banyak prosedur ribet',
+    'en': 'go through many tiresome steps',
+  }, 0),
+  EVocab('bite off more than you can chew', 'bait of mor dhen yu ken cu', {
+    'id': 'mengambil tugas melebihi kemampuan',
+    'en': 'take on more than you can handle',
+  }, 0),
+  EVocab('learn the hard way', 'lern dhe hard wei', {
+    'id': 'belajar dari pengalaman pahit',
+    'en': 'learn through a bad experience',
+  }, 0),
+  EVocab('once in a blue moon', 'wans in e blu mun', {
+    'id': 'sangat jarang terjadi',
+    'en': 'very rarely',
+  }, 1),
+  EVocab('in the nick of time', 'in dhe nik ov taim', {
+    'id': 'tepat sebelum terlambat',
+    'en': 'just before it is too late',
+  }, 1),
+  EVocab('at the eleventh hour', 'et dhi i-le-venth a-wer', {
+    'id': 'di saat-saat terakhir',
+    'en': 'at the last possible moment',
+  }, 1),
+  EVocab('in no time', 'in nou taim', {
+    'id': 'dalam waktu singkat sekali',
+    'en': 'very quickly',
+  }, 1),
+  EVocab('on the dot', 'on dhe dot', {
+    'id': 'tepat pada jamnya',
+    'en': 'at exactly the stated time',
+  }, 1),
+  EVocab('around the clock', 'e-raund dhe klok', {
+    'id': 'siang malam tanpa henti',
+    'en': 'all day and all night',
+  }, 1),
+  EVocab('kill time', 'kil taim', {
+    'id': 'mengisi waktu sambil menunggu',
+    'en': 'pass time while waiting',
+  }, 1),
+  EVocab('miss the boat', 'mis dhe bout', {
+    'id': 'ketinggalan kesempatan',
+    'en': 'miss an opportunity',
+  }, 1),
+  EVocab('strike while the iron is hot', 'straik wail dhi ai-ern iz hot', {
+    'id': 'memanfaatkan kesempatan selagi ada',
+    'en': 'act while conditions are good',
+  }, 1),
+  EVocab('a long shot', 'e long syot', {
+    'id': 'peluang yang tipis',
+    'en': 'something unlikely to succeed',
+  }, 1),
+  EVocab('once in a lifetime', 'wans in e laif-taim', {
+    'id': 'hanya terjadi sekali seumur hidup',
+    'en': 'happening only once ever',
+  }, 1),
+  EVocab('cost an arm and a leg', 'kost en arm end e leg', {
+    'id': 'sangat mahal',
+    'en': 'extremely expensive',
+  }, 2),
+  EVocab('break the bank', 'breik dhe benk', {
+    'id': 'menguras isi dompet',
+    'en': 'cost more than you can afford',
+  }, 2),
+  EVocab('pay through the nose', 'pei thru dhe nouz', {
+    'id': 'membayar jauh lebih mahal dari wajar',
+    'en': 'pay far too much',
+  }, 2),
+  EVocab('make ends meet', 'meik endz mit', {
+    'id': 'mencukupkan penghasilan untuk hidup',
+    'en': 'have just enough money to live',
+  }, 2),
+  EVocab('tighten your belt', 'tai-ten yor belt', {
+    'id': 'berhemat ketat',
+    'en': 'spend less money',
+  }, 2),
+  EVocab('on a shoestring', 'on e syu-string', {
+    'id': 'dengan modal sangat minim',
+    'en': 'with very little money',
+  }, 2),
+  EVocab('strapped for cash', 'strept for kesy', {
+    'id': 'sedang kekurangan uang',
+    'en': 'short of money',
+  }, 2),
+  EVocab('live from paycheck to paycheck', 'liv from pei-cek tu pei-cek', {
+    'id': 'gaji habis sebelum gajian berikutnya',
+    'en': 'spend all income before the next pay',
+  }, 2),
+  EVocab('foot the bill', 'fut dhe bil', {
+    'id': 'menanggung biaya',
+    'en': 'pay for something',
+  }, 2),
+  EVocab('go Dutch', 'gou dac', {
+    'id': 'bayar sendiri-sendiri',
+    'en': 'each person pays for themselves',
+  }, 2),
+  EVocab('worth every penny', 'werth ev-ri pe-ni', {
+    'id': 'sepadan dengan harganya',
+    'en': 'worth the money spent',
+  }, 2),
+  EVocab('a steal', 'e stil', {
+    'id': 'barang murah sekali untuk kualitasnya',
+    'en': 'a great bargain',
+  }, 2),
+  EVocab('call it a day', 'kol it e dei', {
+    'id': 'berhenti bekerja untuk hari ini',
+    'en': 'stop working for now',
+  }, 3),
+  EVocab('burn the midnight oil', 'bern dhe mid-nait oil', {
+    'id': 'bekerja atau belajar sampai larut malam',
+    'en': 'work late into the night',
+  }, 3),
+  EVocab('go the extra mile', 'gou dhi eks-tra mail', {
+    'id': 'berusaha melebihi yang diminta',
+    'en': 'do more than expected',
+  }, 3),
+  EVocab('hit the books', 'hit dhe buks', {
+    'id': 'belajar dengan serius',
+    'en': 'study hard',
+  }, 3),
+  EVocab('learn the ropes', 'lern dhe roups', {
+    'id': 'mempelajari seluk-beluk pekerjaan',
+    'en': 'learn how a job is done',
+  }, 3),
+  EVocab('pull your weight', 'pul yor weit', {
+    'id': 'ikut bekerja sesuai porsinya',
+    'en': 'do your fair share of work',
+  }, 3),
+  EVocab('cut corners', 'kat kor-nerz', {
+    'id': 'mengambil jalan pintas dengan mengorbankan mutu',
+    'en': 'do something cheaply or carelessly',
+  }, 3),
+  EVocab('back to the drawing board', 'bek tu dhe dro-ing bord', {
+    'id': 'merancang ulang setelah rencana gagal',
+    'en': 'start planning again after a failure',
+  }, 3),
+  EVocab('start from scratch', 'start from skrec', {
+    'id': 'memulai dari nol',
+    'en': 'begin from nothing',
+  }, 3),
+  EVocab('think outside the box', 'think aut-said dhe boks', {
+    'id': 'berpikir kreatif di luar kebiasaan',
+    'en': 'think creatively',
+  }, 3),
+  EVocab('get the ball rolling', 'get dhe bol rou-ling', {
+    'id': 'memulai suatu kegiatan',
+    'en': 'start something going',
+  }, 3),
+  EVocab('on the ball', 'on dhe bol', {
+    'id': 'sigap dan cekatan',
+    'en': 'alert and quick to act',
+  }, 3),
+  EVocab('wear many hats', 'weer me-ni hets', {
+    'id': 'merangkap banyak peran',
+    'en': 'have many different roles',
+  }, 3),
+  EVocab('on cloud nine', 'on klaud nain', {
+    'id': 'sangat bahagia',
+    'en': 'extremely happy',
+  }, 4),
+  EVocab('over the moon', 'ou-ver dhe mun', {
+    'id': 'gembira luar biasa atas suatu kabar',
+    'en': 'delighted about some news',
+  }, 4),
+  EVocab('down in the dumps', 'daun in dhe damps', {
+    'id': 'sedang murung',
+    'en': 'feeling sad and low',
+  }, 4),
+  EVocab('get cold feet', 'get kould fit', {
+    'id': 'tiba-tiba ragu menjelang hari H',
+    'en': 'become nervous and hesitate before an event',
+  }, 4),
+  EVocab('butterflies in your stomach', 'ba-ter-flaiz in yor sta-mek', {
+    'id': 'deg-degan karena gugup',
+    'en': 'a nervous feeling inside',
+  }, 4),
+  EVocab('on edge', 'on ej', {
+    'id': 'gelisah dan tegang',
+    'en': 'tense and nervous',
+  }, 4),
+  EVocab('fly off the handle', 'flai of dhe hen-del', {
+    'id': 'tiba-tiba marah meledak',
+    'en': 'suddenly lose your temper',
+  }, 4),
+  EVocab('see red', 'si red', {
+    'id': 'naik pitam',
+    'en': 'become very angry',
+  }, 4),
+  EVocab('blow off steam', 'blou of stim', {
+    'id': 'melampiaskan emosi atau stres',
+    'en': 'release pent-up stress',
+  }, 4),
+  EVocab('get on someone\'s nerves', 'get on sam-wanz nervz', {
+    'id': 'membuat kesal',
+    'en': 'annoy someone',
+  }, 4),
+  EVocab('at the end of your rope', 'et dhi end ov yor roup', {
+    'id': 'sudah habis kesabaran',
+    'en': 'out of patience',
+  }, 4),
+  EVocab('a weight off your shoulders', 'e weit of yor syoul-derz', {
+    'id': 'rasa lega setelah beban hilang',
+    'en': 'relief from a worry',
+  }, 4),
+  EVocab('keep your chin up', 'kip yor cin ap', {
+    'id': 'tetap tabah, jangan putus asa',
+    'en': 'stay positive in hard times',
+  }, 4),
+  EVocab('under the weather', 'an-der dhe we-dher', {
+    'id': 'kurang enak badan',
+    'en': 'slightly ill',
+  }, 5),
+  EVocab('hit the sack', 'hit dhe sek', {
+    'id': 'pergi tidur',
+    'en': 'go to bed',
+  }, 5),
+  EVocab('sleep like a log', 'slip laik e log', {
+    'id': 'tidur sangat nyenyak',
+    'en': 'sleep very deeply',
+  }, 5),
+  EVocab('get some shut-eye', 'get sam syat-ai', {
+    'id': 'tidur sebentar',
+    'en': 'get some sleep',
+  }, 5),
+  EVocab('fit as a fiddle', 'fit ez e fi-del', {
+    'id': 'sangat sehat dan bugar',
+    'en': 'in excellent health',
+  }, 5),
+  EVocab('on the mend', 'on dhe mend', {
+    'id': 'mulai membaik',
+    'en': 'getting better after illness',
+  }, 5),
+  EVocab('back on your feet', 'bek on yor fit', {
+    'id': 'sudah pulih kembali',
+    'en': 'fully recovered',
+  }, 5),
+  EVocab('sick as a dog', 'sik ez e dog', {
+    'id': 'sakit parah sampai mual',
+    'en': 'very ill',
+  }, 5),
+  EVocab('dead on your feet', 'ded on yor fit', {
+    'id': 'capek setengah mati',
+    'en': 'extremely tired',
+  }, 5),
+  EVocab('eat like a horse', 'it laik e hors', {
+    'id': 'makan sangat banyak',
+    'en': 'eat a lot',
+  }, 5),
+  EVocab('a clean bill of health', 'e klin bil ov helth', {
+    'id': 'dinyatakan sehat',
+    'en': 'official confirmation of good health',
+  }, 5),
+  EVocab('break the ice', 'breik dhi ais', {
+    'id': 'mencairkan suasana kaku',
+    'en': 'ease the first awkwardness',
+  }, 6),
+  EVocab('on the same page', 'on dhe seim peij', {
+    'id': 'sepemahaman soal rencana',
+    'en': 'in agreement about a plan',
+  }, 6),
+  EVocab('see eye to eye', 'si ai tu ai', {
+    'id': 'punya pendapat yang sama',
+    'en': 'agree completely',
+  }, 6),
+  EVocab('hit it off', 'hit it of', {
+    'id': 'langsung akrab',
+    'en': 'quickly become friends',
+  }, 6),
+  EVocab('get off on the wrong foot', 'get of on dhe rong fut', {
+    'id': 'awal perkenalan yang kurang baik',
+    'en': 'start badly with someone',
+  }, 6),
+  EVocab('in the loop', 'in dhe lup', {
+    'id': 'terus diberi kabar terbaru',
+    'en': 'kept informed',
+  }, 6),
+  EVocab('cut to the chase', 'kat tu dhe ceis', {
+    'id': 'langsung ke pokok persoalan',
+    'en': 'get to the main point',
+  }, 6),
+  EVocab('beat around the bush', 'bit e-raund dhe busy', {
+    'id': 'berbelit-belit, tidak langsung ke inti',
+    'en': 'avoid saying something directly',
+  }, 6),
+  EVocab('bite your tongue', 'bait yor tang', {
+    'id': 'menahan diri untuk tidak bicara',
+    'en': 'stop yourself from speaking',
+  }, 6),
+  EVocab('walk on eggshells', 'wok on eg-syelz', {
+    'id': 'sangat berhati-hati agar tak menyinggung',
+    'en': 'be very careful not to upset someone',
+  }, 6),
+  EVocab('give someone the cold shoulder', 'giv sam-wan dhe kould syoul-der', {
+    'id': 'sengaja mengacuhkan seseorang',
+    'en': 'deliberately ignore someone',
+  }, 6),
+  EVocab('bury the hatchet', 'be-ri dhe he-cet', {
+    'id': 'berdamai setelah bertengkar',
+    'en': 'make peace after a quarrel',
+  }, 6),
+  EVocab('tie the knot', 'tai dhe not', {
+    'id': 'menikah',
+    'en': 'get married',
+  }, 6),
+  EVocab('pop the question', 'pop dhe kwes-cen', {
+    'id': 'melamar kekasih',
+    'en': 'propose marriage',
+  }, 6),
+  EVocab('the last straw', 'dhe last stro', {
+    'id': 'pemicu terakhir yang membuat habis sabar',
+    'en': 'the final problem that makes you give up',
+  }, 7),
+  EVocab('in hot water', 'in hot wo-ter', {
+    'id': 'sedang dalam masalah',
+    'en': 'in trouble',
+  }, 7),
+  EVocab('get out of hand', 'get aut ov hend', {
+    'id': 'jadi tak terkendali',
+    'en': 'become uncontrollable',
+  }, 7),
+  EVocab('open a can of worms', 'ou-pen e ken ov wermz', {
+    'id': 'memicu masalah rumit baru',
+    'en': 'create complicated new problems',
+  }, 7),
+  EVocab('the elephant in the room', 'dhi e-le-fent in dhe rum', {
+    'id': 'masalah besar yang sengaja tak dibahas',
+    'en': 'an obvious problem nobody mentions',
+  }, 7),
+  EVocab(
+    'make a mountain out of a molehill',
+    'meik e maun-ten aut ov e moul-hil',
+    {
+      'id': 'membesar-besarkan masalah kecil',
+      'en': 'exaggerate a small problem',
+    },
+    7,
+  ),
+  EVocab('between a rock and a hard place', 'bi-twin e rok end e hard pleis', {
+    'id': 'serba salah',
+    'en': 'facing two bad choices',
+  }, 7),
+  EVocab('bite the bullet', 'bait dhe bu-let', {
+    'id': 'memberanikan diri menghadapi hal tak enak',
+    'en': 'face something unpleasant bravely',
+  }, 7),
+  EVocab('face the music', 'feis dhe myu-zik', {
+    'id': 'menanggung akibat perbuatan',
+    'en': 'accept the consequences',
+  }, 7),
+  EVocab('jump the gun', 'jamp dhe gan', {
+    'id': 'bertindak terlalu cepat',
+    'en': 'act too soon',
+  }, 7),
+  EVocab('sit on the fence', 'sit on dhe fens', {
+    'id': 'tidak mau memihak',
+    'en': 'avoid taking sides',
+  }, 7),
+  EVocab('the ball is in your court', 'dhe bol iz in yor kort', {
+    'id': 'sekarang giliranmu mengambil keputusan',
+    'en': 'it is your turn to decide',
+  }, 7),
+  EVocab('a no-brainer', 'e nou-brei-ner', {
+    'id': 'pilihan yang sangat jelas',
+    'en': 'an obvious decision',
+  }, 7),
+  EVocab('play it by ear', 'plei it bai ir', {
+    'id': 'lihat situasi saja nanti',
+    'en': 'decide as things happen',
+  }, 7),
+  EVocab('hit the jackpot', 'hit dhe jek-pot', {
+    'id': 'dapat rezeki atau untung besar',
+    'en': 'have a big stroke of luck',
+  }, 8),
+  EVocab('pass with flying colors', 'pas widh flai-ing ka-lerz', {
+    'id': 'lulus dengan gemilang',
+    'en': 'succeed brilliantly in a test',
+  }, 8),
+  EVocab('make the cut', 'meik dhe kat', {
+    'id': 'lolos seleksi',
+    'en': 'be good enough to be chosen',
+  }, 8),
+  EVocab('beat the odds', 'bit dhi odz', {
+    'id': 'berhasil meski peluangnya kecil',
+    'en': 'succeed despite low chances',
+  }, 8),
+  EVocab('by the skin of your teeth', 'bai dhe skin ov yor tith', {
+    'id': 'berhasil dengan susah payah, nyaris gagal',
+    'en': 'only just succeed',
+  }, 8),
+  EVocab('a close call', 'e klous kol', {
+    'id': 'nyaris celaka',
+    'en': 'a narrow escape from danger',
+  }, 8),
+  EVocab('ahead of the game', 'e-hed ov dhe geim', {
+    'id': 'selangkah lebih maju',
+    'en': 'in a better position than others',
+  }, 8),
+  EVocab('the sky\'s the limit', 'dhe skaiz dhe li-mit', {
+    'id': 'peluangnya tak terbatas',
+    'en': 'there is no limit to success',
+  }, 8),
+  EVocab('a blessing in disguise', 'e bles-sing in dis-gaiz', {
+    'id': 'hikmah di balik musibah',
+    'en': 'a bad thing that turns out good',
+  }, 8),
+  EVocab('steal the show', 'stil dhe syou', {
+    'id': 'jadi bintang yang paling menonjol',
+    'en': 'attract the most attention',
+  }, 8),
+  EVocab('miss the mark', 'mis dhe mark', {
+    'id': 'meleset dari sasaran',
+    'en': 'fail to achieve the aim',
+  }, 8),
+  EVocab('go down in flames', 'gou daun in fleimz', {
+    'id': 'gagal total secara memalukan',
+    'en': 'fail spectacularly',
+  }, 8),
+  EVocab('throw in the towel', 'throu in dhe ta-wel', {
+    'id': 'menyerah kalah',
+    'en': 'admit defeat',
+  }, 8),
+  EVocab('spill the beans', 'spil dhe binz', {
+    'id': 'membocorkan rahasia',
+    'en': 'reveal a secret',
+  }, 9),
+  EVocab('let the cat out of the bag', 'let dhe ket aut ov dhe beg', {
+    'id': 'keceplosan membuka rahasia',
+    'en': 'accidentally reveal a secret',
+  }, 9),
+  EVocab('under wraps', 'an-der reps', {
+    'id': 'dirahasiakan',
+    'en': 'kept secret',
+  }, 9),
+  EVocab('an open secret', 'en ou-pen si-kret', {
+    'id': 'rahasia umum',
+    'en': 'a secret that everyone knows',
+  }, 9),
+  EVocab('hear it through the grapevine', 'hir it thru dhe greip-vain', {
+    'id': 'dengar kabar dari mulut ke mulut',
+    'en': 'learn something through rumour',
+  }, 9),
+  EVocab('straight from the horse\'s mouth', 'streit from dhe hor-siz mauth', {
+    'id': 'langsung dari sumbernya',
+    'en': 'directly from the source',
+  }, 9),
+  EVocab('talk behind someone\'s back', 'tok bi-haind sam-wanz bek', {
+    'id': 'menggunjingkan orang diam-diam',
+    'en': 'gossip about someone secretly',
+  }, 9),
+  EVocab('come clean', 'kam klin', {
+    'id': 'mengaku terus terang',
+    'en': 'confess the truth',
+  }, 9),
+  EVocab('put your cards on the table', 'put yor kardz on dhe tei-bel', {
+    'id': 'berterus terang soal niat',
+    'en': 'be honest about your intentions',
+  }, 9),
+  EVocab('pull someone\'s leg', 'pul sam-wanz leg', {
+    'id': 'bercanda mengerjai seseorang',
+    'en': 'tease someone jokingly',
+  }, 9),
+  EVocab(
+    'take something with a grain of salt',
+    'teik sam-thing widh e grein ov solt',
+    {'id': 'tidak langsung percaya', 'en': 'be skeptical about something'},
+    9,
+  ),
+  EVocab('smell a rat', 'smel e ret', {
+    'id': 'curiga ada yang tidak beres',
+    'en': 'suspect something is wrong',
+  }, 9),
+  EVocab('caught red-handed', 'kot red-hen-did', {
+    'id': 'tertangkap basah',
+    'en': 'caught in the act',
+  }, 9),
+  EVocab('sweep something under the rug', 'swip sam-thing an-der dhe rag', {
+    'id': 'menutup-nutupi masalah',
+    'en': 'hide a problem',
+  }, 9),
+  EVocab('couch potato', 'kauc pe-tei-tou', {
+    'id': 'orang malas yang kerjanya rebahan nonton TV',
+    'en': 'a lazy person who watches lots of TV',
+  }, 10),
+  EVocab('early bird', 'er-li berd', {
+    'id': 'orang yang suka bangun atau datang pagi',
+    'en': 'a person who gets up or arrives early',
+  }, 10),
+  EVocab('night owl', 'nait aul', {
+    'id': 'orang yang suka begadang',
+    'en': 'a person who stays up late',
+  }, 10),
+  EVocab('down to earth', 'daun tu erth', {
+    'id': 'membumi, tidak sombong',
+    'en': 'practical and humble',
+  }, 10),
+  EVocab('the black sheep', 'dhe blek syip', {
+    'id': 'anggota keluarga yang dianggap memalukan',
+    'en': 'the family member seen as a disgrace',
+  }, 10),
+  EVocab('a fish out of water', 'e fisy aut ov wo-ter', {
+    'id': 'merasa canggung di lingkungan asing',
+    'en': 'someone uncomfortable in a new setting',
+  }, 10),
+  EVocab('a pain in the neck', 'e pein in dhe nek', {
+    'id': 'orang atau hal yang menjengkelkan',
+    'en': 'an annoying person or thing',
+  }, 10),
+  EVocab('call the shots', 'kol dhe syots', {
+    'id': 'memegang kendali',
+    'en': 'be in charge',
+  }, 10),
+  EVocab('go with the flow', 'gou widh dhe flou', {
+    'id': 'ikut arus saja',
+    'en': 'accept things as they come',
+  }, 10),
+  EVocab('jump on the bandwagon', 'jamp on dhe bend-we-gen', {
+    'id': 'ikut-ikutan tren',
+    'en': 'join a popular trend',
+  }, 10),
+  EVocab('rain on someone\'s parade', 'rein on sam-wanz pe-reid', {
+    'id': 'merusak kesenangan orang',
+    'en': 'spoil someone\'s happy moment',
+  }, 10),
+  EVocab('cry over spilt milk', 'krai ou-ver spilt milk', {
+    'id': 'menyesali hal yang sudah terjadi',
+    'en': 'regret what can\'t be changed',
+  }, 10),
+  EVocab('hit the nail on the head', 'hit dhe neil on dhe hed', {
+    'id': 'tepat sekali, kena sasaran',
+    'en': 'describe something exactly right',
+  }, 11),
+  EVocab('kill two birds with one stone', 'kil tu berdz widh wan stoun', {
+    'id': 'menyelesaikan dua urusan sekaligus',
+    'en': 'achieve two things with one action',
+  }, 11),
+  EVocab('the best of both worlds', 'dhe best ov bouth werldz', {
+    'id': 'mendapat keuntungan dari dua hal sekaligus',
+    'en': 'the advantages of two things at once',
+  }, 11),
+  EVocab('in a nutshell', 'in e nat-syel', {
+    'id': 'singkatnya',
+    'en': 'in brief',
+  }, 11),
+  EVocab('out of the blue', 'aut ov dhe blu', {
+    'id': 'tiba-tiba tanpa diduga',
+    'en': 'unexpectedly',
+  }, 11),
+  EVocab('the tip of the iceberg', 'dhe tip ov dhi ais-berg', {
+    'id': 'baru sebagian kecil dari masalah',
+    'en': 'a small visible part of a bigger problem',
+  }, 11),
+  EVocab('a drop in the bucket', 'e drop in dhe ba-ket', {
+    'id': 'jumlah yang terlalu kecil untuk berarti',
+    'en': 'an amount too small to matter',
+  }, 11),
+  EVocab('the icing on the cake', 'dhi ai-sing on dhe keik', {
+    'id': 'pelengkap yang membuat makin sempurna',
+    'en': 'an extra good thing on top',
+  }, 11),
+  EVocab('on thin ice', 'on thin ais', {
+    'id': 'dalam posisi berisiko',
+    'en': 'in a risky situation',
+  }, 11),
+  EVocab('when pigs fly', 'wen pigz flai', {
+    'id': 'mustahil terjadi',
+    'en': 'something that will never happen',
+  }, 11),
+  EVocab('rain cats and dogs', 'rein kets end dogz', {
+    'id': 'hujan sangat deras',
+    'en': 'rain very heavily',
+  }, 11),
+  EVocab('break a leg', 'breik e leg', {
+    'id': 'semoga sukses (sebelum tampil)',
+    'en': 'good luck before a performance',
+  }, 11),
 ];

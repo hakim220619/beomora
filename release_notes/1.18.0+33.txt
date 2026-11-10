@@ -1,0 +1,8 @@
+<id>
+✨ Beomora 1.18.0
+🇰🇷 Korea: 1.000+ kosakata TOPIK I, tata bahasa, ungkapan kerja EPS & simulasi ujian TOPIK I / EPS-TOPIK
+🇩🇪 Jerman: 1.000+ kosakata Goethe A1–A2, tata bahasa, ungkapan kerja & Pflege, simulasi Goethe A1/A2
+🇯🇵 Jepang: 540 ungkapan sehari-hari, keigo, onomatope & peribahasa; kosakata JLPT kini urut per tema
+🇬🇧 Inggris: 500+ ungkapan, phrasal verb & idiom
+🌙 Tema gelap: notifikasi & dialog lebih jelas dibaca
+</id>

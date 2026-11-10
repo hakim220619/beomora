@@ -89,10 +89,52 @@ ThemeData buildTheme(Brightness brightness) {
           : Colors.white.withValues(alpha: 0.92),
     ),
     dividerColor: isDark ? const Color(0xFF2E5546) : const Color(0xFFDDD6C0),
+    // Warna teks snackbar ditetapkan eksplisit: bawaan Material 3 di tema
+    // gelap memakai onInverseSurface (gelap) — tak terbaca di latar hijau
+    // papan tulis.
     snackBarTheme: SnackBarThemeData(
       behavior: SnackBarBehavior.floating,
       backgroundColor: isDark ? const Color(0xFF1C4434) : DuoColors.eel,
+      contentTextStyle: TextStyle(
+        fontSize: 14,
+        height: 1.35,
+        color: isDark ? StudyColors.chalk : Colors.white,
+      ),
+      actionTextColor: isDark ? DuoColors.yellow : const Color(0xFF7CE0B8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+    ),
+    // Lembar bawah (detail kosakata, jumlah soal, dll.) senada dialog.
+    bottomSheetTheme: BottomSheetThemeData(
+      backgroundColor: isDark ? StudyColors.boardTop : StudyColors.paper,
+      surfaceTintColor: Colors.transparent,
+      modalBackgroundColor: isDark ? StudyColors.boardTop : StudyColors.paper,
+    ),
+    // AlertDialog biasa disamakan dengan dialog khas Beomora
+    // (showDuoDialog): kertas di tema terang, papan tulis di tema gelap.
+    dialogTheme: DialogThemeData(
+      backgroundColor: isDark ? StudyColors.boardTop : StudyColors.paper,
+      surfaceTintColor: Colors.transparent,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(28),
+        side: BorderSide(
+          color: isDark
+              ? StudyColors.chalk.withValues(alpha: 0.28)
+              : const Color(0xFFE7E0C9),
+          width: 1.5,
+        ),
+      ),
+      titleTextStyle: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.w900,
+        color: isDark ? StudyColors.chalk : DuoColors.eel,
+      ),
+      contentTextStyle: TextStyle(
+        fontSize: 14.5,
+        height: 1.5,
+        color: isDark
+            ? StudyColors.chalk.withValues(alpha: 0.85)
+            : DuoColors.eel.withValues(alpha: 0.85),
+      ),
     ),
   );
 }

@@ -132,9 +132,18 @@ enum ExamScoring {
   jlptN4, // Pengetahuan Bahasa 120 + Choukai 60, lulus 90
   jlptN3, // 3 × 60, lulus 95
   jlptN2, // 3 × 60, lulus 90
-  jlptN1; // 3 × 60, lulus 100
+  jlptN1, // 3 × 60, lulus 100
+  topik1, // Mendengar 100 + Membaca 100; Level 1 ≥ 80, Level 2 ≥ 140
+  epsTopik, // 50 soal × 4 = 200; ambang minimal 80
+  goetheA1, // Lesen + Hören per bagian /100; lulus ≥ 60 (rata-rata)
+  goetheA2; // modul Lesen & Hören masing-masing lulus ≥ 60/100
 
-  bool get isJlpt => index >= ExamScoring.jlptN5.index;
+  bool get isJlpt =>
+      index >= ExamScoring.jlptN5.index && index <= ExamScoring.jlptN1.index;
+
+  /// Ujian bahasa Korea (TOPIK I / EPS-TOPIK).
+  bool get isKorean =>
+      this == ExamScoring.topik1 || this == ExamScoring.epsTopik;
 
   /// Ambang lulus total JLPT (0 untuk ujian tanpa ambang).
   int get passMark => switch (this) {
@@ -143,6 +152,10 @@ enum ExamScoring {
     ExamScoring.jlptN3 => 95,
     ExamScoring.jlptN2 => 90,
     ExamScoring.jlptN1 => 100,
+    ExamScoring.topik1 => 80,
+    ExamScoring.epsTopik => 80,
+    ExamScoring.goetheA1 => 60,
+    ExamScoring.goetheA2 => 60,
     _ => 0,
   };
 }
@@ -751,7 +764,8 @@ class ExamScore {
   /// Skor keseluruhan (mis. "72/90", "Band 6.5", "112/180").
   final String overall;
 
-  /// Hanya JLPT: lulus/tidak (null untuk ujian tanpa ambang lulus).
+  /// JLPT / TOPIK / EPS-TOPIK: lulus/tidak (null untuk ujian tanpa
+  /// ambang lulus).
   final bool? passed;
 
   const ExamScore({
@@ -848,6 +862,63 @@ class ExamScore {
         }
         final avg = rs.isEmpty ? 0 : (sum / rs.length).round();
         return ExamScore(perSection: per, overall: '$avg/90');
+      case ExamScoring.topik1:
+        // TOPIK I: Mendengar /100 + Membaca /100 = /200. Level 1 ≥ 80,
+        // Level 2 ≥ 140 (tanpa ambang per bagian).
+        final li = pctOf(ExamSectionKind.listening);
+        final rd = pctOf(ExamSectionKind.reading);
+        final liS = li < 0 ? 0 : _scale(li, 100);
+        final rdS = rd < 0 ? 0 : _scale(rd, 100);
+        if (li >= 0) per[ExamSectionKind.listening] = '$liS/100';
+        if (rd >= 0) per[ExamSectionKind.reading] = '$rdS/100';
+        final total = liS + rdS;
+        final level = total >= 140
+            ? ' · Level 2'
+            : total >= 80
+            ? ' · Level 1'
+            : '';
+        return ExamScore(
+          perSection: per,
+          overall: '$total/200$level',
+          passed: total >= scoring.passMark,
+        );
+      case ExamScoring.goetheA1:
+      case ExamScoring.goetheA2:
+        // Goethe-Zertifikat: tiap bagian /100; Schreiben & Sprechen tidak
+        // disimulasikan. A1: lulus bila rata-rata ≥ 60. A2 (modular):
+        // tiap modul harus ≥ 60.
+        var sum = 0, n = 0, allPass = true;
+        for (final r in rs) {
+          final s = _scale(r.pct, 100);
+          per[r.kind] = '$s/100';
+          sum += s;
+          n++;
+          if (s < scoring.passMark) allPass = false;
+        }
+        final avg = n == 0 ? 0 : (sum / n).round();
+        return ExamScore(
+          perSection: per,
+          overall: '$avg/100',
+          passed: scoring == ExamScoring.goetheA2
+              ? (n > 0 && allPass)
+              : avg >= scoring.passMark,
+        );
+      case ExamScoring.epsTopik:
+        // EPS-TOPIK: 25 Membaca + 25 Mendengar, 4 poin per soal = /200.
+        // Ambang lulus minimal 80 (bisa lebih tinggi per sektor/negara).
+        var correct = 0, totalQ = 0;
+        for (final r in rs) {
+          final s = _scale(r.pct, r.total * 4);
+          per[r.kind] = '$s/${r.total * 4}';
+          correct += r.correct;
+          totalQ += r.total;
+        }
+        final score = totalQ == 0 ? 0 : (correct * 200 / totalQ).round();
+        return ExamScore(
+          perSection: per,
+          overall: '$score/200',
+          passed: score >= scoring.passMark,
+        );
       case ExamScoring.jlptN5:
       case ExamScoring.jlptN4:
       case ExamScoring.jlptN3:

@@ -1,7 +1,9 @@
 import 'exam_bank.dart';
 import 'jlpt_vocab.dart';
 import 'jlpt_vocab_adv.dart';
+import 'goethe_vocab.dart';
 import 'mcq_bank.dart';
+import 'topik_vocab.dart';
 
 /// Satu paket soal pilihan ganda bertema (mis. JLPT N5, TOEFL). Judul
 /// dwibahasa; layar kuis mengacak soal & pilihan dan — untuk pengguna
@@ -120,6 +122,49 @@ List<McqPack> mcqPacksFor(String courseId) {
           },
           questions: vocabToMcq(jlptN1),
         ),
+      ];
+    case 'ko':
+      // Kosakata inti TOPIK I per kategori besar; distraktor dari kata
+      // di sebelahnya (tema yang sama) sehingga tetap menantang.
+      return [
+        for (var c = 0; c < topikVocabCategories.length; c++)
+          McqPack(
+            id: 'ko_topik_c$c',
+            emoji: const ['🔢', '👥', '🍚', '🚇', '🏭', '🏃', '🎨', '❓'][c],
+            title: {
+              'id': topikVocabCategories[c]['id']!,
+              'en': topikVocabCategories[c]['en']!,
+            },
+            subtitle: const {
+              'id': 'TOPIK I · kosakata inti',
+              'en': 'TOPIK I · core vocabulary',
+            },
+            questions: vocabToMcq([
+              for (final w in topikVocab)
+                if (topikGroupCategory[w.group] == c) w,
+            ]),
+          ),
+      ];
+    case 'de':
+      // Kosakata inti Goethe A1–A2 per kategori besar.
+      return [
+        for (var c = 0; c < goetheVocabCategories.length; c++)
+          McqPack(
+            id: 'de_goethe_c$c',
+            emoji: const ['🔢', '👥', '🥨', '🚆', '📋', '🏃', '🎨', '❓'][c],
+            title: {
+              'id': goetheVocabCategories[c]['id']!,
+              'en': goetheVocabCategories[c]['en']!,
+            },
+            subtitle: const {
+              'id': 'Goethe A1–A2 · kosakata inti',
+              'en': 'Goethe A1–A2 · core vocabulary',
+            },
+            questions: vocabToMcq([
+              for (final w in goetheVocab)
+                if (goetheGroupCategory[w.group] == c) w,
+            ]),
+          ),
       ];
     case 'en':
       return [

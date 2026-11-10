@@ -24,7 +24,14 @@ void main() {
       expect(u.usage('id'), isNotEmpty, reason: w.kana);
       expect(u.sentence, isNot(matches(RegExp('[一-鿿]'))));
     }
-    for (final w in [...academicVocab, ...ieltsVocab, ...toeicVocab]) {
+    for (final w in [
+      ...academicVocab,
+      ...ieltsVocab,
+      ...toeicVocab,
+      ...phraseVocab,
+      ...phrasalVocab,
+      ...idiomVocab,
+    ]) {
       final u = vocabUsageFor('en', w.word);
       expect(u, isNotNull, reason: w.word);
       expect(u!.translation('id'), isNotEmpty, reason: w.word);
@@ -55,10 +62,7 @@ void main() {
       uiLang: 'id',
       topic: ja,
     );
-    expect(
-      d.sentences.map((s) => s.text),
-      contains('のうか は はたけ で はたらきます'),
-    );
+    expect(d.sentences.map((s) => s.text), contains('のうか は はたけ で はたらきます'));
 
     final en = kStudyGuides['en']!.firstWhere(
       (t) => t.id == 'en_vocab_farming',

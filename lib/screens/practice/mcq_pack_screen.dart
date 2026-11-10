@@ -106,11 +106,17 @@ class _PackCard extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Text(
-                          pack.title[l.code] ?? '',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w900,
+                        // Judul panjang dibungkus/dipotong supaya lencana
+                        // jumlah soal tidak terdorong keluar kartu.
+                        Flexible(
+                          child: Text(
+                            pack.title[l.code] ?? '',
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w900,
+                            ),
                           ),
                         ),
                         const SizedBox(width: 8),

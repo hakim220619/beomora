@@ -2,7 +2,15 @@ import '../models/exam.dart';
 import '../models/listening.dart';
 import 'exam_en_listening_more.dart';
 import 'exam_en_reading_more.dart';
+import 'exam_de_a1_hoeren.dart';
+import 'exam_de_a1_lesen.dart';
+import 'exam_de_a2_hoeren.dart';
+import 'exam_de_a2_lesen.dart';
 import 'exam_en_writing_more.dart';
+import 'exam_ko_eps_listening.dart';
+import 'exam_ko_eps_reading.dart';
+import 'exam_ko_topik_listening.dart';
+import 'exam_ko_topik_reading.dart';
 import 'exam_writing_bank_ja.dart';
 import 'jlpt_exam_n4.dart';
 import 'jlpt_exam_n5.dart';
@@ -41,19 +49,150 @@ List<ExamBlueprint> examsFor(String courseId) {
       return _en;
     case 'ja':
       return _ja;
+    case 'ko':
+      return _ko;
+    case 'de':
+      return _de;
     default:
       return const [];
   }
 }
 
 ExamBlueprint? examById(String id) {
-  for (final list in [_en, _ja]) {
+  for (final list in [_en, _ja, _ko, _de]) {
     for (final e in list) {
       if (e.id == id) return e;
     }
   }
   return null;
 }
+
+// ---------------------------------------------------------------------------
+// Jerman — Goethe-Zertifikat A1 (Start Deutsch 1) & A2
+// ---------------------------------------------------------------------------
+// Hanya Lesen & Hören yang disimulasikan (Schreiben & Sprechen tidak).
+final List<ExamBlueprint> _de = [
+  ExamBlueprint(
+    id: 'de_goethe_a1',
+    courseId: 'de',
+    emoji: '🥨',
+    title: const {'id': 'Goethe-Zertifikat A1', 'en': 'Goethe-Zertifikat A1'},
+    subtitle: const {
+      'id': 'Hören 15 · Lesen 15 · lulus ≥ 60/100 (Start Deutsch 1)',
+      'en': 'Listening 15 · Reading 15 · pass ≥ 60/100 (Start Deutsch 1)',
+    },
+    sections: [
+      ExamSection.mixed(
+        ExamSectionKind.listening,
+        minutes: 20,
+        parts: [ExamPart.listening(goetheA1Listening, 15)],
+      ),
+      ExamSection.mixed(
+        ExamSectionKind.reading,
+        minutes: 25,
+        parts: [
+          ExamPart.mcq(goetheA1ReadingMcq, 5),
+          ExamPart.reading(goetheA1Reading, 10),
+        ],
+      ),
+    ],
+    scoring: ExamScoring.goetheA1,
+    pools: const ExamPools(),
+  ),
+  ExamBlueprint(
+    id: 'de_goethe_a2',
+    courseId: 'de',
+    emoji: '🇩🇪',
+    title: const {'id': 'Goethe-Zertifikat A2', 'en': 'Goethe-Zertifikat A2'},
+    subtitle: const {
+      'id': 'Lesen 20 · Hören 20 · tiap modul lulus ≥ 60/100',
+      'en': 'Reading 20 · Listening 20 · each module pass ≥ 60/100',
+    },
+    sections: [
+      ExamSection.mixed(
+        ExamSectionKind.reading,
+        minutes: 30,
+        parts: [
+          ExamPart.mcq(goetheA2ReadingMcq, 5),
+          ExamPart.reading(goetheA2Reading, 15),
+        ],
+      ),
+      ExamSection.mixed(
+        ExamSectionKind.listening,
+        minutes: 30,
+        parts: [ExamPart.listening(goetheA2Listening, 20)],
+      ),
+    ],
+    scoring: ExamScoring.goetheA2,
+    pools: const ExamPools(),
+  ),
+];
+
+// ---------------------------------------------------------------------------
+// Korea — TOPIK I & EPS-TOPIK
+// ---------------------------------------------------------------------------
+final List<ExamBlueprint> _ko = [
+  // TOPIK I (level 1–2): 듣기 30 soal / 40 menit + 읽기 40 soal / 60
+  // menit, skor 200 (Level 1 ≥ 80, Level 2 ≥ 140). Tanpa bagian menulis.
+  ExamBlueprint(
+    id: 'ko_topik1',
+    courseId: 'ko',
+    emoji: '🇰🇷',
+    title: const {'id': 'TOPIK I', 'en': 'TOPIK I'},
+    subtitle: const {
+      'id': 'Mendengar 30 · Membaca 40 · skor 200 (Level 1–2)',
+      'en': 'Listening 30 · Reading 40 · 200 points (Level 1–2)',
+    },
+    sections: [
+      ExamSection.mixed(
+        ExamSectionKind.listening,
+        minutes: 40,
+        parts: [
+          ExamPart.listening([
+            ...topikListening,
+            ..._listeningPack('ko', 'ko_listen_topik1'),
+          ], 30),
+        ],
+      ),
+      ExamSection.mixed(
+        ExamSectionKind.reading,
+        minutes: 60,
+        parts: [
+          ExamPart.mcq(topikReadingMcq, 20),
+          ExamPart.reading(topikReading, 20),
+        ],
+      ),
+    ],
+    scoring: ExamScoring.topik1,
+    pools: const ExamPools(),
+  ),
+  // EPS-TOPIK (izin kerja Korea): 읽기 25 soal / 40 menit + 듣기 25 soal
+  // / 30 menit, 4 poin per soal = 200; ambang minimal 80.
+  ExamBlueprint(
+    id: 'ko_eps',
+    courseId: 'ko',
+    emoji: '🏭',
+    title: const {'id': 'EPS-TOPIK', 'en': 'EPS-TOPIK'},
+    subtitle: const {
+      'id': 'Membaca 25 · Mendengar 25 · skor 200 (izin kerja Korea)',
+      'en': 'Reading 25 · Listening 25 · 200 points (Korea work permit)',
+    },
+    sections: [
+      ExamSection.mixed(
+        ExamSectionKind.reading,
+        minutes: 40,
+        parts: [ExamPart.mcq(epsReading, 25)],
+      ),
+      ExamSection.mixed(
+        ExamSectionKind.listening,
+        minutes: 30,
+        parts: [ExamPart.listening(epsListening, 25)],
+      ),
+    ],
+    scoring: ExamScoring.epsTopik,
+    pools: const ExamPools(),
+  ),
+];
 
 // ---------------------------------------------------------------------------
 // Inggris — TOEFL iBT, IELTS Academic, PTE Academic

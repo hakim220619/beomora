@@ -3,6 +3,58 @@
 Semua perubahan penting dicatat di sini. Versi mengikuti `pubspec.yaml`
 (`versi+kode build`).
 
+## 1.18.0 (build 33) — 10 November 2026
+
+### Baru
+- **Korea — setara Jepang**:
+  - Materi: **Kosakata Inti TOPIK I** (1.058 kata, 54 tema), 7 topik
+    **tata bahasa** (tingkat bicara, konjugasi, lampau/masa depan,
+    negasi, permintaan, penghubung), ungkapan sehari-hari (209),
+    **ungkapan kerja & EPS** (89), onomatope & tanggapan (123), idiom &
+    peribahasa (109). Semua dengan contoh kalimat + romanisasi.
+  - Latihan: **Tebak Kata** per kategori, 8 paket **Pilihan Ganda**
+    TOPIK I, **simulasi TOPIK I** (Mendengar 30 · Membaca 40, skor /200,
+    Level 1 ≥ 80 / Level 2 ≥ 140) dan **EPS-TOPIK** (25 + 25, /200).
+- **Jerman — setara Jepang**:
+  - Materi: **Kosakata Inti A1–A2** (1.049 kata Goethe, kata benda
+    berartikel + jamak), 7 topik tata bahasa (urutan kata, Akkusativ/
+    Dativ, preposisi, modal & kata kerja terpisah, Perfekt, negasi &
+    imperatif, kata sifat), ungkapan sehari-hari (210), **kerja &
+    Pflege** (96), partikel & pengisi (78), idiom & peribahasa (112).
+  - Latihan: Tebak Kata & 8 paket Pilihan Ganda per kategori,
+    **simulasi Goethe-Zertifikat A1** (Hören + Lesen, lulus rata-rata
+    ≥ 60) dan **A2** (tiap modul ≥ 60).
+- **Jepang**: 540 ungkapan baru — sehari-hari (206), aizuchi (49),
+  kerja & keigo (78), onomatope (107), idiom & peribahasa (100).
+- **Inggris**: Ungkapan Sehari-hari (204), Phrasal Verb (157), Idiom
+  (151), semuanya dengan contoh kalimat & catatan pemakaian.
+- Lembar detail kosakata kini mendukung contoh kalimat Korea & Jerman.
+
+### Perubahan
+- **Kosakata JLPT N5/N4/N3 diurutkan per tema** (data dasar + tambahan
+  digabung; waktu lampau → kini → depan, angka & bulan berurutan);
+  judul bagian di Materi memakai nama tema, bukan "Bagian N".
+- Daftar kosakata Inggris/Jepang/Korea/Jerman dikelompokkan per
+  situasi/tema dengan judul bagian.
+
+### Perbaikan
+- **Tema gelap**: teks snackbar (dulu gelap di atas hijau gelap) dan
+  tombol aksinya kini terbaca; AlertDialog & lembar bawah memakai latar
+  papan tulis, senada dengan dialog Beomora.
+- Kartu paket Pilihan Ganda tidak lagi meluber untuk judul panjang.
+- Flag `premium` di profil (lencana Papan Juara) tidak lagi terbaca
+  sebagai premium seumur hidup tanpa catatan pembelian.
+
+### Teknis
+- Generator & validator baru di `tool/`: `jlpt_themes.py`,
+  `gen_ko_vocab.py`/`check_ko_vocab.py`, `gen_de_vocab.py`/
+  `check_de_vocab.py`, `gen_{ja,ko,de}_phrases.py`/`check_*_phrases.py`,
+  `check_en_phrases.py`; `gen_vocab_examples.py` mendukung `ko` & `de`.
+- `ExamScoring`: `topik1`, `epsTopik`, `goetheA1`, `goetheA2`.
+- Tes baru: `jlpt_vocab_order_test`, `ja_phrases_test`,
+  `topik_vocab_test`, `goethe_vocab_test`, `ko_parity_test`,
+  `de_parity_test`, `dark_theme_test`.
+
 ## 1.17.0 (build 32) — 8 November 2026
 
 ### Baru

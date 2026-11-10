@@ -41,7 +41,23 @@ bool _mentions(String courseId, String sentence, String word) {
         ends.contains(word[word.length - 1]) &&
         flat.contains(word.substring(0, word.length - 1));
   }
-  final needle = word.toLowerCase().replaceFirst(RegExp(r'^to '), '').trim();
+  if (courseId == 'ko') {
+    // Kata kerja/sifat Korea berubah di akhir (심다 → 심어요): cocokkan
+    // stem tanpa 다 (dan tanpa 하 untuk kata kerja 하다).
+    final flat = sentence.replaceAll(' ', '');
+    var stem = word.endsWith('다') && word.length >= 2
+        ? word.substring(0, word.length - 1)
+        : word;
+    if (stem.endsWith('하') && stem.length >= 2) {
+      stem = stem.substring(0, stem.length - 1);
+    }
+    return flat.contains(stem);
+  }
+  // Jerman: buang artikel/sich (der Tisch → tisch, sich freuen → freuen).
+  final needle = word
+      .toLowerCase()
+      .replaceFirst(RegExp(r'^(to|der|die|das|sich) '), '')
+      .trim();
   if (needle.isEmpty) return false;
   return RegExp(
     r'\b' + RegExp.escape(needle),
@@ -80,7 +96,7 @@ VocabDetail vocabDetailOf({
         sentences.add(
           VocabSentence(
             e.target,
-            reading: courseId == 'ja' ? e.romaji : null,
+            reading: courseId == 'ja' || courseId == 'ko' ? e.romaji : null,
             // Kalimat Inggris dengan UI Inggris: terjemahannya sama persis.
             translation: t == e.target ? null : t,
           ),

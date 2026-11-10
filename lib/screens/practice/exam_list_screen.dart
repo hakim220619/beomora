@@ -330,13 +330,18 @@ class ExamIntroScreen extends StatelessWidget {
                           .t('exam_rule_audio')
                           .replaceFirst('{n}', '${listening.maxPlays}'),
                     ),
-                  _Rule(
-                    '✍️',
-                    isJlpt
-                        ? '* ${l.t('exam_jlpt_writing_note')}'
-                        : l.t('exam_writing_note'),
-                  ),
-                  if (!isJlpt) _Rule('🗣️', l.t('exam_speaking_note')),
+                  // TOPIK I & EPS-TOPIK tidak punya bagian menulis.
+                  if (exam.sections.any(
+                    (s) => s.kind == ExamSectionKind.writing,
+                  ))
+                    _Rule(
+                      '✍️',
+                      isJlpt
+                          ? '* ${l.t('exam_jlpt_writing_note')}'
+                          : l.t('exam_writing_note'),
+                    ),
+                  if (!isJlpt && !exam.scoring.isKorean)
+                    _Rule('🗣️', l.t('exam_speaking_note')),
                 ],
               ),
             ),

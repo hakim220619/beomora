@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../../data/de_phrases.dart';
 import '../../data/en_exam_vocab.dart';
+import '../../data/goethe_vocab.dart';
+import '../../data/ja_phrases.dart';
 import '../../data/jlpt_vocab.dart';
+import '../../data/ko_phrases.dart';
 import '../../data/study_guides.dart';
+import '../../data/topik_vocab.dart';
 import '../../l10n/app_strings.dart';
 import '../../models/course.dart';
 import '../../models/guide.dart';
@@ -50,6 +55,8 @@ class MaterialsScreen extends StatelessWidget {
       // Jepang, Akademik/IELTS/TOEIC untuk kursus Inggris.
       if (course.id == 'ja') ..._jlptVocabTopics(),
       if (course.id == 'en') ..._englishExamVocabTopics(),
+      if (course.id == 'ko') ..._koreanVocabTopics(),
+      if (course.id == 'de') ..._germanVocabTopics(),
       ...allTopics.where((t) => t.id.contains('vocab')),
     ];
 
@@ -465,16 +472,54 @@ class _VocabHitRow extends StatelessWidget {
 }
 
 /// Topik kosakata ujian: daftar kata dipecah menjadi bagian ±16 kata
-/// agar mudah dibaca.
+/// agar mudah dibaca. Dengan [groups] (indeks tema per kata) +
+/// [groupTitles], tiap bagian berisi satu tema dan berjudul nama tema;
+/// tema panjang dibagi rata, mis. "Kata kerja (1)", "Kata kerja (2)".
 GuideTopic _examVocabTopic({
   required String id,
   required String emoji,
   required String title,
+  String? titleEn,
   required List<GuideExample> words,
   required Map<String, String> subtitle,
+  List<int>? groups,
+  List<Map<String, String>>? groupTitles,
 }) {
   const chunk = 16;
   final sections = <GuideSection>[];
+  if (groups != null && groupTitles != null) {
+    var start = 0;
+    while (start < words.length) {
+      var end = start;
+      while (end < words.length && groups[end] == groups[start]) {
+        end++;
+      }
+      final t = groupTitles[groups[start]];
+      final n = end - start;
+      final parts = (n / chunk).ceil();
+      for (var p = 0; p < parts; p++) {
+        final from = start + (n * p / parts).round();
+        final to = start + (n * (p + 1) / parts).round();
+        sections.add(
+          GuideSection(
+            title: {
+              for (final lang in t.keys)
+                lang: parts == 1 ? t[lang]! : '${t[lang]} (${p + 1})',
+            },
+            examples: words.sublist(from, to),
+          ),
+        );
+      }
+      start = end;
+    }
+    return GuideTopic(
+      id: id,
+      emoji: emoji,
+      title: {'id': title, 'en': titleEn ?? title},
+      subtitle: subtitle,
+      sections: sections,
+    );
+  }
   for (var i = 0; i < words.length; i += chunk) {
     sections.add(
       GuideSection(
@@ -489,37 +534,306 @@ GuideTopic _examVocabTopic({
   return GuideTopic(
     id: id,
     emoji: emoji,
-    title: {'id': title, 'en': title},
+    title: {'id': title, 'en': titleEn ?? title},
     subtitle: subtitle,
     sections: sections,
   );
 }
 
-/// Topik kosakata JLPT (N5/N4/N3) dari [jlptN5] dst.
-List<GuideTopic> _jlptVocabTopics() {
-  GuideTopic build(String id, String emoji, String level, List<JVocab> v) =>
-      _examVocabTopic(
-        id: id,
-        emoji: emoji,
-        title: 'JLPT $level',
-        words: [
-          for (final w in v) GuideExample(w.kana, w.meaning, romaji: w.romaji),
-        ],
-        subtitle: {
-          'id': '${v.length} kosakata $level, ketuk untuk dengar',
-          'en': '${v.length} $level words, tap to listen',
-        },
-      );
+/// Topik kosakata kursus Jerman: ungkapan (sehari-hari, kerja, partikel,
+/// idiom — [dePhraseVocab] dst.), lalu kosakata inti Goethe A1–A2.
+List<GuideTopic> _germanVocabTopics() {
+  GuideTopic phrases(
+    String id,
+    String emoji,
+    String titleId,
+    String titleEn,
+    String unitId,
+    String unitEn,
+    List<JVocab> v,
+    List<Map<String, String>> groupTitles,
+  ) => _examVocabTopic(
+    id: id,
+    emoji: emoji,
+    title: titleId,
+    titleEn: titleEn,
+    words: [
+      for (final w in v) GuideExample(w.kana, w.meaning, romaji: w.romaji),
+    ],
+    groups: [for (final w in v) w.group],
+    groupTitles: groupTitles,
+    subtitle: {
+      'id': '${v.length} $unitId, ketuk untuk dengar',
+      'en': '${v.length} $unitEn, tap to listen',
+    },
+  );
 
   return [
-    build('vocab_jlpt_n5', '🌸', 'N5', jlptN5),
-    build('vocab_jlpt_n4', '🍁', 'N4', jlptN4),
-    build('vocab_jlpt_n3', '🗻', 'N3', jlptN3),
+    phrases(
+      'de_vocab_phrases',
+      '💬',
+      'Ungkapan Sehari-hari',
+      'Everyday Expressions',
+      'ungkapan',
+      'expressions',
+      dePhraseVocab,
+      dePhraseVocabGroups,
+    ),
+    phrases(
+      'de_vocab_work',
+      '💼',
+      'Ungkapan Kerja & Pflege',
+      'Work & Nursing Phrases',
+      'ungkapan kerja',
+      'workplace phrases',
+      deWorkVocab,
+      deWorkVocabGroups,
+    ),
+    phrases(
+      'de_vocab_particles',
+      '🗣️',
+      'Partikel & Pengisi Obrolan',
+      'Particles & Fillers',
+      'partikel & pengisi',
+      'particles & fillers',
+      deParticleVocab,
+      deParticleVocabGroups,
+    ),
+    phrases(
+      'de_vocab_idiom',
+      '🎭',
+      'Idiom & Peribahasa',
+      'Idioms & Proverbs',
+      'idiom & peribahasa',
+      'idioms & proverbs',
+      deIdiomVocab,
+      deIdiomVocabGroups,
+    ),
+    _germanCoreVocabTopic(),
   ];
 }
 
-/// Topik kosakata ujian Inggris: Akademik (Academic Word List, dipakai
-/// TOEFL/IELTS/PTE), IELTS (tema) dan TOEIC, dari [academicVocab] dst.
+/// Kosakata inti Jerman (Goethe A1/A2) dari [goetheVocab], per tema.
+GuideTopic _germanCoreVocabTopic() => _examVocabTopic(
+  id: 'de_vocab_goethe',
+  emoji: '🇩🇪',
+  title: 'Kosakata Inti A1–A2',
+  titleEn: 'A1–A2 Core Vocabulary',
+  words: [
+    for (final w in goetheVocab)
+      GuideExample(w.kana, w.meaning, romaji: w.romaji),
+  ],
+  groups: [for (final w in goetheVocab) w.group],
+  groupTitles: goetheVocabGroups,
+  subtitle: {
+    'id': '${goetheVocab.length} kosakata standar Goethe, ketuk untuk dengar',
+    'en': '${goetheVocab.length} standard Goethe words, tap to listen',
+  },
+);
+
+/// Topik kosakata kursus Korea: ungkapan (sehari-hari, kerja & EPS,
+/// onomatope & tanggapan, idiom & peribahasa — [koPhraseVocab] dst.),
+/// lalu kosakata inti TOPIK I.
+List<GuideTopic> _koreanVocabTopics() {
+  GuideTopic phrases(
+    String id,
+    String emoji,
+    String titleId,
+    String titleEn,
+    String unitId,
+    String unitEn,
+    List<JVocab> v,
+    List<Map<String, String>> groupTitles,
+  ) => _examVocabTopic(
+    id: id,
+    emoji: emoji,
+    title: titleId,
+    titleEn: titleEn,
+    words: [
+      for (final w in v) GuideExample(w.kana, w.meaning, romaji: w.romaji),
+    ],
+    groups: [for (final w in v) w.group],
+    groupTitles: groupTitles,
+    subtitle: {
+      'id': '${v.length} $unitId, ketuk untuk dengar',
+      'en': '${v.length} $unitEn, tap to listen',
+    },
+  );
+
+  return [
+    phrases(
+      'ko_vocab_phrases',
+      '💬',
+      'Ungkapan Sehari-hari',
+      'Everyday Expressions',
+      'ungkapan',
+      'expressions',
+      koPhraseVocab,
+      koPhraseVocabGroups,
+    ),
+    phrases(
+      'ko_vocab_work',
+      '🏭',
+      'Ungkapan Kerja & EPS',
+      'Workplace & EPS Phrases',
+      'ungkapan kerja',
+      'workplace phrases',
+      koWorkVocab,
+      koWorkVocabGroups,
+    ),
+    phrases(
+      'ko_vocab_onomatope',
+      '🎵',
+      'Onomatope & Tanggapan',
+      'Onomatopoeia & Responses',
+      'onomatope & tanggapan',
+      'onomatopoeia & responses',
+      koOnomatopeVocab,
+      koOnomatopeVocabGroups,
+    ),
+    phrases(
+      'ko_vocab_idiom',
+      '🎭',
+      'Idiom & Peribahasa',
+      'Idioms & Proverbs',
+      'idiom & peribahasa',
+      'idioms & proverbs',
+      koIdiomVocab,
+      koIdiomVocabGroups,
+    ),
+    _koreanCoreVocabTopic(),
+  ];
+}
+
+/// Kosakata inti Korea (TOPIK I / EPS-TOPIK) dari [topikVocab], dibagi
+/// per tema.
+GuideTopic _koreanCoreVocabTopic() => _examVocabTopic(
+  id: 'ko_vocab_topik',
+  emoji: '🇰🇷',
+  title: 'Kosakata Inti TOPIK I',
+  titleEn: 'TOPIK I Core Vocabulary',
+  words: [
+    for (final w in topikVocab)
+      GuideExample(w.kana, w.meaning, romaji: w.romaji),
+  ],
+  groups: [for (final w in topikVocab) w.group],
+  groupTitles: topikVocabGroups,
+  subtitle: {
+    'id': '${topikVocab.length} kosakata standar, ketuk untuk dengar',
+    'en': '${topikVocab.length} standard words, tap to listen',
+  },
+);
+
+/// Topik kosakata kursus Jepang: ungkapan (sehari-hari, aizuchi, kerja &
+/// keigo, onomatope, idiom & peribahasa — [jaPhraseVocab] dst.), lalu
+/// kosakata JLPT (N5/N4/N3) dari [jlptN5] dst.
+List<GuideTopic> _jlptVocabTopics() {
+  GuideTopic build(
+    String id,
+    String emoji,
+    String level,
+    List<JVocab> v,
+    List<Map<String, String>> groupTitles,
+  ) => _examVocabTopic(
+    id: id,
+    emoji: emoji,
+    title: 'JLPT $level',
+    words: [
+      for (final w in v) GuideExample(w.kana, w.meaning, romaji: w.romaji),
+    ],
+    groups: [for (final w in v) w.group],
+    groupTitles: groupTitles,
+    subtitle: {
+      'id': '${v.length} kosakata $level, ketuk untuk dengar',
+      'en': '${v.length} $level words, tap to listen',
+    },
+  );
+
+  GuideTopic phrases(
+    String id,
+    String emoji,
+    String titleId,
+    String titleEn,
+    String unitId,
+    String unitEn,
+    List<JVocab> v,
+    List<Map<String, String>> groupTitles,
+  ) => _examVocabTopic(
+    id: id,
+    emoji: emoji,
+    title: titleId,
+    titleEn: titleEn,
+    words: [
+      for (final w in v) GuideExample(w.kana, w.meaning, romaji: w.romaji),
+    ],
+    groups: [for (final w in v) w.group],
+    groupTitles: groupTitles,
+    subtitle: {
+      'id': '${v.length} $unitId, ketuk untuk dengar',
+      'en': '${v.length} $unitEn, tap to listen',
+    },
+  );
+
+  return [
+    phrases(
+      'ja_vocab_phrases',
+      '💬',
+      'Ungkapan Sehari-hari',
+      'Everyday Expressions',
+      'ungkapan',
+      'expressions',
+      jaPhraseVocab,
+      jaPhraseVocabGroups,
+    ),
+    phrases(
+      'ja_vocab_aizuchi',
+      '🗣️',
+      'Aizuchi & Pengisi Obrolan',
+      'Aizuchi & Fillers',
+      'tanggapan & pengisi',
+      'responses & fillers',
+      jaAizuchiVocab,
+      jaAizuchiVocabGroups,
+    ),
+    phrases(
+      'ja_vocab_work',
+      '💼',
+      'Ungkapan Kerja & Keigo',
+      'Workplace Phrases & Keigo',
+      'ungkapan kerja',
+      'workplace phrases',
+      jaWorkVocab,
+      jaWorkVocabGroups,
+    ),
+    phrases(
+      'ja_vocab_onomatope',
+      '🎵',
+      'Onomatope',
+      'Onomatopoeia',
+      'onomatope',
+      'onomatopoeia',
+      jaOnomatopeVocab,
+      jaOnomatopeVocabGroups,
+    ),
+    phrases(
+      'ja_vocab_idiom',
+      '🎭',
+      'Idiom & Peribahasa',
+      'Idioms & Proverbs',
+      'idiom & peribahasa',
+      'idioms & proverbs',
+      jaIdiomVocab,
+      jaIdiomVocabGroups,
+    ),
+    build('vocab_jlpt_n5', '🌸', 'N5', jlptN5, jlptN5Groups),
+    build('vocab_jlpt_n4', '🍁', 'N4', jlptN4, jlptN4Groups),
+    build('vocab_jlpt_n3', '🗻', 'N3', jlptN3, jlptN3Groups),
+  ];
+}
+
+/// Topik kosakata Inggris: ungkapan percakapan, phrasal verb & idiom
+/// (dikelompokkan per situasi/tema), lalu kosakata ujian Akademik
+/// (Academic Word List, dipakai TOEFL/IELTS/PTE), IELTS dan TOEIC.
 List<GuideTopic> _englishExamVocabTopics() {
   GuideTopic build(
     String id,
@@ -527,19 +841,60 @@ List<GuideTopic> _englishExamVocabTopics() {
     String exam,
     String focusId,
     String focusEn,
-    List<EVocab> v,
-  ) => _examVocabTopic(
+    List<EVocab> v, {
+    List<Map<String, String>>? groupTitles,
+    String unitId = 'kosakata',
+    String unitEn = 'words',
+    String? titleEn,
+  }) => _examVocabTopic(
     id: id,
     emoji: emoji,
     title: exam,
+    titleEn: titleEn,
     words: [for (final w in v) GuideExample(w.word, w.meaning, romaji: w.pron)],
+    groups: groupTitles == null ? null : [for (final w in v) w.group],
+    groupTitles: groupTitles,
     subtitle: {
-      'id': '${v.length} kosakata $focusId, ketuk untuk dengar',
-      'en': '${v.length} $focusEn words, tap to listen',
+      'id': '${v.length} $unitId $focusId, ketuk untuk dengar',
+      'en': '${v.length} $focusEn $unitEn, tap to listen',
     },
   );
 
   return [
+    build(
+      'en_vocab_phrases',
+      '💬',
+      'Ungkapan Sehari-hari',
+      'percakapan',
+      'everyday',
+      phraseVocab,
+      titleEn: 'Everyday Expressions',
+      groupTitles: phraseVocabGroups,
+      unitId: 'ungkapan',
+      unitEn: 'expressions',
+    ),
+    build(
+      'en_vocab_phrasal',
+      '🧩',
+      'Phrasal Verb',
+      'yang paling sering dipakai',
+      'most common',
+      phrasalVocab,
+      groupTitles: phrasalVocabGroups,
+      unitId: 'phrasal verb',
+      unitEn: 'phrasal verbs',
+    ),
+    build(
+      'en_vocab_idiom',
+      '🎭',
+      'Idiom',
+      'yang umum dipakai',
+      'common',
+      idiomVocab,
+      groupTitles: idiomVocabGroups,
+      unitId: 'idiom',
+      unitEn: 'idioms',
+    ),
     build(
       'en_vocab_academic',
       '🎓',

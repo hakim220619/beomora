@@ -9,18 +9,12 @@ void main() {
     expect(ProgressProvider.weekOf(sunLast), 'w20261102');
     expect(ProgressProvider.weekOf(monFirst), 'w20261109');
     // Senin 00:00 WIB awal minggu = Minggu 17:00 UTC sebelumnya.
-    expect(
-      ProgressProvider.weekOf(DateTime.utc(2026, 11, 1, 17)),
-      'w20261102',
-    );
+    expect(ProgressProvider.weekOf(DateTime.utc(2026, 11, 1, 17)), 'w20261102');
   });
 
   test('reset tepat setelah Minggu 23:59:59 WIB', () {
     final reset = DateTime.utc(2026, 11, 8, 17);
-    expect(
-      ProgressProvider.weekResetAt(DateTime.utc(2026, 11, 4, 3)),
-      reset,
-    );
+    expect(ProgressProvider.weekResetAt(DateTime.utc(2026, 11, 4, 3)), reset);
     expect(
       ProgressProvider.weekResetAt(DateTime.utc(2026, 11, 8, 16, 59, 59)),
       reset,

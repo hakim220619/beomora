@@ -22,10 +22,15 @@ void _expectValidMcq(McqQuestion q, String where) {
 }
 
 void main() {
-  final all = [...examsFor('en'), ...examsFor('ja')];
+  final all = [
+    ...examsFor('en'),
+    ...examsFor('ja'),
+    ...examsFor('ko'),
+    ...examsFor('de'),
+  ];
 
   group('Cetak biru ujian', () {
-    test('Inggris: TOEFL/IELTS/PTE; Jepang: N5–N1; kursus lain kosong', () {
+    test('Inggris: TOEFL/IELTS/PTE; Jepang: N5–N1; Korea: TOPIK I & EPS', () {
       expect(examsFor('en').map((e) => e.id), [
         'en_toefl',
         'en_ielts',
@@ -38,7 +43,9 @@ void main() {
         'ja_n2',
         'ja_n1',
       ]);
-      expect(examsFor('ko'), isEmpty);
+      expect(examsFor('ko').map((e) => e.id), ['ko_topik1', 'ko_eps']);
+      expect(examsFor('de').map((e) => e.id), ['de_goethe_a1', 'de_goethe_a2']);
+      expect(examsFor('id'), isEmpty);
       expect(examById('ja_n2')?.scoring, ExamScoring.jlptN2);
       expect(examById('zz'), isNull);
     });
@@ -123,8 +130,13 @@ void main() {
           expect(r.text.trim(), isNotEmpty, reason: r.id);
           expect(r.title['id'], isNotEmpty, reason: r.id);
           expect(r.title['en'], isNotEmpty, reason: r.id);
-          // Teks harian TOEFL & 情報検索 cukup 2 soal.
-          expect(r.questions.length, greaterThanOrEqualTo(2), reason: r.id);
+          // Teks harian TOEFL & 情報検索 cukup 2 soal; TOPIK I (soal
+          // 50–70) lazim satu teks satu soal.
+          expect(
+            r.questions.length,
+            greaterThanOrEqualTo(e.scoring.isKorean ? 1 : 2),
+            reason: r.id,
+          );
           for (final q in r.questions) {
             _expectValidMcq(q, r.id);
           }
@@ -276,6 +288,44 @@ void main() {
       expect(sc.perSection[ExamSectionKind.reading], 'Band 7');
       expect(sc.perSection[ExamSectionKind.writing], 'Band 6.5');
       expect(sc.overall, 'Band 7.5');
+    });
+
+    test('TOPIK I: /200 dengan Level 1 (≥ 80) & Level 2 (≥ 140)', () {
+      final l2 = ExamScore.compute(ExamScoring.topik1, const [
+        ExamSectionResult(ExamSectionKind.listening, 24, 30),
+        ExamSectionResult(ExamSectionKind.reading, 32, 40),
+      ]);
+      expect(l2.overall, '160/200 · Level 2');
+      expect(l2.passed, isTrue);
+      final fail = ExamScore.compute(ExamScoring.topik1, const [
+        ExamSectionResult(ExamSectionKind.listening, 9, 30),
+        ExamSectionResult(ExamSectionKind.reading, 12, 40),
+      ]);
+      expect(fail.overall, '60/200');
+      expect(fail.passed, isFalse);
+    });
+
+    test('EPS-TOPIK: 4 poin per soal, lulus ≥ 80', () {
+      final sc = ExamScore.compute(ExamScoring.epsTopik, const [
+        ExamSectionResult(ExamSectionKind.reading, 15, 25),
+        ExamSectionResult(ExamSectionKind.listening, 10, 25),
+      ]);
+      expect(sc.overall, '100/200');
+      expect(sc.perSection[ExamSectionKind.reading], '60/100');
+      expect(sc.passed, isTrue);
+    });
+
+    test('Goethe A1 rata-rata ≥ 60; A2 tiap modul ≥ 60', () {
+      const results = [
+        ExamSectionResult(ExamSectionKind.reading, 14, 20),
+        ExamSectionResult(ExamSectionKind.listening, 10, 20),
+      ];
+      final a1 = ExamScore.compute(ExamScoring.goetheA1, results);
+      expect(a1.overall, '60/100');
+      expect(a1.passed, isTrue);
+      final a2 = ExamScore.compute(ExamScoring.goetheA2, results);
+      expect(a2.perSection[ExamSectionKind.listening], '50/100');
+      expect(a2.passed, isFalse); // Hören < 60
     });
 
     test('PTE: 10–90', () {

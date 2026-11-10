@@ -3,11 +3,13 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../data/goethe_vocab.dart';
 import '../../data/jlpt_vocab.dart';
 import '../../data/kanji_bank.dart';
 import '../../data/jlpt_vocab_adv.dart';
 import '../../data/mcq_packs.dart';
 import '../../data/question_bank.dart';
+import '../../data/topik_vocab.dart';
 import '../../l10n/app_strings.dart';
 import '../../models/course.dart';
 import '../../models/guide.dart';
@@ -411,8 +413,9 @@ class KanjiQuizScreen extends StatelessWidget {
   }
 }
 
-/// Tebak Kata: kosakata JLPT per level — kata ↔ artinya (bahasa UI),
-/// jumlah soal bebas (pengguna gratis dibatasi [kFreeMcqLimit]).
+/// Tebak Kata: kosakata JLPT per level (Jepang) atau kosakata inti
+/// TOPIK I per kategori (Korea) — kata ↔ artinya (bahasa UI), jumlah
+/// soal bebas (pengguna gratis dibatasi [kFreeMcqLimit]).
 class WordQuizScreen extends StatelessWidget {
   final Course course;
   const WordQuizScreen({super.key, required this.course});
@@ -425,28 +428,56 @@ class WordQuizScreen extends StatelessWidget {
     'N1': jlptN1,
   };
 
+  /// Kata per pilihan (kunci pilihan → daftar kata) dan label pilihan.
+  (Map<String, List<JVocab>>, Map<String, String>, String) _choices(L l) {
+    // Korea (TOPIK I) & Jerman (Goethe A1/A2): per kategori besar.
+    final byCategory = switch (course.id) {
+      'ko' => (topikVocab, topikGroupCategory, topikVocabCategories),
+      'de' => (goetheVocab, goetheGroupCategory, goetheVocabCategories),
+      _ => null,
+    };
+    if (byCategory != null) {
+      final (vocab, groupCat, cats) = byCategory;
+      final byCat = <String, List<JVocab>>{};
+      for (final w in vocab) {
+        byCat.putIfAbsent('c${groupCat[w.group]}', () => []).add(w);
+      }
+      return (
+        byCat,
+        {
+          for (var i = 0; i < cats.length; i++)
+            'c$i': cats[i][l.code] ?? cats[i]['id']!,
+        },
+        'c0',
+      );
+    }
+    return (_levels, {for (final k in _levels.keys) k: k}, 'N5');
+  }
+
   @override
   Widget build(BuildContext context) {
     final l = L.of(context);
+    final (levels, labels, initial) = _choices(l);
+    final isKo = course.id == 'ko' || course.id == 'de';
     return QuizSetupScreen(
       course: course,
-      id: 'word_custom',
+      id: course.id == 'ja' ? 'word_custom' : 'word_custom_${course.id}',
       emoji: '📖',
       title: l.t('word_quiz_title'),
       unitLabel: l.t('word_quiz_unit'),
       groups: [
         QuizChoiceGroup(
-          title: l.t('word_quiz_levels'),
-          choices: [for (final k in _levels.keys) QuizChoice(k, k)],
-          initial: const {'N5'},
+          title: l.t(isKo ? 'word_quiz_categories' : 'word_quiz_levels'),
+          choices: [for (final k in levels.keys) QuizChoice(k, labels[k]!)],
+          initial: {initial},
         ),
       ],
       buildPool: (sel) {
         final seen = <String>{};
         return [
-          for (final level in _levels.keys)
+          for (final level in levels.keys)
             if (sel[0].contains(level))
-              for (final v in _levels[level]!)
+              for (final v in levels[level]!)
                 if (seen.add('${v.kana}|${v.meaning[l.code]}'))
                   KanaItem(v.kana, v.meaning[l.code] ?? v.meaning['id']!),
         ];
