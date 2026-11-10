@@ -3,6 +3,20 @@
 Semua perubahan penting dicatat di sini. Versi mengikuti `pubspec.yaml`
 (`versi+kode build`).
 
+## 1.18.1 (build 34) — 10 November 2026
+
+### Perbaikan
+- **Tabel Hiragana & Katakana (Materi)**: baris gojūon kini sejajar
+  seperti tabel standar — や・ゆ・よ satu baris, ら〜ろ satu baris,
+  わ・を satu baris (sebelumnya ら/り ikut naik ke baris や).
+- **Yōon** ditampilkan 3 kolom sehingga tiap baris satu kelompok
+  (きゃ きゅ きょ / しゃ しゅ しょ / …).
+
+### Teknis
+- `GuideSection` menyimpan `kanaGrid` (dengan sel kosong, token `_` di
+  `_kana`) dan `kanaColumns`; getter `kana` tetap tanpa sel kosong
+  untuk latihan & pencarian. Tes baru `test/kana_grid_test.dart`.
+
 ## 1.18.0 (build 33) — 10 November 2026
 
 ### Baru

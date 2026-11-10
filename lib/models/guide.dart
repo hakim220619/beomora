@@ -19,21 +19,36 @@ class GuideTopic {
 class GuideSection {
   final Map<String, String> title;
   final Map<String, String>? body; // paragraf penjelasan
-  final List<KanaItem> kana; // grid huruf (khusus Jepang)
+  /// Grid huruf apa adanya, termasuk sel kosong ([KanaItem.isBlank])
+  /// agar tiap baris tabel tetap rapi (mis. や・ゆ・よ).
+  final List<KanaItem> kanaGrid;
   final List<GuideExample> examples;
+
+  /// Jumlah kolom grid huruf (gojūon 5, yōon 3).
+  final int kanaColumns;
 
   const GuideSection({
     required this.title,
     this.body,
-    this.kana = const [],
+    List<KanaItem> kana = const [],
     this.examples = const [],
-  });
+    this.kanaColumns = 5,
+  }) : kanaGrid = kana;
+
+  /// Huruf saja, tanpa sel kosong (untuk latihan, pencarian, dsb.).
+  List<KanaItem> get kana => [
+    for (final k in kanaGrid)
+      if (!k.isBlank) k,
+  ];
 }
 
 class KanaItem {
   final String kana;
   final String romaji;
   const KanaItem(this.kana, this.romaji);
+
+  /// Sel kosong pengisi grid (tidak bisa diketuk).
+  bool get isBlank => kana.isEmpty;
 }
 
 class GuideExample {

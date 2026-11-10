@@ -101,7 +101,13 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
       final ex = s.examples.where((e) => _matchExample(e, uiLang)).toList();
       if (kana.isEmpty && ex.isEmpty) continue;
       out.add(
-        GuideSection(title: s.title, body: null, kana: kana, examples: ex),
+        GuideSection(
+          title: s.title,
+          body: null,
+          kana: kana,
+          examples: ex,
+          kanaColumns: s.kanaColumns,
+        ),
       );
     }
     return out;
@@ -322,25 +328,28 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
               GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 5,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: section.kanaColumns,
                   mainAxisSpacing: 8,
                   crossAxisSpacing: 8,
-                  childAspectRatio: 0.9,
+                  // Yōon 3 kolom: sel lebih lebar, tinggi tetap serupa.
+                  childAspectRatio: section.kanaColumns == 3 ? 1.6 : 0.9,
                 ),
-                itemCount: section.kana.length,
-                itemBuilder: (_, i) => _KanaCell(
-                  item: section.kana[i],
-                  active: _activeKana == section.kana[i].kana,
-                  onTap: () {
-                    final item = section.kana[i];
-                    _speak(spokenFormOf(item));
-                    setState(() => _activeKana = item.kana);
-                    // Kanji: tampilkan semua bacaan & contoh katanya.
-                    final kanji = kanjiEntryOf(item.kana);
-                    if (kanji != null) _showKanji(context, l, kanji);
-                  },
-                ),
+                itemCount: section.kanaGrid.length,
+                itemBuilder: (_, i) => section.kanaGrid[i].isBlank
+                    ? const SizedBox.shrink()
+                    : _KanaCell(
+                        item: section.kanaGrid[i],
+                        active: _activeKana == section.kanaGrid[i].kana,
+                        onTap: () {
+                          final item = section.kanaGrid[i];
+                          _speak(spokenFormOf(item));
+                          setState(() => _activeKana = item.kana);
+                          // Kanji: tampilkan semua bacaan & contoh katanya.
+                          final kanji = kanjiEntryOf(item.kana);
+                          if (kanji != null) _showKanji(context, l, kanji);
+                        },
+                      ),
               ),
             ],
             if (section.examples.isNotEmpty) ...[
