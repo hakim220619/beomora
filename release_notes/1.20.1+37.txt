@@ -1,0 +1,7 @@
+<id>
+✨ Beomora 1.20.1
+📖 Baru: Kosakata Pemula Bab 1–25 (982 kata urut per bab) di posisi paling atas Kosakata
+🌱 Baru: Kosakata Dasar Sehari-hari, 172 kata per tema (negara, makanan, hobi, ungkapan)
+💬 Semua kata pemula kini punya contoh kalimat + romaji & terjemahan
+⭐ Perbaikan: menandai favorit tidak lagi membuat daftar melompat
+</id>

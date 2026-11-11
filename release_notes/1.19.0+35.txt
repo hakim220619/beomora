@@ -1,0 +1,8 @@
+<id>
+✨ Beomora 1.19.0
+🇯🇵 Contoh kalimat Jepang: partikel (は・が・を・に…) diberi warna + penjelasannya
+🔗 Materi Partikel Dasar kini lengkap 16 partikel
+🇬🇧 Contoh kalimat Inggris: preposisi, artikel & kata bantu berwarna + artinya, kosakata ditandai beserta bentuknya
+🕐 Label tense di tiap contoh kalimat, ketuk untuk penjelasan
+📘 Materi baru: Tenses Lengkap (8 tenses) & Kata Fungsi
+</id>

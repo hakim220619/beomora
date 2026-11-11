@@ -1,5 +1,8 @@
 import '../models/guide.dart';
 import 'de_grammar_guides.dart';
+import 'en_grammar_guides.dart';
+import 'ja_basic_vocab.dart';
+import 'ja_chapter_vocab.dart';
 import 'kanji_bank.dart';
 import 'ko_grammar_guides.dart';
 
@@ -173,8 +176,8 @@ final List<GuideTopic> _japanese = [
     emoji: '🔗',
     title: const {'id': 'Partikel Dasar', 'en': 'Basic Particles'},
     subtitle: const {
-      'id': 'は・を・に・で・の・か — lem perekat kalimat Jepang',
-      'en': 'は・を・に・で・の・か — the glue of Japanese sentences',
+      'id': '16 partikel (は・が・を・に・で・の・か …) — lem perekat kalimat Jepang',
+      'en': '16 particles (は・が・を・に・で・の・か …) — the glue of Japanese sentences',
     },
     sections: [
       GuideSection(
@@ -273,6 +276,214 @@ final List<GuideTopic> _japanese = [
           }, romaji: 'anata wa sensei desu ka'),
         ],
       ),
+      GuideSection(
+        title: const {
+          'id': 'が (ga) — penanda subjek',
+          'en': 'が (ga) — subject marker',
+        },
+        body: const {
+          'id':
+              'Menandai pelaku/subjek, terutama info baru, pertanyaan (だれ が), dan dengan あります・います・すき・わかります.',
+          'en':
+              'Marks the subject, especially new info, questions (だれ が), and with あります・います・すき・わかります.',
+        },
+        examples: const [
+          GuideExample('ねこ が います', {
+            'id': 'Ada kucing',
+            'en': 'There is a cat',
+          }, romaji: 'neko ga imasu'),
+          GuideExample('わたし は すし が すき です', {
+            'id': 'Saya suka sushi',
+            'en': 'I like sushi',
+          }, romaji: 'watashi wa sushi ga suki desu'),
+        ],
+      ),
+      GuideSection(
+        title: const {'id': 'へ (e) — ke arah', 'en': 'へ (e) — toward'},
+        body: const {
+          'id':
+              'Menunjukkan arah tujuan gerakan, mirip に. Ditulis へ ("he") tapi dibaca "e".',
+          'en':
+              'Shows the direction of movement, similar to に. Written へ ("he") but read "e".',
+        },
+        examples: const [
+          GuideExample('にほん へ いきます', {
+            'id': 'Saya pergi ke Jepang',
+            'en': 'I go to Japan',
+          }, romaji: 'nihon e ikimasu'),
+          GuideExample('うち へ かえります', {
+            'id': 'Saya pulang ke rumah',
+            'en': 'I go back home',
+          }, romaji: 'uchi e kaerimasu'),
+        ],
+      ),
+      GuideSection(
+        title: const {
+          'id': 'と (to) — dan / bersama',
+          'en': 'と (to) — and / with',
+        },
+        body: const {
+          'id':
+              'Menghubungkan kata benda secara lengkap ("A dan B"), atau berarti "bersama" seseorang.',
+          'en':
+              'Joins nouns in a complete list ("A and B"), or means "together with" someone.',
+        },
+        examples: const [
+          GuideExample('パン と ミルク を かいます', {
+            'id': 'Saya membeli roti dan susu',
+            'en': 'I buy bread and milk',
+          }, romaji: 'pan to miruku o kaimasu'),
+          GuideExample('ともだち と えいが を みます', {
+            'id': 'Saya menonton film bersama teman',
+            'en': 'I watch a movie with a friend',
+          }, romaji: 'tomodachi to eiga o mimasu'),
+        ],
+      ),
+      GuideSection(
+        title: const {'id': 'も (mo) — juga', 'en': 'も (mo) — also, too'},
+        body: const {
+          'id': 'Berarti "juga". Menggantikan は, が, atau を.',
+          'en': 'Means "also / too". It replaces は, が, or を.',
+        },
+        examples: const [
+          GuideExample('わたし も がくせい です', {
+            'id': 'Saya juga pelajar',
+            'en': 'I am a student too',
+          }, romaji: 'watashi mo gakusei desu'),
+          GuideExample('コーヒー も のみます', {
+            'id': 'Saya juga minum kopi',
+            'en': 'I drink coffee too',
+          }, romaji: 'koohii mo nomimasu'),
+        ],
+      ),
+      GuideSection(
+        title: const {
+          'id': 'から (kara) — dari / karena',
+          'en': 'から (kara) — from / because',
+        },
+        body: const {
+          'id':
+              'Titik awal waktu atau tempat ("dari"). Setelah kalimat, berarti "karena".',
+          'en':
+              'Starting point of time or place ("from"). After a clause, it means "because".',
+        },
+        examples: const [
+          GuideExample('くじ から はたらきます', {
+            'id': 'Saya bekerja dari jam sembilan',
+            'en': 'I work from nine o’clock',
+          }, romaji: 'kuji kara hatarakimasu'),
+          GuideExample('あつい から まど を あけます', {
+            'id': 'Karena panas, saya membuka jendela',
+            'en': 'It is hot, so I open the window',
+          }, romaji: 'atsui kara mado o akemasu'),
+        ],
+      ),
+      GuideSection(
+        title: const {
+          'id': 'まで (made) — sampai',
+          'en': 'まで (made) — until / up to',
+        },
+        body: const {
+          'id':
+              'Batas akhir waktu atau tempat ("sampai"). Sering berpasangan: から … まで.',
+          'en':
+              'End point of time or place ("until / as far as"). Often paired: から … まで.',
+        },
+        examples: const [
+          GuideExample('ごじ まで べんきょう します', {
+            'id': 'Saya belajar sampai jam lima',
+            'en': 'I study until five o’clock',
+          }, romaji: 'goji made benkyou shimasu'),
+          GuideExample('えき まで あるきます', {
+            'id': 'Saya berjalan sampai stasiun',
+            'en': 'I walk to the station',
+          }, romaji: 'eki made arukimasu'),
+        ],
+      ),
+      GuideSection(
+        title: const {'id': 'より (yori) — daripada', 'en': 'より (yori) — than'},
+        body: const {
+          'id': 'Untuk membandingkan: A は B より … = A lebih … daripada B.',
+          'en': 'Used for comparison: A は B より … = A is more … than B.',
+        },
+        examples: const [
+          GuideExample('いぬ は ねこ より おおきい です', {
+            'id': 'Anjing lebih besar daripada kucing',
+            'en': 'Dogs are bigger than cats',
+          }, romaji: 'inu wa neko yori ookii desu'),
+          GuideExample('なつ は ふゆ より あつい です', {
+            'id': 'Musim panas lebih panas daripada musim dingin',
+            'en': 'Summer is hotter than winter',
+          }, romaji: 'natsu wa fuyu yori atsui desu'),
+        ],
+      ),
+      GuideSection(
+        title: const {
+          'id': 'や (ya) — dan (contoh)',
+          'en': 'や (ya) — and (examples)',
+        },
+        body: const {
+          'id':
+              'Seperti と, tapi daftarnya hanya contoh / tidak lengkap ("A, B, dan lain-lain").',
+          'en':
+              'Like と, but the list is just examples, not complete ("A, B, and so on").',
+        },
+        examples: const [
+          GuideExample('りんご や みかん を かいました', {
+            'id': 'Saya membeli apel, jeruk, dan lainnya',
+            'en': 'I bought apples, oranges, and such',
+          }, romaji: 'ringo ya mikan o kaimashita'),
+          GuideExample(
+            'つくえ の うえ に ほん や ペン が あります',
+            {
+              'id': 'Di atas meja ada buku, pena, dan lainnya',
+              'en': 'There are books, pens, and such on the desk',
+            },
+            romaji: 'tsukue no ue ni hon ya pen ga arimasu',
+          ),
+        ],
+      ),
+      GuideSection(
+        title: const {'id': 'ね (ne) — ya kan?', 'en': 'ね (ne) — right?'},
+        body: const {
+          'id':
+              'Di akhir kalimat: meminta persetujuan atau menunjukkan rasa sepaham ("ya", "kan").',
+          'en':
+              'At the end of a sentence: seeks agreement or shows shared feeling ("right?", "isn’t it?").',
+        },
+        examples: const [
+          GuideExample('いい てんき です ね', {
+            'id': 'Cuacanya bagus ya',
+            'en': 'Nice weather, isn’t it?',
+          }, romaji: 'ii tenki desu ne'),
+          GuideExample('この ケーキ おいしい です ね', {
+            'id': 'Kue ini enak ya',
+            'en': 'This cake is tasty, right?',
+          }, romaji: 'kono keeki oishii desu ne'),
+        ],
+      ),
+      GuideSection(
+        title: const {
+          'id': 'よ (yo) — lho (penegasan)',
+          'en': 'よ (yo) — emphasis',
+        },
+        body: const {
+          'id':
+              'Di akhir kalimat: menegaskan atau memberi tahu info baru ke lawan bicara ("lho", "loh").',
+          'en':
+              'At the end of a sentence: emphasizes or tells the listener something new ("you know").',
+        },
+        examples: const [
+          GuideExample('あした は やすみ です よ', {
+            'id': 'Besok libur lho',
+            'en': 'Tomorrow is a day off, you know',
+          }, romaji: 'ashita wa yasumi desu yo'),
+          GuideExample('これ は おいしい です よ', {
+            'id': 'Ini enak lho',
+            'en': 'This is tasty, you know',
+          }, romaji: 'kore wa oishii desu yo'),
+        ],
+      ),
     ],
   ),
   GuideTopic(
@@ -344,6 +555,11 @@ final List<GuideTopic> _japanese = [
       ),
     ],
   ),
+  // Kosakata dasar per tema (ja_basic_vocab.dart) — tampil pertama
+  // di antara topik kosakata tematik.
+  // Kosakata pemula urut Bab 1–25 (ja_chapter_vocab.dart).
+  kJaChapterVocabTopic,
+  kJaBasicVocabTopic,
   GuideTopic(
     id: 'vocab_farming',
     emoji: '🌾',
@@ -2481,6 +2697,8 @@ final List<GuideTopic> _english = [
       ),
     ],
   ),
+  // Tenses lengkap & kata fungsi (en_grammar_guides.dart).
+  ...kEnGrammarTopics,
   GuideTopic(
     id: 'en_articles',
     emoji: '🔤',

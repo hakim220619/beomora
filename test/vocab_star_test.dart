@@ -104,4 +104,123 @@ void main() {
     // Bintang kata di luar topik ini tidak ikut terhapus.
     expect(prefs.getStringList('vocab_starred_ja'), ['lain']);
   });
+
+  testWidgets('bintang di tengah daftar: posisi kata tidak melompat', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({});
+    final prefs = await SharedPreferences.getInstance();
+    final words = [for (var i = 0; i < 40; i++) 'kata$i'];
+    final long = GuideTopic(
+      id: 'vocab_long',
+      emoji: '📚',
+      title: const {'id': 'Panjang', 'en': 'Long'},
+      subtitle: const {'id': '', 'en': ''},
+      sections: [
+        GuideSection(
+          title: const {'id': 'Bagian 1', 'en': 'Part 1'},
+          examples: [
+            for (final w in words) GuideExample(w, {'id': 'arti', 'en': 'm'}),
+          ],
+        ),
+      ],
+    );
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => SettingsProvider(prefs)),
+          ChangeNotifierProvider(create: (_) => AuthProvider(prefs)),
+        ],
+        child: MaterialApp(
+          home: GuideDetailScreen(
+            course: course,
+            topic: long,
+            ttsLocale: 'ja-JP',
+          ),
+        ),
+      ),
+    );
+    await tester.scrollUntilVisible(
+      find.text('kata20'),
+      300,
+      scrollable: find
+          .descendant(
+            of: find.byType(ListView),
+            matching: find.byType(Scrollable),
+          )
+          .first,
+    );
+    await tester.pump();
+    final before = tester.getTopLeft(find.text('kata20')).dy;
+    final star = find.descendant(
+      of: find
+          .ancestor(of: find.text('kata20'), matching: find.byType(Row))
+          .first,
+      matching: find.byIcon(Icons.star_border_rounded),
+    );
+    await tester.tap(star);
+    await tester.pump(); // Favorit muncul di atas
+    await tester.pump(); // geser posisi gulir (post-frame)
+    expect(prefs.getStringList('vocab_starred_ja'), ['kata20']);
+    // Baris di topik (yang terakhir) tetap di tempat yang sama.
+    expect(
+      tester.getTopLeft(find.text('kata20', skipOffstage: false).last).dy,
+      moreOrLessEquals(before, epsilon: 1),
+    );
+  });
+  testWidgets('bintang dekat atas (Favorit terlihat): posisi kata tetap', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({});
+    final prefs = await SharedPreferences.getInstance();
+    final words = [for (var i = 0; i < 40; i++) 'kata$i'];
+    final long = GuideTopic(
+      id: 'vocab_long',
+      emoji: '📚',
+      title: const {'id': 'Panjang', 'en': 'Long'},
+      subtitle: const {'id': '', 'en': ''},
+      sections: [
+        GuideSection(
+          title: const {'id': 'Bagian 1', 'en': 'Part 1'},
+          examples: [
+            for (final w in words) GuideExample(w, {'id': 'arti', 'en': 'm'}),
+          ],
+        ),
+      ],
+    );
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => SettingsProvider(prefs)),
+          ChangeNotifierProvider(create: (_) => AuthProvider(prefs)),
+        ],
+        child: MaterialApp(
+          home: GuideDetailScreen(
+            course: course,
+            topic: long,
+            ttsLocale: 'ja-JP',
+          ),
+        ),
+      ),
+    );
+    await tester.drag(find.byType(ListView), const Offset(0, -120));
+    await tester.pump();
+    final before = tester.getTopLeft(find.text('kata4')).dy;
+    final star = find.descendant(
+      of: find
+          .ancestor(of: find.text('kata4'), matching: find.byType(Row))
+          .first,
+      matching: find.byIcon(Icons.star_border_rounded),
+    );
+    await tester.tap(star);
+    await tester.pump(); // Favorit muncul di atas
+    await tester.pump(); // geser posisi gulir (post-frame)
+    expect(prefs.getStringList('vocab_starred_ja'), ['kata4']);
+    expect(find.text('⭐ Favorit', skipOffstage: false), findsOneWidget);
+    // Baris di topik (yang terakhir) tetap di tempat yang sama.
+    expect(
+      tester.getTopLeft(find.text('kata4', skipOffstage: false).last).dy,
+      moreOrLessEquals(before, epsilon: 1),
+    );
+  });
 }

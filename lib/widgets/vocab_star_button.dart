@@ -26,13 +26,39 @@ class VocabStarButton extends StatelessWidget {
     return IconButton(
       tooltip: l.t(on ? 'vocab_unstar' : 'vocab_star'),
       visualDensity: VisualDensity.compact,
-      onPressed: () => settings.toggleStarred(courseId, word),
+      onPressed: () => _toggleKeepingPlace(context, settings),
       icon: Icon(
         on ? Icons.star_rounded : Icons.star_border_rounded,
         color: on ? DuoColors.yellow : Theme.of(context).hintColor,
         size: 22,
       ),
     );
+  }
+}
+
+/// Bagian "⭐ Favorit" di atas daftar bisa muncul/membesar/mengecil saat
+/// bintang ditekan, yang mendorong isi daftar. Posisi gulir digeser
+/// sebesar selisihnya agar kata yang ditekan tetap di tempat yang sama.
+extension on VocabStarButton {
+  void _toggleKeepingPlace(BuildContext context, SettingsProvider settings) {
+    final box = context.findRenderObject() as RenderBox?;
+    final position = Scrollable.maybeOf(context)?.position;
+    final before = box?.localToGlobal(Offset.zero).dy;
+    settings.toggleStarred(courseId, word);
+    if (position == null || before == null) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!context.mounted) return; // baris ikut hilang (lepas di Favorit)
+      final after = context.findRenderObject() as RenderBox?;
+      if (after == null || !after.attached || !position.hasPixels) return;
+      final dy = after.localToGlobal(Offset.zero).dy - before;
+      if (dy.abs() < 0.5) return;
+      position.jumpTo(
+        (position.pixels + dy).clamp(
+          position.minScrollExtent,
+          position.maxScrollExtent,
+        ),
+      );
+    });
   }
 }
 

@@ -50,14 +50,19 @@ class MaterialsScreen extends StatelessWidget {
     final allTopics = kStudyGuides[course.id] ?? const [];
     // Topik kosakata tematik dikelompokkan di balik satu kartu.
     final topics = allTopics.where((t) => !t.id.contains('vocab')).toList();
+    // Jepang: Kosakata Pemula Bab 1–25 paling atas, baru JLPT.
+    const firstIds = {'vocab_chapters'};
     final vocabTopics = [
+      ...allTopics.where((t) => firstIds.contains(t.id)),
       // Kosakata ujian tampil di depan: JLPT (N5/N4/N3) untuk kursus
       // Jepang, Akademik/IELTS/TOEIC untuk kursus Inggris.
       if (course.id == 'ja') ..._jlptVocabTopics(),
       if (course.id == 'en') ..._englishExamVocabTopics(),
       if (course.id == 'ko') ..._koreanVocabTopics(),
       if (course.id == 'de') ..._germanVocabTopics(),
-      ...allTopics.where((t) => t.id.contains('vocab')),
+      ...allTopics.where(
+        (t) => t.id.contains('vocab') && !firstIds.contains(t.id),
+      ),
     ];
 
     return Scaffold(

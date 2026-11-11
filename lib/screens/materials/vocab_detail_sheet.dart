@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../data/en_grammar.dart';
+import '../../data/ja_chapter_examples.dart';
+import '../../data/ja_particles.dart';
 import '../../data/vocab_examples.dart';
 import '../../l10n/app_strings.dart';
 import '../../models/guide.dart';
 import '../../services/tts_service.dart';
 import '../../theme.dart';
+import '../../widgets/en_sentence_text.dart';
+import '../../widgets/ja_particle_text.dart';
 
 /// Satu contoh kalimat yang ditampilkan di lembar detail kosakata.
 class VocabSentence {
@@ -72,7 +77,15 @@ VocabDetail vocabDetailOf({
   GuideTopic? topic,
 }) {
   final sentences = <VocabSentence>[];
-  final usage = vocabUsageFor(courseId, word.target);
+  // Jepang: contoh khusus kartu Bab 1–25 (per kata + arti, agar kata
+  // yang bunyinya sama tidak tertukar) → contoh umum → bentuk kamus.
+  final meaningId = word.meaning['id'] ?? '';
+  final usage =
+      (courseId == 'ja'
+          ? vocabUsageJaChapter['${word.target}|$meaningId']
+          : null) ??
+      vocabUsageFor(courseId, word.target) ??
+      (courseId == 'ja' ? chapterUsageFor(word.target, meaningId) : null);
   if (usage != null) {
     final t = usage.translation(uiLang);
     sentences.add(
@@ -132,8 +145,14 @@ void showVocabDetail(
     context: context,
     isScrollControlled: true,
     showDragHandle: true,
-    builder: (_) =>
-        _VocabSheet(word: word, detail: detail, l: l, onSpeak: speak),
+    builder: (_) => _VocabSheet(
+      word: word,
+      detail: detail,
+      l: l,
+      onSpeak: speak,
+      particles: courseId == 'ja',
+      english: courseId == 'en',
+    ),
   );
 }
 
@@ -143,11 +162,19 @@ class _VocabSheet extends StatelessWidget {
   final L l;
   final ValueChanged<String> onSpeak;
 
+  /// Warnai partikel (は, を, に, …) + penjelasannya (kursus Jepang).
+  final bool particles;
+
+  /// Kursus Inggris: warnai kata fungsi, tandai kosakata, label tense.
+  final bool english;
+
   const _VocabSheet({
     required this.word,
     required this.detail,
     required this.l,
     required this.onSpeak,
+    this.particles = false,
+    this.english = false,
   });
 
   @override
@@ -239,16 +266,32 @@ class _VocabSheet extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              s.text,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w800,
+                            if (english)
+                              EnSentenceText(
+                                s.text,
+                                vocabIndex: enVocabIn(s.text, word.target)?.$1,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              )
+                            else
+                              ParticleText(
+                                s.text,
+                                marks: particles
+                                    ? particlesOf(s.text, s.reading)
+                                    : null,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w800,
+                                ),
                               ),
-                            ),
                             if (s.reading != null)
-                              Text(
+                              ParticleText(
                                 s.reading!,
+                                marks: particles
+                                    ? readingParticlesOf(s.text, s.reading)
+                                    : null,
                                 style: TextStyle(
                                   fontSize: 12.5,
                                   fontStyle: FontStyle.italic,
@@ -262,6 +305,13 @@ class _VocabSheet extends StatelessWidget {
                                   s.translation!,
                                   style: TextStyle(fontSize: 13.5, color: hint),
                                 ),
+                              ),
+                            if (english)
+                              EnSentenceNotes(s.text, vocab: word.target),
+                            if (particles)
+                              ParticleLegend(
+                                marks: particlesOf(s.text, s.reading),
+                                uiLang: l.code,
                               ),
                           ],
                         ),

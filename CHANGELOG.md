@@ -3,6 +3,66 @@
 Semua perubahan penting dicatat di sini. Versi mengikuti `pubspec.yaml`
 (`versi+kode build`).
 
+## 1.20.1 (build 37) — 11 November 2026
+
+### Baru
+- **Kosakata Pemula Bab 1–25** (Materi → Kosakata, kartu paling atas,
+  di atas JLPT N5): 982 kosakata urut per bab, dengan romaji dan arti
+  Indonesia/Inggris. Arti kata yang bunyinya sama dibedakan per bab
+  (かみ kertas/rambut, はし sumpit/jembatan, おきます bangun/menaruh,
+  とまります menginap, dst.).
+- **Contoh kalimat untuk semua 982 kata**: 304 kalimat baru (kana,
+  romaji, terjemahan, catatan pemakaian) + bentuk ます/します
+  disambungkan ke contoh bentuk kamus yang sudah ada (いきます → いく).
+  Kata yang bunyinya sama mendapat contoh sesuai artinya.
+- **Kosakata Dasar Sehari-hari**: 172 kata pemula per tema (orang &
+  keluarga, negara & kota, tempat, benda & dokumen, makanan, hobi &
+  budaya, kata kerja, keterangan, akhiran & penghitung, ungkapan),
+  masing-masing dengan contoh kalimat per bagian.
+
+### Perbaikan
+- Menekan ⭐ di daftar kosakata tidak lagi membuat posisi daftar
+  melompat saat bagian Favorit muncul/berubah di atas.
+
+### Teknis
+- Baru: `data/ja_chapter_vocab.dart`, `data/ja_chapter_examples.dart`
+  (`vocabUsageJaChapter` berkunci `kata|arti`, alias ke `vocabUsageJa`),
+  `data/ja_basic_vocab.dart`.
+- Tes baru: `ja_chapter_vocab_test.dart`, `ja_basic_vocab_test.dart`,
+  `materials_vocab_order_test.dart`; tes jangkar gulir di
+  `vocab_star_test.dart`.
+
+## 1.19.0 (build 35) — 11 November 2026
+
+### Baru
+- **Partikel Jepang berwarna**: di contoh kalimat kosakata (Materi →
+  Kosakata → ketuk kata), 16 partikel (は, が, を, に, で, へ, と, も,
+  の, から, まで, より, や, か, ね, よ) diwarnai di baris kana & romaji,
+  dengan penjelasan tiap partikel yang muncul di bawah kalimat. Kata
+  yang bentuknya sama tidak ikut diwarnai: は "gigi" (dibaca ha), に
+  angka dua (りんご が に こ).
+- **Materi "Partikel Dasar" lengkap 16 partikel** (10 bagian baru: が,
+  へ, と, も, から, まで, より, や, ね, よ), judul bagian & contohnya
+  ikut diwarnai; juga di "Pola Kalimat Dasar".
+- **Kalimat Inggris dijelaskan**: kata fungsi diwarnai per golongan
+  (preposisi, artikel, kata kerja bantu/modal, kata sambung) beserta
+  artinya; kosakata yang dipelajari ditebalkan + bentuknya (V2, V3,
+  -s/-es, -ing; ±100 kata kerja tak beraturan).
+- **Label tense** di contoh kalimat Inggris (Simple Present/Past, Present
+  Continuous/Perfect, Simple Future, dst.) — ketuk untuk lembar
+  penjelasan. Kalimat yang meragukan (perintah, modal, put/set/cut)
+  sengaja tanpa label; ±73% contoh mendapat label.
+- **Materi baru (Inggris)**: "Tenses Lengkap" (8 tenses: rumus +/−/?,
+  kapan dipakai, penanda waktu, kesalahan umum, contoh) dan "Kata
+  Fungsi" (in/on/at waktu & tempat, preposisi lain, be/do/have, modal,
+  kata sambung). Contoh di topik tata bahasa Inggris ikut diwarnai.
+
+### Teknis
+- Baru: `data/ja_particles.dart`, `data/en_grammar.dart`,
+  `data/en_grammar_guides.dart`, `widgets/ja_particle_text.dart`,
+  `widgets/en_sentence_text.dart`.
+- Tes baru `test/ja_particles_test.dart`, `test/en_grammar_test.dart`.
+
 ## 1.18.1 (build 34) — 10 November 2026
 
 ### Perbaikan

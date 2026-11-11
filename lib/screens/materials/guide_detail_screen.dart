@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../../data/ja_particles.dart';
 import '../../data/kanji_bank.dart';
 import '../../data/question_bank.dart';
 import '../../l10n/app_strings.dart';
@@ -12,6 +13,8 @@ import '../../providers/settings_provider.dart';
 import '../../services/kana_speech.dart';
 import '../../services/tts_service.dart';
 import '../../theme.dart';
+import '../../widgets/en_sentence_text.dart';
+import '../../widgets/ja_particle_text.dart';
 import '../../widgets/study/study_background.dart';
 import '../../widgets/vocab_star_button.dart';
 import '../practice/letter_pick_screen.dart';
@@ -260,6 +263,7 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
                 title: {l.code: '⭐ ${l.t('vocab_starred')}'},
                 examples: starred,
               ),
+              key: const ValueKey('starred'),
               action: VocabStarClearButton(
                 courseId: widget.course.id,
                 words: [for (final e in starred) e.target],
@@ -284,14 +288,38 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
     ];
   }
 
+  /// Topik tata bahasa Jepang: partikel di contoh kalimat diwarnai.
+  bool get _particles =>
+      widget.course.id == 'ja' &&
+      const {'ja_particles', 'ja_patterns'}.contains(widget.topic.id);
+
+  /// Topik tata bahasa Inggris: kata fungsi di contoh diwarnai.
+  bool get _englishGrammar =>
+      widget.course.id == 'en' &&
+      widget.topic.id.startsWith('en_') &&
+      !widget.topic.id.contains('vocab');
+
+  /// Hanya token pertama judul (mis. "が (ga) — …") yang diwarnai.
+  List<JaParticle?> _titleMarks(GuideSection section, L l) {
+    final tokens = (section.title[l.code] ?? '').split(' ');
+    return [
+      for (var i = 0; i < tokens.length; i++)
+        i == 0 ? kJaParticles[tokens[0]] : null,
+    ];
+  }
+
   Widget _buildSection(
     BuildContext context,
     L l,
     GuideSection section, {
     Widget? action, // mis. tombol reset di judul Favorit
+    Key? key,
   }) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    // Kunci tetap per bagian: saat Favorit muncul di atas, kartu bagian
+    // lain (beserta tombol bintangnya) tidak tertukar elemennya.
     return Card(
+      key: key ?? ObjectKey(section),
       margin: const EdgeInsets.only(bottom: 14),
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -301,8 +329,10 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
             Row(
               children: [
                 Expanded(
-                  child: Text(
+                  // Topik Partikel: partikel di awal judul diwarnai.
+                  child: ParticleText(
                     section.title[l.code] ?? '',
+                    marks: _particles ? _titleMarks(section, l) : null,
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w900,
@@ -358,6 +388,8 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
                 _ExampleRow(
                   example: ex,
                   uiLang: l.code,
+                  particles: _particles,
+                  english: _englishGrammar,
                   onSpeak: () => _speak(ex.target),
                   trailing:
                       widget.topic.id.contains('vocab') && !isVocabSentence(ex)
@@ -565,6 +597,8 @@ class _ExampleRow extends StatelessWidget {
   final VoidCallback onSpeak;
   final VoidCallback? onTap;
   final Widget? trailing; // mis. bintang favorit
+  final bool particles; // warnai partikel Jepang
+  final bool english; // warnai kata fungsi Inggris
 
   const _ExampleRow({
     required this.example,
@@ -572,6 +606,8 @@ class _ExampleRow extends StatelessWidget {
     required this.onSpeak,
     this.onTap,
     this.trailing,
+    this.particles = false,
+    this.english = false,
   });
 
   @override
@@ -594,16 +630,31 @@ class _ExampleRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  example.target,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w800,
+                if (english)
+                  EnSentenceText(
+                    example.target,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  )
+                else
+                  ParticleText(
+                    example.target,
+                    marks: particles
+                        ? particlesOf(example.target, example.romaji)
+                        : null,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
-                ),
                 if (example.romaji != null)
-                  Text(
+                  ParticleText(
                     example.romaji!,
+                    marks: particles
+                        ? readingParticlesOf(example.target, example.romaji)
+                        : null,
                     style: TextStyle(
                       fontSize: 12,
                       fontStyle: FontStyle.italic,
