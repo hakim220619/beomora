@@ -3,7 +3,7 @@
 Semua perubahan penting dicatat di sini. Versi mengikuti `pubspec.yaml`
 (`versi+kode build`).
 
-## 1.20.1 (build 37) — 11 November 2026
+## 1.20.2 (build 38) — 11 November 2026
 
 ### Baru
 - **Kosakata Pemula Bab 1–25** (Materi → Kosakata, kartu paling atas,

@@ -1,7 +1,7 @@
 name: beomora
 description: "Beomora - Aplikasi belajar bahasa dengan gamifikasi."
 publish_to: 'none'
-version: 1.20.1+37
+version: 1.20.2+38
 
 environment:
   sdk: ^3.10.7
