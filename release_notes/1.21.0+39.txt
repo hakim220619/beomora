@@ -1,0 +1,6 @@
+<id>
+✨ Beomora 1.21.0
+🧩 Baru: soal "Susun huruf", susun kata dari kotak huruf acak (ada huruf pengecoh yang mirip!)
+📖 Bisa dipilih di Latihan Kosakata, Tebak Kata, dan Tebak Kanji (susun cara baca kata)
+🔀 Pemutar kosakata: pilih putar urut dari atas atau acak
+</id>

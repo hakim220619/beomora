@@ -5,7 +5,9 @@ import 'package:beomora/providers/settings_provider.dart';
 import 'package:beomora/screens/practice/letter_quiz_screen.dart';
 import 'package:beomora/screens/practice/vocab_practice_screen.dart';
 import 'package:beomora/widgets/choice_card.dart';
+import 'package:beomora/widgets/study/quiz_result_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -77,9 +79,9 @@ void main() {
     await tester.tap(find.text('ねこ'));
     await tester.tap(find.text('いぬ'));
     await tester.pump();
-    expect(find.text('2 kata'), findsOneWidget);
+    expect(find.textContaining('· 2 kata'), findsOneWidget);
 
-    await tester.tap(find.text('Lanjut'));
+    await tester.tap(find.textContaining('Lanjut'));
     await tester.pump();
     await tester.pump(const Duration(seconds: 1));
     await tester.tap(find.widgetWithText(ChoiceChip, '5'));
@@ -109,7 +111,7 @@ void main() {
     await pump(tester, premium: false);
     await tester.tap(find.byTooltip('Pilih semua'));
     await tester.pump();
-    await tester.tap(find.text('Lanjut'));
+    await tester.tap(find.textContaining('Lanjut'));
     await tester.pump();
     await tester.pump(const Duration(seconds: 1));
     expect(find.textContaining('Premium bebas pilih'), findsOneWidget);
@@ -138,6 +140,142 @@ void main() {
     // Centang kartu Favorit → kata ikut terpilih di topiknya juga.
     await tester.tap(find.text('いぬ').first);
     await tester.pump();
-    expect(find.text('1 kata'), findsOneWidget);
+    expect(find.textContaining('· 1 kata'), findsOneWidget);
+  });
+
+  group('putar kosakata', () {
+    const ttsChannel = MethodChannel('flutter_tts');
+    final spoken = <String>[];
+    void mockTts(WidgetTester tester) {
+      spoken.clear();
+      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        ttsChannel,
+        (call) async {
+          if (call.method == 'speak') {
+            final a = call.arguments;
+            spoken.add(a is Map ? a['text'] as String : a as String);
+          }
+          return 1;
+        },
+      );
+      addTearDown(
+        () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+          ttsChannel,
+          null,
+        ),
+      );
+    }
+
+    Future<void> playAll(WidgetTester tester) async {
+      await tester.tap(find.byTooltip('Putar kata yang dipilih'));
+      for (var i = 0; i < 20; i++) {
+        await tester.pump(const Duration(milliseconds: 800));
+      }
+    }
+
+    testWidgets('urut: kata Favorit dulu, lalu dari atas ke bawah', (
+      tester,
+    ) async {
+      mockTts(tester);
+      await pump(tester);
+      final ctx = tester.element(find.byType(VocabPracticeScreen));
+      final settings = ctx.read<SettingsProvider>();
+      settings.toggleStarred('ja', 'いえ');
+      settings.toggleStarred('ja', 'さかな');
+      await tester.pump();
+      await tester.tap(find.byTooltip('Pilih semua'));
+      await tester.pump();
+      expect(settings.playShuffle, isFalse); // bawaan: urut
+      await playAll(tester);
+      expect(spoken, ['いえ', 'さかな', 'ねこ', 'いぬ', 'みず', 'ほん']);
+    });
+
+    testWidgets('acak: semua kata terpilih tetap diputar sekali', (
+      tester,
+    ) async {
+      mockTts(tester);
+      await pump(tester);
+      await tester.tap(find.byTooltip('Pilih semua'));
+      await tester.pump();
+      // Ketuk tombol urut → jadi acak (tersimpan di pengaturan).
+      await tester.tap(find.byTooltip('Putar urut dari atas'));
+      await tester.pump();
+      final ctx = tester.element(find.byType(VocabPracticeScreen));
+      expect(ctx.read<SettingsProvider>().playShuffle, isTrue);
+      expect(find.byTooltip('Putar acak'), findsOneWidget);
+      await playAll(tester);
+      expect(spoken, hasLength(6));
+      expect(spoken.toSet(), {'ねこ', 'いぬ', 'さかな', 'みず', 'ほん', 'いえ'});
+    });
+  });
+
+  testWidgets('layar sempit (320 dp): bar bawah tidak tumpuk/meluap', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(640, 1400);
+    tester.view.devicePixelRatio = 2;
+    addTearDown(tester.view.reset);
+    await pump(tester);
+    await tester.tap(find.byTooltip('Pilih semua'));
+    await tester.pump();
+    expect(tester.takeException(), isNull); // tanpa RenderFlex overflow
+
+    Rect box(Finder f) => tester.getRect(f);
+    final speed = box(find.byTooltip('Kecepatan suara'));
+    final order = box(find.byTooltip('Putar urut dari atas'));
+    final loop = box(find.byTooltip('Ulangi terus-menerus'));
+    final play = box(find.byTooltip('Putar kata yang dipilih'));
+    final next = box(find.textContaining('Lanjut'));
+    // Tombol kontrol suara tidak saling menimpa.
+    for (final (a, b) in [(speed, order), (order, loop), (loop, play)]) {
+      expect(a.overlaps(b), isFalse, reason: '$a vs $b');
+    }
+    // Lanjut di baris terpisah di bawah kontrol suara.
+    expect(next.top, greaterThanOrEqualTo(play.bottom - 1));
+  });
+
+  testWidgets('susun huruf: pilih jenis soal, susun kotak, periksa', (
+    tester,
+  ) async {
+    await pump(tester);
+    await tester.tap(find.text('ねこ'));
+    await tester.tap(find.text('いぬ'));
+    await tester.pump();
+    await tester.tap(find.textContaining('Lanjut'));
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+    // Jenis soal: pilih "Susun huruf" (tersimpan).
+    await tester.tap(find.text('Susun huruf'));
+    await tester.pump();
+    final ctx = tester.element(find.byType(VocabPracticeScreen));
+    expect(ctx.read<SettingsProvider>().vocabSpellMode, isTrue);
+    await tester.tap(find.widgetWithText(ChoiceChip, '2'));
+    await tester.pump();
+    await tester.tap(find.text('Mulai'));
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+
+    for (var i = 0; i < 2; i++) {
+      expect(find.text('Susun huruf jadi kata yang berarti:'), findsOneWidget);
+      final meaning = tester
+          .widgetList<Text>(find.byType(Text))
+          .map((t) => t.data)
+          .firstWhere((d) => words.containsValue(d));
+      final word = words.entries.firstWhere((e) => e.value == meaning).key;
+      for (final ch in word.split('')) {
+        await tester.tap(find.text(ch).last);
+        await tester.pump();
+      }
+      await tester.tap(find.text('Periksa'));
+      await tester.pump();
+      expect(find.text('Benar sekali! 🎉'), findsOneWidget);
+      await tester.tap(find.text('Lanjut').last);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 500));
+    }
+    // Selesai: layar hasil, tanpa jawaban salah untuk diulas.
+    final result = tester.widget<QuizResultView>(find.byType(QuizResultView));
+    expect(result.correct, 2);
+    expect(result.total, 2);
   });
 }

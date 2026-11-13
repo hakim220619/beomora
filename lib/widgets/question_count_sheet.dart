@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../data/mcq_packs.dart';
 import '../l10n/app_strings.dart';
 import '../providers/progress_provider.dart';
+import '../providers/settings_provider.dart';
 import '../screens/premium_screen.dart';
 import '../theme.dart';
 import 'duo_button.dart';
@@ -17,6 +18,7 @@ Future<int?> showQuestionCountSheet(
   BuildContext context, {
   required int selected,
   int? freeLimit,
+  bool modeSelector = false,
 }) {
   final premium = context.read<ProgressProvider>().premiumActive;
   final maxCount = premium ? 100 : (freeLimit ?? kFreeMcqLimit);
@@ -29,6 +31,7 @@ Future<int?> showQuestionCountSheet(
       maxCount: maxCount,
       capped: !premium,
       presets: const [5, 10, 20, 30, 50],
+      modeSelector: modeSelector,
     ),
   );
 }
@@ -42,6 +45,10 @@ class QuestionCountSheet extends StatefulWidget {
   final bool capped;
   final List<int> presets;
 
+  /// Tampilkan pilihan jenis soal (pilihan ganda / susun huruf) —
+  /// tersimpan di [SettingsProvider.vocabSpellMode].
+  final bool modeSelector;
+
   const QuestionCountSheet({
     super.key,
     required this.selected,
@@ -49,6 +56,7 @@ class QuestionCountSheet extends StatefulWidget {
     required this.maxCount,
     required this.capped,
     required this.presets,
+    this.modeSelector = false,
   });
 
   @override
@@ -57,6 +65,45 @@ class QuestionCountSheet extends StatefulWidget {
 
 class _QuestionCountSheetState extends State<QuestionCountSheet> {
   late int _count = widget.initial;
+
+  List<Widget> _modeSelector(L l) {
+    final settings = context.watch<SettingsProvider>();
+    final spell = settings.vocabSpellMode;
+    return [
+      Text(
+        l.t('vocab_mode_title'),
+        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w900),
+      ),
+      const SizedBox(height: 8),
+      SegmentedButton<bool>(
+        segments: [
+          ButtonSegment(
+            value: false,
+            icon: const Icon(Icons.radio_button_checked_rounded),
+            label: Text(l.t('vocab_mode_mcq')),
+          ),
+          ButtonSegment(
+            value: true,
+            icon: const Icon(Icons.abc_rounded),
+            label: Text(l.t('vocab_mode_spell')),
+          ),
+        ],
+        selected: {spell},
+        showSelectedIcon: false,
+        onSelectionChanged: (v) => settings.setVocabSpellMode(v.first),
+      ),
+      if (spell)
+        Padding(
+          padding: const EdgeInsets.only(top: 6),
+          child: Text(
+            l.t('vocab_mode_spell_note'),
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 12, color: Theme.of(context).hintColor),
+          ),
+        ),
+      const SizedBox(height: 16),
+    ];
+  }
 
   void _set(int v) => setState(() => _count = v.clamp(1, widget.maxCount));
 
@@ -70,6 +117,7 @@ class _QuestionCountSheetState extends State<QuestionCountSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            if (widget.modeSelector) ..._modeSelector(l),
             Text(
               l.t('kana_mix_count'),
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w900),

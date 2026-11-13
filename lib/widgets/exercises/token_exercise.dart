@@ -13,11 +13,15 @@ class TokenExercise extends StatefulWidget {
   final bool locked;
   final ValueChanged<String> onAnswer;
 
+  /// Judul soal; null = bawaan ("Susun huruf…" / "Susun kalimat…").
+  final String? title;
+
   const TokenExercise({
     super.key,
     required this.exercise,
     required this.locked,
     required this.onAnswer,
+    this.title,
   });
 
   @override
@@ -47,7 +51,8 @@ class _TokenExerciseState extends State<TokenExercise> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(
-          _isScramble ? l.t('unscramble') : l.t('build_sentence'),
+          widget.title ??
+              (_isScramble ? l.t('unscramble') : l.t('build_sentence')),
           style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
         ),
         const SizedBox(height: 12),

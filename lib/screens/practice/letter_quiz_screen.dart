@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/question_bank.dart';
+import '../../data/spell_tiles.dart';
 import '../../l10n/app_strings.dart';
 import '../../models/course.dart';
+import '../../models/exercise.dart';
 import '../../models/guide.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/progress_provider.dart';
@@ -15,6 +17,8 @@ import '../../services/kana_speech.dart';
 import '../../services/tts_service.dart';
 import '../../theme.dart';
 import '../../widgets/choice_card.dart';
+import '../../widgets/duo_button.dart';
+import '../../widgets/exercises/token_exercise.dart';
 import '../../widgets/study/pencil_progress_bar.dart';
 import '../../widgets/study/quiz_result_view.dart';
 import '../../widgets/study/study_background.dart';
@@ -28,6 +32,9 @@ class _Question {
   final String speakText; // yang diucapkan TTS
   final bool symbolToReading;
   final String promptKey; // kunci l10n teks pertanyaan
+  /// Soal susun huruf: kotak acak (jawaban + pengecoh). null = pilihan
+  /// ganda.
+  final List<String>? tiles;
 
   const _Question({
     required this.prompt,
@@ -37,6 +44,7 @@ class _Question {
     required this.speakText,
     required this.symbolToReading,
     required this.promptKey,
+    this.tiles,
   });
 }
 
@@ -58,12 +66,19 @@ class LetterQuizScreen extends StatefulWidget {
   /// diisi ulang dengan item acak dari paket yang sama.
   final int questionCount;
 
+  /// Mode "Susun huruf" (Latihan Kosakata, Tebak Kata, Tebak Kanji):
+  /// arti ditampilkan, pengguna menyusun kata dari kotak huruf acak
+  /// (soal kanji "Baca kata": susun bacaannya). Soal yang tidak cocok
+  /// disusun (panjang, ungkapan, kanji tunggal) tetap pilihan ganda.
+  final bool spell;
+
   const LetterQuizScreen({
     super.key,
     required this.course,
     this.initialCategoryId,
     this.customCategory,
     this.questionCount = 10,
+    this.spell = false,
   });
 
   @override
@@ -78,6 +93,7 @@ class _LetterQuizScreenState extends State<LetterQuizScreen> {
   int _index = 0;
   int _correct = 0;
   String? _picked; // jawaban yang dipilih di soal aktif
+  String _spellInput = ''; // susunan kotak saat ini (mode susun huruf)
   final List<_Question> _missed = []; // soal yang dijawab salah
   bool _finished = false;
   int _earnedXp = 0;
@@ -159,6 +175,36 @@ class _LetterQuizScreenState extends State<LetterQuizScreen> {
   }
 
   _Question _makeQuestion(LetterQuizCategory cat, KanaItem item) {
+    // Susun huruf: kata biasa → tampil arti, susun katanya; kanji
+    // "Baca kata" → tampil kata kanjinya, susun bacaan kananya. Jenis
+    // kuis kanji lain (arti / bacaan on-kun) tetap pilihan ganda.
+    final (String, String, String)? spell = !widget.spell
+        ? null
+        : switch (item) {
+            QuizItem(kind: 'word') when item.kana != item.romaji => (
+              item.kana,
+              item.romaji,
+              'spell_prompt_reading',
+            ),
+            QuizItem() => null,
+            _ => (item.romaji, item.kana, 'unscramble'),
+          };
+    final units = spell == null ? null : spellUnits(spell.$2);
+    if (spell != null && units != null) {
+      return _Question(
+        prompt: spell.$1,
+        answer: spell.$2,
+        options: const [],
+        symbol: item.kana,
+        speakText:
+            (item is QuizItem ? item.speak : null) ??
+            cat.spokenForm?.call(item) ??
+            item.kana,
+        symbolToReading: false,
+        promptKey: spell.$3,
+        tiles: spellTiles(units, _rng),
+      );
+    }
     final symbolToReading = _rng.nextBool();
     // Kumpulkan 3 pengecoh unik dari paket yang sama.
     String sideOf(KanaItem i) => symbolToReading ? i.romaji : i.kana;
@@ -210,6 +256,27 @@ class _LetterQuizScreenState extends State<LetterQuizScreen> {
     unawaited(TtsService.instance.speak(q.speakText, _category!.ttsLocale));
     await Future<void>.delayed(const Duration(milliseconds: 900));
     if (!mounted) return;
+    _advance();
+  }
+
+  /// Susun huruf: periksa susunan [_spellInput]; lanjut lewat tombol
+  /// agar jawaban yang benar sempat dibaca.
+  void _checkSpell() {
+    if (_picked != null || _spellInput.isEmpty) return;
+    final q = _questions[_index];
+    setState(() => _picked = _spellInput);
+    if (_spellInput == q.answer) {
+      _correct++;
+    } else {
+      _missed.add(q);
+    }
+    unawaited(TtsService.instance.speak(q.speakText, _category!.ttsLocale));
+  }
+
+  void _setSpellInput(String v) => setState(() => _spellInput = v);
+
+  void _advance() {
+    _spellInput = '';
     if (_index + 1 < _questions.length) {
       setState(() {
         _index++;
@@ -308,6 +375,7 @@ class _LetterQuizScreenState extends State<LetterQuizScreen> {
 
   Widget _buildQuiz(L l) {
     final q = _questions[_index];
+    if (q.tiles != null) return _buildSpell(l, q);
     ChoiceState stateFor(String option) {
       if (_picked == null) return ChoiceState.idle;
       if (option == q.answer) return ChoiceState.correct;
@@ -369,6 +437,104 @@ class _LetterQuizScreenState extends State<LetterQuizScreen> {
               onTap: _picked == null ? () => _answer(option) : null,
             ),
           ),
+      ],
+    );
+  }
+}
+
+extension on _LetterQuizScreenState {
+  Widget _progress(int answered) => Row(
+    children: [
+      Expanded(
+        child: PencilProgressBar(
+          value: answered / _questions.length,
+          height: 14,
+          color: DuoColors.blue,
+          showPencil: true,
+        ),
+      ),
+      const SizedBox(width: 10),
+      Text(
+        '${_index + 1}/${_questions.length}',
+        style: TextStyle(
+          fontWeight: FontWeight.w800,
+          color: Theme.of(context).hintColor,
+        ),
+      ),
+    ],
+  );
+
+  /// Soal susun huruf: arti + kotak huruf acak, tombol Periksa → umpan
+  /// balik (benar / jawaban yang benar) → Lanjut.
+  Widget _buildSpell(L l, _Question q) {
+    final checked = _picked != null;
+    final ok = _picked == q.answer;
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+      children: [
+        _progress(_index + (checked ? 1 : 0)),
+        const SizedBox(height: 20),
+        TokenExercise(
+          key: ValueKey('spell_$_index'),
+          exercise: Exercise(
+            type: ExerciseType.scramble,
+            prompt: q.prompt,
+            answer: q.answer,
+            options: q.tiles!,
+          ),
+          locked: checked,
+          onAnswer: _setSpellInput,
+          title: l.t(q.promptKey),
+        ),
+        Align(
+          child: TextButton.icon(
+            onPressed: () =>
+                TtsService.instance.speak(q.speakText, _category!.ttsLocale),
+            icon: const Icon(Icons.volume_up_rounded, color: DuoColors.blue),
+            label: Text(l.t('spell_hint')),
+          ),
+        ),
+        const SizedBox(height: 12),
+        if (checked)
+          Container(
+            margin: const EdgeInsets.only(bottom: 12),
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: (ok ? DuoColors.green : DuoColors.red).withValues(
+                alpha: 0.14,
+              ),
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: Column(
+              children: [
+                Text(
+                  l.t(ok ? 'correct' : 'wrong'),
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w900,
+                    color: ok ? DuoColors.green : DuoColors.red,
+                  ),
+                ),
+                if (!ok)
+                  Text(
+                    '${l.t('handwriting_answer')}: ${q.answer}',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        DuoButton(
+          label: l.t(checked ? 'handwriting_next' : 'handwriting_check'),
+          color: checked
+              ? (ok ? DuoColors.green : DuoColors.red)
+              : DuoColors.blue,
+          onPressed: checked
+              ? _advance
+              : (_spellInput.isEmpty ? null : _checkSpell),
+        ),
       ],
     );
   }

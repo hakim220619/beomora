@@ -88,6 +88,7 @@ class _VocabPracticeScreenState extends State<VocabPracticeScreen> {
   int? _playing; // indeks di [_queue] yang sedang dibacakan
   int _playToken = 0;
   bool _loop = false; // ulangi antrean terus-menerus sampai dihentikan
+  final _rng = Random();
 
   @override
   void dispose() {
@@ -97,22 +98,36 @@ class _VocabPracticeScreenState extends State<VocabPracticeScreen> {
     super.dispose();
   }
 
-  Future<void> _play(List<_Word> all) async {
-    final queue = {
-      for (final w in all)
+  /// Putar kata terpilih. [ordered] = urutan tampil di layar: kartu
+  /// Favorit dulu (urut saat ditandai), lalu topik dari atas ke bawah.
+  /// Mode acak mengocok ulang tiap putaran; urut/acak & ulang dibaca
+  /// tiap awal putaran, jadi boleh diubah saat berjalan.
+  Future<void> _play(List<_Word> ordered) async {
+    final base = {
+      for (final w in ordered)
         if (_selected.contains(w.key)) w.key: w,
     }.values.toList();
-    if (queue.isEmpty) return;
+    if (base.isEmpty) return;
     final token = ++_playToken;
-    setState(() => _queue = queue);
-    // [_loop] dibaca tiap akhir putaran, jadi boleh diubah saat berjalan.
+    final settings = context.read<SettingsProvider>();
+    List<_Word>? last;
     play:
     do {
+      final queue = [...base];
+      if (settings.playShuffle) {
+        queue.shuffle(_rng);
+        // Jangan mengulang kata yang sama di sambungan antarputaran.
+        if (last != null && queue.length > 1 && queue.first == last.last) {
+          queue.add(queue.removeAt(0));
+        }
+      }
+      last = queue;
+      setState(() => _queue = queue);
       for (var i = 0; i < queue.length; i++) {
         if (!mounted || token != _playToken) return;
         setState(() => _playing = i);
         // Kecepatan dibaca per kata agar perubahan langsung terasa.
-        final x = context.read<SettingsProvider>().playSpeed;
+        final x = settings.playSpeed;
         final done = await TtsService.instance.speakAndWait(
           queue[i].example.target,
           widget.course.ttsLocale,
@@ -227,6 +242,7 @@ class _VocabPracticeScreenState extends State<VocabPracticeScreen> {
     final count = await showQuestionCountSheet(
       context,
       selected: picked.length,
+      modeSelector: true, // pilihan ganda / susun huruf
     );
     if (count == null || !mounted) return;
     final l = L.read(context);
@@ -252,6 +268,7 @@ class _VocabPracticeScreenState extends State<VocabPracticeScreen> {
           course: widget.course,
           customCategory: cat,
           questionCount: count,
+          spell: context.read<SettingsProvider>().vocabSpellMode,
         ),
       ),
     );
@@ -380,151 +397,219 @@ class _VocabPracticeScreenState extends State<VocabPracticeScreen> {
                   ),
           ),
           Container(
-            padding: const EdgeInsets.fromLTRB(16, 10, 16, 12),
+            padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
             decoration: BoxDecoration(
               color: Theme.of(context).cardTheme.color,
               border: Border(
                 top: BorderSide(color: Theme.of(context).dividerColor),
               ),
             ),
-            child: Row(
-              children: [
-                Expanded(
-                  // Saat memutar cukup ikon suara (tanpa kata yang dibaca).
-                  child: _playing == null
-                      ? Text(
-                          '$selectedCount ${l.t('vocab_practice_selected')}',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w900,
-                          ),
-                        )
-                      : const Align(
-                          alignment: Alignment.centerLeft,
-                          child: Icon(
-                            Icons.volume_up_rounded,
-                            color: DuoColors.blue,
-                            size: 26,
-                          ),
-                        ),
-                ),
-                // Ketuk → daftar kecepatan muncul ke atas, pilih langsung.
-                PopupMenuButton<double>(
-                  tooltip: l.t('vocab_practice_speed'),
-                  initialValue: _speeds.firstWhere(
-                    (s) => (s - settings.playSpeed).abs() < 0.001,
-                    orElse: () => 1.0,
-                  ),
-                  position: PopupMenuPosition.over,
-                  offset: Offset(0, -32.0 * _speeds.length - 20),
-                  constraints: const BoxConstraints(minWidth: 72, maxWidth: 88),
-                  menuPadding: const EdgeInsets.symmetric(vertical: 4),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  onSelected: settings.setPlaySpeed,
-                  itemBuilder: (_) => [
-                    for (final s in _speeds.reversed)
-                      PopupMenuItem(
-                        value: s,
-                        height: 32,
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              width: 18,
-                              child: (s - settings.playSpeed).abs() < 0.001
-                                  ? const Icon(
-                                      Icons.check_rounded,
-                                      size: 14,
-                                      color: DuoColors.blue,
-                                    )
-                                  : null,
-                            ),
-                            Text(
-                              _speedLabel(s),
-                              style: const TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w800,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                  ],
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 10,
+            // Panel pemutar (urut/acak · ulangi · PUTAR · kecepatan) +
+            // tombol Lanjut selebar layar yang sekaligus memuat jumlah kata.
+            child: SafeArea(
+              top: false,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    height: 60,
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    decoration: BoxDecoration(
+                      color: DuoColors.blue.withValues(alpha: 0.08),
+                      borderRadius: BorderRadius.circular(30),
                     ),
                     child: Row(
-                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(
-                          _speedLabel(settings.playSpeed),
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w900,
-                            color: DuoColors.blue,
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              _barToggle(
+                                on: settings.playShuffle,
+                                tooltip: l.t(
+                                  settings.playShuffle
+                                      ? 'vocab_practice_shuffle'
+                                      : 'vocab_practice_in_order',
+                                ),
+                                icon: Icons.format_list_numbered_rounded,
+                                onIcon: Icons.shuffle_rounded,
+                                onTap: () => settings.setPlayShuffle(
+                                  !settings.playShuffle,
+                                ),
+                              ),
+                              _barToggle(
+                                on: _loop,
+                                tooltip: l.t(
+                                  _loop
+                                      ? 'vocab_practice_loop_off'
+                                      : 'vocab_practice_loop',
+                                ),
+                                icon: Icons.repeat_rounded,
+                                onIcon: Icons.repeat_on_rounded,
+                                onTap: () => setState(() => _loop = !_loop),
+                              ),
+                            ],
                           ),
                         ),
-                        const Icon(
-                          Icons.arrow_drop_up_rounded,
-                          size: 20,
-                          color: DuoColors.blue,
+                        _playButton(l, selectedCount, () {
+                          _play([...starred, ...all]);
+                        }),
+                        Expanded(
+                          child: Center(
+                            child: PopupMenuButton<double>(
+                              tooltip: l.t('vocab_practice_speed'),
+                              initialValue: _speeds.firstWhere(
+                                (s) => (s - settings.playSpeed).abs() < 0.001,
+                                orElse: () => 1.0,
+                              ),
+                              position: PopupMenuPosition.over,
+                              offset: Offset(0, -32.0 * _speeds.length - 20),
+                              constraints: const BoxConstraints(
+                                minWidth: 72,
+                                maxWidth: 88,
+                              ),
+                              menuPadding: const EdgeInsets.symmetric(
+                                vertical: 4,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              onSelected: settings.setPlaySpeed,
+                              itemBuilder: (_) => [
+                                for (final s in _speeds.reversed)
+                                  PopupMenuItem(
+                                    value: s,
+                                    height: 32,
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 10,
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        SizedBox(
+                                          width: 18,
+                                          child:
+                                              (s - settings.playSpeed).abs() <
+                                                  0.001
+                                              ? const Icon(
+                                                  Icons.check_rounded,
+                                                  size: 14,
+                                                  color: DuoColors.blue,
+                                                )
+                                              : null,
+                                        ),
+                                        Text(
+                                          _speedLabel(s),
+                                          style: const TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                              ],
+                              child: Container(
+                                padding: const EdgeInsets.fromLTRB(10, 5, 4, 5),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(
+                                    color: DuoColors.blue.withValues(
+                                      alpha: 0.5,
+                                    ),
+                                    width: 1.5,
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      _speedLabel(settings.playSpeed),
+                                      style: const TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w900,
+                                        color: DuoColors.blue,
+                                      ),
+                                    ),
+                                    const Icon(
+                                      Icons.arrow_drop_up_rounded,
+                                      size: 18,
+                                      color: DuoColors.blue,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
                       ],
                     ),
                   ),
-                ),
-                IconButton(
-                  tooltip: l.t(
-                    _loop ? 'vocab_practice_loop_off' : 'vocab_practice_loop',
-                  ),
-                  isSelected: _loop,
-                  onPressed: () => setState(() => _loop = !_loop),
-                  icon: const Icon(Icons.repeat_rounded),
-                  selectedIcon: const Icon(
-                    Icons.repeat_on_rounded,
-                    color: DuoColors.blue,
-                  ),
-                ),
-                IconButton.filledTonal(
-                  tooltip: l.t(
-                    _playing == null
-                        ? 'vocab_practice_play'
-                        : 'vocab_practice_stop',
-                  ),
-                  onPressed: _playing != null
-                      ? _stopPlay
-                      : (selectedCount == 0 ? null : () => _play(all)),
-                  icon: Icon(
-                    _playing == null
-                        ? Icons.play_arrow_rounded
-                        : Icons.stop_rounded,
-                    color: selectedCount == 0 && _playing == null
-                        ? null
-                        : DuoColors.blue,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                SizedBox(
-                  width: 120,
-                  child: DuoButton(
-                    label: l.t('vocab_practice_next'),
+                  const SizedBox(height: 10),
+                  DuoButton(
+                    label: selectedCount == 0
+                        ? l.t('vocab_practice_next')
+                        : '${l.t('vocab_practice_next')} · $selectedCount '
+                              '${l.t('vocab_practice_selected')}',
                     color: DuoColors.blue,
                     height: 48,
                     onPressed: selectedCount == 0
                         ? null
                         : () => _openCountSheet(all),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  /// Tombol bulat kecil yang bisa menyala (urut/acak, ulangi).
+  Widget _barToggle({
+    required bool on,
+    required String tooltip,
+    required IconData icon,
+    required IconData onIcon,
+    required VoidCallback onTap,
+  }) {
+    return IconButton(
+      tooltip: tooltip,
+      isSelected: on,
+      onPressed: onTap,
+      style: IconButton.styleFrom(
+        backgroundColor: on ? DuoColors.blue.withValues(alpha: 0.16) : null,
+      ),
+      icon: Icon(icon, color: Theme.of(context).hintColor),
+      selectedIcon: Icon(onIcon, color: DuoColors.blue),
+    );
+  }
+
+  /// Tombol putar/stop bulat besar di tengah panel pemutar.
+  Widget _playButton(L l, int selectedCount, VoidCallback onPlay) {
+    final playing = _playing != null;
+    final enabled = playing || selectedCount > 0;
+    return Tooltip(
+      message: l.t(playing ? 'vocab_practice_stop' : 'vocab_practice_play'),
+      child: Material(
+        color: enabled
+            ? DuoColors.blue
+            : Theme.of(context).disabledColor.withValues(alpha: 0.2),
+        shape: const CircleBorder(),
+        elevation: enabled ? 2 : 0,
+        child: InkWell(
+          customBorder: const CircleBorder(),
+          onTap: !enabled ? null : (playing ? _stopPlay : onPlay),
+          child: SizedBox(
+            width: 48,
+            height: 48,
+            child: Icon(
+              playing ? Icons.stop_rounded : Icons.play_arrow_rounded,
+              color: Colors.white,
+              size: 30,
+            ),
+          ),
+        ),
       ),
     );
   }

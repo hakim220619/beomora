@@ -12,6 +12,8 @@ class SettingsProvider extends ChangeNotifier {
   static const _kHandwriting = 'handwriting_on';
   static const _kHandwritingWifi = 'handwriting_wifi_only';
   static const _kPlaySpeed = 'vocab_play_speed_x';
+  static const _kPlayShuffle = 'vocab_play_shuffle';
+  static const _kSpellMode = 'vocab_quiz_spell';
   static const _kStarred = 'vocab_starred_'; // + id kursus
 
   final SharedPreferences _prefs;
@@ -67,6 +69,22 @@ class SettingsProvider extends ChangeNotifier {
 
   /// Kecepatan putar kosakata sebagai kelipatan normal (0.5×–2×).
   double get playSpeed => _playSpeed;
+
+  /// Putar kosakata secara acak (true) atau urut dari atas (false).
+  bool get playShuffle => _prefs.getBool(_kPlayShuffle) ?? false;
+
+  void setPlayShuffle(bool on) {
+    _prefs.setBool(_kPlayShuffle, on);
+    notifyListeners();
+  }
+
+  /// Jenis soal Latihan Kosakata: susun huruf (true) / pilihan ganda.
+  bool get vocabSpellMode => _prefs.getBool(_kSpellMode) ?? false;
+
+  void setVocabSpellMode(bool on) {
+    _prefs.setBool(_kSpellMode, on);
+    notifyListeners();
+  }
 
   void setPlaySpeed(double speed) {
     _playSpeed = speed.clamp(0.5, 2.0);

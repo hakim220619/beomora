@@ -14,6 +14,7 @@ import '../../l10n/app_strings.dart';
 import '../../models/course.dart';
 import '../../models/guide.dart';
 import '../../providers/progress_provider.dart';
+import '../../providers/settings_provider.dart';
 import '../../services/kana_speech.dart';
 import '../../theme.dart';
 import '../../widgets/duo_button.dart';
@@ -62,6 +63,14 @@ class QuizSetupScreen extends StatefulWidget {
   /// Batas soal per sesi untuk pengguna gratis; null = tanpa batas.
   final int? freeLimit;
 
+  /// Tampilkan pilihan cara menjawab (pilihan ganda / susun huruf),
+  /// tersimpan di [SettingsProvider.vocabSpellMode] — sama dengan
+  /// Latihan Kosakata.
+  final bool spellOption;
+
+  /// Catatan di bawah pilihan saat susun huruf aktif.
+  final String spellNoteKey;
+
   const QuizSetupScreen({
     super.key,
     required this.course,
@@ -75,6 +84,8 @@ class QuizSetupScreen extends StatefulWidget {
     this.readingPromptKey = 'quiz_prompt_symbol',
     this.spokenForm,
     this.freeLimit,
+    this.spellOption = false,
+    this.spellNoteKey = 'vocab_mode_spell_note',
   });
 
   @override
@@ -120,6 +131,9 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
           course: widget.course,
           customCategory: cat,
           questionCount: count,
+          spell:
+              widget.spellOption &&
+              context.read<SettingsProvider>().vocabSpellMode,
         ),
       ),
     );
@@ -160,6 +174,7 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
             ),
             const SizedBox(height: 20),
           ],
+          if (widget.spellOption) ..._answerMode(l),
           Text(
             '${pool.length} ${widget.unitLabel}',
             style: TextStyle(
@@ -247,6 +262,43 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
         ],
       ),
     );
+  }
+
+  /// Pilihan cara menjawab: pilihan ganda / susun huruf.
+  List<Widget> _answerMode(L l) {
+    final settings = context.watch<SettingsProvider>();
+    final spell = settings.vocabSpellMode;
+    return [
+      _Heading(l.t('answer_mode_title')),
+      Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: [
+          _chip(
+            l.t('vocab_mode_mcq'),
+            !spell,
+            () => settings.setVocabSpellMode(false),
+          ),
+          _chip(
+            l.t('vocab_mode_spell'),
+            spell,
+            () => settings.setVocabSpellMode(true),
+          ),
+        ],
+      ),
+      if (spell)
+        Padding(
+          padding: const EdgeInsets.only(top: 6),
+          child: Text(
+            l.t(widget.spellNoteKey),
+            style: TextStyle(
+              fontSize: 12.5,
+              color: Theme.of(context).hintColor,
+            ),
+          ),
+        ),
+      const SizedBox(height: 20),
+    ];
   }
 
   Widget _chip(String label, bool selected, VoidCallback onTap) {
@@ -409,6 +461,8 @@ class KanjiQuizScreen extends StatelessWidget {
         ];
       },
       freeLimit: kFreeMcqLimit,
+      spellOption: true,
+      spellNoteKey: 'spell_note_kanji',
     );
   }
 }
@@ -488,6 +542,8 @@ class WordQuizScreen extends StatelessWidget {
       // mengucapkan katanya langsung.
       spokenForm: (item) => item.kana,
       freeLimit: kFreeMcqLimit,
+      // Hangul belum bisa dipecah jadi kotak susun huruf.
+      spellOption: course.id != 'ko',
     );
   }
 }

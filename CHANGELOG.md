@@ -3,6 +3,32 @@
 Semua perubahan penting dicatat di sini. Versi mengikuti `pubspec.yaml`
 (`versi+kode build`).
 
+## 1.21.0 (build 39) — 13 November 2026
+
+### Baru
+- **Soal "Susun huruf"**: selain pilihan ganda, pengguna bisa memilih
+  menyusun kata dari kotak huruf acak. Bunyi gabungan (きょ, しゃ) jadi
+  satu kotak, dan ada 3–6 huruf pengecoh yang mirip bentuk/bunyinya
+  (ね/れ/わ, シ/ツ, b/d). Ada tombol 🔊 untuk mendengar petunjuk, lalu
+  Periksa → Lanjut.
+  - **Latihan Kosakata**: pilih jenis soal di lembar jumlah soal.
+  - **Tebak Kata** (Jepang & Jerman) dan **Tebak Kanji**: pilihan "Cara
+    menjawab" di layar setelan kuis. Di Tebak Kanji, soal "Baca kata"
+    menampilkan kata kanjinya (学生) lalu bacaannya disusun (がくせい);
+    soal Arti dan Bacaan on/kun tetap pilihan ganda.
+  - Kata yang tidak cocok disusun (ungkapan, ada spasi/～, lebih dari 10
+    kotak) otomatis jadi pilihan ganda. Pilihan tersimpan dan berlaku
+    untuk semua latihan di atas.
+- **Pemutar kosakata: urut atau acak**: kata yang dipilih bisa diputar
+  urut dari atas (Favorit dulu) atau diacak tiap putaran.
+
+### Teknis
+- Baru: `data/spell_tiles.dart` (`spellUnits`, `spellTiles`), setelan
+  `SettingsProvider.vocabSpellMode` & `playShuffle`. `TokenExercise`
+  menerima judul soal (`title`), `QuizSetupScreen.spellOption`.
+- Tes baru: `spell_tiles_test.dart`, tes susun huruf di
+  `vocab_practice_screen_test.dart` & `quiz_setup_screen_test.dart`.
+
 ## 1.20.2 (build 38) — 11 November 2026
 
 ### Baru

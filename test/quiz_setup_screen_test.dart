@@ -63,6 +63,8 @@ void main() {
 
   Future<void> start(WidgetTester tester) async {
     await tester.scrollUntilVisible(find.text('Mulai'), 100);
+    await tester.ensureVisible(find.text('Mulai'));
+    await tester.pump();
     await tester.tap(find.text('Mulai'));
     await tester.pump();
     await tester.pump(const Duration(seconds: 1));
@@ -131,4 +133,93 @@ void main() {
       expect(find.textContaining('Apa arti kanji ini'), findsNothing);
     },
   );
+
+  group('Cara menjawab (pilihan ganda / susun huruf)', () {
+    testWidgets('Tebak Kanji "Baca kata" + susun huruf → susun bacaan', (
+      tester,
+    ) async {
+      await pumpWith(
+        tester,
+        const KanjiQuizScreen(course: course),
+        premium: true,
+      );
+      await tester.tap(find.text('Arti'));
+      await tester.pump();
+      await tester.tap(find.text('Bacaan on/kun'));
+      await tester.pump();
+      await tester.tap(find.text('Susun huruf'));
+      await tester.pump();
+      expect(find.textContaining('Hanya soal "Baca kata"'), findsOneWidget);
+      await tester.tap(find.text('10'));
+      await tester.pump();
+      await start(tester);
+      expect(
+        tester.widget<LetterQuizScreen>(find.byType(LetterQuizScreen)).spell,
+        isTrue,
+      );
+      expect(find.text('Susun cara baca kata ini:'), findsOneWidget);
+      expect(find.text('Periksa'), findsOneWidget);
+    });
+
+    testWidgets('Tebak Kanji "Arti" + susun huruf → tetap pilihan ganda', (
+      tester,
+    ) async {
+      await pumpWith(
+        tester,
+        const KanjiQuizScreen(course: course),
+        premium: true,
+      );
+      await tester.tap(find.text('Bacaan on/kun'));
+      await tester.pump();
+      await tester.tap(find.text('Baca kata'));
+      await tester.pump();
+      await tester.tap(find.text('Susun huruf'));
+      await tester.pump();
+      await tester.tap(find.text('10'));
+      await tester.pump();
+      await start(tester);
+      expect(find.text('Susun cara baca kata ini:'), findsNothing);
+      expect(find.text('Periksa'), findsNothing);
+    });
+
+    testWidgets('Tebak Kata: pilihan tersimpan & diteruskan ke kuis', (
+      tester,
+    ) async {
+      await pumpWith(
+        tester,
+        const WordQuizScreen(course: course),
+        premium: true,
+      );
+      expect(find.text('Cara menjawab'), findsOneWidget);
+      await tester.tap(find.text('Susun huruf'));
+      await tester.pump();
+      final ctx = tester.element(find.byType(WordQuizScreen));
+      expect(ctx.read<SettingsProvider>().vocabSpellMode, isTrue);
+      await start(tester);
+      expect(
+        tester.widget<LetterQuizScreen>(find.byType(LetterQuizScreen)).spell,
+        isTrue,
+      );
+    });
+
+    testWidgets('Kana Campur & Tebak Kata Korea: tanpa pilihan', (
+      tester,
+    ) async {
+      await pumpWith(tester, const KanaMixScreen(course: course));
+      expect(find.text('Cara menjawab'), findsNothing);
+      await pumpWith(
+        tester,
+        const WordQuizScreen(
+          course: Course(
+            id: 'ko',
+            name: {'id': 'Bahasa Korea', 'en': 'Korean'},
+            flag: '🇰🇷',
+            ttsLocale: 'ko-KR',
+            units: [],
+          ),
+        ),
+      );
+      expect(find.text('Cara menjawab'), findsNothing);
+    });
+  });
 }
