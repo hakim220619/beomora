@@ -3,7 +3,7 @@
 Semua perubahan penting dicatat di sini. Versi mengikuti `pubspec.yaml`
 (`versi+kode build`).
 
-## 1.21.0 (build 39) — 13 November 2026
+## 1.21.1 (build 40) — 16 November 2026
 
 ### Baru
 - **Soal "Susun huruf"**: selain pilihan ganda, pengguna bisa memilih
