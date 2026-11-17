@@ -14,7 +14,6 @@ class SettingsProvider extends ChangeNotifier {
   static const _kPlaySpeed = 'vocab_play_speed_x';
   static const _kPlayShuffle = 'vocab_play_shuffle';
   static const _kSpellMode = 'vocab_quiz_spell';
-  static const _kStarred = 'vocab_starred_'; // + id kursus
 
   final SharedPreferences _prefs;
 
@@ -89,32 +88,6 @@ class SettingsProvider extends ChangeNotifier {
   void setPlaySpeed(double speed) {
     _playSpeed = speed.clamp(0.5, 2.0);
     _prefs.setDouble(_kPlaySpeed, _playSpeed);
-    notifyListeners();
-  }
-
-  /// Kosakata berbintang per kursus (kata target, urut saat ditandai).
-  /// Tampil sebagai bagian "Favorit" paling atas di Latihan Kosakata.
-  List<String> starredWords(String courseId) =>
-      _prefs.getStringList('$_kStarred$courseId') ?? const [];
-
-  bool isStarred(String courseId, String word) =>
-      starredWords(courseId).contains(word);
-
-  void toggleStarred(String courseId, String word) {
-    final list = [...starredWords(courseId)];
-    list.contains(word) ? list.remove(word) : list.add(word);
-    _prefs.setStringList('$_kStarred$courseId', list);
-    notifyListeners();
-  }
-
-  /// Lepas bintang dari [words] sekaligus (tombol reset Favorit).
-  void removeStarred(String courseId, Iterable<String> words) {
-    final drop = words.toSet();
-    final list = [
-      for (final w in starredWords(courseId))
-        if (!drop.contains(w)) w,
-    ];
-    _prefs.setStringList('$_kStarred$courseId', list);
     notifyListeners();
   }
 

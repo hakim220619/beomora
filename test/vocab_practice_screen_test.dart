@@ -130,7 +130,7 @@ void main() {
     await pump(tester);
     expect(find.text('⭐ Favorit'), findsNothing);
     final ctx = tester.element(find.byType(VocabPracticeScreen));
-    ctx.read<SettingsProvider>().toggleStarred('ja', 'いぬ');
+    ctx.read<ProgressProvider>().toggleStarred('ja', 'いぬ');
     await tester.pump();
     expect(find.text('⭐ Favorit'), findsOneWidget);
     expect(
@@ -180,8 +180,9 @@ void main() {
       await pump(tester);
       final ctx = tester.element(find.byType(VocabPracticeScreen));
       final settings = ctx.read<SettingsProvider>();
-      settings.toggleStarred('ja', 'いえ');
-      settings.toggleStarred('ja', 'さかな');
+      final progress = ctx.read<ProgressProvider>();
+      progress.toggleStarred('ja', 'いえ');
+      progress.toggleStarred('ja', 'さかな');
       await tester.pump();
       await tester.tap(find.byTooltip('Pilih semua'));
       await tester.pump();

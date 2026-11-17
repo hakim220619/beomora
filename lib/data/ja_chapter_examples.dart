@@ -2438,6 +2438,38 @@ const Map<String, VocabUsage> vocabUsageJaChapter = {
     'Salam perpisahan untuk waktu lama.',
     'Farewell for a long time.',
   ),
+  'わかりました|saya mengerti / baik': VocabUsage(
+    'はい わかりました',
+    'hai wakarimashita',
+    'Baik, saya mengerti.',
+    'Yes, I understand.',
+    'Menjawab penjelasan atau perintah. Bentuk lampau, artinya "sudah paham". Santai: わかった.',
+    'Reply to an explanation or request. Past form = "got it". Casual: わかった.',
+  ),
+  'わかりません|saya tidak mengerti': VocabUsage(
+    'すみません にほんご が わかりません',
+    'sumimasen nihongo ga wakarimasen',
+    'Maaf, saya tidak mengerti bahasa Jepang.',
+    'Sorry, I don’t understand Japanese.',
+    'Pola: [hal] が わかりません. Ke pelanggan/atasan lebih halus: わかりかねます.',
+    'Pattern: [thing] が わかりません. Softer with customers/bosses: わかりかねます.',
+  ),
+  'まってください|tolong tunggu': VocabUsage(
+    'ちょっと まって ください',
+    'chotto matte kudasai',
+    'Tolong tunggu sebentar.',
+    'Please wait a moment.',
+    'Dari まつ (menunggu) + ください. Lebih sopan: しょうしょう おまち ください.',
+    'From まつ (to wait) + ください. More polite: しょうしょう おまち ください.',
+  ),
+  'もういちど|sekali lagi': VocabUsage(
+    'もういちど おねがいします',
+    'mouichido onegaishimasu',
+    'Tolong (ulangi) sekali lagi.',
+    'Once more, please.',
+    'Minta diulang saat belum menangkap ucapan orang. Bisa juga: もういちど いって ください.',
+    'Ask someone to repeat. Also: もういちど いって ください.',
+  ),
 };
 
 /// Bentuk di kartu (mis. いきます) → kunci contoh yang sudah ada

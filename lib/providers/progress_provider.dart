@@ -109,6 +109,11 @@ class ProgressProvider extends ChangeNotifier {
   /// 'date'} (persen benar, label skor perkiraan, tanggal yyyy-MM-dd).
   Map<String, Map<String, dynamic>> examBest = {};
 
+  /// Kosakata berbintang (Favorit) per kursus: id kursus → kata target,
+  /// urut saat ditandai. Ikut JSON progres sehingga tersinkron ke
+  /// Firestore dan kembali saat pengguna login di perangkat lain.
+  Map<String, List<String>> starred = {};
+
   /// Status premium (di-update AuthProvider via ProgressSyncService).
   /// Dibaca dari cache prefs saat startup supaya pelindung streak
   /// premium bekerja sebelum profil server termuat.
@@ -122,6 +127,7 @@ class ProgressProvider extends ChangeNotifier {
     heartRegenMinutes =
         _prefs.getInt(kHeartRegenPref) ?? defaultHeartRegenMinutes;
     _load();
+    _migrateLegacyStarred();
     // Versi lama menandai onboarding di pengaturan perangkat (sebelum
     // login) — pindahkan sekali ke progres.
     if (_prefs.getBool(_kLegacyOnboarded) ?? false) {
@@ -135,6 +141,60 @@ class ProgressProvider extends ChangeNotifier {
   }
 
   static const _kLegacyOnboarded = 'onboarded';
+  static const _kLegacyStarred = 'vocab_starred_'; // + id kursus
+
+  /// Versi ≤1.21.1 menyimpan Favorit di pengaturan perangkat
+  /// (`vocab_starred_<kursus>`), tidak ikut sinkron. Pindahkan sekali ke
+  /// progres; [savedAt] dimajukan supaya sinkron berikutnya mengunggahnya.
+  void _migrateLegacyStarred() {
+    final keys = [
+      for (final k in _prefs.getKeys())
+        if (k.startsWith(_kLegacyStarred)) k,
+    ];
+    if (keys.isEmpty) return;
+    for (final k in keys) {
+      final course = k.substring(_kLegacyStarred.length);
+      final list = [...starredWords(course)];
+      for (final w in _prefs.getStringList(k) ?? const <String>[]) {
+        if (!list.contains(w)) list.add(w);
+      }
+      if (list.isNotEmpty) starred[course] = list;
+      _prefs.remove(k);
+    }
+    _save();
+  }
+
+  // ---------- Favorit kosakata ----------
+
+  List<String> starredWords(String courseId) => starred[courseId] ?? const [];
+
+  bool isStarred(String courseId, String word) =>
+      starredWords(courseId).contains(word);
+
+  void toggleStarred(String courseId, String word) {
+    final list = [...starredWords(courseId)];
+    list.contains(word) ? list.remove(word) : list.add(word);
+    _setStarred(courseId, list);
+  }
+
+  /// Lepas bintang dari [words] sekaligus (tombol reset Favorit).
+  void removeStarred(String courseId, Iterable<String> words) {
+    final drop = words.toSet();
+    _setStarred(courseId, [
+      for (final w in starredWords(courseId))
+        if (!drop.contains(w)) w,
+    ]);
+  }
+
+  void _setStarred(String courseId, List<String> list) {
+    if (list.isEmpty) {
+      starred.remove(courseId);
+    } else {
+      starred[courseId] = list;
+    }
+    _save();
+    notifyListeners();
+  }
 
   /// Terapkan menit regenerasi nyawa dari server/admin (dijepit 1-1440).
   void applyHeartRegenMinutes(int minutes) {
@@ -495,6 +555,7 @@ class ProgressProvider extends ChangeNotifier {
     coursesTried = {};
     dailyXp = {};
     examBest = {};
+    starred = {};
     _save();
     notifyListeners();
   }
@@ -713,6 +774,11 @@ class ProgressProvider extends ChangeNotifier {
         (k, v) => MapEntry(k, Map<String, dynamic>.from(v as Map)),
       );
     }
+    // Kunci absen (versi lama) → pertahankan nilai lokal.
+    final st = m['starred'] as Map<String, dynamic>?;
+    if (st != null) {
+      starred = st.map((k, v) => MapEntry(k, List<String>.from(v as List)));
+    }
     savedAt = (m['savedAt'] as num?)?.toInt() ?? 0;
   }
 
@@ -752,6 +818,7 @@ class ProgressProvider extends ChangeNotifier {
     'coursesTried': coursesTried.toList(),
     'dailyXp': dailyXp,
     'examBest': examBest,
+    'starred': starred,
     'savedAt': savedAt,
   };
 
@@ -779,7 +846,9 @@ class ProgressProvider extends ChangeNotifier {
     }
     final cloudSavedAt = (m['savedAt'] as num?)?.toInt() ?? 0;
     if (cloudSavedAt == savedAt) return CloudMerge.identical;
-    final localFresh = xp == 0 && totalLessonsDone == 0;
+    // Favorit juga dihitung: pengguna yang baru menandai kata (tanpa XP)
+    // tidak boleh kehilangan tandanya tertimpa data server yang lebih lama.
+    final localFresh = xp == 0 && totalLessonsDone == 0 && starred.isEmpty;
     if (!localFresh && cloudSavedAt < savedAt) return CloudMerge.localWins;
     _applyMap(m);
     _save(touch: false);

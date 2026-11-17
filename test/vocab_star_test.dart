@@ -1,12 +1,19 @@
 import 'package:beomora/models/course.dart';
 import 'package:beomora/models/guide.dart';
 import 'package:beomora/providers/auth_provider.dart';
+import 'package:beomora/providers/progress_provider.dart';
 import 'package:beomora/providers/settings_provider.dart';
 import 'package:beomora/screens/materials/guide_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+/// Favorit kursus 'ja' yang tersimpan di progres (ikut sinkron cloud).
+List<String> starred(WidgetTester tester) => tester
+    .element(find.byType(GuideDetailScreen))
+    .read<ProgressProvider>()
+    .starredWords('ja');
 
 void main() {
   const course = Course(
@@ -41,6 +48,7 @@ void main() {
       MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => SettingsProvider(prefs)),
+          ChangeNotifierProvider(create: (_) => ProgressProvider(prefs)),
           ChangeNotifierProvider(create: (_) => AuthProvider(prefs)),
         ],
         child: MaterialApp(
@@ -62,7 +70,7 @@ void main() {
       tester.getTopLeft(find.text('⭐ Favorit')).dy,
       lessThan(tester.getTopLeft(find.text('Bagian 1')).dy),
     );
-    expect(prefs.getStringList('vocab_starred_ja'), ['いぬ']);
+    expect(starred(tester), ['いぬ']);
 
     await tester.tap(find.byIcon(Icons.star_rounded).first);
     await tester.pump();
@@ -81,6 +89,7 @@ void main() {
       MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => SettingsProvider(prefs)),
+          ChangeNotifierProvider(create: (_) => ProgressProvider(prefs)),
           ChangeNotifierProvider(create: (_) => AuthProvider(prefs)),
         ],
         child: MaterialApp(
@@ -102,7 +111,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 600));
     expect(find.text('⭐ Favorit'), findsNothing);
     // Bintang kata di luar topik ini tidak ikut terhapus.
-    expect(prefs.getStringList('vocab_starred_ja'), ['lain']);
+    expect(starred(tester), ['lain']);
   });
 
   testWidgets('bintang di tengah daftar: posisi kata tidak melompat', (
@@ -129,6 +138,7 @@ void main() {
       MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => SettingsProvider(prefs)),
+          ChangeNotifierProvider(create: (_) => ProgressProvider(prefs)),
           ChangeNotifierProvider(create: (_) => AuthProvider(prefs)),
         ],
         child: MaterialApp(
@@ -161,7 +171,7 @@ void main() {
     await tester.tap(star);
     await tester.pump(); // Favorit muncul di atas
     await tester.pump(); // geser posisi gulir (post-frame)
-    expect(prefs.getStringList('vocab_starred_ja'), ['kata20']);
+    expect(starred(tester), ['kata20']);
     // Baris di topik (yang terakhir) tetap di tempat yang sama.
     expect(
       tester.getTopLeft(find.text('kata20', skipOffstage: false).last).dy,
@@ -192,6 +202,7 @@ void main() {
       MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => SettingsProvider(prefs)),
+          ChangeNotifierProvider(create: (_) => ProgressProvider(prefs)),
           ChangeNotifierProvider(create: (_) => AuthProvider(prefs)),
         ],
         child: MaterialApp(
@@ -215,7 +226,7 @@ void main() {
     await tester.tap(star);
     await tester.pump(); // Favorit muncul di atas
     await tester.pump(); // geser posisi gulir (post-frame)
-    expect(prefs.getStringList('vocab_starred_ja'), ['kata4']);
+    expect(starred(tester), ['kata4']);
     expect(find.text('⭐ Favorit', skipOffstage: false), findsOneWidget);
     // Baris di topik (yang terakhir) tetap di tempat yang sama.
     expect(

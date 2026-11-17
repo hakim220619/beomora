@@ -7,6 +7,7 @@ import '../../data/question_bank.dart';
 import '../../l10n/app_strings.dart';
 import '../../models/course.dart';
 import '../../models/guide.dart';
+import '../../providers/progress_provider.dart';
 import '../../providers/settings_provider.dart';
 import '../../services/tts_service.dart';
 import '../../theme.dart';
@@ -287,7 +288,10 @@ class _VocabPracticeScreenState extends State<VocabPracticeScreen> {
     final selectedCount = _selected.length;
     // Kartu Favorit: kata berbintang (dari Materi) yang ada di topik ini.
     final starred = [
-      for (final t in settings.starredWords(widget.course.id)) ?_byTarget[t],
+      for (final t in context.watch<ProgressProvider>().starredWords(
+        widget.course.id,
+      ))
+        ?_byTarget[t],
     ];
 
     return StudyScaffold(

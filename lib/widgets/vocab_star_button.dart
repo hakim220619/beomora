@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../l10n/app_strings.dart';
-import '../providers/settings_provider.dart';
+import '../providers/progress_provider.dart';
 import '../theme.dart';
 import 'duo_dialog.dart';
 
@@ -21,12 +21,12 @@ class VocabStarButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = L.of(context);
-    final settings = context.watch<SettingsProvider>();
-    final on = settings.isStarred(courseId, word);
+    final progress = context.watch<ProgressProvider>();
+    final on = progress.isStarred(courseId, word);
     return IconButton(
       tooltip: l.t(on ? 'vocab_unstar' : 'vocab_star'),
       visualDensity: VisualDensity.compact,
-      onPressed: () => _toggleKeepingPlace(context, settings),
+      onPressed: () => _toggleKeepingPlace(context, progress),
       icon: Icon(
         on ? Icons.star_rounded : Icons.star_border_rounded,
         color: on ? DuoColors.yellow : Theme.of(context).hintColor,
@@ -40,11 +40,11 @@ class VocabStarButton extends StatelessWidget {
 /// bintang ditekan, yang mendorong isi daftar. Posisi gulir digeser
 /// sebesar selisihnya agar kata yang ditekan tetap di tempat yang sama.
 extension on VocabStarButton {
-  void _toggleKeepingPlace(BuildContext context, SettingsProvider settings) {
+  void _toggleKeepingPlace(BuildContext context, ProgressProvider progress) {
     final box = context.findRenderObject() as RenderBox?;
     final position = Scrollable.maybeOf(context)?.position;
     final before = box?.localToGlobal(Offset.zero).dy;
-    settings.toggleStarred(courseId, word);
+    progress.toggleStarred(courseId, word);
     if (position == null || before == null) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!context.mounted) return; // baris ikut hilang (lepas di Favorit)
@@ -85,7 +85,7 @@ class VocabStarClearButton extends StatelessWidget {
         color: Theme.of(context).hintColor,
       ),
       onPressed: () async {
-        final settings = context.read<SettingsProvider>();
+        final progress = context.read<ProgressProvider>();
         final ok = await showDuoConfirm(
           context,
           emoji: '⭐',
@@ -97,7 +97,7 @@ class VocabStarClearButton extends StatelessWidget {
           cancelLabel: l.t('cancel'),
           color: DuoColors.red,
         );
-        if (ok) settings.removeStarred(courseId, words);
+        if (ok) progress.removeStarred(courseId, words);
       },
     );
   }

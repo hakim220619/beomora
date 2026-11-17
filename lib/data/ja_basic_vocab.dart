@@ -736,6 +736,22 @@ const GuideTopic kJaBasicVocabTopic = GuideTopic(
           'id': 'semoga sehat selalu',
           'en': 'take care',
         }, romaji: 'douzo ogenki de'),
+        GuideExample('わかりました', {
+          'id': 'saya mengerti / baik',
+          'en': 'I understand / got it',
+        }, romaji: 'wakarimashita'),
+        GuideExample('わかりません', {
+          'id': 'saya tidak mengerti',
+          'en': 'I don\'t understand',
+        }, romaji: 'wakarimasen'),
+        GuideExample('まってください', {
+          'id': 'tolong tunggu',
+          'en': 'please wait',
+        }, romaji: 'matte kudasai'),
+        GuideExample('もういちど', {
+          'id': 'sekali lagi',
+          'en': 'once more',
+        }, romaji: 'mou ichido'),
         GuideExample('えーと', {
           'id': 'emm… (sambil berpikir)',
           'en': 'um, let me see',

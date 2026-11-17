@@ -14,7 +14,6 @@ import '../../l10n/app_strings.dart';
 import '../../models/course.dart';
 import '../../models/guide.dart';
 import '../../providers/progress_provider.dart';
-import '../../providers/settings_provider.dart';
 import '../../services/tts_service.dart';
 import '../../theme.dart';
 import '../../widgets/study/study_background.dart';
@@ -191,7 +190,7 @@ class _VocabListScreenState extends State<_VocabListScreen> {
   }
 
   /// Kata berbintang dari semua topik kosakata, urut saat ditandai.
-  List<_VocabHit> _starred(SettingsProvider settings) {
+  List<_VocabHit> _starred(ProgressProvider progress) {
     final byTarget = <String, _VocabHit>{};
     for (final topic in widget.topics) {
       for (final section in topic.sections) {
@@ -201,7 +200,7 @@ class _VocabListScreenState extends State<_VocabListScreen> {
       }
     }
     return [
-      for (final t in settings.starredWords(widget.course.id)) ?byTarget[t],
+      for (final t in progress.starredWords(widget.course.id)) ?byTarget[t],
     ];
   }
 
@@ -238,7 +237,7 @@ class _VocabListScreenState extends State<_VocabListScreen> {
     final hits = searching ? _search(_query, l.code) : const <_VocabHit>[];
     final starred = searching
         ? const <_VocabHit>[]
-        : _starred(context.watch<SettingsProvider>());
+        : _starred(context.watch<ProgressProvider>());
 
     return StudyScaffold(
       appBar: AppBar(

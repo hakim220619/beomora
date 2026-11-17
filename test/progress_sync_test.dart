@@ -149,4 +149,86 @@ void main() {
       isFalse,
     );
   });
+
+  group('Favorit kosakata ikut sinkron', () {
+    test('ganti HP: favorit dari server dipulihkan', () async {
+      final oldPhone = await freshProvider();
+      oldPhone.addXp(30);
+      oldPhone.toggleStarred('ja', 'いぬ');
+      oldPhone.toggleStarred('ja', 'ねこ');
+      oldPhone.toggleStarred('en', 'apple');
+      final raw = oldPhone.exportCloudJson();
+
+      final newPhone = await freshProvider();
+      expect(newPhone.reconcileCloudJson(raw), CloudMerge.applied);
+      expect(newPhone.starredWords('ja'), ['いぬ', 'ねこ']);
+      expect(newPhone.starredWords('en'), ['apple']);
+    });
+
+    test('lepas bintang terakhir ikut tersinkron', () async {
+      final a = await freshProvider();
+      a.toggleStarred('ja', 'いぬ');
+      a.toggleStarred('ja', 'いぬ');
+      expect(a.starredWords('ja'), isEmpty);
+      final m = jsonDecode(a.exportCloudJson()) as Map<String, dynamic>;
+      expect(m['starred'], isEmpty);
+    });
+
+    test(
+      'payload versi lama (tanpa starred) → favorit lokal dipertahankan',
+      () async {
+        final local = await freshProvider();
+        local.addXp(10);
+        local.toggleStarred('ja', 'いぬ');
+        final cloudMap =
+            jsonDecode(local.exportCloudJson()) as Map<String, dynamic>;
+        cloudMap.remove('starred');
+        cloudMap['savedAt'] = local.savedAt + 1000; // server lebih baru
+        expect(
+          local.reconcileCloudJson(jsonEncode(cloudMap)),
+          CloudMerge.applied,
+        );
+        expect(local.starredWords('ja'), ['いぬ']);
+      },
+    );
+
+    test('baru menandai kata (tanpa XP) tidak tertimpa server lama', () async {
+      final local = await freshProvider();
+      local.toggleStarred('ja', 'いぬ');
+      final cloudMap = <String, dynamic>{
+        'xp': 50,
+        'savedAt': local.savedAt - 1000, // data server lebih lama
+      };
+      expect(
+        local.reconcileCloudJson(jsonEncode(cloudMap)),
+        CloudMerge.localWins,
+      );
+      expect(local.starredWords('ja'), ['いぬ']);
+    });
+
+    test('migrasi: favorit di pengaturan perangkat lama dipindah', () async {
+      SharedPreferences.setMockInitialValues({
+        'vocab_starred_ja': ['いぬ', 'ねこ'],
+        'vocab_starred_de': ['Hund'],
+      });
+      final prefs = await SharedPreferences.getInstance();
+      final p = ProgressProvider(prefs);
+      expect(p.starredWords('ja'), ['いぬ', 'ねこ']);
+      expect(p.starredWords('de'), ['Hund']);
+      expect(
+        prefs.getKeys().where((k) => k.startsWith('vocab_starred_')),
+        isEmpty,
+      );
+      expect(p.savedAt, greaterThan(0)); // dimajukan → akan diunggah
+      // Bertahan setelah aplikasi dibuka ulang.
+      expect(ProgressProvider(prefs).starredWords('ja'), ['いぬ', 'ねこ']);
+    });
+
+    test('keluar akun → favorit dikosongkan untuk akun berikutnya', () async {
+      final p = await freshProvider();
+      p.toggleStarred('ja', 'いぬ');
+      p.resetAll();
+      expect(p.starredWords('ja'), isEmpty);
+    });
+  });
 }

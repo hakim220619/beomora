@@ -5,6 +5,7 @@ import 'package:beomora/data/vocab_examples.dart';
 import 'package:beomora/models/course.dart';
 import 'package:beomora/models/guide.dart';
 import 'package:beomora/providers/auth_provider.dart';
+import 'package:beomora/providers/progress_provider.dart';
 import 'package:beomora/providers/settings_provider.dart';
 import 'package:beomora/screens/materials/guide_detail_screen.dart';
 import 'package:beomora/screens/materials/vocab_detail_sheet.dart';
@@ -99,6 +100,7 @@ void main() {
       MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => SettingsProvider(prefs)),
+          ChangeNotifierProvider(create: (_) => ProgressProvider(prefs)),
           ChangeNotifierProvider(create: (_) => AuthProvider(prefs)),
         ],
         child: MaterialApp(

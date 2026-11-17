@@ -9,7 +9,7 @@ import '../../l10n/app_strings.dart';
 import '../../models/course.dart';
 import '../../models/guide.dart';
 import '../../providers/auth_provider.dart';
-import '../../providers/settings_provider.dart';
+import '../../providers/progress_provider.dart';
 import '../../services/kana_speech.dart';
 import '../../services/tts_service.dart';
 import '../../theme.dart';
@@ -142,7 +142,7 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
     // Kata berbintang di topik ini → bagian "⭐ Favorit" paling atas.
     final isVocab = widget.topic.id.contains('vocab');
     final starred = isVocab && !_searching
-        ? _starredIn(context.watch<SettingsProvider>())
+        ? _starredIn(context.watch<ProgressProvider>())
         : const <GuideExample>[];
 
     return StudyScaffold(
@@ -276,7 +276,7 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
   }
 
   /// Kata berbintang yang ada di topik ini, urut saat ditandai.
-  List<GuideExample> _starredIn(SettingsProvider settings) {
+  List<GuideExample> _starredIn(ProgressProvider progress) {
     final byTarget = <String, GuideExample>{};
     for (final s in widget.topic.sections) {
       for (final e in s.examples) {
@@ -284,7 +284,7 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
       }
     }
     return [
-      for (final t in settings.starredWords(widget.course.id)) ?byTarget[t],
+      for (final t in progress.starredWords(widget.course.id)) ?byTarget[t],
     ];
   }
 
