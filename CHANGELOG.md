@@ -3,6 +3,26 @@
 Semua perubahan penting dicatat di sini. Versi mengikuti `pubspec.yaml`
 (`versi+kode build`).
 
+## 1.21.2 (build 41) — 17 November 2026
+
+### Baru
+- **Favorit kosakata ikut tersimpan di akun**: kata berbintang (⭐) kini
+  disinkron ke Firestore bersama progres, sehingga tetap ada saat ganti
+  HP, install ulang, atau login lagi. Favorit lama di HP dipindah
+  otomatis saat pertama kali membuka versi ini.
+- **Ungkapan Sehari-hari** (Kosakata Dasar) bertambah 4: わかりました,
+  わかりません, まってください, もういちど, masing-masing dengan contoh
+  kalimat dan catatan pemakaian (176 kata).
+
+### Teknis
+- Favorit pindah dari `SettingsProvider` (`vocab_starred_<kursus>`) ke
+  `ProgressProvider.starred` (kunci `starred` di JSON progres). Migrasi
+  sekali dari prefs lama; payload versi lama tanpa `starred` tidak
+  menghapus favorit lokal; keluar akun mengosongkan favorit; lokal
+  yang punya favorit tidak dianggap "segar" saat dicocokkan dengan server.
+- Tes baru di `progress_sync_test.dart`; tes favorit membaca dari
+  `ProgressProvider`.
+
 ## 1.21.1 (build 40) — 16 November 2026
 
 ### Baru

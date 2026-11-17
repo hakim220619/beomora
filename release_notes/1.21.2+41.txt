@@ -1,0 +1,5 @@
+<id>
+✨ Beomora 1.21.2
+⭐ Kosakata Favorit kini tersimpan di akun, tetap ada saat ganti HP atau install ulang
+💬 Ungkapan baru: わかりました, わかりません, まってください, もういちど (lengkap dengan contoh kalimat)
+</id>
