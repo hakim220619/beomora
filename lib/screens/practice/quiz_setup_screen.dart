@@ -9,6 +9,7 @@ import '../../data/kanji_bank.dart';
 import '../../data/jlpt_vocab_adv.dart';
 import '../../data/mcq_packs.dart';
 import '../../data/question_bank.dart';
+import '../../data/hsk_vocab.dart';
 import '../../data/topik_vocab.dart';
 import '../../l10n/app_strings.dart';
 import '../../models/course.dart';
@@ -488,6 +489,7 @@ class WordQuizScreen extends StatelessWidget {
     final byCategory = switch (course.id) {
       'ko' => (topikVocab, topikGroupCategory, topikVocabCategories),
       'de' => (goetheVocab, goetheGroupCategory, goetheVocabCategories),
+      'zh' => (hskVocab, hskGroupCategory, hskVocabCategories),
       _ => null,
     };
     if (byCategory != null) {
@@ -512,7 +514,7 @@ class WordQuizScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = L.of(context);
     final (levels, labels, initial) = _choices(l);
-    final isKo = course.id == 'ko' || course.id == 'de';
+    final isKo = {'ko', 'de', 'zh'}.contains(course.id);
     return QuizSetupScreen(
       course: course,
       id: course.id == 'ja' ? 'word_custom' : 'word_custom_${course.id}',
@@ -542,8 +544,8 @@ class WordQuizScreen extends StatelessWidget {
       // mengucapkan katanya langsung.
       spokenForm: (item) => item.kana,
       freeLimit: kFreeMcqLimit,
-      // Hangul belum bisa dipecah jadi kotak susun huruf.
-      spellOption: course.id != 'ko',
+      // Hangul & hanzi belum bisa dipecah jadi kotak susun huruf.
+      spellOption: course.id != 'ko' && course.id != 'zh',
     );
   }
 }

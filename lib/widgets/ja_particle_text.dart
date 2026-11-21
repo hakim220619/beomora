@@ -3,19 +3,31 @@ import 'package:flutter/material.dart';
 import '../data/ja_particles.dart';
 
 /// Kalimat (dipisah spasi) dengan token partikel diwarnai sesuai
-/// [kJaParticles]. Tanpa [marks] (atau tanpa partikel) = teks biasa.
+/// [kJaParticles] / kZhParticles. Tanpa [marks] (atau tanpa partikel) = teks biasa.
 class ParticleText extends StatelessWidget {
   final String text;
   final List<JaParticle?>? marks;
   final TextStyle style;
 
-  const ParticleText(this.text, {super.key, this.marks, required this.style});
+  /// Pemisah antarkata saat ditampilkan ('' untuk hanzi tanpa spasi).
+  final String joiner;
+
+  const ParticleText(
+    this.text, {
+    super.key,
+    this.marks,
+    required this.style,
+    this.joiner = ' ',
+  });
 
   @override
   Widget build(BuildContext context) {
     final m = marks;
     if (m == null || m.every((p) => p == null)) {
-      return Text(text, style: style);
+      return Text(
+        joiner == ' ' ? text : text.split(' ').join(joiner),
+        style: style,
+      );
     }
     final tokens = text.split(' ');
     return Text.rich(
@@ -24,7 +36,7 @@ class ParticleText extends StatelessWidget {
         children: [
           for (var i = 0; i < tokens.length; i++)
             TextSpan(
-              text: i == tokens.length - 1 ? tokens[i] : '${tokens[i]} ',
+              text: i == tokens.length - 1 ? tokens[i] : '${tokens[i]}$joiner',
               style: m[i] == null
                   ? null
                   : TextStyle(color: m[i]!.color, fontWeight: FontWeight.w900),

@@ -3,7 +3,7 @@ const int kSpeakingPassPercent = 80;
 
 /// Kursus yang punya Latihan Bicara (mesin pengenal suara bawaan HP
 /// mendukung bahasa-bahasa ini).
-const Set<String> kSpeakingCourses = {'ja', 'en', 'de', 'ko'};
+const Set<String> kSpeakingCourses = {'ja', 'en', 'de', 'ko', 'zh'};
 
 /// Saklar fitur Latihan Bicara. Sementara dimatikan (deteksi suara
 /// bawaan HP belum cukup andal); ubah ke true untuk menampilkannya lagi.
@@ -59,7 +59,7 @@ SpeechScore scoreSpeech({
 }
 
 SpeechScore _scoreOne(String courseId, List<String> tokens, String heard) {
-  final charLevel = courseId == 'ja' || courseId == 'ko';
+  final charLevel = {'ja', 'ko', 'zh'}.contains(courseId);
   final target = <_Unit>[];
   for (var i = 0; i < tokens.length; i++) {
     final parts = charLevel

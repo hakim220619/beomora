@@ -5,6 +5,7 @@ import 'ja_basic_vocab.dart';
 import 'ja_chapter_vocab.dart';
 import 'kanji_bank.dart';
 import 'ko_grammar_guides.dart';
+import 'zh_guides.dart';
 
 /// Konten Materi Belajar per kursus. Teks penjelasan tersedia dalam
 /// bahasa UI 'id' dan 'en'.
@@ -21,6 +22,7 @@ final Map<String, List<GuideTopic>> kStudyGuides = {
   'id': _indonesian,
   'ko': _korean,
   'de': _german,
+  'zh': zhGuideTopics,
 };
 
 // ===================== BAHASA JEPANG =====================

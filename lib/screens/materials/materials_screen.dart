@@ -9,6 +9,8 @@ import '../../data/ja_phrases.dart';
 import '../../data/jlpt_vocab.dart';
 import '../../data/ko_phrases.dart';
 import '../../data/study_guides.dart';
+import '../../data/hsk_vocab.dart';
+import '../../data/zh_phrases.dart';
 import '../../data/topik_vocab.dart';
 import '../../l10n/app_strings.dart';
 import '../../models/course.dart';
@@ -18,6 +20,7 @@ import '../../services/tts_service.dart';
 import '../../theme.dart';
 import '../../widgets/study/study_background.dart';
 import '../../widgets/vocab_star_button.dart';
+import '../../services/reading_search.dart';
 import '../course_select_screen.dart';
 import '../practice/vocab_practice_screen.dart';
 import 'guide_detail_screen.dart';
@@ -47,8 +50,11 @@ class MaterialsScreen extends StatelessWidget {
       orElse: () => courses.first,
     );
     final allTopics = kStudyGuides[course.id] ?? const [];
-    // Topik kosakata tematik dikelompokkan di balik satu kartu.
-    final topics = allTopics.where((t) => !t.id.contains('vocab')).toList();
+    // Topik kosakata tematik dikelompokkan di balik satu kartu; topik
+    // tata bahasa juga, kalau jumlahnya cukup banyak.
+    final (:core, :grammar) = splitMaterialTopics(
+      allTopics.where((t) => !t.id.contains('vocab')).toList(),
+    );
     // Jepang: Kosakata Pemula Bab 1–25 paling atas, baru JLPT.
     const firstIds = {'vocab_chapters'};
     final vocabTopics = [
@@ -59,6 +65,7 @@ class MaterialsScreen extends StatelessWidget {
       if (course.id == 'en') ..._englishExamVocabTopics(),
       if (course.id == 'ko') ..._koreanVocabTopics(),
       if (course.id == 'de') ..._germanVocabTopics(),
+      if (course.id == 'zh') ..._chineseVocabTopics(),
       ...allTopics.where(
         (t) => t.id.contains('vocab') && !firstIds.contains(t.id),
       ),
@@ -87,17 +94,34 @@ class MaterialsScreen extends StatelessWidget {
             style: TextStyle(color: Theme.of(context).hintColor),
           ),
           const SizedBox(height: 14),
-          for (var i = 0; i < topics.length; i++)
+          for (var i = 0; i < core.length; i++)
             _TopicCard(
-              topic: topics[i],
+              topic: core[i],
               color: _accentCycle[i % _accentCycle.length],
+              onTap: () => _openTopic(context, course, core[i]),
+            ),
+          if (grammar.isNotEmpty)
+            _TopicCard(
+              topic: GuideTopic(
+                id: 'grammar_group',
+                emoji: '🧩',
+                title: {
+                  'id': l.t('materials_grammar_title'),
+                  'en': l.t('materials_grammar_title'),
+                },
+                subtitle: {
+                  for (final lang in const ['id', 'en'])
+                    lang: l
+                        .t('materials_grammar_sub')
+                        .replaceFirst('{n}', '${grammar.length}'),
+                },
+                sections: const [],
+              ),
+              color: _accentCycle[core.length % _accentCycle.length],
               onTap: () => Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (_) => GuideDetailScreen(
-                    course: course,
-                    topic: topics[i],
-                    ttsLocale: course.ttsLocale,
-                  ),
+                  builder: (_) =>
+                      _GrammarListScreen(course: course, topics: grammar),
                 ),
               ),
             ),
@@ -116,13 +140,84 @@ class MaterialsScreen extends StatelessWidget {
                 },
                 sections: const [],
               ),
-              color: _accentCycle[topics.length % _accentCycle.length],
+              color:
+                  _accentCycle[(core.length + (grammar.isEmpty ? 0 : 1)) %
+                      _accentCycle.length],
               onTap: () => Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (_) =>
                       _VocabListScreen(course: course, topics: vocabTopics),
                 ),
               ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+void _openTopic(BuildContext context, Course course, GuideTopic topic) =>
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => GuideDetailScreen(
+          course: course,
+          topic: topic,
+          ttsLocale: course.ttsLocale,
+        ),
+      ),
+    );
+
+/// Topik dasar yang selalu tampil sebagai kartu sendiri di Materi:
+/// huruf & pelafalan (hiragana, kanji, hangul, pinyin), frasa, angka.
+bool isCoreMaterialTopic(String id) =>
+    const {'hiragana', 'katakana', 'hangul', 'pinyin'}.contains(id) ||
+    id.startsWith('kanji_') ||
+    id.endsWith('_phrases') ||
+    id.endsWith('_numbers');
+
+/// Pisahkan topik Materi (tanpa kosakata) menjadi kartu dasar dan topik
+/// tata bahasa. Tata bahasa baru dikelompokkan di balik satu kartu kalau
+/// ada minimal [minGroup] topik; kalau lebih sedikit, semuanya tetap
+/// tampil sebagai kartu biasa (urutan asli dipertahankan).
+({List<GuideTopic> core, List<GuideTopic> grammar}) splitMaterialTopics(
+  List<GuideTopic> topics, {
+  int minGroup = 3,
+}) {
+  final grammar = [
+    for (final t in topics)
+      if (!isCoreMaterialTopic(t.id)) t,
+  ];
+  if (grammar.length < minGroup) return (core: topics, grammar: const []);
+  return (
+    core: [
+      for (final t in topics)
+        if (isCoreMaterialTopic(t.id)) t,
+    ],
+    grammar: grammar,
+  );
+}
+
+/// Daftar topik tata bahasa di balik kartu "Tata Bahasa" pada tab Materi.
+class _GrammarListScreen extends StatelessWidget {
+  final Course course;
+  final List<GuideTopic> topics;
+
+  const _GrammarListScreen({required this.course, required this.topics});
+
+  @override
+  Widget build(BuildContext context) {
+    final l = L.of(context);
+    return Scaffold(
+      appBar: AppBar(title: Text(l.t('materials_grammar_title'))),
+      body: ListView(
+        padding: const EdgeInsets.fromLTRB(16, 4, 16, 40),
+        children: [
+          for (var i = 0; i < topics.length; i++)
+            _TopicCard(
+              topic: topics[i],
+              color: MaterialsScreen
+                  ._accentCycle[i % MaterialsScreen._accentCycle.length],
+              onTap: () => _openTopic(context, course, topics[i]),
             ),
         ],
       ),
@@ -178,7 +273,7 @@ class _VocabListScreenState extends State<_VocabListScreen> {
           final meaning = (w.meaning[uiLang] ?? w.meaning.values.first)
               .toLowerCase();
           if (w.target.toLowerCase().contains(needle) ||
-              (w.romaji?.toLowerCase().contains(needle) ?? false) ||
+              readingContains(w.romaji, needle) ||
               meaning.contains(needle)) {
             hits.add(_VocabHit(topic, w));
             if (hits.length >= 60) return hits;
@@ -707,6 +802,98 @@ List<GuideTopic> _koreanVocabTopics() {
     ),
     _koreanCoreVocabTopic(),
   ];
+}
+
+/// Topik kosakata kursus Mandarin: ungkapan (sehari-hari, kerja,
+/// chengyu & peribahasa — [zhPhraseVocab] dst.), lalu kosakata HSK 1 & 2.
+List<GuideTopic> _chineseVocabTopics() {
+  GuideTopic phrases(
+    String id,
+    String emoji,
+    String titleId,
+    String titleEn,
+    String unitId,
+    String unitEn,
+    List<JVocab> v,
+    List<Map<String, String>> groupTitles,
+  ) => _examVocabTopic(
+    id: id,
+    emoji: emoji,
+    title: titleId,
+    titleEn: titleEn,
+    words: [
+      for (final w in v) GuideExample(w.kana, w.meaning, romaji: w.romaji),
+    ],
+    groups: [for (final w in v) w.group],
+    groupTitles: groupTitles,
+    subtitle: {
+      'id': '${v.length} $unitId, ketuk untuk dengar',
+      'en': '${v.length} $unitEn, tap to listen',
+    },
+  );
+
+  return [
+    phrases(
+      'zh_vocab_phrases',
+      '💬',
+      'Ungkapan Sehari-hari',
+      'Everyday Expressions',
+      'ungkapan',
+      'expressions',
+      zhPhraseVocab,
+      zhPhraseVocabGroups,
+    ),
+    phrases(
+      'zh_vocab_work',
+      '💼',
+      'Ungkapan Kerja',
+      'Workplace Phrases',
+      'ungkapan kerja',
+      'workplace phrases',
+      zhWorkVocab,
+      zhWorkVocabGroups,
+    ),
+    phrases(
+      'zh_vocab_idiom',
+      '🎭',
+      'Chengyu & Peribahasa',
+      'Chengyu & Proverbs',
+      'chengyu & peribahasa',
+      'chengyu & proverbs',
+      zhIdiomVocab,
+      zhIdiomVocabGroups,
+    ),
+    _hskVocabTopic(1),
+    _hskVocabTopic(2),
+  ];
+}
+
+/// Kosakata HSK Mandarin per level dari [hskVocab], dibagi per tema.
+/// Tema sebelum [hsk2FirstGroup] milik HSK 1, sisanya HSK 2.
+GuideTopic _hskVocabTopic(int level) {
+  final hsk2 = level == 2;
+  final words = [
+    for (final w in hskVocab)
+      if ((w.group >= hsk2FirstGroup) == hsk2) w,
+  ];
+  final offset = hsk2 ? hsk2FirstGroup : 0;
+  return _examVocabTopic(
+    id: 'zh_vocab_hsk$level',
+    emoji: hsk2 ? '🏮' : '🇨🇳',
+    title: 'Kosakata HSK $level',
+    titleEn: 'HSK $level Vocabulary',
+    words: [
+      for (final w in words) GuideExample(w.kana, w.meaning, romaji: w.romaji),
+    ],
+    groups: [for (final w in words) w.group - offset],
+    groupTitles: hsk2
+        ? hskVocabGroups.sublist(hsk2FirstGroup)
+        : hskVocabGroups.sublist(0, hsk2FirstGroup),
+    subtitle: {
+      'id': '${words.length} kosakata tingkat $level, ketuk untuk dengar',
+      'en': '${words.length} level $level words, tap to listen',
+    },
+  );
 }
 
 /// Kosakata inti Korea (TOPIK I / EPS-TOPIK) dari [topikVocab], dibagi

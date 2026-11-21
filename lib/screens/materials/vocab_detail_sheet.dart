@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import '../../data/en_grammar.dart';
 import '../../data/ja_chapter_examples.dart';
 import '../../data/ja_particles.dart';
+import '../../data/zh_particles.dart';
 import '../../data/vocab_examples.dart';
 import '../../l10n/app_strings.dart';
 import '../../models/guide.dart';
@@ -109,7 +110,7 @@ VocabDetail vocabDetailOf({
         sentences.add(
           VocabSentence(
             e.target,
-            reading: courseId == 'ja' || courseId == 'ko' ? e.romaji : null,
+            reading: {'ja', 'ko', 'zh'}.contains(courseId) ? e.romaji : null,
             // Kalimat Inggris dengan UI Inggris: terjemahannya sama persis.
             translation: t == e.target ? null : t,
           ),
@@ -151,6 +152,7 @@ void showVocabDetail(
       l: l,
       onSpeak: speak,
       particles: courseId == 'ja',
+      chinese: courseId == 'zh',
       english: courseId == 'en',
     ),
   );
@@ -165,6 +167,9 @@ class _VocabSheet extends StatelessWidget {
   /// Warnai partikel (は, を, に, …) + penjelasannya (kursus Jepang).
   final bool particles;
 
+  /// Kursus Mandarin: warnai partikel (的, 了, 吗, 把, …) + penjelasannya.
+  final bool chinese;
+
   /// Kursus Inggris: warnai kata fungsi, tandai kosakata, label tense.
   final bool english;
 
@@ -174,6 +179,7 @@ class _VocabSheet extends StatelessWidget {
     required this.l,
     required this.onSpeak,
     this.particles = false,
+    this.chinese = false,
     this.english = false,
   });
 
@@ -245,87 +251,106 @@ class _VocabSheet extends StatelessWidget {
             if (detail.sentences.isNotEmpty) ...[
               heading(l.t('vocab_detail_examples')),
               for (final s in detail.sentences)
-                Container(
-                  margin: const EdgeInsets.only(top: 6),
-                  padding: const EdgeInsets.fromLTRB(12, 10, 4, 10),
-                  decoration: BoxDecoration(
-                    color: isDark
-                        ? Colors.white.withValues(alpha: 0.05)
-                        : DuoColors.snow,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
+                for (final zh in [
+                  chinese ? zhParticlesOf(s.text, s.reading) : null,
+                ])
+                  Container(
+                    margin: const EdgeInsets.only(top: 6),
+                    padding: const EdgeInsets.fromLTRB(12, 10, 4, 10),
+                    decoration: BoxDecoration(
                       color: isDark
-                          ? const Color(0x26FFFFFF)
-                          : const Color(0xFFEDE6CF),
-                      width: 1.5,
+                          ? Colors.white.withValues(alpha: 0.05)
+                          : DuoColors.snow,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: isDark
+                            ? const Color(0x26FFFFFF)
+                            : const Color(0xFFEDE6CF),
+                        width: 1.5,
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (english)
+                                EnSentenceText(
+                                  s.text,
+                                  vocabIndex: enVocabIn(
+                                    s.text,
+                                    word.target,
+                                  )?.$1,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                )
+                              else
+                                ParticleText(
+                                  zh?.text ?? s.text,
+                                  joiner: zh?.joiner ?? ' ',
+                                  marks:
+                                      zh?.marks ??
+                                      (particles
+                                          ? particlesOf(s.text, s.reading)
+                                          : null),
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                              if (s.reading != null)
+                                ParticleText(
+                                  zh?.reading ?? s.reading!,
+                                  marks:
+                                      zh?.marks ??
+                                      (particles
+                                          ? readingParticlesOf(
+                                              s.text,
+                                              s.reading,
+                                            )
+                                          : null),
+                                  style: TextStyle(
+                                    fontSize: 12.5,
+                                    fontStyle: FontStyle.italic,
+                                    color: hint,
+                                  ),
+                                ),
+                              if (s.translation != null)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 2),
+                                  child: Text(
+                                    s.translation!,
+                                    style: TextStyle(
+                                      fontSize: 13.5,
+                                      color: hint,
+                                    ),
+                                  ),
+                                ),
+                              if (english)
+                                EnSentenceNotes(s.text, vocab: word.target),
+                              if (particles || zh != null)
+                                ParticleLegend(
+                                  marks:
+                                      zh?.marks ??
+                                      particlesOf(s.text, s.reading),
+                                  uiLang: l.code,
+                                ),
+                            ],
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(
+                            Icons.volume_up_rounded,
+                            color: DuoColors.blue,
+                          ),
+                          onPressed: () => onSpeak(s.text),
+                        ),
+                      ],
                     ),
                   ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            if (english)
-                              EnSentenceText(
-                                s.text,
-                                vocabIndex: enVocabIn(s.text, word.target)?.$1,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w800,
-                                ),
-                              )
-                            else
-                              ParticleText(
-                                s.text,
-                                marks: particles
-                                    ? particlesOf(s.text, s.reading)
-                                    : null,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w800,
-                                ),
-                              ),
-                            if (s.reading != null)
-                              ParticleText(
-                                s.reading!,
-                                marks: particles
-                                    ? readingParticlesOf(s.text, s.reading)
-                                    : null,
-                                style: TextStyle(
-                                  fontSize: 12.5,
-                                  fontStyle: FontStyle.italic,
-                                  color: hint,
-                                ),
-                              ),
-                            if (s.translation != null)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 2),
-                                child: Text(
-                                  s.translation!,
-                                  style: TextStyle(fontSize: 13.5, color: hint),
-                                ),
-                              ),
-                            if (english)
-                              EnSentenceNotes(s.text, vocab: word.target),
-                            if (particles)
-                              ParticleLegend(
-                                marks: particlesOf(s.text, s.reading),
-                                uiLang: l.code,
-                              ),
-                          ],
-                        ),
-                      ),
-                      IconButton(
-                        icon: const Icon(
-                          Icons.volume_up_rounded,
-                          color: DuoColors.blue,
-                        ),
-                        onPressed: () => onSpeak(s.text),
-                      ),
-                    ],
-                  ),
-                ),
             ],
             if (detail.usage != null) ...[
               heading(l.t('vocab_detail_usage')),

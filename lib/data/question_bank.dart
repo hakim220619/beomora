@@ -235,6 +235,23 @@ List<LetterQuizCategory> letterQuizFor(String courseId) {
           ttsLocale: 'ko-KR',
         ),
       ];
+    case 'zh':
+      return [
+        LetterQuizCategory(
+          id: 'pinyin',
+          emoji: '拼',
+          title: const {'id': 'Pinyin & Nada', 'en': 'Pinyin & Tones'},
+          items: _guideKana('zh', 'pinyin'),
+          ttsLocale: 'zh-CN',
+        ),
+        LetterQuizCategory(
+          id: 'zh_numbers',
+          emoji: '🔢',
+          title: const {'id': 'Angka Mandarin', 'en': 'Chinese Numbers'},
+          items: _guideKana('zh', 'zh_numbers'),
+          ttsLocale: 'zh-CN',
+        ),
+      ];
     case 'de':
       return [
         LetterQuizCategory(

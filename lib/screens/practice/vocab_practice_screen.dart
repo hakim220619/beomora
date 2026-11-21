@@ -14,6 +14,7 @@ import '../../theme.dart';
 import '../../widgets/duo_button.dart';
 import '../../widgets/question_count_sheet.dart';
 import '../../widgets/study/study_background.dart';
+import '../../services/reading_search.dart';
 import 'letter_quiz_screen.dart';
 
 /// Tombol mengapung "Latihan Kosakata" untuk halaman kosakata Materi.
@@ -216,7 +217,7 @@ class _VocabPracticeScreenState extends State<VocabPracticeScreen> {
   bool _matches(_Word w) {
     final q = _query.trim().toLowerCase();
     return w.example.target.toLowerCase().contains(q) ||
-        (w.example.romaji?.toLowerCase().contains(q) ?? false) ||
+        readingContains(w.example.romaji, q) ||
         w.item.romaji.toLowerCase().contains(q);
   }
 

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-"""Tambahkan unit 5-16 ke kursus jalur Belajar (assets/content/{en,id,de,ko}.json).
+"""Tambahkan unit 5-16 ke kursus jalur Belajar (assets/content/{en,id,de,ko,zh}.json).
 
 Sumber: course_units_master.py (Inggris + Indonesia), course_units_de.py
 dan course_units_ko.py (terjemahan, kunci = kata Inggris). Idempoten:
 unit dengan id yang sama diganti, unit lain (1-4) tidak disentuh.
 
-Pakai:  python3 tool/gen_course_units.py [en id de ko]
+Pakai:  python3 tool/gen_course_units.py [en id de ko zh]
 """
 import importlib
 import json
@@ -145,6 +145,6 @@ def process(lang):
 
 
 if __name__ == '__main__':
-    langs = sys.argv[1:] or ['en', 'id', 'de', 'ko']
+    langs = sys.argv[1:] or ['en', 'id', 'de', 'ko', 'zh']
     ok = all([process(l) for l in langs])
     sys.exit(0 if ok else 1)

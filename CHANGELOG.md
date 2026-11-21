@@ -3,6 +3,46 @@
 Semua perubahan penting dicatat di sini. Versi mengikuti `pubspec.yaml`
 (`versi+kode build`).
 
+## 1.22.0 (build 42) — 21 November 2026
+
+### Baru
+- **Kursus Bahasa Mandarin** (🇨🇳, TTS zh-CN): 16 unit / 48 pelajaran
+  (288 kata, 96 kalimat) dengan pinyin bernada. Materi: Pinyin & Nada,
+  Frasa Dasar, Angka, dan 16 topik tata bahasa (是/吗/的, 了, 过, 在,
+  kata bantu modal, kata tanya, 比, 是…的, waktu & tempat, pelengkap,
+  kata sambung, 把, 被, 着, 呢/吧/啊). Partikel (的, 了, 吗, 把, 被, …)
+  diwarnai di contoh kalimat dan lembar detail kosakata, seperti
+  partikel Jepang.
+- **Kosakata HSK 1–2 resmi (HSK 3.0)**: 524 kata HSK 1 + 735 kata HSK 2
+  dalam dua kartu Materi, per tema, dengan arti Indonesia/Inggris;
+  Tebak Kata Mandarin per kategori "HSK 1 · …" / "HSK 2 · …".
+- **Ungkapan Mandarin**: sehari-hari, kantor/pelanggan/pabrik, serta
+  chengyu & peribahasa (164 ungkapan).
+- **Contoh kalimat untuk 1.423 kosakata Mandarin** (hanzi, pinyin,
+  terjemahan, catatan pemakaian).
+- **Kalimat Sehari-hari (Latihan, Jepang)**: 12 kartu situasi N5 (Pagi
+  hari, Di sekolah, Belanja, Cuaca, Restoran, Kendaraan, Keluarga, Di
+  rumah, Perkenalan, Waktu & janji, Kesehatan, Akhir pekan), masing-
+  masing 12 kalimat. Tiap kata bergaris warna dengan arti di bawahnya,
+  partikel diwarnai; ketuk kata untuk detail, 🔊 per kalimat, mode tebak
+  arti, dan layar penuh yang memuat semua kalimat tanpa gulir. Kalimat
+  perkenalan memakai nama pengguna (katakana). Gratis 2 kartu pertama.
+- **Pencarian pinyin tanpa nada** (nihao, lvse) di Materi & latihan.
+
+### Perubahan
+- **Materi lebih ringkas**: topik tata bahasa dikelompokkan di balik satu
+  kartu 🧩 Tata Bahasa (bila ≥ 3 topik), untuk semua kursus.
+
+### Teknis
+- `ContentService`: sinkron konten tetap lanjut bila dokumen kursus belum
+  ada di server (kursus baru).
+- Generator baru: `tool/gen_zh_vocab.py` (HSK 1–2), `gen_zh_phrases.py`,
+  `gen_vocab_examples.py` mendukung `zh`. Arti per kata Jepang dibuat
+  otomatis (`services/ja_gloss.dart`: bentuk ます/て/ない/ている, angka
+  + satuan hitung, homofon dilewati).
+- Tes baru: `zh_course_test`, `materials_grammar_group_test`,
+  `sentence_gloss_test`.
+
 ## 1.21.2 (build 41) — 17 November 2026
 
 ### Baru

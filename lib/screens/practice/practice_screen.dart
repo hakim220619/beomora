@@ -20,6 +20,7 @@ import 'exam_list_screen.dart';
 import 'handwriting_activation.dart';
 import 'handwriting_screen.dart';
 import 'quiz_setup_screen.dart';
+import 'sentence_gloss_screen.dart';
 import 'letter_quiz_screen.dart';
 import 'listening_pack_screen.dart';
 import 'mcq_pack_screen.dart';
@@ -79,6 +80,13 @@ class PracticeScreen extends StatelessWidget {
                   : '👑 ${l.t('quiz_free_badge').replaceFirst('{n}', '$kFreeMcqLimit')}',
               onTap: () => _push(context, WordQuizScreen(course: course)),
             ),
+            _GameCard(
+              emoji: '💬',
+              color: DuoColors.purple,
+              title: l.t('gloss_title'),
+              subtitle: l.t('gloss_desc'),
+              onTap: () => _push(context, SentenceGlossScreen(course: course)),
+            ),
           ] else
             _GameCard(
               emoji: '🔤',
@@ -87,8 +95,9 @@ class PracticeScreen extends StatelessWidget {
               subtitle: l.t('letter_quiz_desc'),
               onTap: () => _push(context, LetterQuizScreen(course: course)),
             ),
-          // Korea/Jerman: Tebak Kata dari kosakata inti per kategori.
-          if (course.id == 'ko' || course.id == 'de')
+          // Korea/Jerman/Mandarin: Tebak Kata dari kosakata inti per
+          // kategori.
+          if (course.id == 'ko' || course.id == 'de' || course.id == 'zh')
             _GameCard(
               emoji: '📖',
               color: DuoColors.green,

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/ja_particles.dart';
+import '../../data/zh_particles.dart';
 import '../../data/kanji_bank.dart';
 import '../../data/question_bank.dart';
 import '../../l10n/app_strings.dart';
@@ -17,6 +18,7 @@ import '../../widgets/en_sentence_text.dart';
 import '../../widgets/ja_particle_text.dart';
 import '../../widgets/study/study_background.dart';
 import '../../widgets/vocab_star_button.dart';
+import '../../services/reading_search.dart';
 import '../practice/letter_pick_screen.dart';
 import '../practice/vocab_practice_screen.dart';
 import '../premium_screen.dart';
@@ -54,6 +56,7 @@ String vocabSearchHintKey(String courseId, {required bool hasReading}) {
   return switch (courseId) {
     'ja' => 'vocab_search_hint_romaji',
     'ko' => 'vocab_search_hint_romanization',
+    'zh' => 'vocab_search_hint_pinyin',
     _ => 'vocab_search_hint_reading',
   };
 }
@@ -87,12 +90,12 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
     final q = _needle;
     final meaning = (e.meaning[uiLang] ?? e.meaning.values.first);
     return e.target.toLowerCase().contains(q) ||
-        (e.romaji?.toLowerCase().contains(q) ?? false) ||
+        readingContains(e.romaji, q) ||
         meaning.toLowerCase().contains(q);
   }
 
   bool _matchKana(KanaItem k) =>
-      k.kana.contains(_needle) || k.romaji.toLowerCase().contains(_needle);
+      k.kana.contains(_needle) || readingContains(k.romaji, _needle);
 
   /// Bagian dengan isi yang cocok saja; kana & contoh disaring. Saat
   /// tidak mencari, semua bagian dikembalikan apa adanya.
@@ -293,6 +296,10 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
       widget.course.id == 'ja' &&
       const {'ja_particles', 'ja_patterns'}.contains(widget.topic.id);
 
+  /// Topik tata bahasa Mandarin: partikel (的, 了, 吗, 把, …) diwarnai.
+  bool get _zhParticles =>
+      widget.course.id == 'zh' && widget.topic.id.startsWith('zh_grammar');
+
   /// Topik tata bahasa Inggris: kata fungsi di contoh diwarnai.
   bool get _englishGrammar =>
       widget.course.id == 'en' &&
@@ -389,6 +396,7 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
                   example: ex,
                   uiLang: l.code,
                   particles: _particles,
+                  chinese: _zhParticles,
                   english: _englishGrammar,
                   onSpeak: () => _speak(ex.target),
                   trailing:
@@ -598,6 +606,7 @@ class _ExampleRow extends StatelessWidget {
   final VoidCallback? onTap;
   final Widget? trailing; // mis. bintang favorit
   final bool particles; // warnai partikel Jepang
+  final bool chinese; // warnai partikel Mandarin
   final bool english; // warnai kata fungsi Inggris
 
   const _ExampleRow({
@@ -607,12 +616,14 @@ class _ExampleRow extends StatelessWidget {
     this.onTap,
     this.trailing,
     this.particles = false,
+    this.chinese = false,
     this.english = false,
   });
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final zh = chinese ? zhParticlesOf(example.target, example.romaji) : null;
     final row = Container(
       margin: const EdgeInsets.only(top: 8),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -640,10 +651,13 @@ class _ExampleRow extends StatelessWidget {
                   )
                 else
                   ParticleText(
-                    example.target,
-                    marks: particles
-                        ? particlesOf(example.target, example.romaji)
-                        : null,
+                    zh?.text ?? example.target,
+                    joiner: zh?.joiner ?? ' ',
+                    marks:
+                        zh?.marks ??
+                        (particles
+                            ? particlesOf(example.target, example.romaji)
+                            : null),
                     style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w800,
@@ -651,10 +665,12 @@ class _ExampleRow extends StatelessWidget {
                   ),
                 if (example.romaji != null)
                   ParticleText(
-                    example.romaji!,
-                    marks: particles
-                        ? readingParticlesOf(example.target, example.romaji)
-                        : null,
+                    zh?.reading ?? example.romaji!,
+                    marks:
+                        zh?.marks ??
+                        (particles
+                            ? readingParticlesOf(example.target, example.romaji)
+                            : null),
                     style: TextStyle(
                       fontSize: 12,
                       fontStyle: FontStyle.italic,

@@ -35,7 +35,7 @@ import '../models/course.dart';
 /// disimpan; begitu berubah, cache dibuang, asset bawaan dipakai, dan
 /// sinkron berikutnya dipaksa mengunduh ulang dari server.
 class ContentService {
-  static const _langs = ['en', 'ja', 'id', 'ko', 'de'];
+  static const _langs = ['en', 'ja', 'id', 'ko', 'de', 'zh'];
   static const _kVersion = 'content_version';
   static const _kLastCheck = 'content_last_check';
   static const _kAppBuild = 'content_app_build';
@@ -158,7 +158,10 @@ class ContentService {
             .get()
             .timeout(const Duration(seconds: 15));
         final raw = doc.data()?['json'] as String?;
-        if (raw == null) return; // konten server belum lengkap
+        // Kursus baru yang belum diunggah admin (mis. 'zh' sebelum
+        // "Unggah materi" dijalankan) dilewati — asset bawaan tetap
+        // dipakai, kursus lain tetap tersinkron.
+        if (raw == null) continue;
         Course.fromJson(jsonDecode(raw) as Map<String, dynamic>); // validasi
         fresh[lang] = raw;
       }

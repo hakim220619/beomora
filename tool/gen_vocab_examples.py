@@ -1,6 +1,7 @@
 """Bangkitkan lib/data/vocab_examples.dart — contoh kalimat & catatan
 penggunaan per kata untuk kosakata JLPT (N5/N4/N3), ungkapan Jepang
-(ja_phrases.dart) dan kosakata/ungkapan Inggris (en_exam_vocab.dart).
+(ja_phrases.dart), kosakata/ungkapan Inggris (en_exam_vocab.dart), Korea,
+Jerman, dan Mandarin (hsk_vocab.dart + zh_phrases.dart; data zh_*.py).
 
 Sumber data: tool/vocab_examples/ja_*.py & en_*.py, masing-masing berisi
 EXAMPLES = [(kata, kalimat, bacaan, terjemahan_id, terjemahan_en,
@@ -41,6 +42,10 @@ def load(prefix):
 
 
 KANJI = re.compile(r'[一-鿿]')
+# Pinyin bernada: huruf Latin (+ tanda nada, ü), angka, spasi & tanda baca.
+ZH_PINYIN = re.compile(
+    r"^[a-zA-Z0-9āáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜüĀÁǍÀĒÉĚÈŌÓǑÒ' ,.!?:;\-–—\"“”‘’()%]+$"
+)
 VERB_END = 'うくぐすつぬぶむる'
 
 
@@ -76,6 +81,19 @@ def check(lang, rows, valid):
             # kecocokan kata dicek tool/check_ko_vocab.py.
             if not reading.strip() or not t_en.strip():
                 errors.append(f'romanisasi/terjemahan en kosong: {key}')
+        elif lang == 'zh':
+            # Kalimat hanzi (tanpa spasi) + pinyin bernada + terjemahan
+            # id & en; kata kuncinya wajib muncul utuh di kalimat.
+            if not reading.strip() or not t_en.strip():
+                errors.append(f'pinyin/terjemahan en kosong: {key}')
+            if ' ' in sent:
+                errors.append(f'spasi di kalimat hanzi: {key} → {sent}')
+            if key not in sent:
+                errors.append(f'{key} tak muncul di: {sent}')
+            if not ZH_PINYIN.match(reading):
+                errors.append(f'pinyin tidak valid: {key} → {reading}')
+            if re.search(r'[一-鿿]', reading):
+                errors.append(f'hanzi di pinyin: {key}')
         elif lang == 'de':
             # Kalimat Jerman + terjemahan id & en wajib (tanpa bacaan);
             # kecocokan kata dicek tool/check_de_vocab.py.
@@ -127,12 +145,21 @@ def main():
     )
     if (ROOT / 'lib/data/de_phrases.dart').exists():
         de_valid += dart_keys('lib/data/de_phrases.dart', 'JVocab')
+    zh = load('zh')
+    zh_valid = (
+        dart_keys('lib/data/hsk_vocab.dart', 'JVocab')
+        if (ROOT / 'lib/data/hsk_vocab.dart').exists()
+        else []
+    )
+    if (ROOT / 'lib/data/zh_phrases.dart').exists():
+        zh_valid += dart_keys('lib/data/zh_phrases.dart', 'JVocab')
     failed = False
     for lang, rows, valid in (
         ('ja', ja, ja_valid),
         ('en', en, en_valid),
         ('ko', ko, ko_valid),
         ('de', de, de_valid),
+        ('zh', zh, zh_valid),
     ):
         errors, warns, missing = check(lang, rows, valid)
         for w in warns:
@@ -177,6 +204,7 @@ def main():
         "      'en' => vocabUsageEn[target],",
         "      'ko' => vocabUsageKo[target],",
         "      'de' => vocabUsageDe[target],",
+        "      'zh' => vocabUsageZh[target],",
         '      _ => null,',
         '    };',
         '',
@@ -188,13 +216,16 @@ def main():
         '',
         *emit('vocabUsageDe', de),
         '',
+        *emit('vocabUsageZh', zh),
+        '',
     ]
     (ROOT / 'lib/data/vocab_examples.dart').write_text(
         '\n'.join(out), encoding='utf-8'
     )
     print(
         f'OK: ja={len(ja)}/{len(ja_valid)} en={len(en)}/{len(en_valid)} '
-        f'ko={len(ko)}/{len(ko_valid)} de={len(de)}/{len(de_valid)}'
+        f'ko={len(ko)}/{len(ko_valid)} de={len(de)}/{len(de_valid)} '
+        f'zh={len(zh)}/{len(zh_valid)}'
     )
 
 
